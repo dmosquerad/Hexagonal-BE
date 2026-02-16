@@ -1,0 +1,94 @@
+user:
+  parameters:
+    - name: userUuid
+      in: path
+      required: true
+      description: Uuid User value
+      schema:
+        type: string
+        format: uuid
+        nullable: false
+  get:
+    tags:
+      - users
+    summary: Get an User by Uuid
+    operationId: getUserByUuid
+    responses:
+      '200':
+        description: Expected response to a valid request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userResponse'
+      '500':
+        description: Error
+        content:
+          application/json:
+            schema:
+              $ref: '../common-schema.yml#/schemas/responseError'
+
+users:
+  get:
+    tags:
+      - users
+    summary: Get all Users
+    operationId: getAllUsers
+    responses:
+      '200':
+        description: Expected response
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/usersResponse'
+      '500':
+        description: Error
+        content:
+          application/json:
+            schema:
+              $ref: '../common-schema.yml#/schemas/responseError'
+  post:
+    tags:
+      - users
+    summary: Create an User
+    operationId: createUser
+    requestBody:
+      description: User Body value
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: './users-schema.yml#/schemas/user'
+    responses:
+      '200':
+        description: Expected response to a valid request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userResponse'
+      '500':
+        description: Error
+        content:
+          application/json:
+            schema:
+              $ref: '../common-schema.yml#/schemas/responseError'
+
+
+components:
+  schemas:
+    userResponse:
+      allOf:
+        - $ref: '../common-schema.yml#/schemas/response'
+        - type: object
+          properties:
+            data:
+              $ref: './users-schema.yml#/schemas/user'
+    usersResponse:
+      allOf:
+        - $ref: '../common-schema.yml#/schemas/response'
+        - type: object
+          properties:
+            data:
+              type: array
+              uniqueItems: true
+              items:
+                $ref: './users-schema.yml#/schemas/user'

@@ -1,0 +1,36 @@
+schemas:
+  response:
+    required:
+      - date
+      - status
+      - data
+    properties:
+      date:
+        type: string
+        format: date-time
+        nullable: false
+      status:
+        type: integer
+        format: int32
+        minimum: 100
+        maximum: 599
+        nullable: false
+      data:
+        type: object
+        nullable: true
+
+  responseError:
+    required:
+      - date
+      - status
+    properties:
+      date:
+        type: string
+        format: date-time
+        nullable: false
+      status:
+        type: integer
+        format: int32
+        minimum: 100
+        maximum: 599
+        nullable: false

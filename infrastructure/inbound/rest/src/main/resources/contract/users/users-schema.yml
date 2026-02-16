@@ -1,0 +1,17 @@
+schemas:
+  user:
+    required:
+      - email
+      - name
+    properties:
+      userId:
+        type: string
+        format: uuid
+        nullable: false
+      email:
+        type: string
+        format: email
+        nullable: false
+      name:
+        type: string
+        nullable: false
