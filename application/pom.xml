@@ -18,6 +18,14 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>memory</artifactId>
         </dependency>
+        <!-- TEST -->
+        <!-- SPRINGBOOT -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
 </project>
