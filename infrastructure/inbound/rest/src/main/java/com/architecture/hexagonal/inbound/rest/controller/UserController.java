@@ -9,6 +9,7 @@ import com.architecture.hexagonal.inbound.rest.dto.UserDto;
 import com.architecture.hexagonal.inbound.rest.dto.UserResponseDto;
 import com.architecture.hexagonal.inbound.rest.dto.UsersResponseDto;
 import com.architecture.hexagonal.inbound.rest.mapper.UserDtoMapper;
+import java.time.Clock;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -28,10 +29,12 @@ public class UserController implements UsersApi {
 
   public final UserDtoMapper userDtoMapper;
 
+  public final Clock clock;
+
   @Override
   public ResponseEntity<UsersResponseDto> getAllUsers() {
     final UsersResponseDto userResponseDto = new UsersResponseDto();
-    userResponseDto.setDate(OffsetDateTime.now());
+    userResponseDto.setDate(OffsetDateTime.now(clock));
     userResponseDto.setStatus(HttpStatus.OK.value());
     userResponseDto.setData(userDtoMapper.toUserDtoSet(this.getAllUsersUseCasePort.execute()));
 
@@ -41,7 +44,7 @@ public class UserController implements UsersApi {
   @Override
   public ResponseEntity<UserResponseDto> createUser(UserDto userDto) {
     final UserResponseDto userResponseDto = new UserResponseDto();
-    userResponseDto.setDate(OffsetDateTime.now());
+    userResponseDto.setDate(OffsetDateTime.now(clock));
     userResponseDto.setStatus(HttpStatus.OK.value());
     userResponseDto.setData(userDtoMapper.toUserDto(createUserUseCasePort.execute(
         CreateUserCommand.builder().name(userDto.getName()).email(userDto.getEmail()).build())));
@@ -52,7 +55,7 @@ public class UserController implements UsersApi {
   @Override
   public ResponseEntity<UserResponseDto> getUserByUuid(UUID userUuid) {
     final UserResponseDto userResponseDto = new UserResponseDto();
-    userResponseDto.setDate(OffsetDateTime.now());
+    userResponseDto.setDate(OffsetDateTime.now(clock));
     userResponseDto.setStatus(HttpStatus.OK.value());
     userResponseDto.setData(userDtoMapper.toUserDto(findUserByUserIdUseCasePort.execute(
         FindUserByUserIdQuery.builder().userId(userUuid).build())));

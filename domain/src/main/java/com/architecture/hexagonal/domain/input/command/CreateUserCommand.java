@@ -8,5 +8,4 @@ import lombok.Value;
 public class CreateUserCommand {
   String email;
   String name;
-  String role;
 }
