@@ -1,4 +1,5 @@
-server:
-  port: 8080
-  servlet:
-    context-path: /api
+spring:
+  config:
+    import:
+      - classpath:application-rest.yml
+      - classpath:application-database.yml

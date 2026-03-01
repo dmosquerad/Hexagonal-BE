@@ -7,10 +7,11 @@ import com.architecture.hexagonal.domain.port.in.CreateUserUseCasePort;
 import com.architecture.hexagonal.domain.port.in.FindUserByUserIdUseCasePort;
 import com.architecture.hexagonal.domain.port.in.GetAllUsersUseCasePort;
 import com.architecture.hexagonal.inbound.rest.controller.UserController;
-import com.architecture.hexagonal.inbound.rest.dto.UserDto;
+import com.architecture.hexagonal.inbound.rest.dto.UserCreateDto;
+import com.architecture.hexagonal.inbound.rest.dto.UserReadDto;
 import com.architecture.hexagonal.inbound.rest.dto.UserResponseDto;
 import com.architecture.hexagonal.inbound.rest.dto.UsersResponseDto;
-import com.architecture.hexagonal.inbound.rest.mapper.UserDtoMapper;
+import com.architecture.hexagonal.inbound.rest.mapper.UserReadDtoMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hexagonal.inbound.rest.config.TestApplication;
 import com.hexagonal.stub.InstantStub;
@@ -62,20 +63,20 @@ class UserControllerTestIT {
   FindUserByUserIdUseCasePort findUserByUserIdUseCasePort;
 
   @MockitoSpyBean
-  UserDtoMapper userDtoMapper;
+  UserReadDtoMapper userReadDtoMapper;
 
   @MockitoSpyBean
   Clock clock;
 
   @Test
   void getAllUsers() throws Exception {
-    final UserDto userDto = new UserDto();
-    userDto.setUserId(UserDoStub.USERDO.getUserId());
-    userDto.setEmail(UserDoStub.USERDO.getEmail());
-    userDto.setName(UserDoStub.USERDO.getName());
+    final UserReadDto userReadDto = new UserReadDto();
+    userReadDto.setUserId(UserDoStub.USERDO.getUserId());
+    userReadDto.setEmail(UserDoStub.USERDO.getEmail());
+    userReadDto.setName(UserDoStub.USERDO.getName());
 
     final UsersResponseDto userResponseDto = new UsersResponseDto();
-    userResponseDto.setData(Set.of(userDto));
+    userResponseDto.setData(Set.of(userReadDto));
     userResponseDto.setDate(OffsetDateTime.ofInstant(InstantStub.INSTANT_DATE, ZoneOffset.UTC));
     userResponseDto.setStatus(HttpStatus.OK.value());
 
@@ -96,22 +97,22 @@ class UserControllerTestIT {
 
     Mockito.verify(userController).getAllUsers();
     Mockito.verify(getAllUsersUseCasePort).execute();
-    Mockito.verify(userDtoMapper).toUserDtoSet(ArgumentMatchers.anySet());
+    Mockito.verify(userReadDtoMapper).toUserReadDtoSet(ArgumentMatchers.anySet());
   }
 
   @Test
   void createUser() throws Exception {
-    final UserDto userDto = new UserDto();
-    userDto.setEmail(UserDoStub.USERDO.getEmail());
-    userDto.setName(UserDoStub.USERDO.getName());
+    final UserCreateDto userCreateDto = new UserCreateDto();
+    userCreateDto.setEmail(UserDoStub.USERDO.getEmail());
+    userCreateDto.setName(UserDoStub.USERDO.getName());
 
-    final UserDto userDtoResponse = new UserDto();
-    userDtoResponse.setUserId(UserDoStub.USERDO.getUserId());
-    userDtoResponse.setEmail(UserDoStub.USERDO.getEmail());
-    userDtoResponse.setName(UserDoStub.USERDO.getName());
+    final UserReadDto userReadDto = new UserReadDto();
+    userReadDto.setUserId(UserDoStub.USERDO.getUserId());
+    userReadDto.setEmail(UserDoStub.USERDO.getEmail());
+    userReadDto.setName(UserDoStub.USERDO.getName());
 
     final UserResponseDto userResponseDto = new UserResponseDto();
-    userResponseDto.setData(userDtoResponse);
+    userResponseDto.setData(userReadDto);
     userResponseDto.setDate(OffsetDateTime.ofInstant(InstantStub.INSTANT_DATE, ZoneOffset.UTC));
     userResponseDto.setStatus(HttpStatus.OK.value());
 
@@ -122,7 +123,7 @@ class UserControllerTestIT {
             MockMvcRequestBuilders.post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(userDto)))
+                .content(objectMapper.writeValueAsString(userCreateDto)))
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andReturn();
 
@@ -130,21 +131,21 @@ class UserControllerTestIT {
 
     Assertions.assertEquals(userResponseDto, response);
 
-    Mockito.verify(userController).createUser(ArgumentMatchers.any(UserDto.class));
+    Mockito.verify(userController).createUser(ArgumentMatchers.any(UserCreateDto.class));
     Mockito.verify(createUserUseCasePort).execute(ArgumentMatchers.any(CreateUserCommand.class));
-    Mockito.verify(userDtoMapper).toUserDto(ArgumentMatchers.any(UserDo.class));
+    Mockito.verify(userReadDtoMapper).toUserReadDto(ArgumentMatchers.any(UserDo.class));
     Mockito.verify(clock).instant();
   }
 
   @Test
   void getUserByUuid() throws Exception {
-    final UserDto userDto = new UserDto();
-    userDto.setUserId(UserDoStub.USERDO.getUserId());
-    userDto.setEmail(UserDoStub.USERDO.getEmail());
-    userDto.setName(UserDoStub.USERDO.getName());
+    final UserReadDto userReadDto = new UserReadDto();
+    userReadDto.setUserId(UserDoStub.USERDO.getUserId());
+    userReadDto.setEmail(UserDoStub.USERDO.getEmail());
+    userReadDto.setName(UserDoStub.USERDO.getName());
 
     final UserResponseDto userResponseDto = new UserResponseDto();
-    userResponseDto.setData(userDto);
+    userResponseDto.setData(userReadDto);
     userResponseDto.setDate(OffsetDateTime.ofInstant(InstantStub.INSTANT_DATE, ZoneOffset.UTC));
     userResponseDto.setStatus(HttpStatus.OK.value());
 
@@ -164,7 +165,7 @@ class UserControllerTestIT {
 
     Mockito.verify(userController).getUserByUuid(ArgumentMatchers.any(UUID.class));
     Mockito.verify(findUserByUserIdUseCasePort).execute(ArgumentMatchers.any(FindUserByUserIdQuery.class));
-    Mockito.verify(userDtoMapper).toUserDto(ArgumentMatchers.any(UserDo.class));
+    Mockito.verify(userReadDtoMapper).toUserReadDto(ArgumentMatchers.any(UserDo.class));
     Mockito.verify(clock).instant();
   }
 }
