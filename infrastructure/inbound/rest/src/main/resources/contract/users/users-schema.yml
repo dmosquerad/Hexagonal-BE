@@ -1,17 +1,25 @@
 schemas:
   user:
+    type: object
     required:
       - email
       - name
     properties:
-      userId:
-        type: string
-        format: uuid
-        nullable: false
       email:
         type: string
         format: email
-        nullable: false
       name:
         type: string
-        nullable: false
+  userCreate:
+    allOf:
+      - $ref: './users-schema.yml#/schemas/user'
+  userRead:
+    allOf:
+      - $ref: './users-schema.yml#/schemas/user'
+      - type: object
+        required:
+          - userId
+        properties:
+          userId:
+            type: string
+            format: uuid

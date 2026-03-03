@@ -11,6 +11,6 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>memory</module>
+        <module>database</module>
     </modules>
 </project>

@@ -5,10 +5,11 @@ import com.architecture.hexagonal.domain.port.in.CreateUserUseCasePort;
 import com.architecture.hexagonal.domain.port.in.FindUserByUserIdUseCasePort;
 import com.architecture.hexagonal.domain.port.in.GetAllUsersUseCasePort;
 import com.architecture.hexagonal.domain.input.command.CreateUserCommand;
+import com.architecture.hexagonal.inbound.rest.dto.UserCreateDto;
 import com.architecture.hexagonal.inbound.rest.dto.UserDto;
 import com.architecture.hexagonal.inbound.rest.dto.UserResponseDto;
 import com.architecture.hexagonal.inbound.rest.dto.UsersResponseDto;
-import com.architecture.hexagonal.inbound.rest.mapper.UserDtoMapper;
+import com.architecture.hexagonal.inbound.rest.mapper.UserReadDtoMapper;
 import java.time.Clock;
 import java.time.OffsetDateTime;
 import java.util.UUID;
@@ -27,7 +28,7 @@ public class UserController implements UsersApi {
 
   public final FindUserByUserIdUseCasePort findUserByUserIdUseCasePort;
 
-  public final UserDtoMapper userDtoMapper;
+  public final UserReadDtoMapper userReadDtoMapper;
 
   public final Clock clock;
 
@@ -36,18 +37,18 @@ public class UserController implements UsersApi {
     final UsersResponseDto userResponseDto = new UsersResponseDto();
     userResponseDto.setDate(OffsetDateTime.now(clock));
     userResponseDto.setStatus(HttpStatus.OK.value());
-    userResponseDto.setData(userDtoMapper.toUserDtoSet(this.getAllUsersUseCasePort.execute()));
+    userResponseDto.setData(userReadDtoMapper.toUserReadDtoSet(this.getAllUsersUseCasePort.execute()));
 
     return ResponseEntity.ok(userResponseDto);
   }
 
   @Override
-  public ResponseEntity<UserResponseDto> createUser(UserDto userDto) {
+  public ResponseEntity<UserResponseDto> createUser(UserCreateDto userCreateDto) {
     final UserResponseDto userResponseDto = new UserResponseDto();
     userResponseDto.setDate(OffsetDateTime.now(clock));
     userResponseDto.setStatus(HttpStatus.OK.value());
-    userResponseDto.setData(userDtoMapper.toUserDto(createUserUseCasePort.execute(
-        CreateUserCommand.builder().name(userDto.getName()).email(userDto.getEmail()).build())));
+    userResponseDto.setData(userReadDtoMapper.toUserReadDto(createUserUseCasePort.execute(
+        CreateUserCommand.builder().name(userCreateDto.getName()).email(userCreateDto.getEmail()).build())));
 
     return ResponseEntity.ok(userResponseDto);
   }
@@ -57,7 +58,7 @@ public class UserController implements UsersApi {
     final UserResponseDto userResponseDto = new UserResponseDto();
     userResponseDto.setDate(OffsetDateTime.now(clock));
     userResponseDto.setStatus(HttpStatus.OK.value());
-    userResponseDto.setData(userDtoMapper.toUserDto(findUserByUserIdUseCasePort.execute(
+    userResponseDto.setData(userReadDtoMapper.toUserReadDto(findUserByUserIdUseCasePort.execute(
         FindUserByUserIdQuery.builder().userId(userUuid).build())));
 
     return ResponseEntity.ok(userResponseDto);

@@ -57,7 +57,7 @@ users:
       content:
         application/json:
           schema:
-            $ref: './users-schema.yml#/schemas/user'
+            $ref: './users-schema.yml#/schemas/userCreate'
     responses:
       '200':
         description: Expected response to a valid request
@@ -81,7 +81,7 @@ components:
         - type: object
           properties:
             data:
-              $ref: './users-schema.yml#/schemas/user'
+              $ref: './users-schema.yml#/schemas/userRead'
     usersResponse:
       allOf:
         - $ref: '../common-schema.yml#/schemas/response'
@@ -91,4 +91,4 @@ components:
               type: array
               uniqueItems: true
               items:
-                $ref: './users-schema.yml#/schemas/user'
+                $ref: './users-schema.yml#/schemas/userRead'
