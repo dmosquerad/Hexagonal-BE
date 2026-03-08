@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.outbound.database.adapter;
 
-import com.architecture.hexagonal.domain.data.UserDo;
+import com.architecture.hexagonal.domain.data.User;
 import com.architecture.hexagonal.outbound.database.data.UserDao;
-import com.architecture.hexagonal.outbound.database.mapper.UserDoMapper;
+import com.architecture.hexagonal.outbound.database.mapper.UserMapper;
 import com.architecture.hexagonal.outbound.database.repository.UserDatabaseReadRepository;
 import com.architecture.hexagonal.outbound.database.config.DatabaseIT;
 import com.architecture.hexagonal.outbound.database.config.TestApplication;
@@ -34,11 +34,11 @@ class UserRepositoryDatabaseReadAdapterTestIT extends DatabaseIT {
   UserDatabaseReadRepository userDatabaseReadRepository;
 
   @MockitoSpyBean
-  UserDoMapper userDoMapper;
+  UserMapper userMapper;
 
   @Test
   void getAllUsers() {
-    Set<UserDo> result = userRepositoryDatabaseReadAdapter.getAllUsers();
+    Set<User> result = userRepositoryDatabaseReadAdapter.getAllUsers();
 
     AssertionsForClassTypes.assertThat(result)
         .usingRecursiveComparison()
@@ -46,7 +46,7 @@ class UserRepositoryDatabaseReadAdapterTestIT extends DatabaseIT {
         .isEqualTo(Collections.singleton(UserDaoTestDataBuilder.builder().build().userDao()));
 
     Mockito.verify(userDatabaseReadRepository).findAll();
-    Mockito.verify(userDoMapper).toUserDoSet(ArgumentMatchers.anyList());
+    Mockito.verify(userMapper).toUserSet(ArgumentMatchers.anyList());
   }
 
   @Test
@@ -56,7 +56,7 @@ class UserRepositoryDatabaseReadAdapterTestIT extends DatabaseIT {
         .build()
         .userDao();
 
-    UserDo result = userRepositoryDatabaseReadAdapter.findUserById(userDao.getUserId());
+    User result = userRepositoryDatabaseReadAdapter.findUserById(userDao.getUserId());
 
     AssertionsForClassTypes.assertThat(result)
         .usingRecursiveComparison()
@@ -64,7 +64,7 @@ class UserRepositoryDatabaseReadAdapterTestIT extends DatabaseIT {
         .isEqualTo(userDao);
 
     Mockito.verify(userDatabaseReadRepository).findByUserId(ArgumentMatchers.any(UUID.class));
-    Mockito.verify(userDoMapper).toUserDo(ArgumentMatchers.any(UserDao.class));
+    Mockito.verify(userMapper).toUser(ArgumentMatchers.any(UserDao.class));
   }
 
 }

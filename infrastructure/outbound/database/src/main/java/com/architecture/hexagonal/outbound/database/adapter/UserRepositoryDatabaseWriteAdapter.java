@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.outbound.database.adapter;
 
-import com.architecture.hexagonal.domain.data.UserDo;
+import com.architecture.hexagonal.domain.data.User;
 import com.architecture.hexagonal.outbound.database.mapper.UserDaoMapper;
-import com.architecture.hexagonal.outbound.database.mapper.UserDoMapper;
+import com.architecture.hexagonal.outbound.database.mapper.UserMapper;
 import com.architecture.hexagonal.domain.port.out.UserRepositoryWritePort;
 import com.architecture.hexagonal.outbound.database.repository.UserDatabaseWriteRepository;
 import org.springframework.stereotype.Component;
@@ -13,12 +13,12 @@ import lombok.RequiredArgsConstructor;
 public class UserRepositoryDatabaseWriteAdapter implements UserRepositoryWritePort {
   private final UserDatabaseWriteRepository userDatabaseWriteRepository;
 
-  private final UserDoMapper userDoMapper;
+  private final UserMapper userMapper;
 
   private final UserDaoMapper userDaoMapper;
 
   @Override
-  public UserDo saveUser(UserDo userDo) {
-    return userDoMapper.toUserDo(userDatabaseWriteRepository.save(userDaoMapper.toUserDao(userDo)));
+  public User saveUser(User user) {
+    return userMapper.toUser(userDatabaseWriteRepository.save(userDaoMapper.toUserDao(user)));
   }
 }

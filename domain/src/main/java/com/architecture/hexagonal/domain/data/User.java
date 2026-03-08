@@ -6,7 +6,7 @@ import lombok.Value;
 
 @Value
 @Builder
-public class UserDo {
+public class User {
   UUID userId;
   String name;
   String email;

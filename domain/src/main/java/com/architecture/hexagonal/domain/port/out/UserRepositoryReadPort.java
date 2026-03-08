@@ -1,11 +1,11 @@
 package com.architecture.hexagonal.domain.port.out;
 
-import com.architecture.hexagonal.domain.data.UserDo;
+import com.architecture.hexagonal.domain.data.User;
 import java.util.Set;
 import java.util.UUID;
 
 public interface UserRepositoryReadPort {
-  Set<UserDo> getAllUsers();
+  Set<User> getAllUsers();
   
-  UserDo findUserById(UUID uuid);
+  User findUserById(UUID uuid);
 }

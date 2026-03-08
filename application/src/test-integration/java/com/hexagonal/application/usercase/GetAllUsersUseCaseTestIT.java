@@ -1,9 +1,9 @@
 package com.hexagonal.application.usercase;
 
-import com.architecture.hexagonal.application.usercase.GetAllUsersUserCase;
-import com.architecture.hexagonal.domain.data.UserDo;
+import com.architecture.hexagonal.application.usercase.GetAllUsersUseCase;
+import com.architecture.hexagonal.domain.data.User;
 import com.architecture.hexagonal.domain.port.out.UserRepositoryReadPort;
-import com.hexagonal.application.testutils.data.entity.UserDoTestDataBuilder;
+import com.hexagonal.application.testutils.data.entity.UserTestDataBuilder;
 import java.util.Collections;
 import java.util.Set;
 import org.assertj.core.api.AssertionsForClassTypes;
@@ -13,29 +13,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-@SpringBootTest(classes = GetAllUsersUserCase.class)
-class GetAllUsersUserCaseTestIT {
+@SpringBootTest(classes = GetAllUsersUseCase.class)
+class GetAllUsersUseCaseTestIT {
 
   @Autowired
-  GetAllUsersUserCase getAllUsersUserCase;
+  GetAllUsersUseCase getAllUsersUseCase;
 
   @MockitoBean
   UserRepositoryReadPort userRepositoryReadPort;
 
   @Test
   void execute() {
-    final Set<UserDo> userDoSet = Collections.singleton(UserDoTestDataBuilder
+    final Set<User> userSet = Collections.singleton(UserTestDataBuilder
         .builder()
         .build()
-        .userDo());
+        .user());
 
-    Mockito.when(userRepositoryReadPort.getAllUsers()).thenReturn(userDoSet);
+    Mockito.when(userRepositoryReadPort.getAllUsers()).thenReturn(userSet);
 
-    Set<UserDo> result = getAllUsersUserCase.execute();
+    Set<User> result = getAllUsersUseCase.execute();
 
     AssertionsForClassTypes.assertThat(result)
         .usingRecursiveComparison()
-        .isEqualTo(userDoSet);
+        .isEqualTo(userSet);
 
     Mockito.verify(userRepositoryReadPort).getAllUsers();
   }
