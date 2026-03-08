@@ -24,6 +24,7 @@
     <openapi-generator-maven-plugin.version>7.7.0</openapi-generator-maven-plugin.version>
     <!-- TEST -->
     <junit-jupiter.version>6.0.3</junit-jupiter.version>
+    <assertj.version>3.27.7</assertj.version>
   </properties>
 
   <modules>
@@ -88,6 +89,13 @@
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter</artifactId>
         <version>${junit-jupiter.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.assertj</groupId>
+        <artifactId>assertj-core</artifactId>
+        <version>${assertj.version}</version>
         <scope>test</scope>
       </dependency>
     </dependencies>
@@ -168,6 +176,9 @@
               <testSourceDirectory>
                 ${project.basedir}/src/test-integration/java
               </testSourceDirectory>
+              <additionalClasspathElements>
+                <additionalClasspathElement>${project.basedir}/src/test-integration/resources</additionalClasspathElement>
+              </additionalClasspathElements>
             </configuration>
           </execution>
         </executions>
@@ -191,14 +202,14 @@
             </configuration>
           </execution>
           <execution>
-            <id>add-test-stub</id>
+            <id>add-test-utils</id>
             <phase>generate-test-sources</phase>
             <goals>
               <goal>add-test-source</goal>
             </goals>
             <configuration>
               <sources>
-                <source>src/test-stub/java</source>
+                <source>src/test-utils/java</source>
               </sources>
             </configuration>
           </execution>

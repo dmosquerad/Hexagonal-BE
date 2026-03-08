@@ -15,7 +15,7 @@ public class CreateUserUserCase implements CreateUserUseCasePort {
 
   @Override
   public UserDo execute(CreateUserCommand createUserCommand) {
-    return userRepositoryWritePort.createUser(
+    return userRepositoryWritePort.saveUser(
         UserDo.builder()
             .name(createUserCommand.getName())
             .email(createUserCommand.getEmail())
