@@ -1,13 +1,13 @@
 package com.architecture.hexagonal.outbound.database.adapter;
 
-import com.architecture.hexagonal.domain.data.UserDo;
+import com.architecture.hexagonal.domain.data.User;
 import com.architecture.hexagonal.outbound.database.data.UserDao;
 import com.architecture.hexagonal.outbound.database.mapper.UserDaoMapper;
-import com.architecture.hexagonal.outbound.database.mapper.UserDoMapper;
+import com.architecture.hexagonal.outbound.database.mapper.UserMapper;
 import com.architecture.hexagonal.outbound.database.repository.UserDatabaseWriteRepository;
 import com.architecture.hexagonal.outbound.database.config.DatabaseIT;
 import com.architecture.hexagonal.outbound.database.config.TestApplication;
-import com.hexagonal.outbound.database.testutils.data.entity.UserDoTestDataBuilder;
+import com.hexagonal.outbound.database.testutils.data.entity.UserTestDataBuilder;
 import java.util.UUID;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
@@ -33,48 +33,48 @@ class UserRepositoryDatabaseWriteAdapterTestIT extends DatabaseIT {
   UserDatabaseWriteRepository userDatabaseWriteRepository;
 
   @MockitoSpyBean
-  UserDoMapper userDoMapper;
+  UserMapper userMapper;
 
   @MockitoSpyBean
   UserDaoMapper userDaoMapper;
 
   @Test
   void saveUser_create() {
-    final UserDo userDo = UserDoTestDataBuilder.builder()
+    final User user = UserTestDataBuilder.builder()
         .userId(null)
         .email("pepe@test.com")
         .build()
-        .userDo();
+        .user();
 
-    UserDo result = userRepositoryDatabaseWriteAdapter.saveUser(userDo);
+    User result = userRepositoryDatabaseWriteAdapter.saveUser(user);
 
     AssertionsForClassTypes.assertThat(result)
         .usingRecursiveComparison()
         .ignoringFieldsOfTypes(UUID.class)
-        .isEqualTo(userDo);
+        .isEqualTo(user);
 
-    Mockito.verify(userDaoMapper).toUserDao(ArgumentMatchers.any(UserDo.class));
+    Mockito.verify(userDaoMapper).toUserDao(ArgumentMatchers.any(User.class));
     Mockito.verify(userDatabaseWriteRepository).save(ArgumentMatchers.any(UserDao.class));
-    Mockito.verify(userDoMapper).toUserDo(ArgumentMatchers.any(UserDao.class));
+    Mockito.verify(userMapper).toUser(ArgumentMatchers.any(UserDao.class));
   }
 
   @Test
   void saveUser_update() {
-    final UserDo userDo = UserDoTestDataBuilder
+    final User user = UserTestDataBuilder
         .builder()
         .build()
-        .userDo();
+        .user();
 
-    UserDo result = userRepositoryDatabaseWriteAdapter.saveUser(userDo);
+    User result = userRepositoryDatabaseWriteAdapter.saveUser(user);
 
     AssertionsForClassTypes.assertThat(result)
         .usingRecursiveComparison()
         .ignoringFieldsOfTypes(UUID.class)
-        .isEqualTo(userDo);
+        .isEqualTo(user);
 
-    Mockito.verify(userDaoMapper).toUserDao(ArgumentMatchers.any(UserDo.class));
+    Mockito.verify(userDaoMapper).toUserDao(ArgumentMatchers.any(User.class));
     Mockito.verify(userDatabaseWriteRepository).save(ArgumentMatchers.any(UserDao.class));
-    Mockito.verify(userDoMapper).toUserDo(ArgumentMatchers.any(UserDao.class));
+    Mockito.verify(userMapper).toUser(ArgumentMatchers.any(UserDao.class));
   }
 
 }

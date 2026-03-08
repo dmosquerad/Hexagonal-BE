@@ -1,9 +1,9 @@
 package com.hexagonal.application.usercase;
 
-import com.architecture.hexagonal.application.usercase.FindUserByUserIdUserCase;
-import com.architecture.hexagonal.domain.data.UserDo;
+import com.architecture.hexagonal.application.usercase.FindUserByUserIdUseCase;
+import com.architecture.hexagonal.domain.data.User;
 import com.architecture.hexagonal.domain.port.out.UserRepositoryReadPort;
-import com.hexagonal.application.testutils.data.entity.UserDoTestDataBuilder;
+import com.hexagonal.application.testutils.data.entity.UserTestDataBuilder;
 import com.hexagonal.application.testutils.data.input.query.FindUserByUserIdQueryTestDataBuilder;
 import java.util.UUID;
 import org.assertj.core.api.AssertionsForClassTypes;
@@ -14,33 +14,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-@SpringBootTest(classes = FindUserByUserIdUserCase.class)
-class FindUserByUserIdUserCaseTestIT {
+@SpringBootTest(classes = FindUserByUserIdUseCase.class)
+class FindUserByUserIdUseCaseTestIT {
 
   @Autowired
-  FindUserByUserIdUserCase findUserByUserIdUserCase;
+  FindUserByUserIdUseCase findUserByUserIdUseCase;
 
   @MockitoBean
   UserRepositoryReadPort userRepositoryReadPort;
 
   @Test
   void execute() {
-    final UserDo userDo = UserDoTestDataBuilder
+    final User user = UserTestDataBuilder
         .builder()
         .build()
-        .userDo();
+        .user();
 
     Mockito.when(userRepositoryReadPort.findUserById(ArgumentMatchers.any(UUID.class)))
-        .thenReturn(userDo);
+        .thenReturn(user);
 
-    UserDo result = findUserByUserIdUserCase.execute(FindUserByUserIdQueryTestDataBuilder
+    User result = findUserByUserIdUseCase.execute(FindUserByUserIdQueryTestDataBuilder
         .builder()
         .build()
         .findUserByUserIdQuery());
 
     AssertionsForClassTypes.assertThat(result)
         .usingRecursiveComparison()
-        .isEqualTo(userDo);
+        .isEqualTo(user);
 
     Mockito.verify(userRepositoryReadPort).findUserById(ArgumentMatchers.any(UUID.class));
   }

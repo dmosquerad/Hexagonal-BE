@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.inbound.rest.controller;
 
+import com.architecture.hexagonal.domain.data.User;
 import com.architecture.hexagonal.domain.input.command.CreateUserCommand;
 import com.architecture.hexagonal.domain.input.query.FindUserByUserIdQuery;
-import com.architecture.hexagonal.domain.data.UserDo;
 import com.architecture.hexagonal.domain.port.in.CreateUserUseCasePort;
 import com.architecture.hexagonal.domain.port.in.FindUserByUserIdUseCasePort;
 import com.architecture.hexagonal.domain.port.in.GetAllUsersUseCasePort;
@@ -13,7 +13,7 @@ import com.architecture.hexagonal.inbound.rest.testutils.time.TestClock;
 import com.architecture.hexagonal.inbound.rest.testutils.data.dto.UserCreateDtoTestDataBuilder;
 import com.architecture.hexagonal.inbound.rest.testutils.data.dto.UserResponseDtoTestDataBuilder;
 import com.architecture.hexagonal.inbound.rest.testutils.data.dto.UsersResponseDtoTestDataBuilder;
-import com.architecture.hexagonal.inbound.rest.testutils.data.entity.UserDoTestDataBuilder;
+import com.architecture.hexagonal.inbound.rest.testutils.data.entity.UserTestDataBuilder;
 import java.time.Clock;
 import java.util.Collections;
 import org.assertj.core.api.AssertionsForClassTypes;
@@ -52,10 +52,10 @@ class UserControllerTest {
   @Test
   void getAllUsers() {
     Mockito.when(getAllUsersUseCasePort.execute())
-        .thenReturn(Collections.singleton(UserDoTestDataBuilder
+        .thenReturn(Collections.singleton(UserTestDataBuilder
             .builder()
             .build()
-            .userDo()));
+            .user()));
 
     final ResponseEntity<UsersResponseDto> responseExpected = ResponseEntity.ok(
         UsersResponseDtoTestDataBuilder
@@ -77,10 +77,10 @@ class UserControllerTest {
   @Test
   void createUser() {
     Mockito.when(createUserUseCasePort.execute(ArgumentMatchers.any()))
-        .thenReturn(UserDoTestDataBuilder
+        .thenReturn(UserTestDataBuilder
             .builder()
             .build()
-            .userDo());
+            .user());
 
     final ResponseEntity<UserResponseDto> responseExpected = ResponseEntity.ok(
         UserResponseDtoTestDataBuilder
@@ -99,32 +99,33 @@ class UserControllerTest {
         .isEqualTo(responseExpected);
 
     Mockito.verify(createUserUseCasePort).execute(ArgumentMatchers.any(CreateUserCommand.class));
-    Mockito.verify(userReadDtoMapper).toUserReadDto(ArgumentMatchers.any(UserDo.class));
+    Mockito.verify(userReadDtoMapper).toUserReadDto(ArgumentMatchers.any(User.class));
     Mockito.verify(clock).instant();
   }
 
   @Test
   void getUserByUuid() {
-    final UserDo userDo = UserDoTestDataBuilder
+    final User user = UserTestDataBuilder
         .builder()
         .build()
-        .userDo();
+        .user();
 
-    Mockito.when(findUserByUserIdUseCasePort.execute(ArgumentMatchers.any(FindUserByUserIdQuery.class))).thenReturn(userDo);
+    Mockito.when(findUserByUserIdUseCasePort.execute(ArgumentMatchers.any(FindUserByUserIdQuery.class))).thenReturn(
+        user);
 
     final ResponseEntity<UserResponseDto> responseExpected = ResponseEntity.ok(UserResponseDtoTestDataBuilder
         .builder()
         .build()
         .userResponseDto());
 
-    final ResponseEntity<UserResponseDto> response = userController.getUserByUuid(userDo.getUserId());
+    final ResponseEntity<UserResponseDto> response = userController.getUserByUuid(user.getUserId());
 
     AssertionsForClassTypes.assertThat(response)
         .usingRecursiveComparison()
         .isEqualTo(responseExpected);
 
     Mockito.verify(findUserByUserIdUseCasePort).execute(ArgumentMatchers.any(FindUserByUserIdQuery.class));
-    Mockito.verify(userReadDtoMapper).toUserReadDto(ArgumentMatchers.any(UserDo.class));
+    Mockito.verify(userReadDtoMapper).toUserReadDto(ArgumentMatchers.any(User.class));
     Mockito.verify(clock).instant();
   }
 

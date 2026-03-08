@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.inbound.rest.mapper;
 
-import com.architecture.hexagonal.domain.data.UserDo;
+import com.architecture.hexagonal.domain.data.User;
 import com.architecture.hexagonal.inbound.rest.dto.UserReadDto;
 import java.util.Set;
 import org.mapstruct.Mapper;
@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface UserReadDtoMapper {
 
-  UserReadDto toUserReadDto(UserDo userDo);
+  UserReadDto toUserReadDto(User user);
 
-  Set<UserReadDto> toUserReadDtoSet(Set<UserDo> userDo);
+  Set<UserReadDto> toUserReadDtoSet(Set<User> user);
 }

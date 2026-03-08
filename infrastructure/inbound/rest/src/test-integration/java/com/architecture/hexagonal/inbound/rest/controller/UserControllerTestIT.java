@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.inbound.rest.controller;
 
-import com.architecture.hexagonal.domain.data.UserDo;
+import com.architecture.hexagonal.domain.data.User;
 import com.architecture.hexagonal.domain.input.command.CreateUserCommand;
 import com.architecture.hexagonal.domain.input.query.FindUserByUserIdQuery;
 import com.architecture.hexagonal.domain.port.in.CreateUserUseCasePort;
@@ -13,7 +13,7 @@ import com.architecture.hexagonal.inbound.rest.mapper.UserReadDtoMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.architecture.hexagonal.inbound.rest.config.TestApplication;
 import com.architecture.hexagonal.inbound.rest.testutils.time.TestClock;
-import com.architecture.hexagonal.inbound.rest.testutils.data.entity.UserDoTestDataBuilder;
+import com.architecture.hexagonal.inbound.rest.testutils.data.entity.UserTestDataBuilder;
 import java.time.Clock;
 import java.util.Collections;
 import java.util.UUID;
@@ -71,10 +71,10 @@ class UserControllerTestIT {
 
     Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
     Mockito.when(getAllUsersUseCasePort.execute()).thenReturn(Collections.singleton(
-        UserDoTestDataBuilder
+        UserTestDataBuilder
             .builder()
             .build()
-            .userDo()));
+            .user()));
 
     final MvcResult result = mockMvc.perform(
             MockMvcRequestBuilders.get("/users")
@@ -103,10 +103,10 @@ class UserControllerTestIT {
 
     Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
     Mockito.when(createUserUseCasePort.execute(ArgumentMatchers.any()))
-        .thenReturn(UserDoTestDataBuilder
+        .thenReturn(UserTestDataBuilder
             .builder()
             .build()
-            .userDo());
+            .user());
 
     final MvcResult result = mockMvc.perform(
             MockMvcRequestBuilders.post("/users")
@@ -122,7 +122,7 @@ class UserControllerTestIT {
 
     Mockito.verify(userController).createUser(ArgumentMatchers.any(UserCreateDto.class));
     Mockito.verify(createUserUseCasePort).execute(ArgumentMatchers.any(CreateUserCommand.class));
-    Mockito.verify(userReadDtoMapper).toUserReadDto(ArgumentMatchers.any(UserDo.class));
+    Mockito.verify(userReadDtoMapper).toUserReadDto(ArgumentMatchers.any(User.class));
     Mockito.verify(clock).instant();
   }
 
@@ -135,16 +135,16 @@ class UserControllerTestIT {
     Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
     Mockito.when(findUserByUserIdUseCasePort.execute(
         ArgumentMatchers.any(FindUserByUserIdQuery.class)))
-        .thenReturn(UserDoTestDataBuilder
+        .thenReturn(UserTestDataBuilder
             .builder()
             .build()
-            .userDo());
+            .user());
 
     final MvcResult result = mockMvc.perform(
-            MockMvcRequestBuilders.get("/users/{userUuid}", UserDoTestDataBuilder
+            MockMvcRequestBuilders.get("/users/{userUuid}", UserTestDataBuilder
                     .builder()
                     .build()
-                    .userDo().getUserId())
+                    .user().getUserId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -156,7 +156,7 @@ class UserControllerTestIT {
 
     Mockito.verify(userController).getUserByUuid(ArgumentMatchers.any(UUID.class));
     Mockito.verify(findUserByUserIdUseCasePort).execute(ArgumentMatchers.any(FindUserByUserIdQuery.class));
-    Mockito.verify(userReadDtoMapper).toUserReadDto(ArgumentMatchers.any(UserDo.class));
+    Mockito.verify(userReadDtoMapper).toUserReadDto(ArgumentMatchers.any(User.class));
     Mockito.verify(clock).instant();
   }
 }

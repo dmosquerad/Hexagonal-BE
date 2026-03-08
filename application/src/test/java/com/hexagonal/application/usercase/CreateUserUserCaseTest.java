@@ -1,9 +1,9 @@
 package com.hexagonal.application.usercase;
 
-import com.architecture.hexagonal.application.usercase.CreateUserUserCase;
-import com.architecture.hexagonal.domain.data.UserDo;
+import com.architecture.hexagonal.application.usercase.CreateUserUseCase;
+import com.architecture.hexagonal.domain.data.User;
 import com.architecture.hexagonal.domain.port.out.UserRepositoryWritePort;
-import com.hexagonal.application.testutils.data.entity.UserDoTestDataBuilder;
+import com.hexagonal.application.testutils.data.entity.UserTestDataBuilder;
 import com.hexagonal.application.testutils.data.input.command.CreateUserCommandTestDataBuilder;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
@@ -18,31 +18,31 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class CreateUserUserCaseTest {
 
   @InjectMocks
-  CreateUserUserCase createUserUserCase;
+  CreateUserUseCase createUserUseCase;
 
   @Mock
   UserRepositoryWritePort userRepositoryWritePort;
 
   @Test
   void execute() {
-    final UserDo userDo = UserDoTestDataBuilder
+    final User user = UserTestDataBuilder
         .builder()
         .build()
-        .userDo();
+        .user();
 
-    Mockito.when(userRepositoryWritePort.saveUser(ArgumentMatchers.any(UserDo.class)))
-        .thenReturn(userDo);
+    Mockito.when(userRepositoryWritePort.saveUser(ArgumentMatchers.any(User.class)))
+        .thenReturn(user);
 
-    UserDo result = createUserUserCase.execute(CreateUserCommandTestDataBuilder
+    User result = createUserUseCase.execute(CreateUserCommandTestDataBuilder
         .builder()
         .build()
         .createUserCommand());
 
     AssertionsForClassTypes.assertThat(result)
         .usingRecursiveComparison()
-        .isEqualTo(userDo);
+        .isEqualTo(user);
 
-    Mockito.verify(userRepositoryWritePort).saveUser(ArgumentMatchers.any(UserDo.class));
+    Mockito.verify(userRepositoryWritePort).saveUser(ArgumentMatchers.any(User.class));
   }
 
 }

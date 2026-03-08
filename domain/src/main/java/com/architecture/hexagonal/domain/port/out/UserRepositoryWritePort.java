@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.domain.port.out;
 
-import com.architecture.hexagonal.domain.data.UserDo;
+import com.architecture.hexagonal.domain.data.User;
 
 public interface UserRepositoryWritePort {
-  UserDo saveUser(UserDo userDo);
+  User saveUser(User user);
 }
