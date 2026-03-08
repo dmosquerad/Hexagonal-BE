@@ -18,7 +18,7 @@ public class UserRepositoryDatabaseWriteAdapter implements UserRepositoryWritePo
   private final UserDaoMapper userDaoMapper;
 
   @Override
-  public UserDo createUser(UserDo userDo) {
+  public UserDo saveUser(UserDo userDo) {
     return userDoMapper.toUserDo(userDatabaseWriteRepository.save(userDaoMapper.toUserDao(userDo)));
   }
 }

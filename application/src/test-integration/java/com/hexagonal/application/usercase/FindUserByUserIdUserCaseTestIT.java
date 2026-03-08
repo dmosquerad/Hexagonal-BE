@@ -2,11 +2,11 @@ package com.hexagonal.application.usercase;
 
 import com.architecture.hexagonal.application.usercase.FindUserByUserIdUserCase;
 import com.architecture.hexagonal.domain.data.UserDo;
-import com.architecture.hexagonal.domain.input.query.FindUserByUserIdQuery;
 import com.architecture.hexagonal.domain.port.out.UserRepositoryReadPort;
-import com.hexagonal.application.stub.UserDoStub;
+import com.hexagonal.application.testutils.data.entity.UserDoTestDataBuilder;
+import com.hexagonal.application.testutils.data.input.query.FindUserByUserIdQueryTestDataBuilder;
 import java.util.UUID;
-import org.junit.jupiter.api.Assertions;
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
@@ -24,17 +24,23 @@ class FindUserByUserIdUserCaseTestIT {
   UserRepositoryReadPort userRepositoryReadPort;
 
   @Test
-  void testExecuteFindUserById() {
-    final FindUserByUserIdQuery findUserByUserIdQuery = FindUserByUserIdQuery.builder()
-        .userId(UserDoStub.USERDO.getUserId())
-        .build();
+  void execute() {
+    final UserDo userDo = UserDoTestDataBuilder
+        .builder()
+        .build()
+        .userDo();
 
     Mockito.when(userRepositoryReadPort.findUserById(ArgumentMatchers.any(UUID.class)))
-        .thenReturn(UserDoStub.USERDO);
+        .thenReturn(userDo);
 
-    UserDo result = findUserByUserIdUserCase.execute(findUserByUserIdQuery);
+    UserDo result = findUserByUserIdUserCase.execute(FindUserByUserIdQueryTestDataBuilder
+        .builder()
+        .build()
+        .findUserByUserIdQuery());
 
-    Assertions.assertEquals(UserDoStub.USERDO, result);
+    AssertionsForClassTypes.assertThat(result)
+        .usingRecursiveComparison()
+        .isEqualTo(userDo);
 
     Mockito.verify(userRepositoryReadPort).findUserById(ArgumentMatchers.any(UUID.class));
   }

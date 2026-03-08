@@ -3,9 +3,10 @@ package com.hexagonal.application.usercase;
 import com.architecture.hexagonal.application.usercase.GetAllUsersUserCase;
 import com.architecture.hexagonal.domain.data.UserDo;
 import com.architecture.hexagonal.domain.port.out.UserRepositoryReadPort;
-import com.hexagonal.application.stub.UserDoStub;
+import com.hexagonal.application.testutils.data.entity.UserDoTestDataBuilder;
+import java.util.Collections;
 import java.util.Set;
-import org.junit.jupiter.api.Assertions;
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,12 +24,19 @@ class GetAllUsersUserCaseTest {
   UserRepositoryReadPort userRepositoryReadPort;
 
   @Test
-  void testExecuteReturnsAllUsers() {
-    Mockito.when(userRepositoryReadPort.getAllUsers()).thenReturn(UserDoStub.USERDO_SET);
+  void execute() {
+    final Set<UserDo> userDoSet = Collections.singleton(UserDoTestDataBuilder
+        .builder()
+        .build()
+        .userDo());
+
+    Mockito.when(userRepositoryReadPort.getAllUsers()).thenReturn(userDoSet);
 
     Set<UserDo> result = getAllUsersUserCase.execute();
 
-    Assertions.assertEquals(UserDoStub.USERDO_SET, result);
+    AssertionsForClassTypes.assertThat(result)
+        .usingRecursiveComparison()
+        .isEqualTo(userDoSet);
 
     Mockito.verify(userRepositoryReadPort).getAllUsers();
   }
