@@ -16,7 +16,7 @@
         <!-- PROJECT-MODULES -->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>database</artifactId>
+            <artifactId>domain</artifactId>
         </dependency>
         <!-- TEST -->
         <!-- SPRINGBOOT -->

@@ -25,6 +25,7 @@
     <!-- TEST -->
     <junit-jupiter.version>6.0.3</junit-jupiter.version>
     <assertj.version>3.27.7</assertj.version>
+    <archunit-junit5.version>1.4.1</archunit-junit5.version>
   </properties>
 
   <modules>
@@ -98,6 +99,13 @@
         <version>${assertj.version}</version>
         <scope>test</scope>
       </dependency>
+
+      <dependency>
+        <groupId>com.tngtech.archunit</groupId>
+        <artifactId>archunit-junit5</artifactId>
+        <version>${archunit-junit5.version}</version>
+        <scope>test</scope>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -162,7 +170,7 @@
         </configuration>
       </plugin>
 
-      <!-- INTEGRATION TEST -->
+      <!-- RESOURCES TEST -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
@@ -190,25 +198,15 @@
         <artifactId>build-helper-maven-plugin</artifactId>
         <executions>
           <execution>
-            <id>add-integration-sources</id>
+            <id>add-test-sources</id>
             <phase>generate-test-sources</phase>
             <goals>
               <goal>add-test-source</goal>
             </goals>
             <configuration>
               <sources>
+                <source>src/test-architecture/java</source>
                 <source>src/test-integration/java</source>
-              </sources>
-            </configuration>
-          </execution>
-          <execution>
-            <id>add-test-utils</id>
-            <phase>generate-test-sources</phase>
-            <goals>
-              <goal>add-test-source</goal>
-            </goals>
-            <configuration>
-              <sources>
                 <source>src/test-utils/java</source>
               </sources>
             </configuration>
