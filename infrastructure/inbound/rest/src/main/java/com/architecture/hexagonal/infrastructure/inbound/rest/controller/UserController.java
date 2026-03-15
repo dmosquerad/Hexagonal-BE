@@ -14,6 +14,7 @@ import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.UserReadDto
 import java.time.Clock;
 import java.time.OffsetDateTime;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +40,9 @@ public class UserController implements UsersApi {
     final UsersResponseDto userResponseDto = new UsersResponseDto();
     userResponseDto.setDate(OffsetDateTime.now(clock));
     userResponseDto.setStatus(HttpStatus.OK.value());
-    userResponseDto.setData(userReadDtoMapper.toUserReadDtoSet(this.getAllUsersUseCasePort.execute()));
+    userResponseDto.setData(this.getAllUsersUseCasePort.execute().stream()
+        .map(userReadDtoMapper::toUserReadDto)
+        .collect(Collectors.toUnmodifiableSet()));
 
     return ResponseEntity.ok(userResponseDto);
   }

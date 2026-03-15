@@ -47,7 +47,7 @@ class UserRepositoryDatabaseReadAdapterTestIT extends DatabaseIT {
         .isEqualTo(Collections.singleton(UserDaoTestDataBuilder.builder().build().userDao()));
 
     Mockito.verify(userDatabaseReadRepository).findAll();
-    Mockito.verify(userMapper).toUserSet(ArgumentMatchers.anyList());
+    Mockito.verify(userMapper).toUser(ArgumentMatchers.any(UserDao.class));
   }
 
   @Test

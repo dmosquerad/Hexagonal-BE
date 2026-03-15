@@ -71,7 +71,7 @@ class UserControllerTest {
         .isEqualTo(responseExpected);
 
     Mockito.verify(getAllUsersUseCasePort).execute();
-    Mockito.verify(userReadDtoMapper).toUserReadDtoSet(ArgumentMatchers.anySet());
+    Mockito.verify(userReadDtoMapper).toUserReadDto(ArgumentMatchers.any(User.class));
     Mockito.verify(clock).instant();
   }
 

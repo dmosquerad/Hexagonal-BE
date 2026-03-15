@@ -89,7 +89,7 @@ class UserControllerTestIT {
 
     Mockito.verify(userController).getAllUsers();
     Mockito.verify(getAllUsersUseCasePort).execute();
-    Mockito.verify(userReadDtoMapper).toUserReadDtoSet(ArgumentMatchers.anySet());
+    Mockito.verify(userReadDtoMapper).toUserReadDto(ArgumentMatchers.any(User.class));
   }
 
   @Test

@@ -7,6 +7,7 @@ import com.architecture.hexagonal.infrastructure.outbound.database.repository.Us
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +20,9 @@ public class UserRepositoryDatabaseReadAdapter implements UserRepositoryReadPort
 
   @Override
   public Set<User> getAllUsers() {
-    return userMapper.toUserSet(userDatabaseReadRepository.findAll());
+    return userDatabaseReadRepository.findAll().stream()
+        .map(userMapper::toUser)
+        .collect(Collectors.toUnmodifiableSet());
   }
 
   @Override
