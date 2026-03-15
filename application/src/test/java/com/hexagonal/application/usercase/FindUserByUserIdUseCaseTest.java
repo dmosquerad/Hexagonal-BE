@@ -2,9 +2,11 @@ package com.hexagonal.application.usercase;
 
 import com.architecture.hexagonal.application.usecase.FindUserByUserIdUseCase;
 import com.architecture.hexagonal.domain.data.User;
+import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import com.architecture.hexagonal.domain.port.out.UserRepositoryReadPort;
 import com.hexagonal.application.testutils.data.entity.UserTestDataBuilder;
 import com.hexagonal.application.testutils.data.input.query.FindUserByUserIdQueryTestDataBuilder;
+import java.util.Optional;
 import java.util.UUID;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
@@ -25,14 +27,14 @@ class FindUserByUserIdUseCaseTest {
   UserRepositoryReadPort userRepositoryReadPort;
 
   @Test
-  void execute() {
+  void execute() throws ResourceNotFoundException {
     final User user = UserTestDataBuilder
         .builder()
         .build()
         .user();
 
     Mockito.when(userRepositoryReadPort.findUserById(ArgumentMatchers.any(UUID.class)))
-        .thenReturn(user);
+        .thenReturn(Optional.of(user));
 
     User result = findUserByUserIdUseCase.execute(FindUserByUserIdQueryTestDataBuilder
         .builder()

@@ -8,6 +8,7 @@ import com.architecture.hexagonal.infrastructure.outbound.database.config.Databa
 import com.architecture.hexagonal.infrastructure.outbound.database.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.outbound.database.testutils.data.dao.UserDaoTestDataBuilder;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import org.assertj.core.api.AssertionsForClassTypes;
@@ -56,12 +57,12 @@ class UserRepositoryDatabaseReadAdapterTestIT extends DatabaseIT {
         .build()
         .userDao();
 
-    User result = userRepositoryDatabaseReadAdapter.findUserById(userDao.getUserId());
+    Optional<User> result = userRepositoryDatabaseReadAdapter.findUserById(userDao.getUserId());
 
     AssertionsForClassTypes.assertThat(result)
         .usingRecursiveComparison()
         .ignoringFieldsOfTypes(UUID.class)
-        .isEqualTo(userDao);
+        .isEqualTo(Optional.of(userDao));
 
     Mockito.verify(userDatabaseReadRepository).findByUserId(ArgumentMatchers.any(UUID.class));
     Mockito.verify(userMapper).toUser(ArgumentMatchers.any(UserDao.class));
