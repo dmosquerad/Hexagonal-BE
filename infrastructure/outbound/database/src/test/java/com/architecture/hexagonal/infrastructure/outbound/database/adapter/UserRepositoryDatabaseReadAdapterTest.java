@@ -53,7 +53,7 @@ class UserRepositoryDatabaseReadAdapterTest
             .user()));
 
     Mockito.verify(userDatabaseReadRepository).findAll();
-    Mockito.verify(userMapper).toUserSet(ArgumentMatchers.anyList());
+    Mockito.verify(userMapper).toUser(ArgumentMatchers.any(UserDao.class));
   }
 
   @Test
