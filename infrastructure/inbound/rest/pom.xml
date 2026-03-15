@@ -16,7 +16,7 @@
         <!-- PROJECT-MODULES -->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>application</artifactId>
+            <artifactId>domain</artifactId>
         </dependency>
 
         <!-- SPRINGBOOT -->
@@ -48,9 +48,9 @@
                             <generateSupportingFiles>false</generateSupportingFiles>
                             <modelNameSuffix>Dto</modelNameSuffix>
                             <output>${project.build.directory}/generated-sources</output>
-                            <invokerPackage>com.architecture.hexagonal.inbound.rest</invokerPackage>
-                            <apiPackage>com.architecture.hexagonal.inbound.rest.controller</apiPackage>
-                            <modelPackage>com.architecture.hexagonal.inbound.rest.dto</modelPackage>
+                            <invokerPackage>com.architecture.hexagonal.infrastructure.inbound.rest</invokerPackage>
+                            <apiPackage>com.architecture.hexagonal.infrastructure.inbound.rest.controller</apiPackage>
+                            <modelPackage>com.architecture.hexagonal.infrastructure.inbound.rest.dto</modelPackage>
                             <inputSpec>${project.basedir}/src/main/resources/contract/openapi.yml</inputSpec>
                             <configOptions>
                                 <java8>false</java8>

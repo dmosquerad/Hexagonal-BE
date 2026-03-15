@@ -7,5 +7,5 @@ import lombok.Value;
 @Value
 @Builder
 public class FindUserByUserIdQuery {
-  UUID userId;
+  private UUID userId;
 }
