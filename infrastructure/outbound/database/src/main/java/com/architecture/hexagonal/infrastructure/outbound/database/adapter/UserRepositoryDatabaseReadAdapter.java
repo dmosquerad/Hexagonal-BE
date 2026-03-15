@@ -1,10 +1,11 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.adapter;
 
 import com.architecture.hexagonal.domain.data.User;
-import com.architecture.hexagonal.infrastructure.outbound.database.data.UserDao;
+import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import com.architecture.hexagonal.infrastructure.outbound.database.mapper.UserMapper;
 import com.architecture.hexagonal.domain.port.out.UserRepositoryReadPort;
 import com.architecture.hexagonal.infrastructure.outbound.database.repository.UserDatabaseReadRepository;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,7 @@ public class UserRepositoryDatabaseReadAdapter implements UserRepositoryReadPort
   }
 
   @Override
-  public User findUserById(UUID uuid) {
-    return userMapper.toUser(userDatabaseReadRepository.findByUserId(uuid).orElse(new UserDao()));
+  public Optional<User> findUserById(UUID uuid) {
+    return userDatabaseReadRepository.findByUserId(uuid).map(userMapper::toUser);
   }
 }

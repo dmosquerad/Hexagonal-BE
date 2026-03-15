@@ -20,6 +20,12 @@ user:
           application/json:
             schema:
               $ref: '#/components/schemas/userResponse'
+      '404':
+        description: Not Found
+        content:
+          application/json:
+            schema:
+              $ref: '../common-schema.yml#/schemas/responseError'
       '500':
         description: Error
         content:
