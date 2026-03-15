@@ -3,8 +3,10 @@ package com.architecture.hexagonal.infrastructure.inbound.rest.controller;
 import com.architecture.hexagonal.domain.data.User;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import com.architecture.hexagonal.domain.input.command.CreateUserCommand;
+import com.architecture.hexagonal.domain.input.command.DeleteUserCommand;
 import com.architecture.hexagonal.domain.input.query.FindUserByUserIdQuery;
 import com.architecture.hexagonal.domain.port.in.CreateUserUseCasePort;
+import com.architecture.hexagonal.domain.port.in.DeleteUserUseCasePort;
 import com.architecture.hexagonal.domain.port.in.FindUserByUserIdUseCasePort;
 import com.architecture.hexagonal.domain.port.in.GetAllUsersUseCasePort;
 import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UserResponseDto;
@@ -43,6 +45,9 @@ class UserControllerTest {
 
   @Mock
   FindUserByUserIdUseCasePort findUserByUserIdUseCasePort;
+
+  @Mock
+  DeleteUserUseCasePort deleteUserUseCasePort;
 
   @Spy
   UserReadDtoMapper userReadDtoMapper = Mappers.getMapper(UserReadDtoMapper.class);
@@ -126,6 +131,32 @@ class UserControllerTest {
         .isEqualTo(responseExpected);
 
     Mockito.verify(findUserByUserIdUseCasePort).execute(ArgumentMatchers.any(FindUserByUserIdQuery.class));
+    Mockito.verify(userReadDtoMapper).toUserReadDto(ArgumentMatchers.any(User.class));
+    Mockito.verify(clock).instant();
+  }
+
+  @Test
+  void deleteUserByUuid() throws ResourceNotFoundException {
+    final User user = UserTestDataBuilder
+        .builder()
+        .build()
+        .user();
+
+    Mockito.when(deleteUserUseCasePort.execute(ArgumentMatchers.any(DeleteUserCommand.class)))
+        .thenReturn(user);
+
+    final ResponseEntity<UserResponseDto> responseExpected = ResponseEntity.ok(UserResponseDtoTestDataBuilder
+        .builder()
+        .build()
+        .userResponseDto());
+
+    final ResponseEntity<UserResponseDto> response = userController.deleteUserByUuid(user.getUserId());
+
+    AssertionsForClassTypes.assertThat(response)
+        .usingRecursiveComparison()
+        .isEqualTo(responseExpected);
+
+    Mockito.verify(deleteUserUseCasePort).execute(ArgumentMatchers.any(DeleteUserCommand.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(ArgumentMatchers.any(User.class));
     Mockito.verify(clock).instant();
   }

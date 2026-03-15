@@ -2,8 +2,10 @@ package com.architecture.hexagonal.infrastructure.inbound.rest.controller;
 
 import com.architecture.hexagonal.domain.data.User;
 import com.architecture.hexagonal.domain.input.command.CreateUserCommand;
+import com.architecture.hexagonal.domain.input.command.DeleteUserCommand;
 import com.architecture.hexagonal.domain.input.query.FindUserByUserIdQuery;
 import com.architecture.hexagonal.domain.port.in.CreateUserUseCasePort;
+import com.architecture.hexagonal.domain.port.in.DeleteUserUseCasePort;
 import com.architecture.hexagonal.domain.port.in.FindUserByUserIdUseCasePort;
 import com.architecture.hexagonal.domain.port.in.GetAllUsersUseCasePort;
 import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UserCreateDto;
@@ -56,6 +58,9 @@ class UserControllerTestIT {
 
   @MockitoBean
   FindUserByUserIdUseCasePort findUserByUserIdUseCasePort;
+
+  @MockitoBean
+  DeleteUserUseCasePort deleteUserUseCasePort;
 
   @MockitoSpyBean
   UserReadDtoMapper userReadDtoMapper;
@@ -128,23 +133,22 @@ class UserControllerTestIT {
 
   @Test
   void getUserByUuid() throws Exception {
-    final  UserResponseDto getUserByUuidResponse = objectMapper.readValue(
+    final UserResponseDto getUserByUuidResponse = objectMapper.readValue(
           new ClassPathResource("getUserByUuid_response.json", UserControllerTestIT.class).getFile(),
           UserResponseDto.class);
+
+    final User user = UserTestDataBuilder
+        .builder()
+        .build()
+        .user();
 
     Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
     Mockito.when(findUserByUserIdUseCasePort.execute(
         ArgumentMatchers.any(FindUserByUserIdQuery.class)))
-        .thenReturn(UserTestDataBuilder
-            .builder()
-            .build()
-            .user());
+        .thenReturn(user);
 
     final MvcResult result = mockMvc.perform(
-            MockMvcRequestBuilders.get("/users/{userUuid}", UserTestDataBuilder
-                    .builder()
-                    .build()
-                    .user().getUserId())
+            MockMvcRequestBuilders.get("/users/{userUuid}", user.getUserId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -159,4 +163,37 @@ class UserControllerTestIT {
     Mockito.verify(userReadDtoMapper).toUserReadDto(ArgumentMatchers.any(User.class));
     Mockito.verify(clock).instant();
   }
+
+  @Test
+  void deleteUserByUuid() throws Exception {
+    final UserResponseDto deleteUserByUuidResponse = objectMapper.readValue(
+        new ClassPathResource("deleteUserByUuid_response.json", UserControllerTestIT.class).getFile(),
+        UserResponseDto.class);
+
+    final User user = UserTestDataBuilder
+        .builder()
+        .build()
+        .user();
+
+    Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
+    Mockito.when(deleteUserUseCasePort.execute(ArgumentMatchers.any(DeleteUserCommand.class)))
+        .thenReturn(user);
+
+    final MvcResult result = mockMvc.perform(
+            MockMvcRequestBuilders.delete("/users/{userUuid}", user.getUserId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andReturn();
+
+    AssertionsForClassTypes.assertThat(objectMapper.readValue(result.getResponse().getContentAsString(), UserResponseDto.class))
+        .usingRecursiveComparison()
+        .isEqualTo(deleteUserByUuidResponse);
+
+    Mockito.verify(userController).deleteUserByUuid(ArgumentMatchers.any(UUID.class));
+    Mockito.verify(deleteUserUseCasePort).execute(ArgumentMatchers.any(DeleteUserCommand.class));
+    Mockito.verify(userReadDtoMapper).toUserReadDto(ArgumentMatchers.any(User.class));
+    Mockito.verify(clock).instant();
+  }
+
 }

@@ -18,6 +18,11 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>domain</artifactId>
         </dependency>
+        <!-- SPRING BOOT -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+        </dependency>
         <!-- TEST -->
         <!-- SPRINGBOOT -->
         <dependency>

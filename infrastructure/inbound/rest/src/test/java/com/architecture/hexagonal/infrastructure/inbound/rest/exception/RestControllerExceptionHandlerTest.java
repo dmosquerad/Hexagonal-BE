@@ -12,8 +12,8 @@ import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,10 +35,13 @@ class RestControllerExceptionHandlerTest {
     final ResponseEntity<Object> responseExpected = new ResponseEntity<>(
         responseErrorDto,
         new HttpHeaders(),
-        HttpStatus.BAD_REQUEST);
+        responseErrorDto.getStatus());
+
+    final ProblemDetail problemDetail = ProblemDetail.forStatus(responseErrorDto.getStatus());
+    problemDetail.setDetail(responseErrorDto.getDetail());
 
     final ResponseEntity<Object> response = restControllerExceptionHandler.createResponseEntity(
-        responseErrorDto.getMessages(),
+        problemDetail,
         new HttpHeaders(),
         HttpStatusCode.valueOf(responseErrorDto.getStatus()),
         null
