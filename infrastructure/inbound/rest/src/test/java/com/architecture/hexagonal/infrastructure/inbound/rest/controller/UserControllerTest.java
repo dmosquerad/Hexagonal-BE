@@ -1,6 +1,7 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.controller;
 
 import com.architecture.hexagonal.domain.data.User;
+import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import com.architecture.hexagonal.domain.input.command.CreateUserCommand;
 import com.architecture.hexagonal.domain.input.query.FindUserByUserIdQuery;
 import com.architecture.hexagonal.domain.port.in.CreateUserUseCasePort;
@@ -104,7 +105,7 @@ class UserControllerTest {
   }
 
   @Test
-  void getUserByUuid() {
+  void getUserByUuid() throws ResourceNotFoundException {
     final User user = UserTestDataBuilder
         .builder()
         .build()

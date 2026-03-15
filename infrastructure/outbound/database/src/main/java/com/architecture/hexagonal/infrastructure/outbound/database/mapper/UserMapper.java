@@ -7,8 +7,7 @@ import java.util.Set;
 import org.mapstruct.Mapper;
 
 @Mapper
-public interface UserMapper
-{
+public interface UserMapper {
   User toUser(UserDao userDao);
 
   Set<User> toUserSet(List<UserDao> userDao);
