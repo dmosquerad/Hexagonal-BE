@@ -32,6 +32,30 @@ user:
           application/json:
             schema:
               $ref: '../common-schema.yml#/schemas/responseError'
+  delete:
+    tags:
+      - users
+    summary: Delete an User by Uuid
+    operationId: deleteUserByUuid
+    responses:
+      '200':
+        description: Expected response to a valid request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userResponse'
+      '404':
+        description: Not Found
+        content:
+          application/json:
+            schema:
+              $ref: '../common-schema.yml#/schemas/responseError'
+      '500':
+        description: Error
+        content:
+          application/json:
+            schema:
+              $ref: '../common-schema.yml#/schemas/responseError'
 
 users:
   get:

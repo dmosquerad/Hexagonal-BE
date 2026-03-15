@@ -13,17 +13,21 @@ public class ResponseErrorDtoTestDataBuilder {
   private OffsetDateTime date = OffsetDateTime.now(TestClock.FIXED_CLOCK);
 
   @Builder.Default
-  private Integer status = 400;
+  private Integer status = 404;
 
   @Builder.Default
-  private List<String> messages = List.of("Error messages");
+  private String title = "Not Found";
+
+  @Builder.Default
+  private String detail = "Error detail";
 
   public ResponseErrorDto responseErrorDto() {
 
     ResponseErrorDto responseErrorDto = new ResponseErrorDto();
     responseErrorDto.setDate(date);
     responseErrorDto.status(status);
-    responseErrorDto.messages(messages);
+    responseErrorDto.title(title);
+    responseErrorDto.setDetail(detail);
 
     return responseErrorDto;
   }

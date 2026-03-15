@@ -8,6 +8,7 @@ import com.architecture.hexagonal.infrastructure.outbound.database.repository.Us
 import com.architecture.hexagonal.infrastructure.outbound.database.config.DatabaseIT;
 import com.architecture.hexagonal.infrastructure.outbound.database.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.outbound.database.testutils.data.entity.UserTestDataBuilder;
+import java.util.Optional;
 import java.util.UUID;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
@@ -74,6 +75,24 @@ class UserRepositoryDatabaseWriteAdapterTestIT extends DatabaseIT {
 
     Mockito.verify(userDaoMapper).toUserDao(ArgumentMatchers.any(User.class));
     Mockito.verify(userDatabaseWriteRepository).save(ArgumentMatchers.any(UserDao.class));
+    Mockito.verify(userMapper).toUser(ArgumentMatchers.any(UserDao.class));
+  }
+
+  @Test
+  void deleteUser() {
+    final User user = UserTestDataBuilder
+        .builder()
+        .build()
+        .user();
+
+    final Optional<User> result = userRepositoryDatabaseWriteAdapter.deleteUser(user.getUserId());
+
+    AssertionsForClassTypes.assertThat(result)
+        .usingRecursiveComparison()
+        .ignoringFieldsOfTypes(UUID.class)
+        .isEqualTo(Optional.of(user));
+
+    Mockito.verify(userDatabaseWriteRepository).deleteByUserId(ArgumentMatchers.any(UUID.class));
     Mockito.verify(userMapper).toUser(ArgumentMatchers.any(UserDao.class));
   }
 

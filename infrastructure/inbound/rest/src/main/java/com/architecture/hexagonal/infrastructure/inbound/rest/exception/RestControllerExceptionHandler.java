@@ -4,11 +4,12 @@ import com.architecture.hexagonal.infrastructure.inbound.rest.dto.ResponseErrorD
 import java.sql.SQLException;
 import java.time.Clock;
 import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -28,11 +29,12 @@ public class RestControllerExceptionHandler extends ResponseEntityExceptionHandl
     responseErrorDto.setDate(OffsetDateTime.now(clock));
     responseErrorDto.setStatus(statusCode.value());
 
-    if (Objects.nonNull(body)) {
-      List<String> messages = (body instanceof List<?> list
-          ? list.stream().map(Object::toString).toList()
-          : List.of(String.valueOf(body)));
-      responseErrorDto.setMessages(messages);
+    if (statusCode instanceof HttpStatus status) {
+      responseErrorDto.setTitle(status.getReasonPhrase());
+    }
+
+    if (Objects.nonNull(body) && body instanceof ProblemDetail problem) {
+      responseErrorDto.setDetail(problem.getDetail());
     }
 
     return new ResponseEntity(responseErrorDto, headers, statusCode);
