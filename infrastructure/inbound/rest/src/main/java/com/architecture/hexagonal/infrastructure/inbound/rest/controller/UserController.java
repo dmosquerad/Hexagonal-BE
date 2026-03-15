@@ -1,5 +1,7 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.controller;
 
+import com.architecture.hexagonal.domain.data.User;
+import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import com.architecture.hexagonal.domain.input.query.FindUserByUserIdQuery;
 import com.architecture.hexagonal.domain.port.in.CreateUserUseCasePort;
 import com.architecture.hexagonal.domain.port.in.FindUserByUserIdUseCasePort;
@@ -16,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequiredArgsConstructor
@@ -54,12 +57,18 @@ public class UserController implements UsersApi {
 
   @Override
   public ResponseEntity<UserResponseDto> getUserByUuid(UUID userUuid) {
+    final User user;
+    try {
+      user = findUserByUserIdUseCasePort.execute(
+          FindUserByUserIdQuery.builder().userId(userUuid).build());
+    } catch (ResourceNotFoundException e) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+    }
+
     final UserResponseDto userResponseDto = new UserResponseDto();
     userResponseDto.setDate(OffsetDateTime.now(clock));
     userResponseDto.setStatus(HttpStatus.OK.value());
-    userResponseDto.setData(userReadDtoMapper.toUserReadDto(findUserByUserIdUseCasePort.execute(
-        FindUserByUserIdQuery.builder().userId(userUuid).build())));
-
+    userResponseDto.setData(userReadDtoMapper.toUserReadDto(user));
     return ResponseEntity.ok(userResponseDto);
   }
 

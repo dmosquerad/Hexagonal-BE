@@ -66,15 +66,12 @@ class UserRepositoryDatabaseReadAdapterTest
     Mockito.when(userDatabaseReadRepository.findByUserId(ArgumentMatchers.any(UUID.class)))
         .thenReturn(Optional.of(userDao));
 
-    User result = userRepositoryDatabaseReadAdapter.findUserById(userDao.getUserId());
+    Optional<User> result = userRepositoryDatabaseReadAdapter.findUserById(userDao.getUserId());
 
     AssertionsForClassTypes.assertThat(result)
         .usingRecursiveComparison()
         .ignoringFieldsOfTypes(UUID.class)
-        .isEqualTo(UserTestDataBuilder
-            .builder()
-            .build()
-            .user());
+        .isEqualTo(Optional.of(UserTestDataBuilder.builder().build().user()));
 
     Mockito.verify(userDatabaseReadRepository).findByUserId(ArgumentMatchers.any(UUID.class));
     Mockito.verify(userMapper).toUser(ArgumentMatchers.any(UserDao.class));
