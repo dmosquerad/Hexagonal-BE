@@ -13,30 +13,79 @@ Hexagonal architecture advocates for separation of concerns, enhancing code main
 
 ## 🏗️ Project Structure
 
-The project is organized into independent Maven modules:
+The project is organized into Maven modules plus deployment resources:
 
 ```
 hexagonal/
-├── domain/                          # Pure business logic
-├── application/                     # Use cases & application services
-├── infrastructure/
-│   ├── inbound/
-│   │   └── rest/                   # REST controllers + OpenAPI contracts
-│   └── outbound/
-│       └── database/               # JPA repositories & entities
-└── boot/                           # Spring Boot main application
+├── code/
+│   ├── domain/                      # Pure business logic
+│   ├── application/                 # Use cases & application services
+│   ├── infrastructure/
+│   │   ├── inbound/
+│   │   │   └── rest/               # REST controllers + OpenAPI contracts
+│   │   └── outbound/
+│   │       └── database/           # JPA repositories & entities
+│   └── boot/                       # Spring Boot main application
+└── deployment/
+    └── docker/                   # Compose + postgres init scripts
 ```
+
+## 🔄 Module Communication
+
+```mermaid
+flowchart TD
+    Client([HTTP Client])
+
+    subgraph INBOUND[Infrastructure Inbound]
+        REST[REST Controller]
+    end
+
+    subgraph DOMAIN[Domain]
+        IN_PORT[Input Ports]
+        MODEL[Model]
+        OUT_PORT[Output Ports]
+    end
+
+    subgraph APP[Application]
+        UC[Use Cases]
+    end
+
+    subgraph OUTBOUND[Infrastructure Outbound]
+        DB[DB Adapter]
+    end
+
+    subgraph BOOT[Boot]
+        COMP[Composition Root]
+    end
+
+    POSTGRES[(PostgreSQL)]
+
+    Client --> REST
+    REST --> IN_PORT
+    UC -.-> IN_PORT
+    UC --> OUT_PORT
+    DB -.-> OUT_PORT
+    DB --> POSTGRES
+    COMP --> REST
+    COMP --> UC
+    COMP --> DB
+```
+
+> `-->` calls &nbsp;&nbsp; `- - ->` implements
+
+If the diagram is still not rendered in VS Code preview, enable Mermaid support in Markdown preview settings or use a Mermaid preview extension.
 
 ## 🚀 Quick Start
 
 ### 1. Start PostgreSQL
 ```bash
-cd src/docker
+cd deployment/docker
 docker compose up -d
 ```
 
 ### 2. Build & Run
 ```bash
+cd code
 mvn clean install
 cd boot
 mvn spring-boot:run
@@ -52,15 +101,15 @@ Contains business entities and the core business logic. This module is independe
 **Content:**
 - Domain entities
 - Repository interfaces (ports)
-- Domain services
+- Commands/queries and domain exceptions
 
 ### Application
-Implements the application use cases using domain services.
+Implements the application use cases using domain ports.
 
 **Content:**
 - Application services
-- DTOs (Data Transfer Objects)
-- Mappers
+- Use case implementations
+- Transactional orchestration over domain ports
 
 ### Infrastructure
 
@@ -71,7 +120,7 @@ Inbound adapters that expose the REST API.
 - REST Controllers
 - OpenAPI/Swagger documentation with contract-first approach
 - Automatic code generation from OpenAPI specifications
-- Versioned API contracts
+- OpenAPI contracts under `src/main/resources/contract/`
 
 **Available Resources:**
 - `/api/users` - User-related operations
@@ -89,7 +138,7 @@ Boot module that configures the Spring Boot application and includes all necessa
 
 **Content:**
 - Main application class (`Application.java`)
-- Profile-based configuration with REST and Database profiles
+- Configuration composition by importing REST and Database config files
 - Spring component scanning and auto-configuration
 
 ## 🔌 Ports and Adapters
@@ -109,17 +158,19 @@ Once the application is running, access the interactive API documentation:
 - **OpenAPI JSON**: http://localhost:8080/api/v3/api-docs
 - **Redoc**: http://localhost:8080/api/redoc.html
 
-The API uses **OpenAPI 3.0** specification with contract-first approach defined in `infrastructure/inbound/rest/src/main/resources/contract/`
+The API uses **OpenAPI 3.0** specification with contract-first approach defined in `code/infrastructure/inbound/rest/src/main/resources/contract/`
 
 ## 🧪 Testing
 
 ### Unit Tests
 ```bash
+cd code
 mvn test
 ```
 
 ### Integration Tests
 ```bash
+cd code
 mvn verify
 # or specifically
 mvn failsafe:integration-test
@@ -128,14 +179,14 @@ mvn failsafe:integration-test
 The project includes:
 - **Unit Tests** (`src/test/java`): Fast, isolated business logic tests
 - **Integration Tests** (`src/test-integration/java`): Database and API layer integration tests
-- **Stub Tests** (`src/test-stub/java`): Tests with mock dependencies
+- **Test Utils** (`src/test-utils/java`): Shared builders and reusable test helpers
 
 ## 📝 Configuration
 
 Application configuration is organized by concerns:
 
-- **Main**: `boot/src/main/resources/application.yml` - Composition layer
-- **REST**: `infrastructure/inbound/rest/src/main/resources/application-rest.yml` - API configuration
-- **Database**: `infrastructure/outbound/database/src/main/resources/application-database.yml` - Persistence configuration
+- **Main**: `code/boot/src/main/resources/application.yml` - Composition layer
+- **REST**: `code/infrastructure/inbound/rest/src/main/resources/application-rest.yml` - API configuration
+- **Database**: `code/infrastructure/outbound/database/src/main/resources/application-database.yml` - Persistence configuration
 
 **Created as an example of Hexagonal Architecture in Java** 🏗️
