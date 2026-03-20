@@ -42,8 +42,6 @@ class UserRepositoryDatabaseWriteAdapterTestIT extends DatabaseIT {
   @Test
   void saveUser_create() {
     final User user = UserTestDataBuilder.builder()
-        .userId(null)
-        .email("pepe@test.com")
         .build()
         .user();
 
@@ -54,7 +52,7 @@ class UserRepositoryDatabaseWriteAdapterTestIT extends DatabaseIT {
         .ignoringFieldsOfTypes(UUID.class)
         .isEqualTo(user);
 
-    Mockito.verify(userDaoMapper).toUserDao(ArgumentMatchers.any(User.class));
+    Mockito.verify(userDaoMapper).toUserDao(user);
     Mockito.verify(userDatabaseWriteRepository).save(ArgumentMatchers.any(UserDao.class));
     Mockito.verify(userMapper).toUser(ArgumentMatchers.any(UserDao.class));
   }
@@ -73,7 +71,7 @@ class UserRepositoryDatabaseWriteAdapterTestIT extends DatabaseIT {
         .ignoringFieldsOfTypes(UUID.class)
         .isEqualTo(Optional.of(user));
 
-    Mockito.verify(userDatabaseWriteRepository).deleteByUserId(ArgumentMatchers.any(UUID.class));
+    Mockito.verify(userDatabaseWriteRepository).deleteByUserId(user.getUserId());
     Mockito.verify(userMapper).toUser(ArgumentMatchers.any(UserDao.class));
   }
 

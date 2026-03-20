@@ -9,11 +9,9 @@ import com.architecture.hexagonal.domain.port.out.UserRepositoryReadPort;
 import com.hexagonal.application.testutils.data.entity.UserTestDataBuilder;
 import com.hexagonal.application.testutils.data.input.query.UserExistsQueryTestDataBuilder;
 import java.util.Optional;
-import java.util.UUID;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -35,17 +33,17 @@ class UserExistsUseCaseTest {
         .build()
         .user();
 
-    Mockito.when(userRepositoryReadPort.findUserById(ArgumentMatchers.any(UUID.class)))
-        .thenReturn(Optional.of(user));
-
     final UserExistsQuery userExistsQuery = UserExistsQueryTestDataBuilder
         .builder()
         .build()
         .userExistsQuery();
 
+    Mockito.when(userRepositoryReadPort.findUserById(userExistsQuery.getUserId()))
+        .thenReturn(Optional.of(user));
+
     userExistsUseCase.execute(userExistsQuery);
 
-    Mockito.verify(userRepositoryReadPort).findUserById(ArgumentMatchers.any(UUID.class));
+    Mockito.verify(userRepositoryReadPort).findUserById(userExistsQuery.getUserId());
   }
 
   @Test
@@ -55,7 +53,7 @@ class UserExistsUseCaseTest {
         .build()
         .userExistsQuery();
 
-    Mockito.when(userRepositoryReadPort.findUserById(ArgumentMatchers.any(UUID.class)))
+    Mockito.when(userRepositoryReadPort.findUserById(userExistsQuery.getUserId()))
         .thenReturn(Optional.empty());
 
     AssertionsForClassTypes.assertThatThrownBy(() ->
@@ -63,6 +61,6 @@ class UserExistsUseCaseTest {
         .isInstanceOf(ResourceNotFoundException.class)
         .hasMessage(ExceptionMessage.NOT_FOUND_DATA_MESSAGE + userExistsQuery.getUserId());
 
-    Mockito.verify(userRepositoryReadPort).findUserById(ArgumentMatchers.any(UUID.class));
+    Mockito.verify(userRepositoryReadPort).findUserById(userExistsQuery.getUserId());
   }
 }

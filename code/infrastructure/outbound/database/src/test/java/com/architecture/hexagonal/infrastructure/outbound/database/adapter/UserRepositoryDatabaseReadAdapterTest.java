@@ -14,7 +14,6 @@ import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -36,11 +35,13 @@ class UserRepositoryDatabaseReadAdapterTest
 
   @Test
   void getAllUsers() {
+    final UserDao userDao = UserDaoTestDataBuilder
+      .builder()
+      .build()
+      .userDao();
+
     Mockito.when(userDatabaseReadRepository.findAll())
-        .thenReturn(Collections.singletonList(UserDaoTestDataBuilder
-            .builder()
-            .build()
-            .userDao()));
+      .thenReturn(Collections.singletonList(userDao));
 
     Set<User> result = userRepositoryDatabaseReadAdapter.getAllUsers();
 
@@ -53,7 +54,7 @@ class UserRepositoryDatabaseReadAdapterTest
             .user()));
 
     Mockito.verify(userDatabaseReadRepository).findAll();
-    Mockito.verify(userMapper).toUser(ArgumentMatchers.any(UserDao.class));
+    Mockito.verify(userMapper).toUser(userDao);
   }
 
   @Test
@@ -63,7 +64,7 @@ class UserRepositoryDatabaseReadAdapterTest
         .build()
         .userDao();
 
-    Mockito.when(userDatabaseReadRepository.findByUserId(ArgumentMatchers.any(UUID.class)))
+    Mockito.when(userDatabaseReadRepository.findByUserId(userDao.getUserId()))
         .thenReturn(Optional.of(userDao));
 
     Optional<User> result = userRepositoryDatabaseReadAdapter.findUserById(userDao.getUserId());
@@ -73,8 +74,8 @@ class UserRepositoryDatabaseReadAdapterTest
         .ignoringFieldsOfTypes(UUID.class)
         .isEqualTo(Optional.of(UserTestDataBuilder.builder().build().user()));
 
-    Mockito.verify(userDatabaseReadRepository).findByUserId(ArgumentMatchers.any(UUID.class));
-    Mockito.verify(userMapper).toUser(ArgumentMatchers.any(UserDao.class));
+    Mockito.verify(userDatabaseReadRepository).findByUserId(userDao.getUserId());
+    Mockito.verify(userMapper).toUser(userDao);
   }
 
 }

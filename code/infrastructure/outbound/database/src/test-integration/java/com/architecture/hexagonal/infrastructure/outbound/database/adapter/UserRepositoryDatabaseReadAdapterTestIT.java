@@ -13,7 +13,6 @@ import java.util.Set;
 import java.util.UUID;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -39,15 +38,20 @@ class UserRepositoryDatabaseReadAdapterTestIT extends DatabaseIT {
 
   @Test
   void getAllUsers() {
+    final UserDao userDao = UserDaoTestDataBuilder
+      .builder()
+      .build()
+      .userDao();
+    
     Set<User> result = userRepositoryDatabaseReadAdapter.getAllUsers();
 
     AssertionsForClassTypes.assertThat(result)
         .usingRecursiveComparison()
         .ignoringFieldsOfTypes(UUID.class)
-        .isEqualTo(Collections.singleton(UserDaoTestDataBuilder.builder().build().userDao()));
+        .isEqualTo(Collections.singleton(userDao));
 
     Mockito.verify(userDatabaseReadRepository).findAll();
-    Mockito.verify(userMapper).toUser(ArgumentMatchers.any(UserDao.class));
+    Mockito.verify(userMapper).toUser(userDao);
   }
 
   @Test
@@ -64,8 +68,8 @@ class UserRepositoryDatabaseReadAdapterTestIT extends DatabaseIT {
         .ignoringFieldsOfTypes(UUID.class)
         .isEqualTo(Optional.of(userDao));
 
-    Mockito.verify(userDatabaseReadRepository).findByUserId(ArgumentMatchers.any(UUID.class));
-    Mockito.verify(userMapper).toUser(ArgumentMatchers.any(UserDao.class));
+    Mockito.verify(userDatabaseReadRepository).findByUserId(userDao.getUserId());
+    Mockito.verify(userMapper).toUser(userDao);
   }
 
 }

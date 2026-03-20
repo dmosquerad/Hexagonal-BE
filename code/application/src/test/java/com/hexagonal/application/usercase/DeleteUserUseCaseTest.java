@@ -9,11 +9,9 @@ import com.architecture.hexagonal.domain.port.out.UserRepositoryWritePort;
 import com.hexagonal.application.testutils.data.entity.UserTestDataBuilder;
 import com.hexagonal.application.testutils.data.input.command.DeleteUserCommandTestDataBuilder;
 import java.util.Optional;
-import java.util.UUID;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -34,20 +32,21 @@ class DeleteUserUseCaseTest {
         .builder()
         .build()
         .user();
-
-    Mockito.when(userRepositoryWritePort.deleteUser(ArgumentMatchers.any(UUID.class)))
-        .thenReturn(Optional.of(user));
-
-    final User result = deleteUserUseCase.execute(DeleteUserCommandTestDataBuilder
+    final DeleteUserCommand deleteUserCommand = DeleteUserCommandTestDataBuilder
         .builder()
         .build()
-        .deleteUserCommand());
+        .deleteUserCommand();
+
+    Mockito.when(userRepositoryWritePort.deleteUser(deleteUserCommand.getUserId()))
+        .thenReturn(Optional.of(user));
+
+    final User result = deleteUserUseCase.execute(deleteUserCommand);
 
     AssertionsForClassTypes.assertThat(result)
         .usingRecursiveComparison()
         .isEqualTo(user);
 
-    Mockito.verify(userRepositoryWritePort).deleteUser(ArgumentMatchers.any(UUID.class));
+    Mockito.verify(userRepositoryWritePort).deleteUser(deleteUserCommand.getUserId());
   }
 
   @Test
@@ -57,7 +56,7 @@ class DeleteUserUseCaseTest {
         .build()
         .deleteUserCommand();
 
-    Mockito.when(userRepositoryWritePort.deleteUser(ArgumentMatchers.any(UUID.class)))
+    Mockito.when(userRepositoryWritePort.deleteUser(deleteUserCommand.getUserId()))
         .thenReturn(Optional.empty());
 
     AssertionsForClassTypes.assertThatThrownBy(() ->
@@ -65,7 +64,7 @@ class DeleteUserUseCaseTest {
         .isInstanceOf(ResourceNotFoundException.class)
         .hasMessage(ExceptionMessage.NOT_FOUND_DATA_MESSAGE + deleteUserCommand.getUserId());
 
-    Mockito.verify(userRepositoryWritePort).deleteUser(ArgumentMatchers.any(UUID.class));
+    Mockito.verify(userRepositoryWritePort).deleteUser(deleteUserCommand.getUserId());
   }
 
 }

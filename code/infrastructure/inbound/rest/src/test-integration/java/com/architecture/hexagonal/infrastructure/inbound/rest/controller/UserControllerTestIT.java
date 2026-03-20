@@ -1,7 +1,6 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.controller;
 
 import com.architecture.hexagonal.domain.data.User;
-import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import com.architecture.hexagonal.domain.input.command.CreateUserCommand;
 import com.architecture.hexagonal.domain.input.command.DeleteUserCommand;
 import com.architecture.hexagonal.domain.input.command.PatchUserCommand;
@@ -27,7 +26,6 @@ import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.time.Tes
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.entity.UserTestDataBuilder;
 import java.time.Clock;
 import java.util.Collections;
-import java.util.UUID;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -93,12 +91,10 @@ class UserControllerTestIT {
           new ClassPathResource("getAllUsers_response.json", UserControllerTestIT.class).getFile(),
           UsersResponseDto.class);
 
+    final User user = UserTestDataBuilder.builder().build().user();      
+
     Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
-    Mockito.when(getAllUsersUseCasePort.execute()).thenReturn(Collections.singleton(
-        UserTestDataBuilder
-            .builder()
-            .build()
-            .user()));
+    Mockito.when(getAllUsersUseCasePort.execute()).thenReturn(Collections.singleton(user));
 
     final MvcResult result = mockMvc.perform(
             MockMvcRequestBuilders.get("/users")
@@ -113,7 +109,7 @@ class UserControllerTestIT {
 
     Mockito.verify(userController).getAllUsers();
     Mockito.verify(getAllUsersUseCasePort).execute();
-    Mockito.verify(userReadDtoMapper).toUserReadDto(ArgumentMatchers.any(User.class));
+    Mockito.verify(userReadDtoMapper).toUserReadDto(user);
   }
 
   @Test
@@ -124,13 +120,11 @@ class UserControllerTestIT {
     final UserResponseDto createUserResponse = objectMapper.readValue(
           new ClassPathResource("createUser_response.json", UserControllerTestIT.class).getFile(),
           UserResponseDto.class);
+    final User user = UserTestDataBuilder.builder().build().user();
 
     Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
     Mockito.when(createUserUseCasePort.execute(ArgumentMatchers.any(CreateUserCommand.class)))
-        .thenReturn(UserTestDataBuilder
-            .builder()
-            .build()
-            .user());
+        .thenReturn(user);
 
     final MvcResult result = mockMvc.perform(
             MockMvcRequestBuilders.post("/users")
@@ -144,9 +138,9 @@ class UserControllerTestIT {
         .usingRecursiveComparison()
         .isEqualTo(createUserResponse);
 
-    Mockito.verify(userController).createUser(ArgumentMatchers.any(UserCreateDto.class));
+    Mockito.verify(userController).createUser(createUserRequest);
     Mockito.verify(createUserUseCasePort).execute(ArgumentMatchers.any(CreateUserCommand.class));
-    Mockito.verify(userReadDtoMapper).toUserReadDto(ArgumentMatchers.any(User.class));
+    Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
   }
 
@@ -162,8 +156,7 @@ class UserControllerTestIT {
         .user();
 
     Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
-    Mockito.when(findUserByUserIdUseCasePort.execute(
-        ArgumentMatchers.any(FindUserByUserIdQuery.class)))
+    Mockito.when(findUserByUserIdUseCasePort.execute(ArgumentMatchers.any(FindUserByUserIdQuery.class)))
         .thenReturn(user);
 
     final MvcResult result = mockMvc.perform(
@@ -177,9 +170,9 @@ class UserControllerTestIT {
         .usingRecursiveComparison()
         .isEqualTo(getUserByUuidResponse);
 
-    Mockito.verify(userController).getUserByUuid(ArgumentMatchers.any(UUID.class));
+    Mockito.verify(userController).getUserByUuid(user.getUserId());
     Mockito.verify(findUserByUserIdUseCasePort).execute(ArgumentMatchers.any(FindUserByUserIdQuery.class));
-    Mockito.verify(userReadDtoMapper).toUserReadDto(ArgumentMatchers.any(User.class));
+    Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
   }
 
@@ -209,9 +202,9 @@ class UserControllerTestIT {
         .usingRecursiveComparison()
         .isEqualTo(deleteUserByUuidResponse);
 
-    Mockito.verify(userController).deleteUserByUuid(ArgumentMatchers.any(UUID.class));
+    Mockito.verify(userController).deleteUserByUuid(user.getUserId());
     Mockito.verify(deleteUserUseCasePort).execute(ArgumentMatchers.any(DeleteUserCommand.class));
-    Mockito.verify(userReadDtoMapper).toUserReadDto(ArgumentMatchers.any(User.class));
+    Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
   }
 
@@ -245,10 +238,9 @@ class UserControllerTestIT {
         .usingRecursiveComparison()
         .isEqualTo(updateUserByUuidResponse);
 
-    Mockito.verify(userController).updateUserByUuid(ArgumentMatchers.any(UUID.class),
-        ArgumentMatchers.any(UserUpdateDto.class));
+    Mockito.verify(userController).updateUserByUuid(user.getUserId(), updateUserByUuidRequest);
     Mockito.verify(updateUserUseCasePort).execute(ArgumentMatchers.any(UpdateUserCommand.class));
-    Mockito.verify(userReadDtoMapper).toUserReadDto(ArgumentMatchers.any(User.class));
+    Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
   }
 
@@ -282,10 +274,9 @@ class UserControllerTestIT {
         .usingRecursiveComparison()
         .isEqualTo(patchUserByUuidResponse);
 
-    Mockito.verify(userController).patchUserByUuid(ArgumentMatchers.any(UUID.class),
-        ArgumentMatchers.any(UserPatchDto.class));
+    Mockito.verify(userController).patchUserByUuid(user.getUserId(), patchUserByUuidRequest);
     Mockito.verify(patchUserUseCasePort).execute(ArgumentMatchers.any(PatchUserCommand.class));
-    Mockito.verify(userReadDtoMapper).toUserReadDto(ArgumentMatchers.any(User.class));
+    Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
   }
 
