@@ -4,13 +4,21 @@ import com.architecture.hexagonal.domain.data.User;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import com.architecture.hexagonal.domain.input.command.CreateUserCommand;
 import com.architecture.hexagonal.domain.input.command.DeleteUserCommand;
+import com.architecture.hexagonal.domain.input.command.PatchUserCommand;
+import com.architecture.hexagonal.domain.input.command.UpdateUserCommand;
 import com.architecture.hexagonal.domain.input.query.FindUserByUserIdQuery;
+import com.architecture.hexagonal.domain.input.query.UserExistsQuery;
 import com.architecture.hexagonal.domain.port.in.CreateUserUseCasePort;
 import com.architecture.hexagonal.domain.port.in.DeleteUserUseCasePort;
 import com.architecture.hexagonal.domain.port.in.FindUserByUserIdUseCasePort;
 import com.architecture.hexagonal.domain.port.in.GetAllUsersUseCasePort;
+import com.architecture.hexagonal.domain.port.in.PatchUserUseCasePort;
+import com.architecture.hexagonal.domain.port.in.UpdateUserUseCasePort;
+import com.architecture.hexagonal.domain.port.in.UserExistsUseCasePort;
 import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UserCreateDto;
+import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UserPatchDto;
 import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UserResponseDto;
+import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UserUpdateDto;
 import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UsersResponseDto;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.UserReadDtoMapper;
 import java.time.Clock;
@@ -35,6 +43,12 @@ public class UserController implements UsersApi {
   private final FindUserByUserIdUseCasePort findUserByUserIdUseCasePort;
 
   private final DeleteUserUseCasePort deleteUserUseCasePort;
+
+  private final UpdateUserUseCasePort updateUserUseCasePort;
+
+  private final PatchUserUseCasePort patchUserUseCasePort;
+
+  private final UserExistsUseCasePort userExistsUseCasePort;
 
   private final UserReadDtoMapper userReadDtoMapper;
 
@@ -100,6 +114,68 @@ public class UserController implements UsersApi {
     userResponseDto.setStatus(HttpStatus.OK.value());
     userResponseDto.setData(userReadDtoMapper.toUserReadDto(user));
     return ResponseEntity.ok(userResponseDto);
+  }
+
+  @Override
+  public ResponseEntity<UserResponseDto> updateUserByUuid(UUID userUuid, UserUpdateDto userUpdateDto) {
+    final User user;
+    try {
+      user = updateUserUseCasePort.execute(
+          UpdateUserCommand.builder()
+              .userId(userUuid)
+              .name(userUpdateDto.getName())
+              .email(userUpdateDto.getEmail())
+              .build());
+    } catch (ResourceNotFoundException e) {
+      ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+      problem.setDetail(e.getMessage());
+
+      throw new ErrorResponseException(HttpStatus.NOT_FOUND, problem, e);
+    }
+
+    final UserResponseDto userResponseDto = new UserResponseDto();
+    userResponseDto.setDate(OffsetDateTime.now(clock));
+    userResponseDto.setStatus(HttpStatus.OK.value());
+    userResponseDto.setData(userReadDtoMapper.toUserReadDto(user));
+    return ResponseEntity.ok(userResponseDto);
+  }
+
+  @Override
+  public ResponseEntity<UserResponseDto> patchUserByUuid(UUID userUuid, UserPatchDto userPatchDto) {
+    final User user;
+    try {
+      user = patchUserUseCasePort.execute(
+          PatchUserCommand.builder()
+              .userId(userUuid)
+              .name(userPatchDto.getName())
+              .email(userPatchDto.getEmail())
+              .build());
+    } catch (ResourceNotFoundException e) {
+      ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+      problem.setDetail(e.getMessage());
+
+      throw new ErrorResponseException(HttpStatus.NOT_FOUND, problem, e);
+    }
+
+    final UserResponseDto userResponseDto = new UserResponseDto();
+    userResponseDto.setDate(OffsetDateTime.now(clock));
+    userResponseDto.setStatus(HttpStatus.OK.value());
+    userResponseDto.setData(userReadDtoMapper.toUserReadDto(user));
+    return ResponseEntity.ok(userResponseDto);
+  }
+
+  @Override
+  public ResponseEntity<Void> headUserByUuid(UUID userUuid) {
+    try {
+      userExistsUseCasePort.execute(UserExistsQuery.builder().userId(userUuid).build());
+    } catch (ResourceNotFoundException e) {
+      ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+      problem.setDetail(e.getMessage());
+
+      throw new ErrorResponseException(HttpStatus.NOT_FOUND, problem, e);
+    }
+
+    return ResponseEntity.ok().build();
   }
 
 }

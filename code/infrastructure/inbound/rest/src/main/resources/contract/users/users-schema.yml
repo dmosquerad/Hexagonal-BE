@@ -1,9 +1,6 @@
 schemas:
   user:
     type: object
-    required:
-      - email
-      - name
     properties:
       email:
         type: string
@@ -13,11 +10,27 @@ schemas:
   userCreate:
     allOf:
       - $ref: './users-schema.yml#/schemas/user'
+      - type: object
+        required:
+          - email
+          - name
+  userUpdate:
+    allOf:
+      - $ref: './users-schema.yml#/schemas/user'
+      - type: object
+        required:
+          - email
+          - name
+  userPatch:
+    allOf:
+      - $ref: './users-schema.yml#/schemas/user'
   userRead:
     allOf:
       - $ref: './users-schema.yml#/schemas/user'
       - type: object
         required:
+          - email
+          - name
           - userId
         properties:
           userId:

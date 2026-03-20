@@ -1,15 +1,24 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.controller;
 
 import com.architecture.hexagonal.domain.data.User;
+import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import com.architecture.hexagonal.domain.input.command.CreateUserCommand;
 import com.architecture.hexagonal.domain.input.command.DeleteUserCommand;
+import com.architecture.hexagonal.domain.input.command.PatchUserCommand;
+import com.architecture.hexagonal.domain.input.command.UpdateUserCommand;
 import com.architecture.hexagonal.domain.input.query.FindUserByUserIdQuery;
+import com.architecture.hexagonal.domain.input.query.UserExistsQuery;
 import com.architecture.hexagonal.domain.port.in.CreateUserUseCasePort;
 import com.architecture.hexagonal.domain.port.in.DeleteUserUseCasePort;
 import com.architecture.hexagonal.domain.port.in.FindUserByUserIdUseCasePort;
 import com.architecture.hexagonal.domain.port.in.GetAllUsersUseCasePort;
+import com.architecture.hexagonal.domain.port.in.PatchUserUseCasePort;
+import com.architecture.hexagonal.domain.port.in.UpdateUserUseCasePort;
+import com.architecture.hexagonal.domain.port.in.UserExistsUseCasePort;
 import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UserCreateDto;
+import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UserPatchDto;
 import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UserResponseDto;
+import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UserUpdateDto;
 import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UsersResponseDto;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.UserReadDtoMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -61,6 +71,15 @@ class UserControllerTestIT {
 
   @MockitoBean
   DeleteUserUseCasePort deleteUserUseCasePort;
+
+  @MockitoBean
+  UpdateUserUseCasePort updateUserUseCasePort;
+
+  @MockitoBean
+  PatchUserUseCasePort patchUserUseCasePort;
+
+  @MockitoBean
+  UserExistsUseCasePort userExistsUseCasePort;
 
   @MockitoSpyBean
   UserReadDtoMapper userReadDtoMapper;
@@ -107,7 +126,7 @@ class UserControllerTestIT {
           UserResponseDto.class);
 
     Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
-    Mockito.when(createUserUseCasePort.execute(ArgumentMatchers.any()))
+    Mockito.when(createUserUseCasePort.execute(ArgumentMatchers.any(CreateUserCommand.class)))
         .thenReturn(UserTestDataBuilder
             .builder()
             .build()
@@ -194,6 +213,119 @@ class UserControllerTestIT {
     Mockito.verify(deleteUserUseCasePort).execute(ArgumentMatchers.any(DeleteUserCommand.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(ArgumentMatchers.any(User.class));
     Mockito.verify(clock).instant();
+  }
+
+  @Test
+  void updateUserByUuid() throws Exception {
+    final UserUpdateDto updateUserByUuidRequest = objectMapper.readValue(
+        new ClassPathResource("updateUserByUuid_request.json", UserControllerTestIT.class).getFile(),
+        UserUpdateDto.class);
+    final UserResponseDto updateUserByUuidResponse = objectMapper.readValue(
+        new ClassPathResource("updateUserByUuid_response.json", UserControllerTestIT.class).getFile(),
+        UserResponseDto.class);
+
+    final User user = UserTestDataBuilder
+        .builder()
+        .build()
+        .user();
+
+    Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
+    Mockito.when(updateUserUseCasePort.execute(ArgumentMatchers.any(UpdateUserCommand.class)))
+        .thenReturn(user);
+
+    final MvcResult result = mockMvc.perform(
+            MockMvcRequestBuilders.put("/users/{userUuid}", user.getUserId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updateUserByUuidRequest)))
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andReturn();
+
+    AssertionsForClassTypes.assertThat(objectMapper.readValue(result.getResponse().getContentAsString(), UserResponseDto.class))
+        .usingRecursiveComparison()
+        .isEqualTo(updateUserByUuidResponse);
+
+    Mockito.verify(userController).updateUserByUuid(ArgumentMatchers.any(UUID.class),
+        ArgumentMatchers.any(UserUpdateDto.class));
+    Mockito.verify(updateUserUseCasePort).execute(ArgumentMatchers.any(UpdateUserCommand.class));
+    Mockito.verify(userReadDtoMapper).toUserReadDto(ArgumentMatchers.any(User.class));
+    Mockito.verify(clock).instant();
+  }
+
+  @Test
+  void patchUserByUuid() throws Exception {
+    final UserPatchDto patchUserByUuidRequest = objectMapper.readValue(
+        new ClassPathResource("patchUserByUuid_request.json", UserControllerTestIT.class).getFile(),
+        UserPatchDto.class);
+    final UserResponseDto patchUserByUuidResponse = objectMapper.readValue(
+        new ClassPathResource("patchUserByUuid_response.json", UserControllerTestIT.class).getFile(),
+        UserResponseDto.class);
+
+    final User user = UserTestDataBuilder
+        .builder()
+        .build()
+        .user();
+
+    Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
+    Mockito.when(patchUserUseCasePort.execute(ArgumentMatchers.any(PatchUserCommand.class)))
+        .thenReturn(user);
+
+    final MvcResult result = mockMvc.perform(
+            MockMvcRequestBuilders.patch("/users/{userUuid}", user.getUserId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(patchUserByUuidRequest)))
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andReturn();
+
+    AssertionsForClassTypes.assertThat(objectMapper.readValue(result.getResponse().getContentAsString(), UserResponseDto.class))
+        .usingRecursiveComparison()
+        .isEqualTo(patchUserByUuidResponse);
+
+    Mockito.verify(userController).patchUserByUuid(ArgumentMatchers.any(UUID.class),
+        ArgumentMatchers.any(UserPatchDto.class));
+    Mockito.verify(patchUserUseCasePort).execute(ArgumentMatchers.any(PatchUserCommand.class));
+    Mockito.verify(userReadDtoMapper).toUserReadDto(ArgumentMatchers.any(User.class));
+    Mockito.verify(clock).instant();
+  }
+
+  @Test
+  void headUserByUuid() throws Exception {
+    final User user = UserTestDataBuilder
+        .builder()
+        .build()
+        .user();
+
+    Mockito.doNothing().when(userExistsUseCasePort).execute(ArgumentMatchers.any(UserExistsQuery.class));
+
+    mockMvc.perform(
+            MockMvcRequestBuilders.head("/users/{userUuid}", user.getUserId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andReturn();
+
+    Mockito.verify(userExistsUseCasePort).execute(ArgumentMatchers.any(UserExistsQuery.class));
+  }
+
+  @Test
+  void headUserByUuidUserNotFound() throws Exception {
+    final User user = UserTestDataBuilder
+        .builder()
+        .build()
+        .user();
+
+    Mockito.doThrow(new ResourceNotFoundException(HttpStatus.NOT_FOUND.getReasonPhrase()))
+        .when(userExistsUseCasePort).execute(ArgumentMatchers.any(UserExistsQuery.class));
+
+    mockMvc.perform(
+            MockMvcRequestBuilders.head("/users/{userUuid}", user.getUserId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.status().isNotFound())
+        .andReturn();
+
+    Mockito.verify(userExistsUseCasePort).execute(ArgumentMatchers.any(UserExistsQuery.class));
   }
 
 }
