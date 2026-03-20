@@ -2,17 +2,14 @@ package com.hexagonal.application.usercase;
 
 import com.architecture.hexagonal.application.usecase.FindUserByUserIdUseCase;
 import com.architecture.hexagonal.domain.data.User;
-import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import com.architecture.hexagonal.domain.input.query.FindUserByUserIdQuery;
 import com.architecture.hexagonal.domain.port.out.UserRepositoryReadPort;
 import com.hexagonal.application.testutils.data.entity.UserTestDataBuilder;
 import com.hexagonal.application.testutils.data.input.query.FindUserByUserIdQueryTestDataBuilder;
 import java.util.Optional;
-import java.util.UUID;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,37 +30,20 @@ class FindUserByUserIdUseCaseTestIT {
         .builder()
         .build()
         .user();
+    final FindUserByUserIdQuery findUserByUserIdQuery = FindUserByUserIdQueryTestDataBuilder
+      .builder()
+      .build()
+      .findUserByUserIdQuery();
 
-    Mockito.when(userRepositoryReadPort.findUserById(ArgumentMatchers.any(UUID.class)))
+    Mockito.when(userRepositoryReadPort.findUserById(findUserByUserIdQuery.getUserId()))
         .thenReturn(Optional.of(user));
 
-    User result = findUserByUserIdUseCase.execute(FindUserByUserIdQueryTestDataBuilder
-        .builder()
-        .build()
-        .findUserByUserIdQuery());
+    User result = findUserByUserIdUseCase.execute(findUserByUserIdQuery);
 
     AssertionsForClassTypes.assertThat(result)
         .usingRecursiveComparison()
         .isEqualTo(user);
 
-    Mockito.verify(userRepositoryReadPort).findUserById(ArgumentMatchers.any(UUID.class));
-  }
-
-  @Test
-  void executeUserNotFound() {
-    final FindUserByUserIdQuery findUserByUserIdQuery = FindUserByUserIdQueryTestDataBuilder
-            .builder()
-            .build()
-            .findUserByUserIdQuery();
-
-    Mockito.when(userRepositoryReadPort.findUserById(ArgumentMatchers.any(UUID.class)))
-        .thenReturn(Optional.empty());
-
-    AssertionsForClassTypes.assertThatThrownBy(() ->
-            findUserByUserIdUseCase.execute(findUserByUserIdQuery))
-        .isInstanceOf(ResourceNotFoundException.class)
-        .hasMessage(ExceptionMessage.NOT_FOUND_DATA_MESSAGE + findUserByUserIdQuery.getUserId());
-
-    Mockito.verify(userRepositoryReadPort).findUserById(ArgumentMatchers.any(UUID.class));
+    Mockito.verify(userRepositoryReadPort).findUserById(findUserByUserIdQuery.getUserId());
   }
 }

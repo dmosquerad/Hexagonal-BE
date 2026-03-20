@@ -13,7 +13,6 @@ import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -41,12 +40,12 @@ class UserRepositoryDatabaseWriteAdapterTest {
         .builder()
         .build()
         .user();
+    final UserDao userDao = UserDaoTestDataBuilder
+      .builder()
+      .build()
+      .userDao();
 
-    Mockito.when(userDatabaseWriteRepository.save(ArgumentMatchers.any(UserDao.class))).thenReturn(
-        UserDaoTestDataBuilder
-            .builder()
-            .build()
-            .userDao());
+    Mockito.when(userDatabaseWriteRepository.save(userDao)).thenReturn(userDao);
 
     User result = userRepositoryDatabaseWriteAdapter.saveUser(user);
 
@@ -55,9 +54,9 @@ class UserRepositoryDatabaseWriteAdapterTest {
         .ignoringFieldsOfTypes(UUID.class)
         .isEqualTo(user);
 
-    Mockito.verify(userDaoMapper).toUserDao(ArgumentMatchers.any(User.class));
-    Mockito.verify(userDatabaseWriteRepository).save(ArgumentMatchers.any(UserDao.class));
-    Mockito.verify(userMapper).toUser(ArgumentMatchers.any(UserDao.class));
+    Mockito.verify(userDaoMapper).toUserDao(user);
+    Mockito.verify(userDatabaseWriteRepository).save(userDao);
+    Mockito.verify(userMapper).toUser(userDao);
   }
 
   @Test
@@ -66,12 +65,13 @@ class UserRepositoryDatabaseWriteAdapterTest {
         .builder()
         .build()
         .user();
+    final UserDao userDao = UserDaoTestDataBuilder
+      .builder()
+      .build()
+      .userDao();
 
-    Mockito.when(userDatabaseWriteRepository.deleteByUserId(ArgumentMatchers.any(UUID.class)))
-        .thenReturn(Optional.of(UserDaoTestDataBuilder
-            .builder()
-            .build()
-            .userDao()));
+    Mockito.when(userDatabaseWriteRepository.deleteByUserId(user.getUserId()))
+      .thenReturn(Optional.of(userDao));
 
     final Optional<User> result = userRepositoryDatabaseWriteAdapter.deleteUser(user.getUserId());
 
@@ -80,8 +80,8 @@ class UserRepositoryDatabaseWriteAdapterTest {
         .ignoringFieldsOfTypes(UUID.class)
         .isEqualTo(Optional.of(user));
 
-    Mockito.verify(userDatabaseWriteRepository).deleteByUserId(ArgumentMatchers.any(UUID.class));
-    Mockito.verify(userMapper).toUser(ArgumentMatchers.any(UserDao.class));
+    Mockito.verify(userDatabaseWriteRepository).deleteByUserId(user.getUserId());
+    Mockito.verify(userMapper).toUser(userDao);
   }
 
 }

@@ -67,27 +67,32 @@ public class UserController implements UsersApi {
   }
 
   @Override
-  public ResponseEntity<UserResponseDto> createUser(UserCreateDto userCreateDto) {
+  public ResponseEntity<UserResponseDto> createUser(final UserCreateDto userCreateDto) {
     final UserResponseDto userResponseDto = new UserResponseDto();
     userResponseDto.setDate(OffsetDateTime.now(clock));
     userResponseDto.setStatus(HttpStatus.OK.value());
-    userResponseDto.setData(userReadDtoMapper.toUserReadDto(createUserUseCasePort.execute(
-        CreateUserCommand.builder().name(userCreateDto.getName()).email(userCreateDto.getEmail()).build())));
+    userResponseDto.setData(
+        userReadDtoMapper.toUserReadDto(
+            createUserUseCasePort.execute(
+                CreateUserCommand.builder()
+                    .name(userCreateDto.getName())
+                    .email(userCreateDto.getEmail())
+                    .build())));
 
     return ResponseEntity.ok(userResponseDto);
   }
 
   @Override
-  public ResponseEntity<UserResponseDto> getUserByUuid(UUID userUuid) {
+  public ResponseEntity<UserResponseDto> getUserByUuid(final UUID userUuid) {
     final User user;
     try {
       user = findUserByUserIdUseCasePort.execute(
           FindUserByUserIdQuery.builder().userId(userUuid).build());
     } catch (ResourceNotFoundException e) {
-      ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
-      problem.setDetail(e.getMessage());
+      final ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+      problemDetail.setDetail(e.getMessage());
 
-      throw new ErrorResponseException(HttpStatus.NOT_FOUND, problem, e);
+      throw new ErrorResponseException(HttpStatus.NOT_FOUND, problemDetail, e);
     }
 
     final UserResponseDto userResponseDto = new UserResponseDto();
@@ -98,15 +103,15 @@ public class UserController implements UsersApi {
   }
 
   @Override
-  public ResponseEntity<UserResponseDto> deleteUserByUuid(UUID userUuid) {
+  public ResponseEntity<UserResponseDto> deleteUserByUuid(final UUID userUuid) {
     final User user;
     try {
       user = deleteUserUseCasePort.execute(DeleteUserCommand.builder().userId(userUuid).build());
     } catch (ResourceNotFoundException e) {
-      ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
-      problem.setDetail(e.getMessage());
+      final ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+      problemDetail.setDetail(e.getMessage());
 
-      throw new ErrorResponseException(HttpStatus.NOT_FOUND, problem, e);
+      throw new ErrorResponseException(HttpStatus.NOT_FOUND, problemDetail, e);
     }
 
     final UserResponseDto userResponseDto = new UserResponseDto();
@@ -117,7 +122,8 @@ public class UserController implements UsersApi {
   }
 
   @Override
-  public ResponseEntity<UserResponseDto> updateUserByUuid(UUID userUuid, UserUpdateDto userUpdateDto) {
+  public ResponseEntity<UserResponseDto> updateUserByUuid(
+      final UUID userUuid, final UserUpdateDto userUpdateDto) {
     final User user;
     try {
       user = updateUserUseCasePort.execute(
@@ -127,10 +133,10 @@ public class UserController implements UsersApi {
               .email(userUpdateDto.getEmail())
               .build());
     } catch (ResourceNotFoundException e) {
-      ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
-      problem.setDetail(e.getMessage());
+      final ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+      problemDetail.setDetail(e.getMessage());
 
-      throw new ErrorResponseException(HttpStatus.NOT_FOUND, problem, e);
+      throw new ErrorResponseException(HttpStatus.NOT_FOUND, problemDetail, e);
     }
 
     final UserResponseDto userResponseDto = new UserResponseDto();
@@ -141,7 +147,8 @@ public class UserController implements UsersApi {
   }
 
   @Override
-  public ResponseEntity<UserResponseDto> patchUserByUuid(UUID userUuid, UserPatchDto userPatchDto) {
+  public ResponseEntity<UserResponseDto> patchUserByUuid(
+      final UUID userUuid, final UserPatchDto userPatchDto) {
     final User user;
     try {
       user = patchUserUseCasePort.execute(
@@ -151,10 +158,10 @@ public class UserController implements UsersApi {
               .email(userPatchDto.getEmail())
               .build());
     } catch (ResourceNotFoundException e) {
-      ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
-      problem.setDetail(e.getMessage());
+      final ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+      problemDetail.setDetail(e.getMessage());
 
-      throw new ErrorResponseException(HttpStatus.NOT_FOUND, problem, e);
+      throw new ErrorResponseException(HttpStatus.NOT_FOUND, problemDetail, e);
     }
 
     final UserResponseDto userResponseDto = new UserResponseDto();
@@ -165,7 +172,7 @@ public class UserController implements UsersApi {
   }
 
   @Override
-  public ResponseEntity<Void> headUserByUuid(UUID userUuid) {
+  public ResponseEntity<Void> headUserByUuid(final UUID userUuid) {
     try {
       userExistsUseCasePort.execute(UserExistsQuery.builder().userId(userUuid).build());
     } catch (ResourceNotFoundException e) {

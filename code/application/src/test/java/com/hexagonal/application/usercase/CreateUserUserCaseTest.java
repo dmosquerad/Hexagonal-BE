@@ -2,6 +2,7 @@ package com.hexagonal.application.usercase;
 
 import com.architecture.hexagonal.application.usecase.CreateUserUseCase;
 import com.architecture.hexagonal.domain.data.User;
+import com.architecture.hexagonal.domain.input.command.CreateUserCommand;
 import com.architecture.hexagonal.domain.port.out.UserRepositoryWritePort;
 import com.hexagonal.application.testutils.data.entity.UserTestDataBuilder;
 import com.hexagonal.application.testutils.data.input.command.CreateUserCommandTestDataBuilder;
@@ -30,13 +31,15 @@ class CreateUserUserCaseTest {
         .build()
         .user();
 
+    final CreateUserCommand createUserCommand = CreateUserCommandTestDataBuilder
+        .builder()
+        .build()
+        .createUserCommand();
+
     Mockito.when(userRepositoryWritePort.saveUser(ArgumentMatchers.any(User.class)))
         .thenReturn(user);
 
-    User result = createUserUseCase.execute(CreateUserCommandTestDataBuilder
-        .builder()
-        .build()
-        .createUserCommand());
+    User result = createUserUseCase.execute(createUserCommand);
 
     AssertionsForClassTypes.assertThat(result)
         .usingRecursiveComparison()

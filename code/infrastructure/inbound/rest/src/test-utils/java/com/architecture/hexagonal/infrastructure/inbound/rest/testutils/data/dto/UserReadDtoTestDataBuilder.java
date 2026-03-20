@@ -17,7 +17,6 @@ public class UserReadDtoTestDataBuilder {
   private String name = "Test User";
 
   public UserReadDto userReadDto() {
-
     UserReadDto userReadDto = new UserReadDto();
     userReadDto.setUserId(userId);
     userReadDto.setEmail(email);

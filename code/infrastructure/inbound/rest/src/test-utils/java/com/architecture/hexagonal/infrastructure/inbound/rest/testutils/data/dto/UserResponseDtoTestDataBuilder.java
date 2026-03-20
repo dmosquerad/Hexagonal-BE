@@ -20,7 +20,6 @@ public class UserResponseDtoTestDataBuilder {
 
   public UserResponseDto userResponseDto() {
     UserResponseDto userResponseDto = new UserResponseDto();
-
     userResponseDto.setStatus(status);
     userResponseDto.setDate(this.date);
     userResponseDto.setData(this.userReadDto);

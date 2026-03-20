@@ -24,5 +24,4 @@ public class UserDao {
 
   @Column(nullable = false, unique = true)
   String email;
-  
 }

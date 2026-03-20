@@ -19,10 +19,11 @@ public class DeleteUserUseCase implements DeleteUserUseCasePort {
 
   @Override
   @Transactional
-  public User execute(DeleteUserCommand deleteUserCommand) throws ResourceNotFoundException {
+  public User execute(final DeleteUserCommand deleteUserCommand) throws ResourceNotFoundException {
     final UUID uuid = deleteUserCommand.getUserId();
 
     return userRepositoryWritePort.deleteUser(uuid)
-        .orElseThrow(() -> new ResourceNotFoundException(ExceptionMessage.NOT_FOUND_DATA_MESSAGE + uuid));
+        .orElseThrow(
+            () -> new ResourceNotFoundException(ExceptionMessage.NOT_FOUND_DATA_MESSAGE + uuid));
   }
 }

@@ -7,8 +7,8 @@ import com.architecture.hexagonal.infrastructure.outbound.database.mapper.UserMa
 import com.architecture.hexagonal.infrastructure.outbound.database.repository.UserDatabaseWriteRepository;
 import java.util.Optional;
 import java.util.UUID;
-import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
@@ -20,12 +20,12 @@ public class UserRepositoryDatabaseWriteAdapter implements UserRepositoryWritePo
   private final UserDaoMapper userDaoMapper;
 
   @Override
-  public User saveUser(User user) {
+  public User saveUser(final User user) {
     return userMapper.toUser(userDatabaseWriteRepository.save(userDaoMapper.toUserDao(user)));
   }
 
   @Override
-  public Optional<User> deleteUser(UUID uuid) {
+  public Optional<User> deleteUser(final UUID uuid) {
     return userDatabaseWriteRepository.deleteByUserId(uuid).map(userMapper::toUser);
   }
 }

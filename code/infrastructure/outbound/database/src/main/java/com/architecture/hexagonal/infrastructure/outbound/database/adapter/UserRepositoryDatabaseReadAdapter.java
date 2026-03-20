@@ -26,7 +26,7 @@ public class UserRepositoryDatabaseReadAdapter implements UserRepositoryReadPort
   }
 
   @Override
-  public Optional<User> findUserById(UUID uuid) {
+  public Optional<User> findUserById(final UUID uuid) {
     return userDatabaseReadRepository.findByUserId(uuid).map(userMapper::toUser);
   }
 }
