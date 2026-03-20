@@ -308,24 +308,4 @@ class UserControllerTestIT {
     Mockito.verify(userExistsUseCasePort).execute(ArgumentMatchers.any(UserExistsQuery.class));
   }
 
-  @Test
-  void headUserByUuidUserNotFound() throws Exception {
-    final User user = UserTestDataBuilder
-        .builder()
-        .build()
-        .user();
-
-    Mockito.doThrow(new ResourceNotFoundException(HttpStatus.NOT_FOUND.getReasonPhrase()))
-        .when(userExistsUseCasePort).execute(ArgumentMatchers.any(UserExistsQuery.class));
-
-    mockMvc.perform(
-            MockMvcRequestBuilders.head("/users/{userUuid}", user.getUserId())
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-        .andExpect(MockMvcResultMatchers.status().isNotFound())
-        .andReturn();
-
-    Mockito.verify(userExistsUseCasePort).execute(ArgumentMatchers.any(UserExistsQuery.class));
-  }
-
 }

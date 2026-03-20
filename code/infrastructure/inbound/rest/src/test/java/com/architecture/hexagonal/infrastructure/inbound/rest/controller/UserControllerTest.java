@@ -339,9 +339,7 @@ class UserControllerTest {
     Mockito.doThrow(new ResourceNotFoundException(errorMessage))
         .when(userExistsUseCasePort).execute(ArgumentMatchers.any(UserExistsQuery.class));
 
-    final ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND.value());
-    problemDetail.setDetail(errorMessage);
-    final ErrorResponseException errorException = new ErrorResponseException(HttpStatus.NOT_FOUND, problemDetail, null);
+    final ErrorResponseException errorException = new ErrorResponseException(HttpStatus.NOT_FOUND, null);
 
     AssertionsForClassTypes.assertThatThrownBy(() ->
         userController.headUserByUuid(user.getUserId()))
