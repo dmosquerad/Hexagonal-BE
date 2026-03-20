@@ -141,13 +141,15 @@ class UserControllerTest {
         .build()
         .user();
 
-    Mockito.when(findUserByUserIdUseCasePort.execute(ArgumentMatchers.any(FindUserByUserIdQuery.class)))
+    Mockito
+        .when(findUserByUserIdUseCasePort.execute(ArgumentMatchers.any(FindUserByUserIdQuery.class)))
         .thenReturn(user);
 
-    final ResponseEntity<UserResponseDto> responseExpected = ResponseEntity.ok(UserResponseDtoTestDataBuilder
-        .builder()
-        .build()
-        .userResponseDto());
+    final ResponseEntity<UserResponseDto> responseExpected = ResponseEntity.ok(
+        UserResponseDtoTestDataBuilder
+            .builder()
+            .build()
+            .userResponseDto());
 
     final ResponseEntity<UserResponseDto> response = userController.getUserByUuid(user.getUserId());
 
@@ -155,7 +157,8 @@ class UserControllerTest {
         .usingRecursiveComparison()
         .isEqualTo(responseExpected);
 
-    Mockito.verify(findUserByUserIdUseCasePort).execute(ArgumentMatchers.any(FindUserByUserIdQuery.class));
+    Mockito
+        .verify(findUserByUserIdUseCasePort).execute(ArgumentMatchers.any(FindUserByUserIdQuery.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
   }
@@ -170,12 +173,14 @@ class UserControllerTest {
     Mockito.when(deleteUserUseCasePort.execute(ArgumentMatchers.any(DeleteUserCommand.class)))
         .thenReturn(user);
 
-    final ResponseEntity<UserResponseDto> responseExpected = ResponseEntity.ok(UserResponseDtoTestDataBuilder
-        .builder()
-        .build()
-        .userResponseDto());
+    final ResponseEntity<UserResponseDto> responseExpected = ResponseEntity.ok(
+        UserResponseDtoTestDataBuilder
+            .builder()
+            .build()
+            .userResponseDto());
 
-    final ResponseEntity<UserResponseDto> response = userController.deleteUserByUuid(user.getUserId());
+    final ResponseEntity<UserResponseDto> response = userController.deleteUserByUuid(
+        user.getUserId());
 
     AssertionsForClassTypes.assertThat(response)
         .usingRecursiveComparison()
@@ -231,7 +236,10 @@ class UserControllerTest {
 
     final ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND.value());
     problemDetail.setDetail(errorMessage);
-    final ErrorResponseException errorException = new ErrorResponseException(HttpStatus.NOT_FOUND, problemDetail, null);
+    final ErrorResponseException errorException = new ErrorResponseException(
+        HttpStatus.NOT_FOUND,
+        problemDetail,
+        null);
 
     AssertionsForClassTypes.assertThatThrownBy(() ->
         userController.updateUserByUuid(
@@ -297,7 +305,10 @@ class UserControllerTest {
 
     final ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND.value());
     problemDetail.setDetail(errorMessage);
-    final ErrorResponseException errorException = new ErrorResponseException(HttpStatus.NOT_FOUND, problemDetail, null);
+    final ErrorResponseException errorException = new ErrorResponseException(
+        HttpStatus.NOT_FOUND,
+        problemDetail,
+        null);
 
     AssertionsForClassTypes.assertThatThrownBy(() ->
         userController.patchUserByUuid(
@@ -322,11 +333,15 @@ class UserControllerTest {
 
     final ResponseEntity<Void> responseExpected = ResponseEntity.ok().build();
 
-    Mockito.doNothing().when(userExistsUseCasePort).execute(ArgumentMatchers.any(UserExistsQuery.class));
+    Mockito.doNothing()
+        .when(userExistsUseCasePort)
+        .execute(ArgumentMatchers.any(UserExistsQuery.class));
 
     final ResponseEntity<Void> response = userController.headUserByUuid(user.getUserId());
 
-    AssertionsForClassTypes.assertThat(response).usingRecursiveComparison().isEqualTo(responseExpected);
+    AssertionsForClassTypes.assertThat(response)
+        .usingRecursiveComparison()
+        .isEqualTo(responseExpected);
 
     Mockito.verify(userExistsUseCasePort).execute(ArgumentMatchers.any(UserExistsQuery.class));
   }
@@ -342,7 +357,9 @@ class UserControllerTest {
     Mockito.doThrow(new ResourceNotFoundException(errorMessage))
         .when(userExistsUseCasePort).execute(ArgumentMatchers.any(UserExistsQuery.class));
 
-    final ErrorResponseException errorException = new ErrorResponseException(HttpStatus.NOT_FOUND, null);
+    final ErrorResponseException errorException = new ErrorResponseException(
+        HttpStatus.NOT_FOUND,
+        null);
 
     AssertionsForClassTypes.assertThatThrownBy(() ->
         userController.headUserByUuid(user.getUserId()))

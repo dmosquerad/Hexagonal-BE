@@ -3,7 +3,6 @@ package com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.dt
 import com.architecture.hexagonal.infrastructure.inbound.rest.dto.ResponseErrorDto;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.time.TestClock;
 import java.time.OffsetDateTime;
-import java.util.List;
 import lombok.Builder;
 
 @Builder
@@ -22,11 +21,10 @@ public class ResponseErrorDtoTestDataBuilder {
   private String detail = "Error detail";
 
   public ResponseErrorDto responseErrorDto() {
-
     ResponseErrorDto responseErrorDto = new ResponseErrorDto();
     responseErrorDto.setDate(date);
-    responseErrorDto.status(status);
-    responseErrorDto.title(title);
+    responseErrorDto.setStatus(status);
+    responseErrorDto.setTitle(title);
     responseErrorDto.setDetail(detail);
 
     return responseErrorDto;

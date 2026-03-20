@@ -22,11 +22,12 @@ public class UpdateUserUseCase implements UpdateUserUseCasePort {
 
   @Override
   @Transactional
-  public User execute(UpdateUserCommand updateUserCommand) throws ResourceNotFoundException {
+  public User execute(final UpdateUserCommand updateUserCommand) throws ResourceNotFoundException {
     final UUID uuid = updateUserCommand.getUserId();
 
     userRepositoryReadPort.findUserById(uuid)
-        .orElseThrow(() -> new ResourceNotFoundException(ExceptionMessage.NOT_FOUND_DATA_MESSAGE + uuid));
+        .orElseThrow(() ->
+            new ResourceNotFoundException(ExceptionMessage.NOT_FOUND_DATA_MESSAGE + uuid));
 
     return userRepositoryWritePort.saveUser(
         User.builder()

@@ -24,7 +24,11 @@ public class RestControllerExceptionHandler extends ResponseEntityExceptionHandl
   private final Clock clock;
 
   @Override
-  public ResponseEntity<Object> createResponseEntity(@Nullable Object body, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {
+  public ResponseEntity<Object> createResponseEntity(
+      @Nullable final Object body,
+      final HttpHeaders headers,
+      final HttpStatusCode statusCode,
+      final WebRequest request) {
     final ResponseErrorDto responseErrorDto = new ResponseErrorDto();
     responseErrorDto.setDate(OffsetDateTime.now(clock));
     responseErrorDto.setStatus(statusCode.value());
@@ -37,11 +41,13 @@ public class RestControllerExceptionHandler extends ResponseEntityExceptionHandl
       responseErrorDto.setDetail(problem.getDetail());
     }
 
-    return new ResponseEntity(responseErrorDto, headers, statusCode);
+    return new ResponseEntity<>(responseErrorDto, headers, statusCode);
   }
 
   @ExceptionHandler(SQLException.class)
-  public ResponseEntity<Object> handleSQLException(SQLException ex, WebRequest request) {
-    return this.handleExceptionInternal(ex, ex.getMessage(), null, HttpStatusCode.valueOf(500), request);
+  public ResponseEntity<Object> handleSqlException(
+      final SQLException ex, final WebRequest request) {
+    return this.handleExceptionInternal(
+        ex, ex.getMessage(), null, HttpStatusCode.valueOf(500), request);
   }
 }

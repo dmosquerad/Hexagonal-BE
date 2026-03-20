@@ -19,10 +19,12 @@ public class FindUserByUserIdUseCase implements FindUserByUserIdUseCasePort {
 
   @Override
   @Transactional(readOnly = true)
-  public User execute(FindUserByUserIdQuery findUserByUserIdQuery) throws ResourceNotFoundException {
+  public User execute(final FindUserByUserIdQuery findUserByUserIdQuery)  
+      throws ResourceNotFoundException {
     final UUID uuid = findUserByUserIdQuery.getUserId();
 
     return userRepositoryReadPort.findUserById(uuid)
-        .orElseThrow(() -> new ResourceNotFoundException(ExceptionMessage.NOT_FOUND_DATA_MESSAGE + uuid));
+        .orElseThrow(
+            () -> new ResourceNotFoundException(ExceptionMessage.NOT_FOUND_DATA_MESSAGE + uuid));
   }
 }

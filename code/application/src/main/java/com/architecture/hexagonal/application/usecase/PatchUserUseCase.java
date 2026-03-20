@@ -23,10 +23,12 @@ public class PatchUserUseCase implements PatchUserUseCasePort {
 
   @Override
   @Transactional
-  public User execute(PatchUserCommand patchUserCommand) throws ResourceNotFoundException {
+  public User execute(final PatchUserCommand patchUserCommand) throws ResourceNotFoundException {
     final UUID uuid = patchUserCommand.getUserId();
+
     final User currentUser = userRepositoryReadPort.findUserById(uuid)
-        .orElseThrow(() -> new ResourceNotFoundException(ExceptionMessage.NOT_FOUND_DATA_MESSAGE + uuid));
+        .orElseThrow(() ->
+            new ResourceNotFoundException(ExceptionMessage.NOT_FOUND_DATA_MESSAGE + uuid));
 
     return userRepositoryWritePort.saveUser(
         User.builder()

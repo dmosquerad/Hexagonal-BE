@@ -18,10 +18,11 @@ public class UserExistsUseCase implements UserExistsUseCasePort {
 
   @Override
   @Transactional(readOnly = true)
-  public void execute(UserExistsQuery userExistsQuery) throws ResourceNotFoundException {
+  public void execute(final UserExistsQuery userExistsQuery) throws ResourceNotFoundException {
     final UUID uuid = userExistsQuery.getUserId();
 
     userRepositoryReadPort.findUserById(uuid)
-        .orElseThrow(() -> new ResourceNotFoundException(ExceptionMessage.NOT_FOUND_DATA_MESSAGE + uuid));
+        .orElseThrow(
+            () -> new ResourceNotFoundException(ExceptionMessage.NOT_FOUND_DATA_MESSAGE + uuid));
   }
 }

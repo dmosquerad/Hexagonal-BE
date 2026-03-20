@@ -10,7 +10,8 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("database")
 @TestConfiguration
 @EnableAutoConfiguration
-@EnableJpaRepositories(basePackages = "com.architecture.hexagonal.infrastructure.outbound.database.repository")
+@EnableJpaRepositories(
+	basePackages = "com.architecture.hexagonal.infrastructure.outbound.database.repository")
 @EntityScan(basePackages = "com.architecture.hexagonal.infrastructure.outbound.database.data")
 @ComponentScan(basePackages = "com.architecture.hexagonal.infrastructure.outbound.database")
 public class TestApplication {

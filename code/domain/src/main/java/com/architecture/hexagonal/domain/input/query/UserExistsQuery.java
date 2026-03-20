@@ -7,5 +7,5 @@ import lombok.Value;
 @Value
 @Builder
 public class UserExistsQuery {
-  private UUID userId;
+  UUID userId;
 }

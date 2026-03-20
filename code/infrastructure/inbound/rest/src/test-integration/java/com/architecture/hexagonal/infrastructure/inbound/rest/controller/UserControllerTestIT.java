@@ -103,7 +103,10 @@ class UserControllerTestIT {
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andReturn();
 
-    AssertionsForClassTypes.assertThat(objectMapper.readValue(result.getResponse().getContentAsString(), UsersResponseDto.class))
+    AssertionsForClassTypes.assertThat(
+            objectMapper.readValue(
+                result.getResponse().getContentAsString(),
+                UsersResponseDto.class))
         .usingRecursiveComparison()
         .isEqualTo(getAllUsersResponse);
 
@@ -134,7 +137,10 @@ class UserControllerTestIT {
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andReturn();
 
-    AssertionsForClassTypes.assertThat(objectMapper.readValue(result.getResponse().getContentAsString(), UserResponseDto.class))
+    AssertionsForClassTypes.assertThat(
+            objectMapper.readValue(
+                result.getResponse().getContentAsString(),
+                UserResponseDto.class))
         .usingRecursiveComparison()
         .isEqualTo(createUserResponse);
 
@@ -147,7 +153,9 @@ class UserControllerTestIT {
   @Test
   void getUserByUuid() throws Exception {
     final UserResponseDto getUserByUuidResponse = objectMapper.readValue(
-          new ClassPathResource("getUserByUuid_response.json", UserControllerTestIT.class).getFile(),
+          new ClassPathResource(
+              "getUserByUuid_response.json",
+              UserControllerTestIT.class).getFile(),
           UserResponseDto.class);
 
     final User user = UserTestDataBuilder
@@ -156,7 +164,8 @@ class UserControllerTestIT {
         .user();
 
     Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
-    Mockito.when(findUserByUserIdUseCasePort.execute(ArgumentMatchers.any(FindUserByUserIdQuery.class)))
+    Mockito.when(
+            findUserByUserIdUseCasePort.execute(ArgumentMatchers.any(FindUserByUserIdQuery.class)))
         .thenReturn(user);
 
     final MvcResult result = mockMvc.perform(
@@ -166,12 +175,16 @@ class UserControllerTestIT {
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andReturn();
 
-    AssertionsForClassTypes.assertThat(objectMapper.readValue(result.getResponse().getContentAsString(), UserResponseDto.class))
+    AssertionsForClassTypes.assertThat(
+            objectMapper.readValue(
+                result.getResponse().getContentAsString(),
+                UserResponseDto.class))
         .usingRecursiveComparison()
         .isEqualTo(getUserByUuidResponse);
 
     Mockito.verify(userController).getUserByUuid(user.getUserId());
-    Mockito.verify(findUserByUserIdUseCasePort).execute(ArgumentMatchers.any(FindUserByUserIdQuery.class));
+    Mockito.verify(findUserByUserIdUseCasePort)
+        .execute(ArgumentMatchers.any(FindUserByUserIdQuery.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
   }
@@ -179,7 +192,9 @@ class UserControllerTestIT {
   @Test
   void deleteUserByUuid() throws Exception {
     final UserResponseDto deleteUserByUuidResponse = objectMapper.readValue(
-        new ClassPathResource("deleteUserByUuid_response.json", UserControllerTestIT.class).getFile(),
+        new ClassPathResource(
+            "deleteUserByUuid_response.json",
+            UserControllerTestIT.class).getFile(),
         UserResponseDto.class);
 
     final User user = UserTestDataBuilder
@@ -198,7 +213,10 @@ class UserControllerTestIT {
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andReturn();
 
-    AssertionsForClassTypes.assertThat(objectMapper.readValue(result.getResponse().getContentAsString(), UserResponseDto.class))
+    AssertionsForClassTypes.assertThat(
+            objectMapper.readValue(
+                result.getResponse().getContentAsString(),
+                UserResponseDto.class))
         .usingRecursiveComparison()
         .isEqualTo(deleteUserByUuidResponse);
 
@@ -211,10 +229,14 @@ class UserControllerTestIT {
   @Test
   void updateUserByUuid() throws Exception {
     final UserUpdateDto updateUserByUuidRequest = objectMapper.readValue(
-        new ClassPathResource("updateUserByUuid_request.json", UserControllerTestIT.class).getFile(),
+        new ClassPathResource(
+            "updateUserByUuid_request.json",
+            UserControllerTestIT.class).getFile(),
         UserUpdateDto.class);
     final UserResponseDto updateUserByUuidResponse = objectMapper.readValue(
-        new ClassPathResource("updateUserByUuid_response.json", UserControllerTestIT.class).getFile(),
+        new ClassPathResource(
+            "updateUserByUuid_response.json",
+            UserControllerTestIT.class).getFile(),
         UserResponseDto.class);
 
     final User user = UserTestDataBuilder
@@ -234,7 +256,10 @@ class UserControllerTestIT {
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andReturn();
 
-    AssertionsForClassTypes.assertThat(objectMapper.readValue(result.getResponse().getContentAsString(), UserResponseDto.class))
+    AssertionsForClassTypes.assertThat(
+            objectMapper.readValue(
+                result.getResponse().getContentAsString(),
+                UserResponseDto.class))
         .usingRecursiveComparison()
         .isEqualTo(updateUserByUuidResponse);
 
@@ -250,7 +275,9 @@ class UserControllerTestIT {
         new ClassPathResource("patchUserByUuid_request.json", UserControllerTestIT.class).getFile(),
         UserPatchDto.class);
     final UserResponseDto patchUserByUuidResponse = objectMapper.readValue(
-        new ClassPathResource("patchUserByUuid_response.json", UserControllerTestIT.class).getFile(),
+        new ClassPathResource(
+            "patchUserByUuid_response.json",
+            UserControllerTestIT.class).getFile(),
         UserResponseDto.class);
 
     final User user = UserTestDataBuilder
@@ -270,7 +297,10 @@ class UserControllerTestIT {
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andReturn();
 
-    AssertionsForClassTypes.assertThat(objectMapper.readValue(result.getResponse().getContentAsString(), UserResponseDto.class))
+    AssertionsForClassTypes.assertThat(
+            objectMapper.readValue(
+                result.getResponse().getContentAsString(),
+                UserResponseDto.class))
         .usingRecursiveComparison()
         .isEqualTo(patchUserByUuidResponse);
 
@@ -287,7 +317,9 @@ class UserControllerTestIT {
         .build()
         .user();
 
-    Mockito.doNothing().when(userExistsUseCasePort).execute(ArgumentMatchers.any(UserExistsQuery.class));
+    Mockito.doNothing()
+        .when(userExistsUseCasePort)
+        .execute(ArgumentMatchers.any(UserExistsQuery.class));
 
     mockMvc.perform(
             MockMvcRequestBuilders.head("/users/{userUuid}", user.getUserId())

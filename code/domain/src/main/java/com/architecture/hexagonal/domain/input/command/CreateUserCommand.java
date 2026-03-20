@@ -6,6 +6,6 @@ import lombok.Value;
 @Value
 @Builder
 public class CreateUserCommand {
-  private String email;
-  private String name;
+  String email;
+  String name;
 }

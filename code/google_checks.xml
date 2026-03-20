@@ -91,6 +91,12 @@
                     LITERAL_SWITCH, LITERAL_SYNCHRONIZED, LITERAL_TRY, LITERAL_WHILE, METHOD_DEF,
                     OBJBLOCK, STATIC_INIT, RECORD_DEF, COMPACT_CTOR_DEF"/>
     </module>
+    <module name="LeftCurly">
+      <property name="id" value="LeftCurlyNl"/>
+      <property name="option" value="nl"/>
+      <property name="tokens"
+                value="LITERAL_CASE, LITERAL_DEFAULT"/>
+    </module>
     <module name="SuppressionXpathSingleFilter">
       <!-- LITERAL_CASE, LITERAL_DEFAULT are reused in SWITCH_RULE  -->
       <property name="id" value="LeftCurlyNl"/>
@@ -370,12 +376,15 @@
       <property name="allowedAnnotations" value="Override, Test"/>
       <property name="tokens" value="METHOD_DEF, CTOR_DEF, ANNOTATION_FIELD_DEF, COMPACT_CTOR_DEF"/>
     </module>
+    <!-- Avoid actually using MissingJavadocMethod -->
+    <!--
     <module name="MissingJavadocMethod">
       <property name="scope" value="protected"/>
       <property name="allowMissingPropertyJavadoc" value="true"/>
       <property name="allowedAnnotations" value="Override, Test"/>
       <property name="tokens" value="METHOD_DEF, CTOR_DEF, ANNOTATION_FIELD_DEF, COMPACT_CTOR_DEF"/>
     </module>
+    -->
     <module name="SuppressionXpathSingleFilter">
       <property name="checks" value="MissingJavadocMethod"/>
       <property name="query" value="//*[self::METHOD_DEF or self::CTOR_DEF
@@ -384,11 +393,14 @@
                                  or self::RECORD_DEF or self::ENUM_DEF]
                                  [not(./MODIFIERS/LITERAL_PUBLIC)]]"/>
     </module>
+    <!-- Avoid actually using MissingJavadocMethod -->
+    <!--
     <module name="MissingJavadocType">
       <property name="scope" value="protected"/>
       <property name="tokens" value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, RECORD_DEF, ANNOTATION_DEF"/>
       <property name="excludeScope" value="nothing"/>
     </module>
+    -->
     <module name="MethodName">
       <property name="format" value="^[a-z][a-z0-9][a-zA-Z0-9]*$"/>
       <message key="name.invalidPattern"
@@ -427,21 +439,8 @@
       <!-- The check is suppressed in the next line of code after the comment -->
       <property name="influenceFormat" value="1"/>
     </module>
-    <!-- Changed by me -->
-    <module name="FinalParameters"/> <!-- added -->
-
-    <module name="LeftCurly">
-      <property name="id" value="LeftCurlyNl"/>
-      <property name="option" value="eol"/> <!-- changed -->
-      <property name="tokens"
-                value="LITERAL_CASE, LITERAL_DEFAULT"/>
-    </module>
-  </module>
-  <!-- Changed by me -->
-  <module name="LineLength">
-    <property name="fileExtensions" value="java"/>
-    <property name="max" value="120"/> <!-- changed -->
-    <property name="ignorePattern"
-              value="^package.*|^import.*|href\s*=\s*&quot;[^&quot;]*&quot;|http://|https://|ftp://"/>
+    <!-- Added by me -->
+    <module name="FinalParameters"/>
+    <module name="FinalLocalVariable"/>
   </module>
 </module>

@@ -13,7 +13,6 @@ public class UserCreateDtoTestDataBuilder {
   private String name = "Test User";
 
   public UserCreateDto userCreateDto() {
-
     UserCreateDto userCreateDto = new UserCreateDto();
     userCreateDto.setEmail(email);
     userCreateDto.setName(name);

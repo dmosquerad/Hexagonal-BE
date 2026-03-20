@@ -7,5 +7,5 @@ import lombok.Value;
 @Value
 @Builder
 public class DeleteUserCommand {
-  private UUID userId;
+  UUID userId;
 }

@@ -16,7 +16,7 @@ public class CreateUserUseCase implements CreateUserUseCasePort {
 
   @Override
   @Transactional
-  public User execute(CreateUserCommand createUserCommand) {
+  public User execute(final CreateUserCommand createUserCommand) {
     return userRepositoryWritePort.saveUser(
         User.builder()
             .name(createUserCommand.getName())
