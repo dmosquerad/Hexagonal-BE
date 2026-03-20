@@ -7,12 +7,14 @@ import com.architecture.hexagonal.domain.input.command.DeleteUserCommand;
 import com.architecture.hexagonal.domain.input.command.PatchUserCommand;
 import com.architecture.hexagonal.domain.input.command.UpdateUserCommand;
 import com.architecture.hexagonal.domain.input.query.FindUserByUserIdQuery;
+import com.architecture.hexagonal.domain.input.query.UserExistsQuery;
 import com.architecture.hexagonal.domain.port.in.CreateUserUseCasePort;
 import com.architecture.hexagonal.domain.port.in.DeleteUserUseCasePort;
 import com.architecture.hexagonal.domain.port.in.FindUserByUserIdUseCasePort;
 import com.architecture.hexagonal.domain.port.in.GetAllUsersUseCasePort;
 import com.architecture.hexagonal.domain.port.in.PatchUserUseCasePort;
 import com.architecture.hexagonal.domain.port.in.UpdateUserUseCasePort;
+import com.architecture.hexagonal.domain.port.in.UserExistsUseCasePort;
 import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UserCreateDto;
 import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UserPatchDto;
 import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UserResponseDto;
@@ -45,6 +47,8 @@ public class UserController implements UsersApi {
   private final UpdateUserUseCasePort updateUserUseCasePort;
 
   private final PatchUserUseCasePort patchUserUseCasePort;
+
+  private final UserExistsUseCasePort userExistsUseCasePort;
 
   private final UserReadDtoMapper userReadDtoMapper;
 
@@ -158,6 +162,20 @@ public class UserController implements UsersApi {
     userResponseDto.setStatus(HttpStatus.OK.value());
     userResponseDto.setData(userReadDtoMapper.toUserReadDto(user));
     return ResponseEntity.ok(userResponseDto);
+  }
+
+  @Override
+  public ResponseEntity<Void> headUserByUuid(UUID userUuid) {
+    try {
+      userExistsUseCasePort.execute(UserExistsQuery.builder().userId(userUuid).build());
+    } catch (ResourceNotFoundException e) {
+      ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+      problem.setDetail(e.getMessage());
+
+      throw new ErrorResponseException(HttpStatus.NOT_FOUND, problem, e);
+    }
+
+    return ResponseEntity.ok().build();
   }
 
 }

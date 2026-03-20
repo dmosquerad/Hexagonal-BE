@@ -1,17 +1,20 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.controller;
 
 import com.architecture.hexagonal.domain.data.User;
+import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import com.architecture.hexagonal.domain.input.command.CreateUserCommand;
 import com.architecture.hexagonal.domain.input.command.DeleteUserCommand;
 import com.architecture.hexagonal.domain.input.command.PatchUserCommand;
 import com.architecture.hexagonal.domain.input.command.UpdateUserCommand;
 import com.architecture.hexagonal.domain.input.query.FindUserByUserIdQuery;
+import com.architecture.hexagonal.domain.input.query.UserExistsQuery;
 import com.architecture.hexagonal.domain.port.in.CreateUserUseCasePort;
 import com.architecture.hexagonal.domain.port.in.DeleteUserUseCasePort;
 import com.architecture.hexagonal.domain.port.in.FindUserByUserIdUseCasePort;
 import com.architecture.hexagonal.domain.port.in.GetAllUsersUseCasePort;
 import com.architecture.hexagonal.domain.port.in.PatchUserUseCasePort;
 import com.architecture.hexagonal.domain.port.in.UpdateUserUseCasePort;
+import com.architecture.hexagonal.domain.port.in.UserExistsUseCasePort;
 import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UserCreateDto;
 import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UserPatchDto;
 import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UserResponseDto;
@@ -33,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -73,6 +77,9 @@ class UserControllerTestIT {
 
   @MockitoBean
   PatchUserUseCasePort patchUserUseCasePort;
+
+  @MockitoBean
+  UserExistsUseCasePort userExistsUseCasePort;
 
   @MockitoSpyBean
   UserReadDtoMapper userReadDtoMapper;
@@ -280,6 +287,45 @@ class UserControllerTestIT {
     Mockito.verify(patchUserUseCasePort).execute(ArgumentMatchers.any(PatchUserCommand.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(ArgumentMatchers.any(User.class));
     Mockito.verify(clock).instant();
+  }
+
+  @Test
+  void headUserByUuid() throws Exception {
+    final User user = UserTestDataBuilder
+        .builder()
+        .build()
+        .user();
+
+    Mockito.doNothing().when(userExistsUseCasePort).execute(ArgumentMatchers.any(UserExistsQuery.class));
+
+    mockMvc.perform(
+            MockMvcRequestBuilders.head("/users/{userUuid}", user.getUserId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andReturn();
+
+    Mockito.verify(userExistsUseCasePort).execute(ArgumentMatchers.any(UserExistsQuery.class));
+  }
+
+  @Test
+  void headUserByUuidUserNotFound() throws Exception {
+    final User user = UserTestDataBuilder
+        .builder()
+        .build()
+        .user();
+
+    Mockito.doThrow(new ResourceNotFoundException(HttpStatus.NOT_FOUND.getReasonPhrase()))
+        .when(userExistsUseCasePort).execute(ArgumentMatchers.any(UserExistsQuery.class));
+
+    mockMvc.perform(
+            MockMvcRequestBuilders.head("/users/{userUuid}", user.getUserId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.status().isNotFound())
+        .andReturn();
+
+    Mockito.verify(userExistsUseCasePort).execute(ArgumentMatchers.any(UserExistsQuery.class));
   }
 
 }

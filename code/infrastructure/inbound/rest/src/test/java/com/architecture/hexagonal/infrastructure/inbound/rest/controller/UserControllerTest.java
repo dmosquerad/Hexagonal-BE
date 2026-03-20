@@ -7,12 +7,14 @@ import com.architecture.hexagonal.domain.input.command.DeleteUserCommand;
 import com.architecture.hexagonal.domain.input.command.PatchUserCommand;
 import com.architecture.hexagonal.domain.input.command.UpdateUserCommand;
 import com.architecture.hexagonal.domain.input.query.FindUserByUserIdQuery;
+import com.architecture.hexagonal.domain.input.query.UserExistsQuery;
 import com.architecture.hexagonal.domain.port.in.CreateUserUseCasePort;
 import com.architecture.hexagonal.domain.port.in.DeleteUserUseCasePort;
 import com.architecture.hexagonal.domain.port.in.FindUserByUserIdUseCasePort;
 import com.architecture.hexagonal.domain.port.in.GetAllUsersUseCasePort;
 import com.architecture.hexagonal.domain.port.in.PatchUserUseCasePort;
 import com.architecture.hexagonal.domain.port.in.UpdateUserUseCasePort;
+import com.architecture.hexagonal.domain.port.in.UserExistsUseCasePort;
 import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UserResponseDto;
 import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UsersResponseDto;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.UserReadDtoMapper;
@@ -65,6 +67,9 @@ class UserControllerTest {
 
   @Mock
   PatchUserUseCasePort patchUserUseCasePort;
+
+  @Mock
+  UserExistsUseCasePort userExistsUseCasePort;
 
   @Spy
   UserReadDtoMapper userReadDtoMapper = Mappers.getMapper(UserReadDtoMapper.class);
@@ -303,6 +308,48 @@ class UserControllerTest {
         .isEqualTo(errorException);
 
     Mockito.verify(patchUserUseCasePort).execute(ArgumentMatchers.any(PatchUserCommand.class));
+  }
+
+  @Test
+  void headUserByUuid() throws ResourceNotFoundException {
+    final User user = UserTestDataBuilder
+        .builder()
+        .build()
+        .user();
+
+    final ResponseEntity<Void> responseExpected = ResponseEntity.ok().build();
+
+    Mockito.doNothing().when(userExistsUseCasePort).execute(ArgumentMatchers.any(UserExistsQuery.class));
+
+    final ResponseEntity<Void> response = userController.headUserByUuid(user.getUserId());
+
+    AssertionsForClassTypes.assertThat(response).usingRecursiveComparison().isEqualTo(responseExpected);
+
+    Mockito.verify(userExistsUseCasePort).execute(ArgumentMatchers.any(UserExistsQuery.class));
+  }
+
+  @Test
+  void headUserByUuidUserNotFound() throws ResourceNotFoundException {
+    final User user = UserTestDataBuilder
+        .builder()
+        .build()
+        .user();
+    final String errorMessage = HttpStatus.NOT_FOUND.getReasonPhrase();
+
+    Mockito.doThrow(new ResourceNotFoundException(errorMessage))
+        .when(userExistsUseCasePort).execute(ArgumentMatchers.any(UserExistsQuery.class));
+
+    final ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND.value());
+    problemDetail.setDetail(errorMessage);
+    final ErrorResponseException errorException = new ErrorResponseException(HttpStatus.NOT_FOUND, problemDetail, null);
+
+    AssertionsForClassTypes.assertThatThrownBy(() ->
+        userController.headUserByUuid(user.getUserId()))
+        .isInstanceOf(ErrorResponseException.class)
+        .usingRecursiveComparison()
+        .isEqualTo(errorException);
+
+    Mockito.verify(userExistsUseCasePort).execute(ArgumentMatchers.any(UserExistsQuery.class));
   }
 
 }
