@@ -12,38 +12,49 @@ class InfrastructureInboundArchTest {
   @ArchTest
   static final ArchRule controller_should_reside_in_inbound =
       ArchRuleDefinition.classes()
-          .that().haveSimpleNameEndingWith("Controller")
-          .should().resideInAPackage("..infrastructure.inbound..")
-          .because("Controllers are inbound adapters in a hexagonal architecture");
+          .that()
+          .haveSimpleNameEndingWith("Controller")
+          .should()
+          .resideInAPackage("..infrastructure.inbound..")
+          .because("Controllers must be in infrastructure.inbound");
 
   @ArchTest
   static final ArchRule dtos_should_reside_in_inbound =
       ArchRuleDefinition.classes()
-          .that().haveSimpleNameEndingWith("Dto")
-          .should().resideInAPackage("..infrastructure.inbound..")
-          .because("DTOs used for incoming requests belong to inbound adapters");
+          .that()
+          .haveSimpleNameEndingWith("Dto")
+          .should()
+          .resideInAPackage("..infrastructure.inbound..")
+          .because("DTOs must be in infrastructure.inbound");
 
   @ArchTest
   static final ArchRule inbound_not_depend_on_outbound_ports =
       ArchRuleDefinition.noClasses()
-          .that().resideInAPackage("..infrastructure.inbound..")
-          .should().dependOnClassesThat()
+          .that()
+          .resideInAPackage("..infrastructure.inbound..")
+          .should()
+          .dependOnClassesThat()
           .resideInAPackage("..domain.port.out..")
-          .because("Controllers are inbound adapters and must only depend on inbound ports from the domain");
+          .because("Inbound adapters must not depend on outbound ports");
 
   @ArchTest
   static final ArchRule controller_should_depend_on_inbound_ports =
       ArchRuleDefinition.classes()
-          .that().haveSimpleNameEndingWith("Controller")
-          .and().resideInAPackage("..infrastructure.inbound..")
-          .should().dependOnClassesThat()
+          .that()
+          .haveSimpleNameEndingWith("Controller")
+          .and()
+          .resideInAPackage("..infrastructure.inbound..")
+          .should()
+          .dependOnClassesThat()
           .resideInAPackage("..domain.port.in..")
-          .because("Controllers must drive the application through inbound ports defined in the domain");
+          .because("Controllers must depend on inbound domain ports");
 
   @ArchTest
   static final ArchRule rest_controller_can_only_in_in_layer =
       ArchRuleDefinition.classes()
-          .that().areAnnotatedWith(RestController.class)
+          .that()
+          .areAnnotatedWith(RestController.class)
           .should()
-          .resideInAPackage("..infrastructure.inbound..");
+          .resideInAPackage("..infrastructure.inbound..")
+          .because("@RestController types must be in infrastructure.inbound");
 }

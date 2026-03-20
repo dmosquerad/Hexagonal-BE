@@ -9,34 +9,32 @@ import com.tngtech.archunit.lang.syntax.ArchRuleDefinition;
 class InfrastructureArchTest {
 
   @ArchTest
+  static final ArchRule infrastructure_should_not_depend_on_boot =
+      ArchRuleDefinition.noClasses()
+          .that()
+          .resideInAPackage("..infrastructure..")
+          .should()
+          .dependOnClassesThat()
+          .resideInAPackage("..boot..")
+          .because("Infrastructure must not depend on boot");
+
+  @ArchTest
   static final ArchRule infrastructure_should_not_depend_on_application =
       ArchRuleDefinition.noClasses()
-          .that().resideInAPackage("..infrastructure..")
-          .should().dependOnClassesThat()
+          .that()
+          .resideInAPackage("..infrastructure..")
+          .should()
+          .dependOnClassesThat()
           .resideInAnyPackage("..application..")
-          .because("Infrastructure adapters must depend only on domain ports, never on the application layer");
+          .because("Infrastructure must not depend on application");
 
   @ArchTest
   static final ArchRule mappers_should_reside_in_infrastructure =
       ArchRuleDefinition.classes()
-          .that().haveSimpleNameEndingWith("Mapper")
-          .should().resideInAPackage("..infrastructure..")
-          .because("Mapping between layers or DTOs is an infrastructure concern");
-
-  @ArchTest
-  static final ArchRule inbound_adapters_should_not_depend_on_outbound_ports =
-      ArchRuleDefinition.noClasses()
-          .that().resideInAPackage("..infrastructure.inbound..")
-          .should().dependOnClassesThat()
-          .resideInAPackage("..domain.port.out..")
-          .because("Inbound adapters must only interact with inbound ports to maintain hexagonal isolation");
-
-  @ArchTest
-  static final ArchRule outbound_adapters_should_not_depend_on_inbound_ports =
-      ArchRuleDefinition.noClasses()
-          .that().resideInAPackage("..infrastructure.outbound..")
-          .should().dependOnClassesThat()
-          .resideInAPackage("..domain.port.in..")
-          .because("Outbound adapters must only implement outbound ports to maintain hexagonal isolation");
+          .that()
+          .haveSimpleNameEndingWith("Mapper")
+          .should()
+          .resideInAPackage("..infrastructure..")
+          .because("Mappers must stay in infrastructure");
 }
 

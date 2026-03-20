@@ -6,6 +6,8 @@ import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.lang.syntax.ArchRuleDefinition;
 import com.tngtech.archunit.library.Architectures;
 import com.tngtech.archunit.library.dependencies.SlicesRuleDefinition;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Configuration;
 
 @AnalyzeClasses(packages = "com.architecture.hexagonal")
 class HexagonalArchitectureTest {
@@ -19,15 +21,18 @@ class HexagonalArchitectureTest {
   static final ArchRule packages_should_be_free_of_cycles =
       SlicesRuleDefinition.slices()
           .matching("com.architecture.hexagonal.(*)..")
-          .should().beFreeOfCycles()
-          .because("Packages must be free of cyclic dependencies between layers");
+          .should()
+          .beFreeOfCycles()
+          .because("Layers must be free of package cycles");
 
   @ArchTest
   static final ArchRule only_declared_adapters_should_exist =
       ArchRuleDefinition.classes()
-          .that().resideInAPackage("..infrastructure..")
-          .should().resideInAnyPackage(ALLOWED_ADAPTER_PACKAGES)
-          .because("Only declared adapter packages are allowed in the infrastructure layer");
+          .that()
+          .resideInAPackage("..infrastructure..")
+          .should()
+          .resideInAnyPackage(ALLOWED_ADAPTER_PACKAGES)
+          .because("Infrastructure may contain only declared adapters");
 
   @ArchTest
   static final ArchRule hexagonal_architecture_layers_check =
@@ -36,7 +41,7 @@ class HexagonalArchitectureTest {
           .domainServices("..domain..")
           .applicationServices("..application..")
           .adapter("adapters", ALLOWED_ADAPTER_PACKAGES)
-          .because("Architecture must follow a hexagonal (Ports & Adapters) layered structure");
+          .because("Architecture must follow onion/hexagonal layering");
 
   @ArchTest
   static final ArchRule layers_should_follow_hexagonal_architecture =
@@ -48,6 +53,5 @@ class HexagonalArchitectureTest {
           .whereLayer("Domain").mayOnlyBeAccessedByLayers("Application", "Infrastructure")
           .whereLayer("Application").mayNotBeAccessedByAnyLayer()
           .whereLayer("Infrastructure").mayNotBeAccessedByAnyLayer()
-          .because("Layers must respect hexagonal architecture: Infrastructure depends on Domain, "
-              + "Application depends on Domain, no layer depends on Application or Infrastructure");
+          .because("Dependencies must follow the defined layer boundaries");
 }
