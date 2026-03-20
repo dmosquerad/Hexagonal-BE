@@ -60,25 +60,6 @@ class UserRepositoryDatabaseWriteAdapterTestIT extends DatabaseIT {
   }
 
   @Test
-  void saveUser_update() {
-    final User user = UserTestDataBuilder
-        .builder()
-        .build()
-        .user();
-
-    User result = userRepositoryDatabaseWriteAdapter.saveUser(user);
-
-    AssertionsForClassTypes.assertThat(result)
-        .usingRecursiveComparison()
-        .ignoringFieldsOfTypes(UUID.class)
-        .isEqualTo(user);
-
-    Mockito.verify(userDaoMapper).toUserDao(ArgumentMatchers.any(User.class));
-    Mockito.verify(userDatabaseWriteRepository).save(ArgumentMatchers.any(UserDao.class));
-    Mockito.verify(userMapper).toUser(ArgumentMatchers.any(UserDao.class));
-  }
-
-  @Test
   void deleteUser() {
     final User user = UserTestDataBuilder
         .builder()

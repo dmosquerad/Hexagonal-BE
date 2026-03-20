@@ -56,6 +56,68 @@ user:
           application/json:
             schema:
               $ref: '../common-schema.yml#/schemas/responseError'
+  put:
+    tags:
+      - users
+    summary: Update an User by Uuid
+    operationId: updateUserByUuid
+    requestBody:
+      description: User Body value
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: './users-schema.yml#/schemas/userUpdate'
+    responses:
+      '200':
+        description: Expected response to a valid request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userResponse'
+      '404':
+        description: Not Found
+        content:
+          application/json:
+            schema:
+              $ref: '../common-schema.yml#/schemas/responseError'
+      '500':
+        description: Error
+        content:
+          application/json:
+            schema:
+              $ref: '../common-schema.yml#/schemas/responseError'
+  patch:
+    tags:
+      - users
+    summary: Patch an User by Uuid
+    operationId: patchUserByUuid
+    requestBody:
+      description: Partial User Body value
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: './users-schema.yml#/schemas/userPatch'
+    responses:
+      '200':
+        description: Expected response to a valid request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userResponse'
+      '404':
+        description: Not Found
+        content:
+          application/json:
+            schema:
+              $ref: '../common-schema.yml#/schemas/responseError'
+      '500':
+        description: Error
+        content:
+          application/json:
+            schema:
+              $ref: '../common-schema.yml#/schemas/responseError'
 
 users:
   get:
