@@ -169,10 +169,7 @@ public class UserController implements UsersApi {
     try {
       userExistsUseCasePort.execute(UserExistsQuery.builder().userId(userUuid).build());
     } catch (ResourceNotFoundException e) {
-      ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
-      problem.setDetail(e.getMessage());
-
-      throw new ErrorResponseException(HttpStatus.NOT_FOUND, problem, e);
+      throw new ErrorResponseException(HttpStatus.NOT_FOUND, e);
     }
 
     return ResponseEntity.ok().build();
