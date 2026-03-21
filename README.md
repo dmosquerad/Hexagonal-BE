@@ -26,6 +26,8 @@ hexagonal/
 │   │   └── outbound/
 │   │       └── database/           # JPA repositories & entities
 │   └── boot/                       # Spring Boot main application
+├── e2e/
+│   └── karate/                     # End-to-end API tests (Karate + JUnit 5)
 └── deployment/
     └── docker/                   # Compose + postgres init scripts
 ```
@@ -180,6 +182,39 @@ The project includes:
 - **Unit Tests** (`src/test/java`): Fast, isolated business logic tests
 - **Integration Tests** (`src/test-integration/java`): Database and API layer integration tests
 - **Test Utils** (`src/test-utils/java`): Shared builders and reusable test helpers
+
+### E2E Tests (Karate)
+
+Karate tests are in `e2e/karate` and can run in 3 modes using `executionMode`:
+
+- **all** (default): runs the complete suite
+- **smoke**: runs only smoke-tagged tests (currently full E2E flow)
+- **features**: runs feature tests excluding smoke-tagged ones
+
+```bash
+# Default (all)
+mvn -f e2e/karate/pom.xml clean test
+
+# Smoke only
+mvn -f e2e/karate/pom.xml clean test -DexecutionMode=smoke
+
+# Feature suite excluding smoke
+mvn -f e2e/karate/pom.xml clean test -DexecutionMode=features
+```
+
+You can override the API base URL if needed:
+
+```bash
+mvn -f e2e/karate/pom.xml clean test -DbaseUrl=http://localhost:8080/api
+```
+
+#### Error Contract Consolidation
+
+`404` non-existing-user contract checks were consolidated into a dedicated feature:
+
+- `e2e/karate/src/test/resources/features/users/users-error-contract.feature`
+
+This keeps endpoint features focused on happy paths and centralizes negative contract validation.
 
 ## 📝 Configuration
 
