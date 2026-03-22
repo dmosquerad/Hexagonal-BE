@@ -2,9 +2,9 @@ package com.architecture.hexagonal.infrastructure.outbound.database.mapper.util;
 
 import com.architecture.hexagonal.domain.data.vo.EmailVo;
 import java.util.Objects;
-import org.apache.commons.lang3.StringUtils;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.Named;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)

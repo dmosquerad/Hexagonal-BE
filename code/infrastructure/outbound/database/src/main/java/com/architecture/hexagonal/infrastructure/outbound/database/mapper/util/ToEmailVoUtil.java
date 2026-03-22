@@ -1,7 +1,8 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.mapper.util;
 
-import com.architecture.hexagonal.domain.data.vo.factory.EmailVoFactory;
 import com.architecture.hexagonal.domain.data.vo.EmailVo;
+import com.architecture.hexagonal.domain.data.vo.factory.EmailVoFactory;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.mapstruct.Named;
@@ -13,6 +14,9 @@ public final class ToEmailVoUtil {
 
   @Named(TO_EMAIL_VO)
   public static EmailVo toEmailVo(String email) {
+    if (Objects.isNull(email)) {
+      return EmailVo.builder().build();
+    }
     return EmailVoFactory.from(email);
   }
 }

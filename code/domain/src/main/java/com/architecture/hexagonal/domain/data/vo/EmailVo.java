@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.domain.data.vo;
 
-import org.apache.commons.lang3.StringUtils;
 import lombok.Builder;
 import lombok.Value;
+import org.apache.commons.lang3.StringUtils;
 
 @Value
 @Builder
