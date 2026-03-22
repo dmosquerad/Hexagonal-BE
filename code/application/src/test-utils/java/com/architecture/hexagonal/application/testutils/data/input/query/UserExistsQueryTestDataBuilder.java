@@ -1,4 +1,4 @@
-package com.hexagonal.application.testutils.data.input.query;
+package com.architecture.hexagonal.application.testutils.data.input.query;
 
 import com.architecture.hexagonal.domain.input.query.UserExistsQuery;
 import java.util.UUID;

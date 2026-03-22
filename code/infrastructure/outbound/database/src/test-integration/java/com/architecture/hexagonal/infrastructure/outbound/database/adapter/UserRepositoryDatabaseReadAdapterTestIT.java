@@ -1,11 +1,11 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.adapter;
 
 import com.architecture.hexagonal.domain.data.entity.User;
+import com.architecture.hexagonal.infrastructure.outbound.database.config.DatabaseIT;
+import com.architecture.hexagonal.infrastructure.outbound.database.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.outbound.database.data.UserDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.mapper.UserMapper;
 import com.architecture.hexagonal.infrastructure.outbound.database.repository.UserDatabaseReadRepository;
-import com.architecture.hexagonal.infrastructure.outbound.database.config.DatabaseIT;
-import com.architecture.hexagonal.infrastructure.outbound.database.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.outbound.database.testutils.data.entity.UserTestDataBuilder;
 import java.util.Collections;
 import java.util.Optional;

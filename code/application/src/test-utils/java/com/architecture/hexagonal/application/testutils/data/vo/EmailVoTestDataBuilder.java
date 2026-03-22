@@ -1,4 +1,4 @@
-package com.hexagonal.application.testutils.data.vo;
+package com.architecture.hexagonal.application.testutils.data.vo;
 
 import com.architecture.hexagonal.domain.data.vo.EmailVo;
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package com.hexagonal.application.testutils.data.input.command;
+package com.architecture.hexagonal.application.testutils.data.input.command;
 
 import com.architecture.hexagonal.domain.input.command.CreateUserCommand;
 import lombok.Builder;

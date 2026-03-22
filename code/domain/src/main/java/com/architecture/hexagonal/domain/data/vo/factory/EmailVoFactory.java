@@ -14,14 +14,14 @@ public class EmailVoFactory {
       return EmailVo.builder().build();
     }
 
-    int atIndex = email.indexOf('@');
+    final int atIndex = email.indexOf('@');
     if (atIndex <= 0 || atIndex != email.lastIndexOf('@') || atIndex == email.length() - 1) {
       return EmailVo.builder().build();
     }
 
-    String username = email.substring(0, atIndex);
-    String rightPart = email.substring(atIndex + 1);
-    String[] hostParts = rightPart.split("\\.", -1);
+    final String username = email.substring(0, atIndex);
+    final String rightPart = email.substring(atIndex + 1);
+    final String[] hostParts = rightPart.split("\\.", -1);
 
     if (StringUtils.isBlank(username)
         || hostParts.length < 2
@@ -29,8 +29,8 @@ public class EmailVoFactory {
       return EmailVo.builder().build();
     }
 
-    String host = String.join(".", Arrays.copyOf(hostParts, hostParts.length - 1));
-    String tld = hostParts[hostParts.length - 1];
+    final String host = String.join(".", Arrays.copyOf(hostParts, hostParts.length - 1));
+    final String tld = hostParts[hostParts.length - 1];
 
     return EmailVo.builder()
         .username(username)
