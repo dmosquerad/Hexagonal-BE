@@ -13,7 +13,7 @@ public final class ToEmailUtil {
   public static final String TO_EMAIL = "toEmail";
 
   @Named(TO_EMAIL)
-  public static String toEmail(EmailVo email) {
+  public static String toEmail(final EmailVo email) {
     if (Objects.isNull(email)) {
       return StringUtils.EMPTY;
     }
