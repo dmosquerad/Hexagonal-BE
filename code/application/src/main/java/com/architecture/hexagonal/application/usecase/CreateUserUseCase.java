@@ -5,7 +5,6 @@ import com.architecture.hexagonal.domain.input.command.CreateUserCommand;
 import com.architecture.hexagonal.domain.port.in.CreateUserUseCasePort;
 import com.architecture.hexagonal.domain.port.out.UserRepositoryWritePort;
 import com.architecture.hexagonal.domain.data.vo.factory.EmailVoFactory;
-import com.architecture.hexagonal.domain.data.vo.EmailVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,8 +21,7 @@ public class CreateUserUseCase implements CreateUserUseCasePort {
     return userRepositoryWritePort.saveUser(
         User.builder()
             .name(createUserCommand.getName())
-            .email(EmailVoFactory.from(createUserCommand.getEmail())
-              .orElse(EmailVo.builder().build()))
+            .email(EmailVoFactory.from(createUserCommand.getEmail()))
             .build());
   }
 }

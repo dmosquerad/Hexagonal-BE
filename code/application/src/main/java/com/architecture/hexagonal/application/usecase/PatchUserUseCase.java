@@ -36,7 +36,7 @@ public class PatchUserUseCase implements PatchUserUseCasePort {
             .userId(uuid)
             .name(Optional.ofNullable(patchUserCommand.getName())
                 .orElse(currentUser.getName()))
-            .email(EmailVoFactory.from(patchUserCommand.getEmail())
+            .email(Optional.ofNullable(EmailVoFactory.from(patchUserCommand.getEmail()))
                 .orElse(currentUser.getEmail()))
             .build());
   }

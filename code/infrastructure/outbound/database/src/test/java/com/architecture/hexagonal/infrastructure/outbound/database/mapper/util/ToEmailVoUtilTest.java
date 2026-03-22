@@ -24,7 +24,8 @@ class ToEmailVoUtilTest {
 
     assertThat(result).isEqualTo(EmailVoTestDataBuilder.builder()
         .username(null)
-        .domain(null)
+        .host(null)
+        .tld(null)
         .build()
         .emailVo());
   }

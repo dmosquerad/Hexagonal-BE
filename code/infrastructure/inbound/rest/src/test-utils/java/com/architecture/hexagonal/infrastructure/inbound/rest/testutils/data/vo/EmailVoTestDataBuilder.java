@@ -10,12 +10,16 @@ public class EmailVoTestDataBuilder {
   private String username = "test";
 
   @Builder.Default
-  private String domain = "example.com";
+  private String host = "example";
+
+  @Builder.Default
+  private String tld = "com";
 
   public EmailVo emailVo() {
     return EmailVo.builder()
         .username(username)
-        .domain(domain)
+        .host(host)
+        .tld(tld)
         .build();
   }
 }

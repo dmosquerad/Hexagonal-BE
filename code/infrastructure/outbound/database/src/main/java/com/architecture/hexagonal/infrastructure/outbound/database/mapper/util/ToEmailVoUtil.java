@@ -13,7 +13,6 @@ public final class ToEmailVoUtil {
 
   @Named(TO_EMAIL_VO)
   public static EmailVo toEmailVo(String email) {
-    return EmailVoFactory.from(email)
-            .orElse(EmailVo.builder().build());
+    return EmailVoFactory.from(email);
   }
 }

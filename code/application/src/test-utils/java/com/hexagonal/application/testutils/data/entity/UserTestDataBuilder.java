@@ -14,7 +14,8 @@ public class UserTestDataBuilder {
   @Builder.Default
   private EmailVo email = EmailVo.builder()
       .username("test")
-      .domain("example.com")
+      .host("example")
+      .tld("com")
       .build();
 
   @Builder.Default

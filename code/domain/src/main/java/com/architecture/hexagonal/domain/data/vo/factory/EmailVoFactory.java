@@ -1,27 +1,42 @@
 package com.architecture.hexagonal.domain.data.vo.factory;
 
 import com.architecture.hexagonal.domain.data.vo.EmailVo;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.Arrays;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EmailVoFactory {
 
-  public static Optional<EmailVo> from(String email) {
-    if (Objects.isNull(email) || !email.contains("@")) {
-      return Optional.empty();
+  public static EmailVo from(String email) {
+    if (StringUtils.isBlank(email)) {
+      return EmailVo.builder().build();
     }
 
     int atIndex = email.indexOf('@');
-    String username = email.substring(0, atIndex);
-    String domain = email.substring(atIndex + 1);
+    if (atIndex <= 0 || atIndex != email.lastIndexOf('@') || atIndex == email.length() - 1) {
+      return EmailVo.builder().build();
+    }
 
-    return Optional.of(EmailVo.builder()
+    String username = email.substring(0, atIndex);
+    String rightPart = email.substring(atIndex + 1);
+    String[] hostParts = rightPart.split("\\.", -1);
+
+    if (StringUtils.isBlank(username)
+        || hostParts.length < 2
+        || Arrays.stream(hostParts).anyMatch(StringUtils::isBlank)) {
+      return EmailVo.builder().build();
+    }
+
+    String host = String.join(".", Arrays.copyOf(hostParts, hostParts.length - 1));
+    String tld = hostParts[hostParts.length - 1];
+
+    return EmailVo.builder()
         .username(username)
-        .domain(domain)
-        .build());
+        .host(host)
+        .tld(tld)
+        .build();
   }
 
 }

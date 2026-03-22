@@ -20,7 +20,8 @@ class EmailVoTest {
   void canFormEmailShouldReturnFalseWhenIsMissing() {
     final EmailVo dataMissing = EmailVoTestDataBuilder.builder()
       .username(null)
-      .domain(null)
+      .host(null)
+      .tld(null)
       .build()
       .emailVo();
 
@@ -42,7 +43,8 @@ class EmailVoTest {
   void getEmailShouldReturnEmptyWhenDataIsInvalid() {
     final EmailVo emailVo = EmailVoTestDataBuilder.builder()
       .username(null)
-      .domain(null)
+      .host(null)
+      .tld(null)
       .build()
       .emailVo();
 

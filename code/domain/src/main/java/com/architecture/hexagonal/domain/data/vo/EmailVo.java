@@ -10,10 +10,14 @@ public class EmailVo {
 
   String username;
 
-  String domain;
+  String host;
+
+  String tld;
 
   public boolean canFormEmail() {
-    return StringUtils.isNotBlank(this.username) && StringUtils.isNotBlank(domain);
+    return StringUtils.isNotBlank(this.username)
+        && StringUtils.isNotBlank(this.host)
+        && StringUtils.isNotBlank(this.tld);
   }
 
   public String getEmail() {
@@ -21,7 +25,7 @@ public class EmailVo {
       return StringUtils.EMPTY;
     }
 
-    return this.getUsername() + "@" + this.getDomain();
+    return this.getUsername() + "@" + this.getHost() + "." + this.getTld();
   }
 
 }

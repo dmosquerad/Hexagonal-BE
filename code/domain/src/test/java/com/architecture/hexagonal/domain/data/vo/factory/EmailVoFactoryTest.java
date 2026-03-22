@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.architecture.hexagonal.domain.data.vo.EmailVo;
 import com.architecture.hexagonal.domain.testutils.data.vo.EmailVoTestDataBuilder;
-import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 class EmailVoFactoryTest {
@@ -15,15 +14,20 @@ class EmailVoFactoryTest {
       .build()
       .emailVo();
 
-    final Optional<EmailVo> result = EmailVoFactory.from("test@example.com");
+    final EmailVo result = EmailVoFactory.from("test@example.com");
 
-    assertThat(result).isEqualTo(Optional.of(expected));
+    assertThat(result).isEqualTo(expected);
   }
 
   @Test
-  void fromShouldReturnEmptyWhenEmailIsInvalid() {
-    final Optional<EmailVo> result = EmailVoFactory.from(null);
+  void fromShouldReturnEmptyEmailVoWhenEmailIsInvalid() {
+    final EmailVo result = EmailVoFactory.from(null);
 
-    assertThat(result).isEmpty();
+    assertThat(result).isEqualTo(EmailVoTestDataBuilder.builder()
+        .username(null)
+        .host(null)
+        .tld(null)
+        .build()
+        .emailVo());
   }
 }

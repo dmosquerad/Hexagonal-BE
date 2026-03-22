@@ -9,8 +9,6 @@ import com.architecture.hexagonal.domain.port.out.UserRepositoryReadPort;
 import com.architecture.hexagonal.domain.port.out.UserRepositoryWritePort;
 import com.architecture.hexagonal.domain.data.vo.factory.EmailVoFactory;
 import java.util.UUID;
-
-import com.architecture.hexagonal.domain.data.vo.EmailVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,8 +34,7 @@ public class UpdateUserUseCase implements UpdateUserUseCasePort {
         User.builder()
           .userId(uuid)
           .name(updateUserCommand.getName())
-          .email(EmailVoFactory.from(updateUserCommand.getEmail())
-            .orElse(EmailVo.builder().build()))
+          .email(EmailVoFactory.from(updateUserCommand.getEmail()))
           .build());
   }
 }
