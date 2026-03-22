@@ -17,6 +17,12 @@
     </modules>
 
     <dependencies>
+        <!-- PROJECT-MODULES -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>application</artifactId>
+        </dependency>
+        
         <!-- MAPSTRUCT -->
         <dependency>
             <groupId>org.mapstruct</groupId>

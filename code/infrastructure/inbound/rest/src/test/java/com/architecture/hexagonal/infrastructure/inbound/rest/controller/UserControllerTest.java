@@ -1,31 +1,37 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.controller;
 
-import com.architecture.hexagonal.domain.data.User;
+import com.architecture.hexagonal.application.input.command.CreateUserCommand;
+import com.architecture.hexagonal.application.input.command.DeleteUserCommand;
+import com.architecture.hexagonal.application.input.command.PatchUserCommand;
+import com.architecture.hexagonal.application.input.command.UpdateUserCommand;
+import com.architecture.hexagonal.application.input.query.FindUserByUserIdQuery;
+import com.architecture.hexagonal.application.input.query.UserExistsQuery;
+import com.architecture.hexagonal.application.port.in.CreateUserUseCasePort;
+import com.architecture.hexagonal.application.port.in.DeleteUserUseCasePort;
+import com.architecture.hexagonal.application.port.in.FindUserByUserIdUseCasePort;
+import com.architecture.hexagonal.application.port.in.GetAllUsersUseCasePort;
+import com.architecture.hexagonal.application.port.in.PatchUserUseCasePort;
+import com.architecture.hexagonal.application.port.in.UpdateUserUseCasePort;
+import com.architecture.hexagonal.application.port.in.UserExistsUseCasePort;
+import com.architecture.hexagonal.domain.data.entity.User;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
-import com.architecture.hexagonal.domain.input.command.CreateUserCommand;
-import com.architecture.hexagonal.domain.input.command.DeleteUserCommand;
-import com.architecture.hexagonal.domain.input.command.PatchUserCommand;
-import com.architecture.hexagonal.domain.input.command.UpdateUserCommand;
-import com.architecture.hexagonal.domain.input.query.FindUserByUserIdQuery;
-import com.architecture.hexagonal.domain.input.query.UserExistsQuery;
-import com.architecture.hexagonal.domain.port.in.CreateUserUseCasePort;
-import com.architecture.hexagonal.domain.port.in.DeleteUserUseCasePort;
-import com.architecture.hexagonal.domain.port.in.FindUserByUserIdUseCasePort;
-import com.architecture.hexagonal.domain.port.in.GetAllUsersUseCasePort;
-import com.architecture.hexagonal.domain.port.in.PatchUserUseCasePort;
-import com.architecture.hexagonal.domain.port.in.UpdateUserUseCasePort;
-import com.architecture.hexagonal.domain.port.in.UserExistsUseCasePort;
 import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UserResponseDto;
 import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UsersResponseDto;
+import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.CreateUserCommandMapper;
+import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.DeleteUserCommandMapper;
+import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.FindUserByUserIdQueryMapper;
+import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.PatchUserCommandMapper;
+import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.UpdateUserCommandMapper;
+import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.UserExistsQueryMapper;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.UserReadDtoMapper;
-import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.dto.UserReadDtoTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.time.TestClock;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.dto.UserCreateDtoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.dto.UserPatchDtoTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.dto.UserReadDtoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.dto.UserResponseDtoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.dto.UserUpdateDtoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.dto.UsersResponseDtoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.entity.UserTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.time.TestClock;
 import java.time.Clock;
 import java.util.Collections;
 import org.assertj.core.api.AssertionsForClassTypes;
@@ -72,6 +78,30 @@ class UserControllerTest {
 
   @Spy
   UserReadDtoMapper userReadDtoMapper = Mappers.getMapper(UserReadDtoMapper.class);
+
+  @Spy
+  CreateUserCommandMapper createUserCommandMapper =
+      Mappers.getMapper(CreateUserCommandMapper.class);
+
+  @Spy
+  DeleteUserCommandMapper deleteUserCommandMapper =
+      Mappers.getMapper(DeleteUserCommandMapper.class);
+
+  @Spy
+  UpdateUserCommandMapper updateUserCommandMapper =
+      Mappers.getMapper(UpdateUserCommandMapper.class);
+
+  @Spy
+  PatchUserCommandMapper patchUserCommandMapper =
+      Mappers.getMapper(PatchUserCommandMapper.class);
+
+  @Spy
+  FindUserByUserIdQueryMapper findUserByUserIdQueryMapper =
+      Mappers.getMapper(FindUserByUserIdQueryMapper.class);
+
+  @Spy
+  UserExistsQueryMapper userExistsQueryMapper =
+      Mappers.getMapper(UserExistsQueryMapper.class);
 
   @Spy
   Clock clock = TestClock.FIXED_CLOCK;
@@ -129,6 +159,7 @@ class UserControllerTest {
         .usingRecursiveComparison()
         .isEqualTo(responseExpected);
 
+    Mockito.verify(createUserCommandMapper).toCreateUserCommand(createUserDto);
     Mockito.verify(createUserUseCasePort).execute(ArgumentMatchers.any(CreateUserCommand.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
@@ -157,6 +188,7 @@ class UserControllerTest {
         .usingRecursiveComparison()
         .isEqualTo(responseExpected);
 
+    Mockito.verify(findUserByUserIdQueryMapper).toFindUserByUserIdQuery(user.getUserId());
     Mockito
         .verify(findUserByUserIdUseCasePort).execute(ArgumentMatchers.any(FindUserByUserIdQuery.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
@@ -186,6 +218,7 @@ class UserControllerTest {
         .usingRecursiveComparison()
         .isEqualTo(responseExpected);
 
+    Mockito.verify(deleteUserCommandMapper).toDeleteUserCommand(user.getUserId());
     Mockito.verify(deleteUserUseCasePort).execute(ArgumentMatchers.any(DeleteUserCommand.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
@@ -218,6 +251,8 @@ class UserControllerTest {
         .usingRecursiveComparison()
         .isEqualTo(responseExpected);
 
+    Mockito.verify(updateUserCommandMapper)
+        .toUpdateUserCommand(ArgumentMatchers.eq(user.getUserId()), ArgumentMatchers.any());
     Mockito.verify(updateUserUseCasePort).execute(ArgumentMatchers.any(UpdateUserCommand.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
@@ -252,6 +287,8 @@ class UserControllerTest {
         .usingRecursiveComparison()
         .isEqualTo(errorException);
 
+    Mockito.verify(updateUserCommandMapper)
+        .toUpdateUserCommand(ArgumentMatchers.eq(user.getUserId()), ArgumentMatchers.any());
     Mockito.verify(updateUserUseCasePort).execute(ArgumentMatchers.any(UpdateUserCommand.class));
   }
 
@@ -287,6 +324,8 @@ class UserControllerTest {
         .usingRecursiveComparison()
         .isEqualTo(responseExpected);
 
+    Mockito.verify(patchUserCommandMapper)
+        .toPatchUserCommand(ArgumentMatchers.eq(user.getUserId()), ArgumentMatchers.any());
     Mockito.verify(patchUserUseCasePort).execute(ArgumentMatchers.any(PatchUserCommand.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
@@ -321,6 +360,8 @@ class UserControllerTest {
         .usingRecursiveComparison()
         .isEqualTo(errorException);
 
+    Mockito.verify(patchUserCommandMapper)
+        .toPatchUserCommand(ArgumentMatchers.eq(user.getUserId()), ArgumentMatchers.any());
     Mockito.verify(patchUserUseCasePort).execute(ArgumentMatchers.any(PatchUserCommand.class));
   }
 
@@ -343,6 +384,7 @@ class UserControllerTest {
         .usingRecursiveComparison()
         .isEqualTo(responseExpected);
 
+    Mockito.verify(userExistsQueryMapper).toUserExistsQuery(user.getUserId());
     Mockito.verify(userExistsUseCasePort).execute(ArgumentMatchers.any(UserExistsQuery.class));
   }
 
@@ -367,6 +409,7 @@ class UserControllerTest {
         .usingRecursiveComparison()
         .isEqualTo(errorException);
 
+    Mockito.verify(userExistsQueryMapper).toUserExistsQuery(user.getUserId());
     Mockito.verify(userExistsUseCasePort).execute(ArgumentMatchers.any(UserExistsQuery.class));
   }
 

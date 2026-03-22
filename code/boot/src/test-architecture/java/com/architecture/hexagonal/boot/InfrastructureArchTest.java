@@ -19,16 +19,6 @@ class InfrastructureArchTest {
           .because("Infrastructure must not depend on boot");
 
   @ArchTest
-  static final ArchRule infrastructure_should_not_depend_on_application =
-      ArchRuleDefinition.noClasses()
-          .that()
-          .resideInAPackage("..infrastructure..")
-          .should()
-          .dependOnClassesThat()
-          .resideInAnyPackage("..application..")
-          .because("Infrastructure must not depend on application");
-
-  @ArchTest
   static final ArchRule mappers_should_reside_in_infrastructure =
       ArchRuleDefinition.classes()
           .that()

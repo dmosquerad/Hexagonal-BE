@@ -54,8 +54,8 @@ class InfrastructureOutboundArchTest {
           .haveSimpleNameEndingWith("Adapter")
           .and()
           .resideInAPackage("..infrastructure.outbound..")
-          .should().implement(Predicates.resideInAPackage("..domain.port.out.."))
-          .because("Outbound adapters must implement outbound domain ports");
+          .should().implement(Predicates.resideInAPackage("..application.port.out.."))
+          .because("Outbound adapters must implement outbound ports");
 
   @ArchTest
   static final ArchRule outbound_adapters_should_not_depend_on_inbound_ports =
@@ -64,7 +64,7 @@ class InfrastructureOutboundArchTest {
           .resideInAPackage("..infrastructure.outbound..")
           .should()
           .dependOnClassesThat()
-          .resideInAPackage("..domain.port.in..")
+          .resideInAPackage("..application.port.in..")
           .because("Outbound adapters must not depend on inbound ports");
 
   @ArchTest

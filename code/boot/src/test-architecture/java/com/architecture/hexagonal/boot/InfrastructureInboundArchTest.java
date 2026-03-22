@@ -34,7 +34,7 @@ class InfrastructureInboundArchTest {
           .resideInAPackage("..infrastructure.inbound..")
           .should()
           .dependOnClassesThat()
-          .resideInAPackage("..domain.port.out..")
+          .resideInAPackage("..application.port.out..")
           .because("Inbound adapters must not depend on outbound ports");
 
   @ArchTest
@@ -46,8 +46,8 @@ class InfrastructureInboundArchTest {
           .resideInAPackage("..infrastructure.inbound..")
           .should()
           .dependOnClassesThat()
-          .resideInAPackage("..domain.port.in..")
-          .because("Controllers must depend on inbound domain ports");
+          .resideInAPackage("..application.port.in..")
+          .because("Controllers must depend on inbound ports");
 
   @ArchTest
   static final ArchRule rest_controller_can_only_in_in_layer =

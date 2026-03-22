@@ -83,50 +83,33 @@ class DomainArchTest {
           .because("Domain names must avoid technical adapter suffixes");
 
   @ArchTest
-  static final ArchRule commands_should_reside_in_domain_command_package =
+  static final ArchRule domain_data_should_reside_in_entity_vo_or_vo_factory_packages =
       ArchRuleDefinition.classes()
           .that()
-          .haveSimpleNameEndingWith("Command")
+          .resideInAPackage("..domain.data..")
           .should()
-          .resideInAPackage("..domain.input.command..")
-          .because("Commands must be in domain.input.command");
+          .resideInAnyPackage(
+              "..domain.data.entity..",
+              "..domain.data.vo..")
+          .because("Domain data must follow the entity/vo taxonomy");
 
   @ArchTest
-  static final ArchRule queries_should_reside_in_domain_query_package =
+  static final ArchRule value_objects_should_reside_in_domain_data_vo_package =
       ArchRuleDefinition.classes()
           .that()
-          .haveSimpleNameEndingWith("Query")
+          .haveSimpleNameEndingWith("Vo")
           .should()
-          .resideInAPackage("..domain.input.query..")
-          .because("Queries must be in domain.input.query");
+          .resideInAPackage("..domain.data.vo..")
+          .because("Value objects must reside in domain.data.vo");
 
   @ArchTest
-  static final ArchRule ports_should_reside_in_domain_port_package =
+  static final ArchRule value_object_factories_should_reside_in_domain_data_vo_factory_package =
       ArchRuleDefinition.classes()
           .that()
-          .haveSimpleNameEndingWith("Port")
+          .haveSimpleNameEndingWith("VoFactory")
           .should()
-          .resideInAPackage("..domain.port..")
-          .because("Ports must be in domain.port");
-
-  @ArchTest
-  static final ArchRule inbound_ports_should_reside_in_domain_port_in =
-      ArchRuleDefinition.classes()
-          .that()
-          .haveSimpleNameEndingWith("UseCasePort")
-          .should()
-          .resideInAPackage("..domain.port.in..")
-          .because("Inbound use case ports must be in domain.port.in");
-
-  @ArchTest
-  static final ArchRule outbound_ports_should_reside_in_domain_port_out =
-      ArchRuleDefinition.classes()
-          .that()
-          .haveSimpleNameEndingWith("Port")
-          .and()
-          .haveSimpleNameNotEndingWith("UseCasePort")
-          .should()
-          .resideInAPackage("..domain.port.out..")
-          .because("Outbound ports must be in domain.port.out");
+          .resideInAPackage("..domain.service.factory.vo..")
+          .because("Value object factories must reside in domain.service.factory.vo");
+  
 }
 

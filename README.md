@@ -4,78 +4,91 @@ This is a production-ready example project implementing **hexagonal architecture
 
 ## 📋 Description
 
-Hexagonal architecture advocates for separation of concerns, enhancing code maintainability and testability. This project demonstrates a comprehensive implementation with:
+This repository is a practical implementation of **Hexagonal Architecture (Ports & Adapters)** in a **multi-module Maven** setup.
 
-- **Domain Layer**: Pure business logic independent of frameworks
-- **Application Layer**: Use cases and business orchestration  
-- **Infrastructure Layer**: REST adapters (inbound) and database adapters (outbound)
-- **Boot Module**: Spring Boot configuration and dependency injection
+The goal is to keep the business core isolated from frameworks and infrastructure concerns, making the codebase easier to evolve, test, and maintain over time.
+
+It is organized around four main modules:
+
+- **Domain**: business model and core rules, framework-agnostic
+- **Application**: use cases and port contracts that orchestrate the domain
+- **Infrastructure**: inbound REST adapters and outbound database adapters
+- **Boot**: Spring Boot composition root and runtime wiring
+
+The API follows a **contract-first** approach with OpenAPI, includes unit/integration/E2E testing, and is prepared to run with PostgreSQL via Docker Compose.
 
 ## 🏗️ Project Structure
 
 The project is organized into Maven modules plus deployment resources:
 
 ```
-hexagonal/
+Hexagonal-BE/
 ├── code/
-│   ├── domain/                      # Pure business logic
-│   ├── application/                 # Use cases & application services
+│   ├── pom.xml                      # Parent Maven module
+│   ├── domain/                      # Domain layer
+│   ├── application/                 # Application layer (use cases + ports)
 │   ├── infrastructure/
 │   │   ├── inbound/
-│   │   │   └── rest/               # REST controllers + OpenAPI contracts
+│   │   │   └── rest/                # REST adapter + OpenAPI contracts
 │   │   └── outbound/
-│   │       └── database/           # JPA repositories & entities
-│   └── boot/                       # Spring Boot main application
+│   │       └── database/            # Database adapter (JPA/PostgreSQL)
+│   ├── boot/                        # Spring Boot main application
 ├── e2e/
-│   └── karate/                     # End-to-end API tests (Karate + JUnit 5)
+│   └── karate/                      # End-to-end API tests (Karate + JUnit 5)
 └── deployment/
-    └── docker/                   # Compose + postgres init scripts
+    └── docker/                     # Docker Compose + Postgres init scripts
 ```
 
 ## 🔄 Module Communication
 
 ```mermaid
-flowchart TD
+flowchart LR
     Client([HTTP Client])
+    POSTGRES[(PostgreSQL)]
 
-    subgraph INBOUND[Infrastructure Inbound]
-        REST[REST Controller]
+    subgraph INBOUND["Infrastructure · Inbound"]
+        direction TB
+        REST[UserController]
     end
 
-    subgraph DOMAIN[Domain]
-        IN_PORT[Input Ports]
-        MODEL[Model]
-        OUT_PORT[Output Ports]
-    end
-
-    subgraph APP[Application]
+    subgraph APP["Application"]
+        direction TB
+        IN_PORT[Ports In]
         UC[Use Cases]
+        OUT_PORT[Ports Out]
     end
 
-    subgraph OUTBOUND[Infrastructure Outbound]
-        DB[DB Adapter]
+    subgraph DOMAIN["Domain"]
+        direction TB
+        MODEL[Domain Model]
     end
 
-    subgraph BOOT[Boot]
+    subgraph OUTBOUND["Infrastructure · Outbound"]
+        direction TB
+        DB[DB Adapters]
+    end
+
+    APP ~~~ DOMAIN
+
+    subgraph BOOT["Boot"]
+        direction TB
         COMP[Composition Root]
     end
-
-    POSTGRES[(PostgreSQL)]
 
     Client --> REST
     REST --> IN_PORT
     UC -.-> IN_PORT
+    UC --> MODEL
     UC --> OUT_PORT
     DB -.-> OUT_PORT
     DB --> POSTGRES
-    COMP --> REST
-    COMP --> UC
-    COMP --> DB
+
+    COMP -.wires.-> REST
+    COMP -.wires.-> UC
+    COMP -.wires.-> DB
 ```
 
-> `-->` calls &nbsp;&nbsp; `- - ->` implements
-
-If the diagram is still not rendered in VS Code preview, enable Mermaid support in Markdown preview settings or use a Mermaid preview extension.
+> `-->` runtime flow &nbsp;&nbsp; `-.->` implementation/wiring
 
 ## 🚀 Quick Start
 
@@ -98,69 +111,78 @@ Application available at: **http://localhost:8080/api**
 ## 📚 Modules
 
 ### Domain
-Contains business entities and the core business logic. This module is independent of any framework.
+Contains the business model and core rules. This module is framework-agnostic and does not depend on Spring.
 
 **Content:**
-- Domain entities
-- Repository interfaces (ports)
-- Commands/queries and domain exceptions
+- Entities and value objects
+- Domain services/factories
+- Domain exceptions and error messages
 
 ### Application
-Implements the application use cases using domain ports.
+Implements use cases and defines the contracts (ports) to interact with infrastructure.
 
 **Content:**
-- Application services
-- Use case implementations
-- Transactional orchestration over domain ports
+- Ports In (input contracts for inbound adapters)
+- Ports Out (output contracts for outbound adapters)
+- Commands and queries for use case execution
+- Use case implementations and orchestration
 
 ### Infrastructure
+Provides adapter implementations for external interaction.
 
 #### Inbound (REST)
-Inbound adapters that expose the REST API.
+Exposes the API and translates HTTP requests/responses to application use cases.
 
 **Features:**
-- REST Controllers
-- OpenAPI/Swagger documentation with contract-first approach
-- Automatic code generation from OpenAPI specifications
-- OpenAPI contracts under `src/main/resources/contract/`
+- REST controllers
+- OpenAPI contract-first documentation
+- API code generation from OpenAPI specs
+- Centralized REST exception handling
 
-**Available Resources:**
-- `/api/users` - User-related operations
+**Contract location:**
+- `code/infrastructure/inbound/rest/src/main/resources/contract/`
 
 #### Outbound (Database)
-Outbound adapters for data persistence using **PostgreSQL**.
+Implements persistence with PostgreSQL using Spring Data JPA.
 
 **Content:**
-- JPA Repository implementations
-- Entity mapping and data access layer
-- Database schema management with Hibernate
+- Repository adapters implementing Ports Out
+- JPA repositories and DAO mappings
+- Persistence configuration and data access
 
 ### Boot
-Boot module that configures the Spring Boot application and includes all necessary dependencies.
+Application composition root that wires all modules and launches Spring Boot.
 
 **Content:**
-- Main application class (`Application.java`)
-- Configuration composition by importing REST and Database config files
-- Spring component scanning and auto-configuration
+- Main application entrypoint
+- Component scanning and module wiring
+- Runtime configuration composition
 
 ## 🔌 Ports and Adapters
 
 ### Ports (Interfaces)
-Ports are defined as interfaces that represent contracts between the domain and the outside world.
+Ports are contracts defined in the application layer to decouple use cases from external technologies.
+
+- **Ports In**: define how the application is invoked (input boundary for use cases)
+- **Ports Out**: define what external capabilities the application needs (output boundary)
 
 ### Adapters
-Adapters are concrete implementations of ports:
-- **REST Adapter**: Converts HTTP requests into application commands
-- **Database Adapter**: Persists data in PostgreSQL using JPA/Hibernate
+Adapters are infrastructure implementations that connect external systems to ports:
+
+- **Inbound adapters** (for example REST): translate external requests into calls to **Ports In**
+- **Outbound adapters** (for example database): implement **Ports Out** to persist and retrieve data
+
+This separation keeps business logic independent from HTTP, database, and framework details.
 
 ## 📖 API Documentation
 
-Once the application is running, access the interactive API documentation:
+Once the application is running, you can access the interactive API documentation:
 - **Swagger UI**: http://localhost:8080/api/swagger-ui/index.html
 - **OpenAPI JSON**: http://localhost:8080/api/v3/api-docs
 - **Redoc**: http://localhost:8080/api/redoc.html
 
-The API uses **OpenAPI 3.0** specification with contract-first approach defined in `code/infrastructure/inbound/rest/src/main/resources/contract/`
+The API follows an **OpenAPI 3.0 contract-first** approach.
+Contracts are defined in `code/infrastructure/inbound/rest/src/main/resources/contract/`.
 
 ## 🧪 Testing
 
@@ -174,8 +196,6 @@ mvn test
 ```bash
 cd code
 mvn verify
-# or specifically
-mvn failsafe:integration-test
 ```
 
 The project includes:
@@ -202,7 +222,7 @@ mvn -f e2e/karate/pom.xml clean test -DexecutionMode=smoke
 mvn -f e2e/karate/pom.xml clean test -DexecutionMode=features
 ```
 
-You can override the API base URL if needed:
+Optional: override the API base URL if needed:
 
 ```bash
 mvn -f e2e/karate/pom.xml clean test -DbaseUrl=http://localhost:8080/api
@@ -224,4 +244,4 @@ Application configuration is organized by concerns:
 - **REST**: `code/infrastructure/inbound/rest/src/main/resources/application-rest.yml` - API configuration
 - **Database**: `code/infrastructure/outbound/database/src/main/resources/application-database.yml` - Persistence configuration
 
-**Created as an example of Hexagonal Architecture in Java** 🏗️
+**Built as a practical Hexagonal Architecture example in Java.**

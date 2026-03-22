@@ -38,8 +38,10 @@ class HexagonalArchitectureTest {
   static final ArchRule hexagonal_architecture_layers_check =
       Architectures.onionArchitecture()
           .domainModels("..domain.data..")
-          .domainServices("..domain..")
-          .applicationServices("..application..")
+          .domainServices("..domain.service..")
+          .applicationServices("..application.usecase..",
+            "..application.port.in..",
+            "..application.port.out..")
           .adapter("adapters", ALLOWED_ADAPTER_PACKAGES)
           .because("Architecture must follow onion/hexagonal layering");
 
@@ -51,7 +53,7 @@ class HexagonalArchitectureTest {
           .layer("Application").definedBy("..application..")
           .layer("Infrastructure").definedBy("..infrastructure..")
           .whereLayer("Domain").mayOnlyBeAccessedByLayers("Application", "Infrastructure")
-          .whereLayer("Application").mayNotBeAccessedByAnyLayer()
+          .whereLayer("Application").mayOnlyBeAccessedByLayers("Infrastructure")
           .whereLayer("Infrastructure").mayNotBeAccessedByAnyLayer()
           .because("Dependencies must follow the defined layer boundaries");
 }

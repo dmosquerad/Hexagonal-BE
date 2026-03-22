@@ -1,0 +1,12 @@
+package com.architecture.hexagonal.application.port.out;
+
+import com.architecture.hexagonal.domain.data.entity.User;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+
+public interface UserRepositoryReadPort {
+  Set<User> getAllUsers();
+  
+  Optional<User> findUserById(UUID uuid);
+}

@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.adapter;
 
-import com.architecture.hexagonal.domain.data.User;
+import com.architecture.hexagonal.domain.data.entity.User;
 import com.architecture.hexagonal.infrastructure.outbound.database.data.UserDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.mapper.UserMapper;
 import com.architecture.hexagonal.infrastructure.outbound.database.repository.UserDatabaseReadRepository;
@@ -43,7 +43,7 @@ class UserRepositoryDatabaseReadAdapterTest
     Mockito.when(userDatabaseReadRepository.findAll())
       .thenReturn(Collections.singletonList(userDao));
 
-    Set<User> result = userRepositoryDatabaseReadAdapter.getAllUsers();
+    final Set<User> result = userRepositoryDatabaseReadAdapter.getAllUsers();
 
     AssertionsForClassTypes.assertThat(result)
         .usingRecursiveComparison()
@@ -67,7 +67,7 @@ class UserRepositoryDatabaseReadAdapterTest
     Mockito.when(userDatabaseReadRepository.findByUserId(userDao.getUserId()))
         .thenReturn(Optional.of(userDao));
 
-    Optional<User> result = userRepositoryDatabaseReadAdapter.findUserById(userDao.getUserId());
+    final Optional<User> result = userRepositoryDatabaseReadAdapter.findUserById(userDao.getUserId());
 
     AssertionsForClassTypes.assertThat(result)
         .usingRecursiveComparison()
