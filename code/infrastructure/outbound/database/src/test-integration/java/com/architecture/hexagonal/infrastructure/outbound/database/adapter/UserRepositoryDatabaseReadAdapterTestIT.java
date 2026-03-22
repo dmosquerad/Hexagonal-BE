@@ -39,7 +39,7 @@ class UserRepositoryDatabaseReadAdapterTestIT extends DatabaseIT {
 
   @Test
   void getAllUsers() {
-    Set<User> result = userRepositoryDatabaseReadAdapter.getAllUsers();
+    final Set<User> result = userRepositoryDatabaseReadAdapter.getAllUsers();
 
     AssertionsForClassTypes.assertThat(result)
         .usingRecursiveComparison()

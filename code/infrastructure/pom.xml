@@ -17,6 +17,12 @@
     </modules>
 
     <dependencies>
+        <!-- SPRINGBOOT -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
         <!-- MAPSTRUCT -->
         <dependency>
             <groupId>org.mapstruct</groupId>

@@ -17,7 +17,7 @@ class EmailVoTest {
   }
 
   @Test
-  void canFormEmailShouldReturnFalseWhenAreMissing() {
+  void canFormEmailShouldReturnFalseWhenPartsAreMissing() {
     final EmailVo dataMissing = EmailVoTestDataBuilder.builder()
       .username(null)
       .host(null)

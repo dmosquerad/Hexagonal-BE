@@ -13,7 +13,7 @@ public final class ToEmailVoUtil {
   public static final String TO_EMAIL_VO = "toEmailVo";
 
   @Named(TO_EMAIL_VO)
-  public static EmailVo toEmailVo(String email) {
+  public static EmailVo toEmailVo(final String email) {
     if (Objects.isNull(email)) {
       return EmailVo.builder().build();
     }

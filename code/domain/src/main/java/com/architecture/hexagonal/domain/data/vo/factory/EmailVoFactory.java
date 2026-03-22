@@ -9,7 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EmailVoFactory {
 
-  public static EmailVo from(String email) {
+  public static EmailVo from(final String email) {
     if (StringUtils.isBlank(email)) {
       return EmailVo.builder().build();
     }

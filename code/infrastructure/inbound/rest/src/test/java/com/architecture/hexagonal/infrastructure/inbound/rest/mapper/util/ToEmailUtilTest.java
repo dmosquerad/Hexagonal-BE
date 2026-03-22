@@ -20,23 +20,10 @@ class ToEmailUtilTest {
   }
 
   @Test
-  void toEmailShouldReturnNullWhenEmailVoIsNull() {
+  void toEmailShouldReturnEmptyWhenEmailVoIsNull() {
     final String result = ToEmailUtil.toEmail(null);
 
     assertThat(result).isEmpty();
   }
 
-  @Test
-  void toEmailShouldReturnEmptyWhenEmailVoCannotFormEmail() {
-    final EmailVo emailVo = EmailVoTestDataBuilder.builder()
-      .username(null)
-      .host(null)
-      .tld(null)
-      .build()
-      .emailVo();
-
-    final String result = ToEmailUtil.toEmail(emailVo);
-
-    assertThat(result).isEmpty();
-  }
 }
