@@ -1,5 +1,6 @@
-package com.architecture.hexagonal.domain.data;
+package com.architecture.hexagonal.domain.data.entity;
 
+import com.architecture.hexagonal.domain.data.vo.EmailVo;
 import java.util.UUID;
 import lombok.Builder;
 import lombok.Value;
@@ -9,5 +10,5 @@ import lombok.Value;
 public class User {
   UUID userId;
   String name;
-  String email;
+  EmailVo email;
 }

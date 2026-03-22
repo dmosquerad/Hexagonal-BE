@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.controller;
 
-import com.architecture.hexagonal.domain.data.User;
+import com.architecture.hexagonal.domain.data.entity.User;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import com.architecture.hexagonal.domain.input.command.CreateUserCommand;
 import com.architecture.hexagonal.domain.input.command.DeleteUserCommand;

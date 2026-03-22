@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.domain.port.in;
 
-import com.architecture.hexagonal.domain.data.User;
+import com.architecture.hexagonal.domain.data.entity.User;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import com.architecture.hexagonal.domain.input.command.UpdateUserCommand;
 

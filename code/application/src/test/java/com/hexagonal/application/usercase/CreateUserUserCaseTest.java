@@ -1,7 +1,7 @@
 package com.hexagonal.application.usercase;
 
 import com.architecture.hexagonal.application.usecase.CreateUserUseCase;
-import com.architecture.hexagonal.domain.data.User;
+import com.architecture.hexagonal.domain.data.entity.User;
 import com.architecture.hexagonal.domain.input.command.CreateUserCommand;
 import com.architecture.hexagonal.domain.port.out.UserRepositoryWritePort;
 import com.hexagonal.application.testutils.data.entity.UserTestDataBuilder;

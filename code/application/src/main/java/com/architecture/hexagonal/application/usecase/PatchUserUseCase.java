@@ -1,12 +1,13 @@
 package com.architecture.hexagonal.application.usecase;
 
-import com.architecture.hexagonal.domain.data.User;
+import com.architecture.hexagonal.domain.data.entity.User;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import com.architecture.hexagonal.domain.input.command.PatchUserCommand;
 import com.architecture.hexagonal.domain.port.in.PatchUserUseCasePort;
 import com.architecture.hexagonal.domain.port.out.UserRepositoryReadPort;
 import com.architecture.hexagonal.domain.port.out.UserRepositoryWritePort;
+import com.architecture.hexagonal.domain.data.vo.factory.EmailVoFactory;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -33,8 +34,10 @@ public class PatchUserUseCase implements PatchUserUseCasePort {
     return userRepositoryWritePort.saveUser(
         User.builder()
             .userId(uuid)
-            .name(Optional.ofNullable(patchUserCommand.getName()).orElse(currentUser.getName()))
-            .email(Optional.ofNullable(patchUserCommand.getEmail()).orElse(currentUser.getEmail()))
+            .name(Optional.ofNullable(patchUserCommand.getName())
+                .orElse(currentUser.getName()))
+            .email(EmailVoFactory.from(patchUserCommand.getEmail())
+                .orElse(currentUser.getEmail()))
             .build());
   }
 }

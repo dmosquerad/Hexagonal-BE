@@ -1,7 +1,7 @@
 package com.hexagonal.application.usercase;
 
 import com.architecture.hexagonal.application.usecase.GetAllUsersUseCase;
-import com.architecture.hexagonal.domain.data.User;
+import com.architecture.hexagonal.domain.data.entity.User;
 import com.architecture.hexagonal.domain.port.out.UserRepositoryReadPort;
 import com.hexagonal.application.testutils.data.entity.UserTestDataBuilder;
 import java.util.Collections;

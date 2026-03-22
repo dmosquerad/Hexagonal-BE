@@ -1,7 +1,7 @@
 package com.hexagonal.application.usercase;
 
 import com.architecture.hexagonal.application.usecase.UserExistsUseCase;
-import com.architecture.hexagonal.domain.data.User;
+import com.architecture.hexagonal.domain.data.entity.User;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import com.architecture.hexagonal.domain.input.query.UserExistsQuery;
 import com.architecture.hexagonal.domain.port.out.UserRepositoryReadPort;
