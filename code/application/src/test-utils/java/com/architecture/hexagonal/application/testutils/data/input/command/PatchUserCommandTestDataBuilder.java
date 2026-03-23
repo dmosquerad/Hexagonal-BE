@@ -1,11 +1,11 @@
-package com.hexagonal.application.testutils.data.input.command;
+package com.architecture.hexagonal.application.testutils.data.input.command;
 
-import com.architecture.hexagonal.domain.input.command.UpdateUserCommand;
+import com.architecture.hexagonal.domain.input.command.PatchUserCommand;
 import java.util.UUID;
 import lombok.Builder;
 
 @Builder
-public class UpdateUserCommandTestDataBuilder {
+public class PatchUserCommandTestDataBuilder {
 
   @Builder.Default
   private UUID userId = UUID.fromString("4059510b-ceb3-4d4c-913e-1759acbd62a4");
@@ -16,8 +16,8 @@ public class UpdateUserCommandTestDataBuilder {
   @Builder.Default
   private String name = "Test User";
 
-  public UpdateUserCommand updateUserCommand() {
-    return UpdateUserCommand.builder()
+  public PatchUserCommand patchUserCommand() {
+    return PatchUserCommand.builder()
         .userId(userId)
         .email(email)
         .name(name)

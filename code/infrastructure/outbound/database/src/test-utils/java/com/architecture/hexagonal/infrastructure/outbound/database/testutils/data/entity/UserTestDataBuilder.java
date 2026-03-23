@@ -1,6 +1,8 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.testutils.data.entity;
 
-import com.architecture.hexagonal.domain.data.User;
+import com.architecture.hexagonal.domain.data.entity.User;
+import com.architecture.hexagonal.domain.data.vo.EmailVo;
+import com.architecture.hexagonal.infrastructure.outbound.database.testutils.data.vo.EmailVoTestDataBuilder;
 import java.util.UUID;
 import lombok.Builder;
 
@@ -11,7 +13,9 @@ public class UserTestDataBuilder {
   private UUID userId = UUID.fromString("4059510b-ceb3-4d4c-913e-1759acbd62a4");
 
   @Builder.Default
-  private String email = "test@example.com";
+  private EmailVo email = EmailVoTestDataBuilder.builder()
+          .build()
+          .emailVo();
 
   @Builder.Default
   private String name = "Test User";

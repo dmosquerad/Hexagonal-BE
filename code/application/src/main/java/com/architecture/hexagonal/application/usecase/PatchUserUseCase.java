@@ -1,6 +1,7 @@
 package com.architecture.hexagonal.application.usecase;
 
-import com.architecture.hexagonal.domain.data.User;
+import com.architecture.hexagonal.domain.data.entity.User;
+import com.architecture.hexagonal.domain.data.vo.factory.EmailVoFactory;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import com.architecture.hexagonal.domain.input.command.PatchUserCommand;
@@ -33,8 +34,10 @@ public class PatchUserUseCase implements PatchUserUseCasePort {
     return userRepositoryWritePort.saveUser(
         User.builder()
             .userId(uuid)
-            .name(Optional.ofNullable(patchUserCommand.getName()).orElse(currentUser.getName()))
-            .email(Optional.ofNullable(patchUserCommand.getEmail()).orElse(currentUser.getEmail()))
+            .name(Optional.ofNullable(patchUserCommand.getName())
+                .orElse(currentUser.getName()))
+            .email(Optional.ofNullable(EmailVoFactory.from(patchUserCommand.getEmail()))
+                .orElse(currentUser.getEmail()))
             .build());
   }
 }

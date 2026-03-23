@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.application.usecase;
 
-import com.architecture.hexagonal.domain.data.User;
+import com.architecture.hexagonal.domain.data.entity.User;
 import com.architecture.hexagonal.domain.port.in.GetAllUsersUseCasePort;
 import com.architecture.hexagonal.domain.port.out.UserRepositoryReadPort;
 import java.util.Set;

@@ -83,6 +83,36 @@ class DomainArchTest {
           .because("Domain names must avoid technical adapter suffixes");
 
   @ArchTest
+  static final ArchRule domain_data_should_reside_in_entity_vo_or_vo_factory_packages =
+      ArchRuleDefinition.classes()
+          .that()
+          .resideInAPackage("..domain.data..")
+          .should()
+          .resideInAnyPackage(
+              "..domain.data.entity..",
+              "..domain.data.vo..",
+              "..domain.data.vo.factory..")
+          .because("Domain data must follow the entity/vo/factory taxonomy");
+
+  @ArchTest
+  static final ArchRule value_objects_should_reside_in_domain_data_vo_package =
+      ArchRuleDefinition.classes()
+          .that()
+          .haveSimpleNameEndingWith("Vo")
+          .should()
+          .resideInAPackage("..domain.data.vo..")
+          .because("Value objects must reside in domain.data.vo");
+
+  @ArchTest
+  static final ArchRule value_object_factories_should_reside_in_domain_data_vo_factory_package =
+      ArchRuleDefinition.classes()
+          .that()
+          .haveSimpleNameEndingWith("VoFactory")
+          .should()
+          .resideInAPackage("..domain.data.vo.factory..")
+          .because("Value object factories must reside in domain.data.vo.factory");
+
+  @ArchTest
   static final ArchRule commands_should_reside_in_domain_command_package =
       ArchRuleDefinition.classes()
           .that()
