@@ -60,7 +60,7 @@ class UserRepositoryDatabaseReadAdapterTestIT extends DatabaseIT {
             .build()
             .user();
 
-    Optional<User> result = userRepositoryDatabaseReadAdapter.findUserById(user.getUserId());
+    final Optional<User> result = userRepositoryDatabaseReadAdapter.findUserById(user.getUserId());
 
     AssertionsForClassTypes.assertThat(result)
         .usingRecursiveComparison()
