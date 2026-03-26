@@ -1,10 +1,10 @@
 package com.architecture.hexagonal.application.usecase;
 
+import com.architecture.hexagonal.application.input.query.UserExistsQuery;
+import com.architecture.hexagonal.application.port.in.UserExistsUseCasePort;
+import com.architecture.hexagonal.application.port.out.UserRepositoryReadPort;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
-import com.architecture.hexagonal.domain.input.query.UserExistsQuery;
-import com.architecture.hexagonal.domain.port.in.UserExistsUseCasePort;
-import com.architecture.hexagonal.domain.port.out.UserRepositoryReadPort;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

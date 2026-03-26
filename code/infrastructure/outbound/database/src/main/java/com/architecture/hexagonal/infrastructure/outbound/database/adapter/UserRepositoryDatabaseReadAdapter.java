@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.adapter;
 
+import com.architecture.hexagonal.application.port.out.UserRepositoryReadPort;
 import com.architecture.hexagonal.domain.data.entity.User;
-import com.architecture.hexagonal.domain.port.out.UserRepositoryReadPort;
 import com.architecture.hexagonal.infrastructure.outbound.database.mapper.UserMapper;
 import com.architecture.hexagonal.infrastructure.outbound.database.repository.UserDatabaseReadRepository;
 import java.util.Optional;

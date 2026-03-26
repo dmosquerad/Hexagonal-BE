@@ -1,16 +1,18 @@
 package com.architecture.hexagonal.application.usecase;
 
+import com.architecture.hexagonal.application.input.command.PatchUserCommand;
+import com.architecture.hexagonal.application.port.in.PatchUserUseCasePort;
+import com.architecture.hexagonal.application.port.out.UserRepositoryReadPort;
 import com.architecture.hexagonal.domain.data.entity.User;
-import com.architecture.hexagonal.domain.data.vo.factory.EmailVoFactory;
+import com.architecture.hexagonal.domain.data.vo.EmailVo;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
-import com.architecture.hexagonal.domain.input.command.PatchUserCommand;
-import com.architecture.hexagonal.domain.port.in.PatchUserUseCasePort;
-import com.architecture.hexagonal.domain.port.out.UserRepositoryReadPort;
-import com.architecture.hexagonal.domain.port.out.UserRepositoryWritePort;
-import java.util.Optional;
+import com.architecture.hexagonal.domain.service.factory.vo.EmailVoFactory;
+import com.architecture.hexagonal.application.port.out.UserRepositoryWritePort;
+
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,13 +33,16 @@ public class PatchUserUseCase implements PatchUserUseCasePort {
         .orElseThrow(() ->
             new ResourceNotFoundException(ExceptionMessage.NOT_FOUND_DATA_MESSAGE + uuid));
 
+    final String name = StringUtils.isBlank(patchUserCommand.getName()) ?
+            currentUser.getName() : patchUserCommand.getName();
+    final EmailVo email = StringUtils.isBlank(patchUserCommand.getEmail()) ?
+            currentUser.getEmail() : EmailVoFactory.from(patchUserCommand.getEmail());
+
     return userRepositoryWritePort.saveUser(
         User.builder()
             .userId(uuid)
-            .name(Optional.ofNullable(patchUserCommand.getName())
-                .orElse(currentUser.getName()))
-            .email(Optional.ofNullable(EmailVoFactory.from(patchUserCommand.getEmail()))
-                .orElse(currentUser.getEmail()))
+            .name(name)
+            .email(email)
             .build());
   }
 }

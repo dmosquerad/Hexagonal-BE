@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.application.testutils.data.input.query;
 
-import com.architecture.hexagonal.domain.input.query.FindUserByUserIdQuery;
+import com.architecture.hexagonal.application.input.query.FindUserByUserIdQuery;
 import java.util.UUID;
 import lombok.Builder;
 

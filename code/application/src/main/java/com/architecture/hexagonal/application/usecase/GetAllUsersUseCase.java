@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.application.usecase;
 
+import com.architecture.hexagonal.application.port.in.GetAllUsersUseCasePort;
+import com.architecture.hexagonal.application.port.out.UserRepositoryReadPort;
 import com.architecture.hexagonal.domain.data.entity.User;
-import com.architecture.hexagonal.domain.port.in.GetAllUsersUseCasePort;
-import com.architecture.hexagonal.domain.port.out.UserRepositoryReadPort;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

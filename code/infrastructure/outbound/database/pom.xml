@@ -13,12 +13,6 @@
     </parent>
 
     <dependencies>
-        <!-- PROJECT-MODULES -->
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>domain</artifactId>
-        </dependency>
-
         <!-- SPRINGBOOT -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

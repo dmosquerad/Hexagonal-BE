@@ -21,17 +21,19 @@ Architecture validation is implemented with ArchUnit in [code/boot/src/test-arch
 5. [InfrastructureInboundArchTest.java](code/boot/src/test-architecture/java/com/architecture/hexagonal/boot/InfrastructureInboundArchTest.java)
 6. [InfrastructureOutboundArchTest.java](code/boot/src/test-architecture/java/com/architecture/hexagonal/boot/InfrastructureOutboundArchTest.java)
 7. [SpringArchTest.java](code/boot/src/test-architecture/java/com/architecture/hexagonal/boot/SpringArchTest.java)
+8. [BootArchTest.java](code/boot/src/test-architecture/java/com/architecture/hexagonal/boot/BootArchTest.java)
 
 ### Active rules
 1. HexagonalArchitectureTest: 6 rules
-2. DomainArchTest: 14 rules
-3. ApplicationArchTest: 7 rules
-4. InfrastructureArchTest: 3 rules
+2. DomainArchTest: 10 rules
+3. ApplicationArchTest: 13 rules
+4. InfrastructureArchTest: 2 rules
 5. InfrastructureInboundArchTest: 5 rules
-6. InfrastructureOutboundArchTest: 7 rules
+6. InfrastructureOutboundArchTest: 8 rules
 7. SpringArchTest: 11 rules
+8. BootArchTest: 2 rules
 
-Total: 53 rules
+Total: 57 rules
 
 ## Coverage By Architectural Style
 
@@ -73,7 +75,7 @@ Good structural coverage at package dependency level.
 6. Package-based taxonomy for domain data:
 7. `..domain.data.entity..` for entities
 8. `..domain.data.vo..` for value objects
-9. `..domain.data.vo.factory..` for value object factories
+9. `..domain.service.factory.vo..` for value object factories
 
 ### Status
 Partial coverage. Structural DDD is covered and package-based tactical DDD conventions are now partially enforced.

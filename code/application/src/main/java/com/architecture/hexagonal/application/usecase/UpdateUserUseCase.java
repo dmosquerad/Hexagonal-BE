@@ -1,13 +1,13 @@
 package com.architecture.hexagonal.application.usecase;
 
+import com.architecture.hexagonal.application.input.command.UpdateUserCommand;
+import com.architecture.hexagonal.application.port.in.UpdateUserUseCasePort;
+import com.architecture.hexagonal.application.port.out.UserRepositoryReadPort;
+import com.architecture.hexagonal.application.port.out.UserRepositoryWritePort;
 import com.architecture.hexagonal.domain.data.entity.User;
-import com.architecture.hexagonal.domain.data.vo.factory.EmailVoFactory;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
-import com.architecture.hexagonal.domain.input.command.UpdateUserCommand;
-import com.architecture.hexagonal.domain.port.in.UpdateUserUseCasePort;
-import com.architecture.hexagonal.domain.port.out.UserRepositoryReadPort;
-import com.architecture.hexagonal.domain.port.out.UserRepositoryWritePort;
+import com.architecture.hexagonal.domain.service.factory.vo.EmailVoFactory;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

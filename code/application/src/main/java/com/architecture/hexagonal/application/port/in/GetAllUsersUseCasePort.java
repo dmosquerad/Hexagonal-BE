@@ -1,4 +1,4 @@
-package com.architecture.hexagonal.domain.port.in;
+package com.architecture.hexagonal.application.port.in;
 
 import com.architecture.hexagonal.domain.data.entity.User;
 import java.util.Set;

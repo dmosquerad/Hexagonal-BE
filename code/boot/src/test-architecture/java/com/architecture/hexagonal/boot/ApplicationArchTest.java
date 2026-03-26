@@ -58,8 +58,8 @@ class ApplicationArchTest {
           .haveSimpleNameEndingWith("UseCase")
           .and()
           .resideInAPackage("..application.usecase..")
-          .should().implement(Predicates.resideInAPackage("..domain.port.in.."))
-          .because("Use cases must implement inbound domain ports");
+          .should().implement(Predicates.resideInAPackage("..application.port.in.."))
+          .because("Use cases must implement inbound ports");
 
   @ArchTest
   static final ArchRule use_cases_should_be_annotated_with_service =
@@ -79,4 +79,51 @@ class ApplicationArchTest {
           .should()
           .resideInAPackage("..application.usecase..")
           .because("Only application use cases may be @Service");
+
+  @ArchTest
+  static final ArchRule commands_should_reside_in_application_command_package =
+          ArchRuleDefinition.classes()
+                  .that()
+                  .haveSimpleNameEndingWith("Command")
+                  .should()
+                  .resideInAPackage("..application.input.command..")
+                  .because("Commands must be in application.input.command");
+
+  @ArchTest
+  static final ArchRule queries_should_reside_in_application_query_package =
+          ArchRuleDefinition.classes()
+                  .that()
+                  .haveSimpleNameEndingWith("Query")
+                  .should()
+                  .resideInAPackage("..application.input.query..")
+                  .because("Queries must be in application.input.query");
+
+  @ArchTest
+  static final ArchRule ports_should_reside_in_application_port_package =
+          ArchRuleDefinition.classes()
+                  .that()
+                  .haveSimpleNameEndingWith("Port")
+                  .should()
+                  .resideInAPackage("..application.port..")
+                  .because("Ports must be in application.port");
+
+  @ArchTest
+  static final ArchRule inbound_ports_should_reside_in_application_port_in =
+          ArchRuleDefinition.classes()
+                  .that()
+                  .haveSimpleNameEndingWith("UseCasePort")
+                  .should()
+                  .resideInAPackage("..application.port.in..")
+                  .because("Inbound use case ports must be in application.port.in");
+
+  @ArchTest
+  static final ArchRule outbound_ports_should_reside_in_application_port_out =
+          ArchRuleDefinition.classes()
+                  .that()
+                  .haveSimpleNameEndingWith("Port")
+                  .and()
+                  .haveSimpleNameNotEndingWith("UseCasePort")
+                  .should()
+                  .resideInAPackage("..application.port.out..")
+                  .because("Outbound ports must be in application.port.out");
 }

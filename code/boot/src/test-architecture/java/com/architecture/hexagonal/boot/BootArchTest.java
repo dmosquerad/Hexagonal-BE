@@ -17,7 +17,7 @@ class BootArchTest {
           .resideInAPackage("..boot..")
           .should()
           .dependOnClassesThat()
-          .resideInAnyPackage("..domain.input..", "..application.usecase..")
+          .resideInAnyPackage("..application.input..", "..application.usecase..")
           .because("Boot must wire modules, not execute use case logic");
 
   @ArchTest
