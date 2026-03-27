@@ -1,6 +1,7 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.exception;
 
 import com.architecture.hexagonal.infrastructure.inbound.rest.dto.ResponseErrorDto;
+import jakarta.validation.ConstraintViolationException;
 import java.sql.SQLException;
 import java.time.Clock;
 import java.time.OffsetDateTime;
@@ -44,9 +45,14 @@ public class RestControllerExceptionHandler extends ResponseEntityExceptionHandl
     return new ResponseEntity<>(responseErrorDto, headers, statusCode);
   }
 
-  @ExceptionHandler(SQLException.class)
-  public ResponseEntity<Object> handleSqlException(
-      final SQLException ex, final WebRequest request) {
+  @ExceptionHandler(ConstraintViolationException.class)
+  public ResponseEntity<Object> handleConstraintViolationException(
+      final ConstraintViolationException ex, final WebRequest request) {
+    return this.handleExceptionInternal(ex, ex.getMessage(), null, HttpStatus.BAD_REQUEST, request);
+  }
+
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<Object> handleNonControlledException(final Exception ex, final WebRequest request) {
     return this.handleExceptionInternal(
         ex, ex.getMessage(), null, HttpStatusCode.valueOf(500), request);
   }

@@ -20,6 +20,12 @@ import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UserPatchDto;
 import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UserResponseDto;
 import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UserUpdateDto;
 import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UsersResponseDto;
+import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.CreateUserCommandMapper;
+import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.DeleteUserCommandMapper;
+import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.FindUserByUserIdQueryMapper;
+import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.PatchUserCommandMapper;
+import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.UpdateUserCommandMapper;
+import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.UserExistsQueryMapper;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.UserReadDtoMapper;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.entity.UserTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.time.TestClock;
@@ -80,6 +86,24 @@ class UserControllerTestIT {
 
   @MockitoSpyBean
   UserReadDtoMapper userReadDtoMapper;
+
+    @MockitoSpyBean
+    CreateUserCommandMapper createUserCommandMapper;
+
+    @MockitoSpyBean
+    DeleteUserCommandMapper deleteUserCommandMapper;
+
+    @MockitoSpyBean
+    UpdateUserCommandMapper updateUserCommandMapper;
+
+    @MockitoSpyBean
+    PatchUserCommandMapper patchUserCommandMapper;
+
+    @MockitoSpyBean
+    FindUserByUserIdQueryMapper findUserByUserIdQueryMapper;
+
+    @MockitoSpyBean
+    UserExistsQueryMapper userExistsQueryMapper;
 
   @MockitoSpyBean
   Clock clock;
@@ -144,6 +168,7 @@ class UserControllerTestIT {
         .isEqualTo(createUserResponse);
 
     Mockito.verify(userController).createUser(createUserRequest);
+    Mockito.verify(createUserCommandMapper).toCreateUserCommand(createUserRequest);
     Mockito.verify(createUserUseCasePort).execute(ArgumentMatchers.any(CreateUserCommand.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
@@ -182,6 +207,7 @@ class UserControllerTestIT {
         .isEqualTo(getUserByUuidResponse);
 
     Mockito.verify(userController).getUserByUuid(user.getUserId());
+    Mockito.verify(findUserByUserIdQueryMapper).toFindUserByUserIdQuery(user.getUserId());
     Mockito.verify(findUserByUserIdUseCasePort)
         .execute(ArgumentMatchers.any(FindUserByUserIdQuery.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
@@ -220,6 +246,7 @@ class UserControllerTestIT {
         .isEqualTo(deleteUserByUuidResponse);
 
     Mockito.verify(userController).deleteUserByUuid(user.getUserId());
+    Mockito.verify(deleteUserCommandMapper).toDeleteUserCommand(user.getUserId());
     Mockito.verify(deleteUserUseCasePort).execute(ArgumentMatchers.any(DeleteUserCommand.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
@@ -263,6 +290,8 @@ class UserControllerTestIT {
         .isEqualTo(updateUserByUuidResponse);
 
     Mockito.verify(userController).updateUserByUuid(user.getUserId(), updateUserByUuidRequest);
+    Mockito.verify(updateUserCommandMapper)
+        .toUpdateUserCommand(ArgumentMatchers.eq(user.getUserId()), ArgumentMatchers.any());
     Mockito.verify(updateUserUseCasePort).execute(ArgumentMatchers.any(UpdateUserCommand.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
@@ -304,6 +333,8 @@ class UserControllerTestIT {
         .isEqualTo(patchUserByUuidResponse);
 
     Mockito.verify(userController).patchUserByUuid(user.getUserId(), patchUserByUuidRequest);
+    Mockito.verify(patchUserCommandMapper)
+        .toPatchUserCommand(ArgumentMatchers.eq(user.getUserId()), ArgumentMatchers.any());
     Mockito.verify(patchUserUseCasePort).execute(ArgumentMatchers.any(PatchUserCommand.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
@@ -327,6 +358,7 @@ class UserControllerTestIT {
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andReturn();
 
+    Mockito.verify(userExistsQueryMapper).toUserExistsQuery(user.getUserId());
     Mockito.verify(userExistsUseCasePort).execute(ArgumentMatchers.any(UserExistsQuery.class));
   }
 
