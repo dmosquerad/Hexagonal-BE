@@ -5,7 +5,7 @@ import com.architecture.hexagonal.application.port.out.UserRepositoryWritePort;
 import com.architecture.hexagonal.application.testutils.data.entity.UserTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.data.input.command.DeleteUserCommandTestDataBuilder;
 import com.architecture.hexagonal.application.usecase.DeleteUserUseCase;
-import com.architecture.hexagonal.domain.data.entity.User;
+import com.architecture.hexagonal.domain.model.entity.User;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import java.util.Optional;
 import org.assertj.core.api.AssertionsForClassTypes;

@@ -8,7 +8,7 @@ import com.architecture.hexagonal.application.port.in.PatchUserUseCasePort;
 import com.architecture.hexagonal.application.port.in.UpdateUserUseCasePort;
 import com.architecture.hexagonal.application.port.in.UserExistsUseCasePort;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
-import com.architecture.hexagonal.domain.data.entity.User;
+import com.architecture.hexagonal.domain.model.entity.User;
 import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UserCreateDto;
 import com.architecture.hexagonal.infrastructure.inbound.rest.factory.ErrorResponseFactory;
 import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UserPatchDto;
@@ -18,12 +18,14 @@ import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UsersResponseD
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.CreateUserCommandMapper;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.DeleteUserCommandMapper;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.FindUserByUserIdQueryMapper;
+import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.GetAllUserQueryMapper;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.PatchUserCommandMapper;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.UserReadDtoMapper;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.UserExistsQueryMapper;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.UpdateUserCommandMapper;
 import java.time.Clock;
 import java.time.OffsetDateTime;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -64,18 +66,15 @@ public class UserController implements UsersApi {
 
   private final UserExistsQueryMapper userExistsQueryMapper;
 
+  private final GetAllUserQueryMapper getAllUserQueryMapper;
+
   private final Clock clock;
 
   @Override
-  public ResponseEntity<UsersResponseDto> getAllUsers() {
-    final UsersResponseDto userResponseDto = new UsersResponseDto();
-    userResponseDto.setDate(OffsetDateTime.now(clock));
-    userResponseDto.setStatus(HttpStatus.OK.value());
-    userResponseDto.setData(this.getAllUsersUseCasePort.execute().stream()
-        .map(userReadDtoMapper::toUserReadDto)
-        .collect(Collectors.toUnmodifiableSet()));
-
-    return ResponseEntity.ok(userResponseDto);
+  public ResponseEntity<UsersResponseDto> getAllUsers(final String host, final Boolean blockHost) {
+    return ResponseEntity.ok(buildUserResponse(
+        this.getAllUsersUseCasePort.execute(
+            getAllUserQueryMapper.toGetAllUserQuery(host, blockHost))));
   }
 
   @Override
@@ -150,10 +149,21 @@ public class UserController implements UsersApi {
   }
 
   private UserResponseDto buildUserResponse(final User user) {
-    final UserResponseDto dto = new UserResponseDto();
-    dto.setDate(OffsetDateTime.now(clock));
-    dto.setStatus(HttpStatus.OK.value());
-    dto.setData(userReadDtoMapper.toUserReadDto(user));
-    return dto;
+    final UserResponseDto userResponseDto = new UserResponseDto();
+    userResponseDto.setDate(OffsetDateTime.now(clock));
+    userResponseDto.setStatus(HttpStatus.OK.value());
+    userResponseDto.setData(userReadDtoMapper.toUserReadDto(user));
+    return userResponseDto;
+  }
+
+  private UsersResponseDto buildUserResponse(final Set<User> users) {
+    final UsersResponseDto usersResponseDto = new UsersResponseDto();
+    usersResponseDto.setDate(OffsetDateTime.now(clock));
+    usersResponseDto.setStatus(HttpStatus.OK.value());
+    usersResponseDto.setData(users.stream()
+        .map(userReadDtoMapper::toUserReadDto)
+        .collect(Collectors.toUnmodifiableSet()));
+
+    return usersResponseDto;
   }
 }

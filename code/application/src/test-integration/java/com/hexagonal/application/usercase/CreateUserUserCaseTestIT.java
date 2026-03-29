@@ -5,7 +5,7 @@ import com.architecture.hexagonal.application.port.out.UserRepositoryWritePort;
 import com.architecture.hexagonal.application.testutils.data.entity.UserTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.data.input.command.CreateUserCommandTestDataBuilder;
 import com.architecture.hexagonal.application.usecase.CreateUserUseCase;
-import com.architecture.hexagonal.domain.data.entity.User;
+import com.architecture.hexagonal.domain.model.entity.User;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;

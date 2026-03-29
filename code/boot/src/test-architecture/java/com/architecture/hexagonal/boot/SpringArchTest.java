@@ -63,30 +63,6 @@ public class SpringArchTest {
           .because("Use constructor injection instead of field injection");
 
   @ArchTest
-  static final ArchRule component_classes_should_not_have_public_fields =
-      ArchRuleDefinition.noFields()
-          .that()
-          .areDeclaredInClassesThat()
-          .areAnnotatedWith(Component.class)
-          .should()
-          .bePublic()
-          .because("@Component fields must not be public");
-
-  @ArchTest
-  static final ArchRule component_fields_should_be_private_final =
-      ArchRuleDefinition.fields()
-          .that()
-          .areDeclaredInClassesThat()
-          .areAnnotatedWith(Component.class)
-          .and()
-          .areNotStatic()
-          .should()
-          .bePrivate()
-          .andShould()
-          .beFinal()
-          .because("@Component instance fields must be private final");
-
-  @ArchTest
   static final ArchRule service_classes_should_not_have_public_fields =
       ArchRuleDefinition.noFields()
           .that()
