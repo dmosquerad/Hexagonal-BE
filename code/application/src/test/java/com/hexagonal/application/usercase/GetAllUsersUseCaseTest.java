@@ -1,9 +1,11 @@
 package com.hexagonal.application.usercase;
 
+import com.architecture.hexagonal.application.input.query.GetAllUserQuery;
 import com.architecture.hexagonal.application.port.out.UserRepositoryReadPort;
 import com.architecture.hexagonal.application.testutils.data.entity.UserTestDataBuilder;
+import com.architecture.hexagonal.application.testutils.data.input.query.GetAllUserQueryTestDataBuilder;
 import com.architecture.hexagonal.application.usecase.GetAllUsersUseCase;
-import com.architecture.hexagonal.domain.data.entity.User;
+import com.architecture.hexagonal.domain.model.entity.User;
 import java.util.Collections;
 import java.util.Set;
 import org.assertj.core.api.AssertionsForClassTypes;
@@ -30,9 +32,14 @@ class GetAllUsersUseCaseTest {
         .build()
         .user());
 
+    final GetAllUserQuery getAllUserQuery = GetAllUserQueryTestDataBuilder
+        .builder()
+        .build()
+        .getAllUserQuery();
+
     Mockito.when(userRepositoryReadPort.getAllUsers()).thenReturn(userSet);
 
-    Set<User> result = getAllUsersUseCase.execute();
+    Set<User> result = getAllUsersUseCase.execute(getAllUserQuery);
 
     AssertionsForClassTypes.assertThat(result)
         .usingRecursiveComparison()

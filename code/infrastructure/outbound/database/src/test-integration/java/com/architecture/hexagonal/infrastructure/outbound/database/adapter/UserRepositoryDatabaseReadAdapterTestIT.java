@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.adapter;
 
-import com.architecture.hexagonal.domain.data.entity.User;
+import com.architecture.hexagonal.domain.model.entity.User;
 import com.architecture.hexagonal.infrastructure.outbound.database.config.DatabaseIT;
 import com.architecture.hexagonal.infrastructure.outbound.database.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.outbound.database.data.UserDao;

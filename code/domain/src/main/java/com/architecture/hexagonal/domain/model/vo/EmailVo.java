@@ -1,5 +1,6 @@
-package com.architecture.hexagonal.domain.data.vo;
+package com.architecture.hexagonal.domain.model.vo;
 
+import com.architecture.hexagonal.domain.model.vo.predicate.EmailVoPredicate;
 import lombok.Builder;
 import lombok.Value;
 import org.apache.commons.lang3.StringUtils;
@@ -7,21 +8,12 @@ import org.apache.commons.lang3.StringUtils;
 @Value
 @Builder
 public class EmailVo {
-
   String username;
-
   String host;
-
   String tld;
 
-  public boolean canFormEmail() {
-    return StringUtils.isNotBlank(this.username)
-        && StringUtils.isNotBlank(this.host)
-        && StringUtils.isNotBlank(this.tld);
-  }
-
   public String getEmail() {
-    if (!this.canFormEmail()) {
+    if (!EmailVoPredicate.CAN_FORM_EMAIL.test(this)) {
       return StringUtils.EMPTY;
     }
 

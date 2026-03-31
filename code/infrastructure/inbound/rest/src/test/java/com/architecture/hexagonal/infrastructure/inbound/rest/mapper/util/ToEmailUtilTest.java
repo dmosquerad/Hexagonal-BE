@@ -2,7 +2,7 @@ package com.architecture.hexagonal.infrastructure.inbound.rest.mapper.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.architecture.hexagonal.domain.data.vo.EmailVo;
+import com.architecture.hexagonal.domain.model.vo.EmailVo;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.vo.EmailVoTestDataBuilder;
 import org.junit.jupiter.api.Test;
 

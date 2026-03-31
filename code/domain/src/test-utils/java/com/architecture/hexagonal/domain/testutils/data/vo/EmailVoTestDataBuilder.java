@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.domain.testutils.data.vo;
 
-import com.architecture.hexagonal.domain.data.vo.EmailVo;
+import com.architecture.hexagonal.domain.model.vo.EmailVo;
 import lombok.Builder;
 
 @Builder

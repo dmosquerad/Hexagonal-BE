@@ -3,11 +3,11 @@ package com.architecture.hexagonal.application.usecase;
 import com.architecture.hexagonal.application.input.command.PatchUserCommand;
 import com.architecture.hexagonal.application.port.in.PatchUserUseCasePort;
 import com.architecture.hexagonal.application.port.out.UserRepositoryReadPort;
-import com.architecture.hexagonal.domain.data.entity.User;
-import com.architecture.hexagonal.domain.data.vo.EmailVo;
+import com.architecture.hexagonal.domain.model.entity.User;
+import com.architecture.hexagonal.domain.model.vo.EmailVo;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
-import com.architecture.hexagonal.domain.service.factory.vo.EmailVoFactory;
+import com.architecture.hexagonal.domain.model.vo.factory.EmailVoFactory;
 import com.architecture.hexagonal.application.port.out.UserRepositoryWritePort;
 
 import java.util.UUID;

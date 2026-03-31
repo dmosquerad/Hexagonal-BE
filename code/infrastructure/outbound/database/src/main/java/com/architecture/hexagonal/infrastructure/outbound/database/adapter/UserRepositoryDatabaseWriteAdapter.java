@@ -1,16 +1,16 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.adapter;
 
 import com.architecture.hexagonal.application.port.out.UserRepositoryWritePort;
-import com.architecture.hexagonal.domain.data.entity.User;
+import com.architecture.hexagonal.domain.model.entity.User;
 import com.architecture.hexagonal.infrastructure.outbound.database.mapper.UserDaoMapper;
 import com.architecture.hexagonal.infrastructure.outbound.database.mapper.UserMapper;
 import com.architecture.hexagonal.infrastructure.outbound.database.repository.UserDatabaseWriteRepository;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
-@Component
+@Repository
 @RequiredArgsConstructor
 public class UserRepositoryDatabaseWriteAdapter implements UserRepositoryWritePort {
   private final UserDatabaseWriteRepository userDatabaseWriteRepository;

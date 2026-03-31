@@ -5,6 +5,7 @@ import com.architecture.hexagonal.application.input.command.DeleteUserCommand;
 import com.architecture.hexagonal.application.input.command.PatchUserCommand;
 import com.architecture.hexagonal.application.input.command.UpdateUserCommand;
 import com.architecture.hexagonal.application.input.query.FindUserByUserIdQuery;
+import com.architecture.hexagonal.application.input.query.GetAllUserQuery;
 import com.architecture.hexagonal.application.input.query.UserExistsQuery;
 import com.architecture.hexagonal.application.port.in.CreateUserUseCasePort;
 import com.architecture.hexagonal.application.port.in.DeleteUserUseCasePort;
@@ -13,7 +14,7 @@ import com.architecture.hexagonal.application.port.in.GetAllUsersUseCasePort;
 import com.architecture.hexagonal.application.port.in.PatchUserUseCasePort;
 import com.architecture.hexagonal.application.port.in.UpdateUserUseCasePort;
 import com.architecture.hexagonal.application.port.in.UserExistsUseCasePort;
-import com.architecture.hexagonal.domain.data.entity.User;
+import com.architecture.hexagonal.domain.model.entity.User;
 import com.architecture.hexagonal.infrastructure.inbound.rest.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UserCreateDto;
 import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UserPatchDto;
@@ -23,6 +24,7 @@ import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UsersResponseD
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.CreateUserCommandMapper;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.DeleteUserCommandMapper;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.FindUserByUserIdQueryMapper;
+import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.GetAllUserQueryMapper;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.PatchUserCommandMapper;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.UpdateUserCommandMapper;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.UserExistsQueryMapper;
@@ -32,6 +34,7 @@ import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.time.Tes
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Clock;
 import java.util.Collections;
+import java.util.Objects;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -48,6 +51,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 @SpringBootTest(classes = {UserController.class})
 @AutoConfigureMockMvc
@@ -87,23 +92,26 @@ class UserControllerTestIT {
   @MockitoSpyBean
   UserReadDtoMapper userReadDtoMapper;
 
-    @MockitoSpyBean
-    CreateUserCommandMapper createUserCommandMapper;
+  @MockitoSpyBean
+  CreateUserCommandMapper createUserCommandMapper;
 
-    @MockitoSpyBean
-    DeleteUserCommandMapper deleteUserCommandMapper;
+  @MockitoSpyBean
+  DeleteUserCommandMapper deleteUserCommandMapper;
 
-    @MockitoSpyBean
-    UpdateUserCommandMapper updateUserCommandMapper;
+  @MockitoSpyBean
+  UpdateUserCommandMapper updateUserCommandMapper;
 
-    @MockitoSpyBean
-    PatchUserCommandMapper patchUserCommandMapper;
+  @MockitoSpyBean
+  PatchUserCommandMapper patchUserCommandMapper;
 
-    @MockitoSpyBean
-    FindUserByUserIdQueryMapper findUserByUserIdQueryMapper;
+  @MockitoSpyBean
+  FindUserByUserIdQueryMapper findUserByUserIdQueryMapper;
 
-    @MockitoSpyBean
-    UserExistsQueryMapper userExistsQueryMapper;
+  @MockitoSpyBean
+  UserExistsQueryMapper userExistsQueryMapper;
+
+  @MockitoSpyBean
+  GetAllUserQueryMapper getAllUserQueryMapper;
 
   @MockitoSpyBean
   Clock clock;
@@ -114,13 +122,22 @@ class UserControllerTestIT {
           new ClassPathResource("getAllUsers_response.json", UserControllerTestIT.class).getFile(),
           UsersResponseDto.class);
 
+    final String host = "";
+    final Boolean blockHost = false;
+
     final User user = UserTestDataBuilder.builder().build().user();      
 
     Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
-    Mockito.when(getAllUsersUseCasePort.execute()).thenReturn(Collections.singleton(user));
+    Mockito.when(getAllUsersUseCasePort.execute(ArgumentMatchers.any(GetAllUserQuery.class)))
+        .thenReturn(Collections.singleton(user));
+
+    final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+    params.add("host", host);
+    params.add("blockHost", String.valueOf(blockHost));
 
     final MvcResult result = mockMvc.perform(
             MockMvcRequestBuilders.get("/users")
+                .queryParams(params)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -133,8 +150,9 @@ class UserControllerTestIT {
         .usingRecursiveComparison()
         .isEqualTo(getAllUsersResponse);
 
-    Mockito.verify(userController).getAllUsers();
-    Mockito.verify(getAllUsersUseCasePort).execute();
+    Mockito.verify(userController).getAllUsers(host, blockHost);
+    Mockito.verify(getAllUserQueryMapper).toGetAllUserQuery(host, blockHost);
+    Mockito.verify(getAllUsersUseCasePort).execute(ArgumentMatchers.any(GetAllUserQuery.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
   }
 

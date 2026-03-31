@@ -1,11 +1,12 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.mapper;
 
 import com.architecture.hexagonal.application.input.query.FindUserByUserIdQuery;
+import com.architecture.hexagonal.infrastructure.inbound.rest.config.MapstructConfig;
 import java.util.UUID;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper
+@Mapper(config = MapstructConfig.class)
 public interface FindUserByUserIdQueryMapper {
 
   @Mapping(source = "userUuid", target = "userId")

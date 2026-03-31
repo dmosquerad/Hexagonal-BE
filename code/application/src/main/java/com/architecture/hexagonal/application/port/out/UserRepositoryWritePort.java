@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.application.port.out;
 
-import com.architecture.hexagonal.domain.data.entity.User;
+import com.architecture.hexagonal.domain.model.entity.User;
 import java.util.Optional;
 import java.util.UUID;
 

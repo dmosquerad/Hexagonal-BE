@@ -145,6 +145,19 @@ users:
       - users
     summary: Get all Users
     operationId: getAllUsers
+    parameters:
+      - name: host
+        in: query
+        description: Filter users by email host
+        required: false
+        schema:
+          type: string
+      - name: blockHost
+        in: query
+        description: Filter users by blockHost
+        required: false
+        schema:
+          type: boolean
     responses:
       '200':
         description: Expected response

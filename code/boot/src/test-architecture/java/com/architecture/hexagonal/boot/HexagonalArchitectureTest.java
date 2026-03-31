@@ -6,16 +6,9 @@ import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.lang.syntax.ArchRuleDefinition;
 import com.tngtech.archunit.library.Architectures;
 import com.tngtech.archunit.library.dependencies.SlicesRuleDefinition;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Configuration;
 
 @AnalyzeClasses(packages = "com.architecture.hexagonal")
 class HexagonalArchitectureTest {
-
-  private static final String[] ALLOWED_ADAPTER_PACKAGES = {
-      "..infrastructure.outbound.database..",
-      "..infrastructure.inbound.rest.."
-  };
 
   @ArchTest
   static final ArchRule packages_should_be_free_of_cycles =
@@ -31,18 +24,20 @@ class HexagonalArchitectureTest {
           .that()
           .resideInAPackage("..infrastructure..")
           .should()
-          .resideInAnyPackage(ALLOWED_ADAPTER_PACKAGES)
+          .resideInAnyPackage("..infrastructure.outbound.database..",
+              "..infrastructure.inbound.rest..")
           .because("Infrastructure may contain only declared adapters");
 
   @ArchTest
   static final ArchRule hexagonal_architecture_layers_check =
       Architectures.onionArchitecture()
-          .domainModels("..domain.data..")
+          .domainModels("..domain.model..")
           .domainServices("..domain.service..")
           .applicationServices("..application.usecase..",
             "..application.port.in..",
             "..application.port.out..")
-          .adapter("adapters", ALLOWED_ADAPTER_PACKAGES)
+          .adapter("inbound", "..infrastructure.inbound..")
+          .adapter("outbound", "..infrastructure.outbound..")
           .because("Architecture must follow onion/hexagonal layering");
 
   @ArchTest

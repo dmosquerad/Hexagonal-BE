@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.mapper.util;
 
-import com.architecture.hexagonal.domain.data.vo.EmailVo;
-import com.architecture.hexagonal.domain.service.factory.vo.EmailVoFactory;
+import com.architecture.hexagonal.domain.model.vo.EmailVo;
+import com.architecture.hexagonal.domain.model.vo.factory.EmailVoFactory;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

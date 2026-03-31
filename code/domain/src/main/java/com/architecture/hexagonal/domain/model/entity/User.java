@@ -1,6 +1,6 @@
-package com.architecture.hexagonal.domain.data.entity;
+package com.architecture.hexagonal.domain.model.entity;
 
-import com.architecture.hexagonal.domain.data.vo.EmailVo;
+import com.architecture.hexagonal.domain.model.vo.EmailVo;
 import java.util.UUID;
 import lombok.Builder;
 import lombok.Value;

@@ -3,7 +3,7 @@ package com.architecture.hexagonal.application.usecase;
 import com.architecture.hexagonal.application.input.query.FindUserByUserIdQuery;
 import com.architecture.hexagonal.application.port.in.FindUserByUserIdUseCasePort;
 import com.architecture.hexagonal.application.port.out.UserRepositoryReadPort;
-import com.architecture.hexagonal.domain.data.entity.User;
+import com.architecture.hexagonal.domain.model.entity.User;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import java.util.UUID;

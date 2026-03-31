@@ -86,12 +86,12 @@ class DomainArchTest {
   static final ArchRule domain_data_should_reside_in_entity_vo_or_vo_factory_packages =
       ArchRuleDefinition.classes()
           .that()
-          .resideInAPackage("..domain.data..")
+          .resideInAPackage("..domain.model..")
           .should()
           .resideInAnyPackage(
-              "..domain.data.entity..",
-              "..domain.data.vo..")
-          .because("Domain data must follow the entity/vo taxonomy");
+              "..domain.model.entity..",
+              "..domain.model.vo..")
+          .because("Domain model must follow the entity/vo taxonomy");
 
   @ArchTest
   static final ArchRule value_objects_should_reside_in_domain_data_vo_package =
@@ -99,8 +99,8 @@ class DomainArchTest {
           .that()
           .haveSimpleNameEndingWith("Vo")
           .should()
-          .resideInAPackage("..domain.data.vo..")
-          .because("Value objects must reside in domain.data.vo");
+          .resideInAPackage("..domain.model.vo..")
+          .because("Value objects must reside in model.data.vo");
 
   @ArchTest
   static final ArchRule value_object_factories_should_reside_in_domain_data_vo_factory_package =
@@ -108,8 +108,8 @@ class DomainArchTest {
           .that()
           .haveSimpleNameEndingWith("VoFactory")
           .should()
-          .resideInAPackage("..domain.service.factory.vo..")
-          .because("Value object factories must reside in domain.service.factory.vo");
+          .resideInAPackage("..domain.model.vo.factory..")
+          .because("Value object factories must reside in model.vo.factory");
   
 }
 
