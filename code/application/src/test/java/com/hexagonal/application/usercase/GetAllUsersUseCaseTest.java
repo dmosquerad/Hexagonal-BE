@@ -1,16 +1,19 @@
 package com.hexagonal.application.usercase;
 
 import com.architecture.hexagonal.application.input.query.GetAllUserQuery;
+import com.architecture.hexagonal.application.port.out.EmailConfigurationPort;
 import com.architecture.hexagonal.application.port.out.UserRepositoryReadPort;
 import com.architecture.hexagonal.application.testutils.data.entity.UserTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.data.input.query.GetAllUserQueryTestDataBuilder;
 import com.architecture.hexagonal.application.usecase.GetAllUsersUseCase;
 import com.architecture.hexagonal.domain.model.entity.User;
+import com.architecture.hexagonal.domain.model.vo.EmailVo;
 import java.util.Collections;
 import java.util.Set;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -24,6 +27,9 @@ class GetAllUsersUseCaseTest {
 
   @Mock
   UserRepositoryReadPort userRepositoryReadPort;
+
+  @Mock
+  EmailConfigurationPort emailConfigurationPort;
 
   @Test
   void execute() {
@@ -46,6 +52,8 @@ class GetAllUsersUseCaseTest {
         .isEqualTo(userSet);
 
     Mockito.verify(userRepositoryReadPort).getAllUsers();
+    Mockito.verify(emailConfigurationPort, Mockito.never())
+            .filterAllowed(ArgumentMatchers.anySet());
   }
 
 }

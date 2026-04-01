@@ -20,4 +20,12 @@ public class EmailVo {
     return this.getUsername() + "@" + this.getHost() + "." + this.getTld();
   }
 
+  public String getDomain() {
+    if (!EmailVoPredicate.CAN_FORM_DOMAIN.test(this)) {
+      return StringUtils.EMPTY;
+    }
+
+    return this.getHost() + "." + this.getTld();
+  }
+
 }

@@ -93,6 +93,11 @@
         <artifactId>database</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>configuration</artifactId>
+        <version>${project.version}</version>
+      </dependency>
 
       <!-- TESTING -->
       <dependency>

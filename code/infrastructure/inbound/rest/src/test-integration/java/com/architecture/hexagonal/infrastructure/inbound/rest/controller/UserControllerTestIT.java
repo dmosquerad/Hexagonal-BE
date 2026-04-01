@@ -123,7 +123,7 @@ class UserControllerTestIT {
           UsersResponseDto.class);
 
     final String host = "";
-    final Boolean blockHost = false;
+    final Boolean blockEmail = false;
 
     final User user = UserTestDataBuilder.builder().build().user();      
 
@@ -133,7 +133,7 @@ class UserControllerTestIT {
 
     final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
     params.add("host", host);
-    params.add("blockHost", String.valueOf(blockHost));
+    params.add("blockEmail", String.valueOf(blockEmail));
 
     final MvcResult result = mockMvc.perform(
             MockMvcRequestBuilders.get("/users")
@@ -150,8 +150,8 @@ class UserControllerTestIT {
         .usingRecursiveComparison()
         .isEqualTo(getAllUsersResponse);
 
-    Mockito.verify(userController).getAllUsers(host, blockHost);
-    Mockito.verify(getAllUserQueryMapper).toGetAllUserQuery(host, blockHost);
+    Mockito.verify(userController).getAllUsers(host, blockEmail);
+    Mockito.verify(getAllUserQueryMapper).toGetAllUserQuery(host, blockEmail);
     Mockito.verify(getAllUsersUseCasePort).execute(ArgumentMatchers.any(GetAllUserQuery.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
   }

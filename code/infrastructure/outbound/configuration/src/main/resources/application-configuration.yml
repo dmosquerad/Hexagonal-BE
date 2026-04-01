@@ -1,0 +1,15 @@
+email:
+  block:
+    email: []
+    username:
+      - test
+      - spam
+      - fraud
+    domain:
+      - blocked.org
+      - malware.com
+    host:
+      - banned
+      - malicious
+      - spam-host
+    tld: []

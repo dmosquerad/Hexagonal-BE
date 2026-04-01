@@ -21,11 +21,11 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>application</artifactId>
+            <artifactId>database</artifactId>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>database</artifactId>
+            <artifactId>configuration</artifactId>
         </dependency>
 
         <!-- TESTING -->

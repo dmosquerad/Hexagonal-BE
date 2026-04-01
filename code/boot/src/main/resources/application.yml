@@ -3,3 +3,4 @@ spring:
     import:
       - classpath:application-rest.yml
       - classpath:application-database.yml
+      - classpath:application-configuration.yml

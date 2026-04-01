@@ -25,6 +25,9 @@ public class EmailVoPredicate {
         email.getHost(),
         email.getTld());
 
+  public static final Predicate<EmailVo> CAN_FORM_DOMAIN = email ->
+    StringUtils.isNoneBlank(email.getHost(), email.getTld());
+
   public static Predicate<EmailVo> hostEquals(final String host) {
     return email -> StringUtils.isNotBlank(host)
         && StringUtils.isNotBlank(email.getHost())
