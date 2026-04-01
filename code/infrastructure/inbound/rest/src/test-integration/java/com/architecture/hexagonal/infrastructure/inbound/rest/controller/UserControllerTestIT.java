@@ -21,20 +21,12 @@ import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UserPatchDto;
 import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UserResponseDto;
 import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UserUpdateDto;
 import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UsersResponseDto;
-import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.CreateUserCommandMapper;
-import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.DeleteUserCommandMapper;
-import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.FindUserByUserIdQueryMapper;
-import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.GetAllUserQueryMapper;
-import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.PatchUserCommandMapper;
-import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.UpdateUserCommandMapper;
-import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.UserExistsQueryMapper;
-import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.UserReadDtoMapper;
+import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.*;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.entity.UserTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.time.TestClock;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Clock;
 import java.util.Collections;
-import java.util.Objects;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -54,7 +46,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-@SpringBootTest(classes = {UserController.class})
+@SpringBootTest(classes = UserController.class)
 @AutoConfigureMockMvc
 @ContextConfiguration(classes = TestApplication.class)
 class UserControllerTestIT {
@@ -63,7 +55,7 @@ class UserControllerTestIT {
   MockMvc mockMvc;
 
   @Autowired
-  ObjectMapper objectMapper = new ObjectMapper().findAndRegisterModules();
+  ObjectMapper objectMapper;
 
   @MockitoSpyBean
   UserController userController;

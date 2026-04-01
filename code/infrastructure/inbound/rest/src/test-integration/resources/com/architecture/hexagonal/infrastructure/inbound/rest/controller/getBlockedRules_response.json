@@ -1,0 +1,11 @@
+{
+  "date": "2025-01-01T10:00:00Z",
+  "status": 200,
+  "data": {
+    "email": ["test@example.com"],
+    "host": ["example"],
+    "tld": ["com"],
+    "domain": ["example.com"],
+    "username": ["test"]
+  }
+}

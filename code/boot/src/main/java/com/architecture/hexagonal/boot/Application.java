@@ -12,7 +12,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 })
 @EntityScan(basePackages = "com.architecture.hexagonal.infrastructure.outbound.database.data")
 @ConfigurationPropertiesScan(basePackages = {
-        "com.architecture.hexagonal.infrastructure.outbound.configuration.config"
+    "com.architecture.hexagonal.infrastructure.outbound.configuration.config"
 })
 public class Application {
   public static void main(final String[] args) {
