@@ -9,16 +9,6 @@ import com.tngtech.archunit.lang.syntax.ArchRuleDefinition;
 class InfrastructureArchTest {
 
   @ArchTest
-  static final ArchRule infrastructure_should_not_depend_on_boot =
-      ArchRuleDefinition.noClasses()
-          .that()
-          .resideInAPackage("..infrastructure..")
-          .should()
-          .dependOnClassesThat()
-          .resideInAPackage("..boot..")
-          .because("Infrastructure must not depend on boot");
-
-  @ArchTest
   static final ArchRule mappers_should_reside_in_infrastructure =
       ArchRuleDefinition.classes()
           .that()

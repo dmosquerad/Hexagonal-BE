@@ -25,6 +25,7 @@ class HexagonalArchitectureTest {
           .resideInAPackage("..infrastructure..")
           .should()
           .resideInAnyPackage("..infrastructure.outbound.database..",
+              "..infrastructure.outbound.configuration..",
               "..infrastructure.inbound.rest..")
           .because("Infrastructure may contain only declared adapters");
 

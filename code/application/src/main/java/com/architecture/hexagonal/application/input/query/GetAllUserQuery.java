@@ -8,5 +8,5 @@ import lombok.Value;
 public class GetAllUserQuery {
 
   String host;
-  Boolean blockHost;
+  Boolean blockEmail;
 }

@@ -71,10 +71,10 @@ public class UserController implements UsersApi {
   private final Clock clock;
 
   @Override
-  public ResponseEntity<UsersResponseDto> getAllUsers(final String host, final Boolean blockHost) {
+  public ResponseEntity<UsersResponseDto> getAllUsers(final String host, final Boolean blockEmail) {
     return ResponseEntity.ok(buildUserResponse(
         this.getAllUsersUseCasePort.execute(
-            getAllUserQueryMapper.toGetAllUserQuery(host, blockHost))));
+            getAllUserQueryMapper.toGetAllUserQuery(host, blockEmail))));
   }
 
   @Override

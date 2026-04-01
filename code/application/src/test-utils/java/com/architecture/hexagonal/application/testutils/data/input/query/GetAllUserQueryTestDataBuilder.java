@@ -10,12 +10,12 @@ public class GetAllUserQueryTestDataBuilder {
   private String host = "example";
 
   @Builder.Default
-  private Boolean blockHost = true;
+  private Boolean blockEmail = null;
 
   public GetAllUserQuery getAllUserQuery() {
     return GetAllUserQuery.builder()
         .host(host)
-        .blockHost(blockHost)
+        .blockEmail(blockEmail)
         .build();
   }
 }

@@ -152,9 +152,9 @@ users:
         required: false
         schema:
           type: string
-      - name: blockHost
+      - name: blockEmail
         in: query
-        description: Filter users by blockHost
+        description: Filter users if email is blocked
         required: false
         schema:
           type: boolean

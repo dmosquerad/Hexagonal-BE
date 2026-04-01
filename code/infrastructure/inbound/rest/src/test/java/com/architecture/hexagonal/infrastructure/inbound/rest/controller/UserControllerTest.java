@@ -121,7 +121,7 @@ class UserControllerTest {
         .user();
 
     final String host = "";
-    final Boolean blockHost = false;
+    final Boolean blockEmail = false;
 
     Mockito.when(getAllUsersUseCasePort.execute(ArgumentMatchers.any(GetAllUserQuery.class)))
         .thenReturn(Collections.singleton(user));
@@ -132,13 +132,13 @@ class UserControllerTest {
             .build()
             .usersResponseDto());
 
-    final ResponseEntity<UsersResponseDto> response = userController.getAllUsers(host, blockHost);
+    final ResponseEntity<UsersResponseDto> response = userController.getAllUsers(host, blockEmail);
 
     AssertionsForClassTypes.assertThat(response)
         .usingRecursiveComparison()
         .isEqualTo(responseExpected);
 
-    Mockito.verify(getAllUserQueryMapper).toGetAllUserQuery(host, blockHost);
+    Mockito.verify(getAllUserQueryMapper).toGetAllUserQuery(host, blockEmail);
     Mockito.verify(getAllUsersUseCasePort).execute(ArgumentMatchers.any(GetAllUserQuery.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
