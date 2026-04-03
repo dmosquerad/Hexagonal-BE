@@ -8,15 +8,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
 import java.util.Set;
 
-@SpringBootTest(classes = {EmailConfigurationAdapter.class})
+@SpringBootTest(classes = EmailConfigurationAdapter.class)
 @ContextConfiguration(classes = TestApplication.class)
-@ActiveProfiles("configuration")
 class EmailConfigurationAdapterTestIT {
 
     @Autowired

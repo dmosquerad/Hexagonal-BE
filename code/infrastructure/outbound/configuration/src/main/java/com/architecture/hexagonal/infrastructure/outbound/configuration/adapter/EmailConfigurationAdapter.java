@@ -1,6 +1,7 @@
 package com.architecture.hexagonal.infrastructure.outbound.configuration.adapter;
 
 import com.architecture.hexagonal.application.port.out.EmailConfigurationPort;
+import com.architecture.hexagonal.domain.model.vo.EmailBlockRulesVo;
 import com.architecture.hexagonal.domain.model.vo.EmailVo;
 import com.architecture.hexagonal.domain.model.vo.predicate.EmailVoPredicate;
 import com.architecture.hexagonal.infrastructure.outbound.configuration.config.EmailBlockConfig;
@@ -35,6 +36,17 @@ public class EmailConfigurationAdapter implements EmailConfigurationPort {
         return emails.stream()
             .filter(email -> !isBlocked(email))
             .collect(Collectors.toUnmodifiableSet());
+    }
+
+    @Override
+    public EmailBlockRulesVo getBlockedRules() {
+        return EmailBlockRulesVo.builder()
+            .email(emailBlockConfig.getEmail())
+            .host(emailBlockConfig.getHost())
+            .tld(emailBlockConfig.getTld())
+            .domain(emailBlockConfig.getDomain())
+            .username(emailBlockConfig.getUsername())
+            .build();
     }
 
     private boolean isBlocked(EmailVo emailVo) {

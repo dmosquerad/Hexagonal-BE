@@ -1,0 +1,29 @@
+emails:
+  get:
+    tags:
+      - emails
+    summary: Get email block rules
+    operationId: getBlockedRules
+    responses:
+      '200':
+        description: Block rules response
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/emailBlockRulesResponse'
+      '500':
+        description: Error
+        content:
+          application/json:
+            schema:
+              $ref: '../common-schema.yml#/schemas/responseError'
+
+components:
+  schemas:
+    emailBlockRulesResponse:
+      allOf:
+        - $ref: '../common-schema.yml#/schemas/response'
+        - type: object
+          properties:
+            data:
+              $ref: './emails-schema.yml#/schemas/emailBlockRules'
