@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.application.bus.command.impl;
 
 import com.architecture.hexagonal.application.bus.command.CommandBus;
-import com.architecture.hexagonal.application.bus.command.CommandHandler;
+import com.architecture.hexagonal.application.handler.command.CommandHandler;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

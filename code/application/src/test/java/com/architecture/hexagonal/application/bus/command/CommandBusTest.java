@@ -1,8 +1,7 @@
-package com.architecture.hexagonal.application.command;
+package com.architecture.hexagonal.application.bus.command;
 
-import com.architecture.hexagonal.application.bus.command.CommandBus;
 import com.architecture.hexagonal.application.bus.command.impl.CommandBusImpl;
-import com.architecture.hexagonal.application.bus.command.impl.CreateUserCommandHandler;
+import com.architecture.hexagonal.application.handler.command.impl.CreateUserCommandHandler;
 import com.architecture.hexagonal.application.input.command.CreateUserCommand;
 import com.architecture.hexagonal.application.port.in.CreateUserUseCasePort;
 import com.architecture.hexagonal.application.port.in.GetBlockedRulesUseCasePort;

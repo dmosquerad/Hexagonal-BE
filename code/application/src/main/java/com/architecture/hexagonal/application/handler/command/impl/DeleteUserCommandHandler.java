@@ -1,6 +1,6 @@
-package com.architecture.hexagonal.application.bus.command.impl;
+package com.architecture.hexagonal.application.handler.command.impl;
 
-import com.architecture.hexagonal.application.bus.command.CommandHandler;
+import com.architecture.hexagonal.application.handler.command.CommandHandler;
 import com.architecture.hexagonal.application.input.command.DeleteUserCommand;
 import com.architecture.hexagonal.application.port.in.DeleteUserUseCasePort;
 import com.architecture.hexagonal.domain.model.entity.User;

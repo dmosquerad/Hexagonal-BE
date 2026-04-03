@@ -1,4 +1,4 @@
-package com.architecture.hexagonal.application.bus.command;
+package com.architecture.hexagonal.application.handler.command;
 
 public interface CommandHandler<C, R> {
 

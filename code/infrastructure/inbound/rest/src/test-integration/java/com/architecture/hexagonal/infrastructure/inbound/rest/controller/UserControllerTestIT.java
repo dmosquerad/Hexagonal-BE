@@ -8,9 +8,7 @@ import com.architecture.hexagonal.application.input.query.FindUserByUserIdQuery;
 import com.architecture.hexagonal.application.input.query.GetAllUserQuery;
 import com.architecture.hexagonal.application.input.query.UserExistsQuery;
 import com.architecture.hexagonal.application.bus.command.CommandBus;
-import com.architecture.hexagonal.application.port.in.FindUserByUserIdUseCasePort;
-import com.architecture.hexagonal.application.port.in.GetAllUsersUseCasePort;
-import com.architecture.hexagonal.application.port.in.UserExistsUseCasePort;
+import com.architecture.hexagonal.application.bus.query.QueryBus;
 import com.architecture.hexagonal.domain.model.entity.User;
 import com.architecture.hexagonal.infrastructure.inbound.rest.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UserCreateDto;
@@ -58,16 +56,10 @@ class UserControllerTestIT {
   UserController userController;
 
   @MockitoBean
-  GetAllUsersUseCasePort getAllUsersUseCasePort;
+  QueryBus queryBus;
 
   @MockitoBean
   CommandBus commandBus;
-
-  @MockitoBean
-  FindUserByUserIdUseCasePort findUserByUserIdUseCasePort;
-
-  @MockitoBean
-  UserExistsUseCasePort userExistsUseCasePort;
 
   @MockitoSpyBean
   UserReadDtoMapper userReadDtoMapper;
@@ -108,7 +100,7 @@ class UserControllerTestIT {
     final User user = UserTestDataBuilder.builder().build().user();      
 
     Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
-    Mockito.when(getAllUsersUseCasePort.execute(ArgumentMatchers.any(GetAllUserQuery.class)))
+    Mockito.when(queryBus.execute(ArgumentMatchers.any(GetAllUserQuery.class)))
         .thenReturn(Collections.singleton(user));
 
     final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
@@ -132,7 +124,7 @@ class UserControllerTestIT {
 
     Mockito.verify(userController).getAllUsers(host, blockEmail);
     Mockito.verify(getAllUserQueryMapper).toGetAllUserQuery(host, blockEmail);
-    Mockito.verify(getAllUsersUseCasePort).execute(ArgumentMatchers.any(GetAllUserQuery.class));
+    Mockito.verify(queryBus).execute(ArgumentMatchers.any(GetAllUserQuery.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
   }
 
@@ -187,7 +179,7 @@ class UserControllerTestIT {
 
     Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
     Mockito.when(
-        findUserByUserIdUseCasePort.execute(ArgumentMatchers.any(FindUserByUserIdQuery.class)))
+        queryBus.execute(ArgumentMatchers.any(FindUserByUserIdQuery.class)))
         .thenReturn(user);
 
     final MvcResult result = mockMvc.perform(
@@ -206,7 +198,7 @@ class UserControllerTestIT {
 
     Mockito.verify(userController).getUserByUuid(user.getUserId());
     Mockito.verify(findUserByUserIdQueryMapper).toFindUserByUserIdQuery(user.getUserId());
-    Mockito.verify(findUserByUserIdUseCasePort)
+    Mockito.verify(queryBus)
         .execute(ArgumentMatchers.any(FindUserByUserIdQuery.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
@@ -345,9 +337,8 @@ class UserControllerTestIT {
         .build()
         .user();
 
-    Mockito.doNothing()
-        .when(userExistsUseCasePort)
-        .execute(ArgumentMatchers.any(UserExistsQuery.class));
+    Mockito.when(queryBus.execute(ArgumentMatchers.any(UserExistsQuery.class)))
+        .thenReturn(null);
 
     mockMvc.perform(
             MockMvcRequestBuilders.head("/users/{userUuid}", user.getUserId())
@@ -357,7 +348,7 @@ class UserControllerTestIT {
         .andReturn();
 
     Mockito.verify(userExistsQueryMapper).toUserExistsQuery(user.getUserId());
-    Mockito.verify(userExistsUseCasePort).execute(ArgumentMatchers.any(UserExistsQuery.class));
+    Mockito.verify(queryBus).execute(ArgumentMatchers.any(UserExistsQuery.class));
   }
 
 }

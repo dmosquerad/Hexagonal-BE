@@ -1,8 +1,10 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.controller;
 
-import com.architecture.hexagonal.application.port.in.GetBlockedRulesUseCasePort;
+import com.architecture.hexagonal.application.bus.query.QueryBus;
+import com.architecture.hexagonal.application.input.query.GetBlockedRulesQuery;
 import com.architecture.hexagonal.domain.model.vo.EmailBlockRulesVo;
 import com.architecture.hexagonal.infrastructure.inbound.rest.dto.EmailBlockRulesResponseDto;
+import com.architecture.hexagonal.infrastructure.inbound.rest.factory.ErrorResponseFactory;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.EmailBlockRulesMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,7 +18,7 @@ import java.time.OffsetDateTime;
 @RequiredArgsConstructor
 public class EmailController implements EmailsApi {
 
-  private final GetBlockedRulesUseCasePort getBlockedRulesUseCasePort;
+  private final QueryBus queryBus;
 
   private final EmailBlockRulesMapper emailBlockRulesMapper;
 
@@ -24,8 +26,12 @@ public class EmailController implements EmailsApi {
 
   @Override
   public ResponseEntity<EmailBlockRulesResponseDto> getBlockedRules() {
-    return ResponseEntity.ok(
-        buildEmailBlockRulesResponse(getBlockedRulesUseCasePort.execute()));
+    try {
+      return ResponseEntity.ok(
+          buildEmailBlockRulesResponse(queryBus.execute(new GetBlockedRulesQuery())));
+    } catch (Exception e) {
+      throw ErrorResponseFactory.of(HttpStatus.INTERNAL_SERVER_ERROR, e);
+    }
   }
 
   private EmailBlockRulesResponseDto buildEmailBlockRulesResponse(final EmailBlockRulesVo emailBlockRulesVo) {

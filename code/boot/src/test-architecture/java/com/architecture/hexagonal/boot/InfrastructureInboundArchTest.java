@@ -46,7 +46,7 @@ class InfrastructureInboundArchTest {
           .resideInAPackage("..infrastructure.inbound..")
           .should()
           .dependOnClassesThat()
-          .resideInAPackage("..application.port.in..")
+          .resideInAPackage("..application.bus..")
           .because("Controllers must depend on inbound ports");
 
   @ArchTest

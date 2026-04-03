@@ -35,9 +35,9 @@ class HexagonalArchitectureTest {
           .domainModels("..domain.model..")
           .domainServices("..domain.service..")
           .applicationServices("..application.usecase..",
-            "..application.port.in..",
-            "..application.port.out..",
-            "..application.command..")
+            "..application.port..",
+            "..application.bus..",
+            "..application.handler..")
           .adapter("inbound", "..infrastructure.inbound..")
           .adapter("outbound", "..infrastructure.outbound..")
           .because("Architecture must follow onion/hexagonal layering");

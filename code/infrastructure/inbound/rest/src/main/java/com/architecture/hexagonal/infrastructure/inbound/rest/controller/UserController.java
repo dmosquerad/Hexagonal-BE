@@ -1,9 +1,7 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.controller;
 
 import com.architecture.hexagonal.application.bus.command.CommandBus;
-import com.architecture.hexagonal.application.port.in.FindUserByUserIdUseCasePort;
-import com.architecture.hexagonal.application.port.in.GetAllUsersUseCasePort;
-import com.architecture.hexagonal.application.port.in.UserExistsUseCasePort;
+import com.architecture.hexagonal.application.bus.query.QueryBus;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import com.architecture.hexagonal.domain.model.entity.User;
 import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UserCreateDto;
@@ -35,11 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class UserController implements UsersApi {
 
-  private final GetAllUsersUseCasePort getAllUsersUseCasePort;
-
-  private final FindUserByUserIdUseCasePort findUserByUserIdUseCasePort;
-
-  private final UserExistsUseCasePort userExistsUseCasePort;
+  private final QueryBus queryBus;
 
   private final CommandBus commandBus;
 
@@ -63,9 +57,13 @@ public class UserController implements UsersApi {
 
   @Override
   public ResponseEntity<UsersResponseDto> getAllUsers(final String host, final Boolean blockEmail) {
-          return ResponseEntity.ok(buildUsersResponse(
-        this.getAllUsersUseCasePort.execute(
-                  getAllUserQueryMapper.toGetAllUserQuery(host, blockEmail))));
+    try {
+      return ResponseEntity.ok(buildUsersResponse(
+          queryBus.execute(
+              getAllUserQueryMapper.toGetAllUserQuery(host, blockEmail))));
+    } catch (Exception e) {
+      throw ErrorResponseFactory.of(HttpStatus.INTERNAL_SERVER_ERROR, e);
+    }
   }
 
   @Override
@@ -85,10 +83,12 @@ public class UserController implements UsersApi {
   public ResponseEntity<UserResponseDto> getUserByUuid(final UUID userUuid) {
     try {
       return ResponseEntity.ok(buildUserResponse(
-          findUserByUserIdUseCasePort.execute(
+          queryBus.execute(
               findUserByUserIdQueryMapper.toFindUserByUserIdQuery(userUuid))));
     } catch (ResourceNotFoundException e) {
       throw ErrorResponseFactory.of(HttpStatus.NOT_FOUND, e);
+    } catch (Exception e) {
+      throw ErrorResponseFactory.of(HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
   }
 
@@ -139,9 +139,11 @@ public class UserController implements UsersApi {
   @Override
   public ResponseEntity<Void> headUserByUuid(final UUID userUuid) {
     try {
-      userExistsUseCasePort.execute(userExistsQueryMapper.toUserExistsQuery(userUuid));
+      queryBus.execute(userExistsQueryMapper.toUserExistsQuery(userUuid));
     } catch (ResourceNotFoundException e) {
       throw new ErrorResponseException(HttpStatus.NOT_FOUND, e);
+    } catch (Exception e) {
+      throw ErrorResponseFactory.of(HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
 
       return ResponseEntity.ok().build();
