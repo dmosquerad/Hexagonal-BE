@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.application.usecase;
 
-import com.architecture.hexagonal.application.input.command.CreateUserCommand;
+import com.architecture.hexagonal.application.cqrs.command.request.CreateUserCommand;
 import com.architecture.hexagonal.application.port.in.CreateUserUseCasePort;
 import com.architecture.hexagonal.application.port.out.UserRepositoryWritePort;
 import com.architecture.hexagonal.domain.model.entity.User;

@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.application.port.in;
 
-import com.architecture.hexagonal.application.input.query.FindUserByUserIdQuery;
+import com.architecture.hexagonal.application.cqrs.query.request.FindUserByUserIdQuery;
 import com.architecture.hexagonal.domain.model.entity.User;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import jakarta.validation.Valid;
