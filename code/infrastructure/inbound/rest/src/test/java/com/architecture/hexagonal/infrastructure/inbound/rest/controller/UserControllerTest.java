@@ -4,15 +4,12 @@ import com.architecture.hexagonal.application.input.command.CreateUserCommand;
 import com.architecture.hexagonal.application.input.command.DeleteUserCommand;
 import com.architecture.hexagonal.application.input.command.PatchUserCommand;
 import com.architecture.hexagonal.application.input.command.UpdateUserCommand;
+import com.architecture.hexagonal.application.bus.command.CommandBus;
 import com.architecture.hexagonal.application.input.query.FindUserByUserIdQuery;
 import com.architecture.hexagonal.application.input.query.GetAllUserQuery;
 import com.architecture.hexagonal.application.input.query.UserExistsQuery;
-import com.architecture.hexagonal.application.port.in.CreateUserUseCasePort;
-import com.architecture.hexagonal.application.port.in.DeleteUserUseCasePort;
 import com.architecture.hexagonal.application.port.in.FindUserByUserIdUseCasePort;
 import com.architecture.hexagonal.application.port.in.GetAllUsersUseCasePort;
-import com.architecture.hexagonal.application.port.in.PatchUserUseCasePort;
-import com.architecture.hexagonal.application.port.in.UpdateUserUseCasePort;
 import com.architecture.hexagonal.application.port.in.UserExistsUseCasePort;
 import com.architecture.hexagonal.domain.model.entity.User;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
@@ -62,19 +59,10 @@ class UserControllerTest {
   GetAllUsersUseCasePort getAllUsersUseCasePort;
 
   @Mock
-  CreateUserUseCasePort createUserUseCasePort;
+  CommandBus commandBus;
 
   @Mock
   FindUserByUserIdUseCasePort findUserByUserIdUseCasePort;
-
-  @Mock
-  DeleteUserUseCasePort deleteUserUseCasePort;
-
-  @Mock
-  UpdateUserUseCasePort updateUserUseCasePort;
-
-  @Mock
-  PatchUserUseCasePort patchUserUseCasePort;
 
   @Mock
   UserExistsUseCasePort userExistsUseCasePort;
@@ -145,7 +133,7 @@ class UserControllerTest {
   }
 
   @Test
-  void createUser() {
+  void createUser() throws Exception {
     final User user = UserTestDataBuilder
         .builder()
         .build()
@@ -155,7 +143,7 @@ class UserControllerTest {
         .build()
         .userCreateDto();
 
-    Mockito.when(createUserUseCasePort.execute(ArgumentMatchers.any(CreateUserCommand.class)))
+    Mockito.when(commandBus.execute(ArgumentMatchers.any(CreateUserCommand.class)))
         .thenReturn(user);
 
     final ResponseEntity<UserResponseDto> responseExpected = ResponseEntity.ok(
@@ -171,7 +159,7 @@ class UserControllerTest {
         .isEqualTo(responseExpected);
 
     Mockito.verify(createUserCommandMapper).toCreateUserCommand(createUserDto);
-    Mockito.verify(createUserUseCasePort).execute(ArgumentMatchers.any(CreateUserCommand.class));
+    Mockito.verify(commandBus).execute(ArgumentMatchers.any(CreateUserCommand.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
   }
@@ -207,13 +195,13 @@ class UserControllerTest {
   }
 
   @Test
-  void deleteUserByUuid() throws ResourceNotFoundException {
+  void deleteUserByUuid() throws Exception {
     final User user = UserTestDataBuilder
         .builder()
         .build()
         .user();
 
-    Mockito.when(deleteUserUseCasePort.execute(ArgumentMatchers.any(DeleteUserCommand.class)))
+    Mockito.when(commandBus.execute(ArgumentMatchers.any(DeleteUserCommand.class)))
         .thenReturn(user);
 
     final ResponseEntity<UserResponseDto> responseExpected = ResponseEntity.ok(
@@ -230,19 +218,19 @@ class UserControllerTest {
         .isEqualTo(responseExpected);
 
     Mockito.verify(deleteUserCommandMapper).toDeleteUserCommand(user.getUserId());
-    Mockito.verify(deleteUserUseCasePort).execute(ArgumentMatchers.any(DeleteUserCommand.class));
+    Mockito.verify(commandBus).execute(ArgumentMatchers.any(DeleteUserCommand.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
   }
 
   @Test
-  void updateUserByUuid() throws ResourceNotFoundException {
+  void updateUserByUuid() throws Exception {
     final User user = UserTestDataBuilder
         .builder()
         .build()
         .user();
 
-    Mockito.when(updateUserUseCasePort.execute(ArgumentMatchers.any(UpdateUserCommand.class)))
+    Mockito.when(commandBus.execute(ArgumentMatchers.any(UpdateUserCommand.class)))
         .thenReturn(user);
 
     final ResponseEntity<UserResponseDto> responseExpected = ResponseEntity.ok(
@@ -264,20 +252,20 @@ class UserControllerTest {
 
     Mockito.verify(updateUserCommandMapper)
         .toUpdateUserCommand(ArgumentMatchers.eq(user.getUserId()), ArgumentMatchers.any());
-    Mockito.verify(updateUserUseCasePort).execute(ArgumentMatchers.any(UpdateUserCommand.class));
+    Mockito.verify(commandBus).execute(ArgumentMatchers.any(UpdateUserCommand.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
   }
 
   @Test
-  void updateUserByUuidUserNotFound() throws ResourceNotFoundException {
+  void updateUserByUuidUserNotFound() throws Exception {
     final User user = UserTestDataBuilder
         .builder()
         .build()
         .user();
     final String errorMessage = HttpStatus.NOT_FOUND.getReasonPhrase();
 
-    Mockito.when(updateUserUseCasePort.execute(ArgumentMatchers.any(UpdateUserCommand.class)))
+    Mockito.when(commandBus.execute(ArgumentMatchers.any(UpdateUserCommand.class)))
         .thenThrow(new ResourceNotFoundException(errorMessage));
 
     final ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND.value());
@@ -300,17 +288,17 @@ class UserControllerTest {
 
     Mockito.verify(updateUserCommandMapper)
         .toUpdateUserCommand(ArgumentMatchers.eq(user.getUserId()), ArgumentMatchers.any());
-    Mockito.verify(updateUserUseCasePort).execute(ArgumentMatchers.any(UpdateUserCommand.class));
+    Mockito.verify(commandBus).execute(ArgumentMatchers.any(UpdateUserCommand.class));
   }
 
   @Test
-  void patchUserByUuid() throws ResourceNotFoundException {
+  void patchUserByUuid() throws Exception {
     final User user = UserTestDataBuilder
         .builder()
         .build()
         .user();
 
-    Mockito.when(patchUserUseCasePort.execute(ArgumentMatchers.any(PatchUserCommand.class)))
+    Mockito.when(commandBus.execute(ArgumentMatchers.any(PatchUserCommand.class)))
         .thenReturn(user);
 
     final ResponseEntity<UserResponseDto> responseExpected = ResponseEntity.ok(
@@ -337,20 +325,20 @@ class UserControllerTest {
 
     Mockito.verify(patchUserCommandMapper)
         .toPatchUserCommand(ArgumentMatchers.eq(user.getUserId()), ArgumentMatchers.any());
-    Mockito.verify(patchUserUseCasePort).execute(ArgumentMatchers.any(PatchUserCommand.class));
+    Mockito.verify(commandBus).execute(ArgumentMatchers.any(PatchUserCommand.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
   }
 
   @Test
-  void patchUserByUuidUserNotFound() throws ResourceNotFoundException {
+  void patchUserByUuidUserNotFound() throws Exception {
     final User user = UserTestDataBuilder
         .builder()
         .build()
         .user();
     final String errorMessage = HttpStatus.NOT_FOUND.getReasonPhrase();
 
-    Mockito.when(patchUserUseCasePort.execute(ArgumentMatchers.any(PatchUserCommand.class)))
+    Mockito.when(commandBus.execute(ArgumentMatchers.any(PatchUserCommand.class)))
         .thenThrow(new ResourceNotFoundException(errorMessage));
 
     final ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND.value());
@@ -373,7 +361,7 @@ class UserControllerTest {
 
     Mockito.verify(patchUserCommandMapper)
         .toPatchUserCommand(ArgumentMatchers.eq(user.getUserId()), ArgumentMatchers.any());
-    Mockito.verify(patchUserUseCasePort).execute(ArgumentMatchers.any(PatchUserCommand.class));
+    Mockito.verify(commandBus).execute(ArgumentMatchers.any(PatchUserCommand.class));
   }
 
   @Test

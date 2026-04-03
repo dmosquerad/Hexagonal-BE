@@ -7,12 +7,9 @@ import com.architecture.hexagonal.application.input.command.UpdateUserCommand;
 import com.architecture.hexagonal.application.input.query.FindUserByUserIdQuery;
 import com.architecture.hexagonal.application.input.query.GetAllUserQuery;
 import com.architecture.hexagonal.application.input.query.UserExistsQuery;
-import com.architecture.hexagonal.application.port.in.CreateUserUseCasePort;
-import com.architecture.hexagonal.application.port.in.DeleteUserUseCasePort;
+import com.architecture.hexagonal.application.bus.command.CommandBus;
 import com.architecture.hexagonal.application.port.in.FindUserByUserIdUseCasePort;
 import com.architecture.hexagonal.application.port.in.GetAllUsersUseCasePort;
-import com.architecture.hexagonal.application.port.in.PatchUserUseCasePort;
-import com.architecture.hexagonal.application.port.in.UpdateUserUseCasePort;
 import com.architecture.hexagonal.application.port.in.UserExistsUseCasePort;
 import com.architecture.hexagonal.domain.model.entity.User;
 import com.architecture.hexagonal.infrastructure.inbound.rest.config.TestApplication;
@@ -64,19 +61,10 @@ class UserControllerTestIT {
   GetAllUsersUseCasePort getAllUsersUseCasePort;
 
   @MockitoBean
-  CreateUserUseCasePort createUserUseCasePort;
+  CommandBus commandBus;
 
   @MockitoBean
   FindUserByUserIdUseCasePort findUserByUserIdUseCasePort;
-
-  @MockitoBean
-  DeleteUserUseCasePort deleteUserUseCasePort;
-
-  @MockitoBean
-  UpdateUserUseCasePort updateUserUseCasePort;
-
-  @MockitoBean
-  PatchUserUseCasePort patchUserUseCasePort;
 
   @MockitoBean
   UserExistsUseCasePort userExistsUseCasePort;
@@ -159,7 +147,7 @@ class UserControllerTestIT {
     final User user = UserTestDataBuilder.builder().build().user();
 
     Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
-    Mockito.when(createUserUseCasePort.execute(ArgumentMatchers.any(CreateUserCommand.class)))
+    Mockito.when(commandBus.execute(ArgumentMatchers.any(CreateUserCommand.class)))
         .thenReturn(user);
 
     final MvcResult result = mockMvc.perform(
@@ -179,7 +167,7 @@ class UserControllerTestIT {
 
     Mockito.verify(userController).createUser(createUserRequest);
     Mockito.verify(createUserCommandMapper).toCreateUserCommand(createUserRequest);
-    Mockito.verify(createUserUseCasePort).execute(ArgumentMatchers.any(CreateUserCommand.class));
+    Mockito.verify(commandBus).execute(ArgumentMatchers.any(CreateUserCommand.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
   }
@@ -199,7 +187,7 @@ class UserControllerTestIT {
 
     Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
     Mockito.when(
-            findUserByUserIdUseCasePort.execute(ArgumentMatchers.any(FindUserByUserIdQuery.class)))
+        findUserByUserIdUseCasePort.execute(ArgumentMatchers.any(FindUserByUserIdQuery.class)))
         .thenReturn(user);
 
     final MvcResult result = mockMvc.perform(
@@ -238,7 +226,7 @@ class UserControllerTestIT {
         .user();
 
     Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
-    Mockito.when(deleteUserUseCasePort.execute(ArgumentMatchers.any(DeleteUserCommand.class)))
+    Mockito.when(commandBus.execute(ArgumentMatchers.any(DeleteUserCommand.class)))
         .thenReturn(user);
 
     final MvcResult result = mockMvc.perform(
@@ -257,7 +245,7 @@ class UserControllerTestIT {
 
     Mockito.verify(userController).deleteUserByUuid(user.getUserId());
     Mockito.verify(deleteUserCommandMapper).toDeleteUserCommand(user.getUserId());
-    Mockito.verify(deleteUserUseCasePort).execute(ArgumentMatchers.any(DeleteUserCommand.class));
+    Mockito.verify(commandBus).execute(ArgumentMatchers.any(DeleteUserCommand.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
   }
@@ -281,7 +269,7 @@ class UserControllerTestIT {
         .user();
 
     Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
-    Mockito.when(updateUserUseCasePort.execute(ArgumentMatchers.any(UpdateUserCommand.class)))
+    Mockito.when(commandBus.execute(ArgumentMatchers.any(UpdateUserCommand.class)))
         .thenReturn(user);
 
     final MvcResult result = mockMvc.perform(
@@ -302,7 +290,7 @@ class UserControllerTestIT {
     Mockito.verify(userController).updateUserByUuid(user.getUserId(), updateUserByUuidRequest);
     Mockito.verify(updateUserCommandMapper)
         .toUpdateUserCommand(ArgumentMatchers.eq(user.getUserId()), ArgumentMatchers.any());
-    Mockito.verify(updateUserUseCasePort).execute(ArgumentMatchers.any(UpdateUserCommand.class));
+    Mockito.verify(commandBus).execute(ArgumentMatchers.any(UpdateUserCommand.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
   }
@@ -324,7 +312,7 @@ class UserControllerTestIT {
         .user();
 
     Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
-    Mockito.when(patchUserUseCasePort.execute(ArgumentMatchers.any(PatchUserCommand.class)))
+    Mockito.when(commandBus.execute(ArgumentMatchers.any(PatchUserCommand.class)))
         .thenReturn(user);
 
     final MvcResult result = mockMvc.perform(
@@ -345,7 +333,7 @@ class UserControllerTestIT {
     Mockito.verify(userController).patchUserByUuid(user.getUserId(), patchUserByUuidRequest);
     Mockito.verify(patchUserCommandMapper)
         .toPatchUserCommand(ArgumentMatchers.eq(user.getUserId()), ArgumentMatchers.any());
-    Mockito.verify(patchUserUseCasePort).execute(ArgumentMatchers.any(PatchUserCommand.class));
+    Mockito.verify(commandBus).execute(ArgumentMatchers.any(PatchUserCommand.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
   }
