@@ -1,4 +1,4 @@
-package com.hexagonal.application.usercase;
+package com.architecture.hexagonal.application.usercase;
 
 import com.architecture.hexagonal.application.usecase.UserExistsUseCase;
 import com.architecture.hexagonal.domain.model.entity.User;

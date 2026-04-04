@@ -1,4 +1,4 @@
-package com.hexagonal.application.usercase;
+package com.architecture.hexagonal.application.usercase;
 
 import com.architecture.hexagonal.application.input.query.GetAllUserQuery;
 import com.architecture.hexagonal.application.port.out.EmailConfigurationPort;

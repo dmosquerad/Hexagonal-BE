@@ -1,4 +1,4 @@
-package com.hexagonal.application.usercase;
+package com.architecture.hexagonal.application.usercase;
 
 import com.architecture.hexagonal.application.input.command.CreateUserCommand;
 import com.architecture.hexagonal.application.port.out.UserRepositoryWritePort;
@@ -8,20 +8,19 @@ import com.architecture.hexagonal.application.usecase.CreateUserUseCase;
 import com.architecture.hexagonal.domain.model.entity.User;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-@ExtendWith(MockitoExtension.class)
-class CreateUserUserCaseTest {
+@SpringBootTest(classes = CreateUserUseCase.class)
+class CreateUserUserCaseTestIT {
 
-  @InjectMocks
+  @Autowired
   CreateUserUseCase createUserUseCase;
 
-  @Mock
+  @MockitoBean
   UserRepositoryWritePort userRepositoryWritePort;
 
   @Test
@@ -30,11 +29,10 @@ class CreateUserUserCaseTest {
         .builder()
         .build()
         .user();
-
     final CreateUserCommand createUserCommand = CreateUserCommandTestDataBuilder
-        .builder()
-        .build()
-        .createUserCommand();
+      .builder()
+      .build()
+      .createUserCommand();
 
     Mockito.when(userRepositoryWritePort.saveUser(ArgumentMatchers.any(User.class)))
         .thenReturn(user);

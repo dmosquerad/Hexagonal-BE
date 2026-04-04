@@ -1,11 +1,11 @@
-package com.hexagonal.application.usercase;
+package com.architecture.hexagonal.application.usercase;
 
-import com.architecture.hexagonal.application.input.command.PatchUserCommand;
+import com.architecture.hexagonal.application.input.command.UpdateUserCommand;
 import com.architecture.hexagonal.application.port.out.UserRepositoryReadPort;
 import com.architecture.hexagonal.application.port.out.UserRepositoryWritePort;
 import com.architecture.hexagonal.application.testutils.data.entity.UserTestDataBuilder;
-import com.architecture.hexagonal.application.testutils.data.input.command.PatchUserCommandTestDataBuilder;
-import com.architecture.hexagonal.application.usecase.PatchUserUseCase;
+import com.architecture.hexagonal.application.testutils.data.input.command.UpdateUserCommandTestDataBuilder;
+import com.architecture.hexagonal.application.usecase.UpdateUserUseCase;
 import com.architecture.hexagonal.domain.model.entity.User;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import java.util.Optional;
@@ -16,11 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-@SpringBootTest(classes = PatchUserUseCase.class)
-class PatchUserUseCaseTestIT {
+@SpringBootTest(classes = UpdateUserUseCase.class)
+class UpdateUserUseCaseTestIT {
 
   @Autowired
-  PatchUserUseCase patchUserUseCase;
+  UpdateUserUseCase updateUserUseCase;
 
   @MockitoBean
   UserRepositoryReadPort userRepositoryReadPort;
@@ -29,28 +29,28 @@ class PatchUserUseCaseTestIT {
   UserRepositoryWritePort userRepositoryWritePort;
 
   @Test
-  void executeNamePatch() throws ResourceNotFoundException {
+  void execute() throws ResourceNotFoundException {
     final User user = UserTestDataBuilder
         .builder()
         .build()
         .user();
-    final PatchUserCommand patchUserCommand = PatchUserCommandTestDataBuilder
+    final UpdateUserCommand updateUserCommand = UpdateUserCommandTestDataBuilder
         .builder()
         .build()
-        .patchUserCommand();
+        .updateUserCommand();
 
-    Mockito.when(userRepositoryReadPort.findUserById(patchUserCommand.getUserId()))
+    Mockito.when(userRepositoryReadPort.findUserById(updateUserCommand.getUserId()))
         .thenReturn(Optional.of(user));
     Mockito.when(userRepositoryWritePort.saveUser(user))
         .thenReturn(user);
 
-    final User result = patchUserUseCase.execute(patchUserCommand);
+    final User result = updateUserUseCase.execute(updateUserCommand);
 
     AssertionsForClassTypes.assertThat(result)
         .usingRecursiveComparison()
         .isEqualTo(user);
 
-    Mockito.verify(userRepositoryReadPort).findUserById(patchUserCommand.getUserId());
+    Mockito.verify(userRepositoryReadPort).findUserById(updateUserCommand.getUserId());
     Mockito.verify(userRepositoryWritePort).saveUser(user);
   }
 }

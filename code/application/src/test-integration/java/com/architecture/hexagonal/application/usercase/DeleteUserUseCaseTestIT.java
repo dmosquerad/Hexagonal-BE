@@ -1,4 +1,4 @@
-package com.hexagonal.application.usercase;
+package com.architecture.hexagonal.application.usercase;
 
 import com.architecture.hexagonal.application.input.command.DeleteUserCommand;
 import com.architecture.hexagonal.application.port.out.UserRepositoryWritePort;
