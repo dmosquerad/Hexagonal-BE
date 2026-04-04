@@ -1,0 +1,18 @@
+rabbitmq:
+  exchange: hexagonal
+
+  commandQueues:
+    CreateUserCommand: command-create-user
+    DeleteUserCommand: command-delete-user
+
+  commandBindings:
+    CreateUserCommand: command.create-user
+    DeleteUserCommand: command.delete-user
+
+  queryQueues:
+    FindUserByUserIdQuery: query-find-user-by-user-id
+    GetAllUserQuery: query-get-all-users
+
+  queryBindings:
+    FindUserByUserIdQuery: query.find-user-by-user-id
+    GetAllUserQuery: query.get-all-users

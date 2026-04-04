@@ -4,3 +4,4 @@ spring:
       - classpath:application-rest.yml
       - classpath:application-database.yml
       - classpath:application-configuration.yml
+      - classpath:application-rabbitmq.yml

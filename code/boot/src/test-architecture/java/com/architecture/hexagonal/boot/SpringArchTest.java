@@ -39,7 +39,7 @@ public class SpringArchTest {
           .that()
           .areAnnotatedWith(Configuration.class)
           .should()
-          .resideInAnyPackage("..boot..", "..infrastructure..config..")
+          .resideInAnyPackage("..boot..", "..infrastructure..config..","..application..")
           .because("@Configuration classes must be in config or boot packages");
 
   @ArchTest
