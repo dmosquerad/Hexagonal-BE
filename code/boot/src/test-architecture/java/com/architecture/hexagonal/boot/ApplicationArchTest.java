@@ -86,8 +86,8 @@ class ApplicationArchTest {
                   .that()
                   .haveSimpleNameEndingWith("Command")
                   .should()
-                  .resideInAPackage("..application.input.command..")
-                  .because("Commands must be in application.input.command");
+                  .resideInAPackage("..application.cqrs.command.request..")
+                  .because("Commands must be in application.cqrs.command.request");
 
   @ArchTest
   static final ArchRule queries_should_reside_in_application_query_package =
@@ -95,8 +95,8 @@ class ApplicationArchTest {
                   .that()
                   .haveSimpleNameEndingWith("Query")
                   .should()
-                  .resideInAPackage("..application.input.query..")
-                  .because("Queries must be in application.input.query");
+                  .resideInAPackage("..application.cqrs.query.request..")
+                  .because("Queries must be in application.cqrs.query.request");
 
   @ArchTest
   static final ArchRule ports_should_reside_in_application_port_package =

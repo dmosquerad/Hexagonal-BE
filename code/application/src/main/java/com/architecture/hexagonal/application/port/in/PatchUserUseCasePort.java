@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.application.port.in;
 
-import com.architecture.hexagonal.application.input.command.PatchUserCommand;
+import com.architecture.hexagonal.application.cqrs.command.request.PatchUserCommand;
 import com.architecture.hexagonal.domain.model.entity.User;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import jakarta.validation.Valid;

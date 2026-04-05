@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.application.usecase;
 
-import com.architecture.hexagonal.application.input.query.FindUserByUserIdQuery;
+import com.architecture.hexagonal.application.cqrs.query.request.FindUserByUserIdQuery;
 import com.architecture.hexagonal.application.port.in.FindUserByUserIdUseCasePort;
 import com.architecture.hexagonal.application.port.out.UserRepositoryReadPort;
 import com.architecture.hexagonal.domain.model.entity.User;

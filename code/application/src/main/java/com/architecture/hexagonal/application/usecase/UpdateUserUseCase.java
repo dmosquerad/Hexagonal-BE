@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.application.usecase;
 
-import com.architecture.hexagonal.application.input.command.UpdateUserCommand;
+import com.architecture.hexagonal.application.cqrs.command.request.UpdateUserCommand;
 import com.architecture.hexagonal.application.port.in.UpdateUserUseCasePort;
 import com.architecture.hexagonal.application.port.out.UserRepositoryReadPort;
 import com.architecture.hexagonal.application.port.out.UserRepositoryWritePort;

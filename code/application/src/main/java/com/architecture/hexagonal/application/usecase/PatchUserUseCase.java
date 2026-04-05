@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.application.usecase;
 
-import com.architecture.hexagonal.application.input.command.PatchUserCommand;
+import com.architecture.hexagonal.application.cqrs.command.request.PatchUserCommand;
 import com.architecture.hexagonal.application.port.in.PatchUserUseCasePort;
 import com.architecture.hexagonal.application.port.out.UserRepositoryReadPort;
 import com.architecture.hexagonal.domain.model.entity.User;

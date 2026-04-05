@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.application.usecase;
 
-import com.architecture.hexagonal.application.input.query.UserExistsQuery;
+import com.architecture.hexagonal.application.cqrs.query.request.UserExistsQuery;
 import com.architecture.hexagonal.application.port.in.UserExistsUseCasePort;
 import com.architecture.hexagonal.application.port.out.UserRepositoryReadPort;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;

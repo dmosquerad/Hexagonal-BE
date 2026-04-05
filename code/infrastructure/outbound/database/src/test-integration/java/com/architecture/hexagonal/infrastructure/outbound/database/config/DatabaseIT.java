@@ -13,7 +13,7 @@ public abstract class DatabaseIT {
 
   @Container
   @ServiceConnection
-  static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15");
+  static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16");
 
   @DynamicPropertySource
   static void configure(DynamicPropertyRegistry registry) {

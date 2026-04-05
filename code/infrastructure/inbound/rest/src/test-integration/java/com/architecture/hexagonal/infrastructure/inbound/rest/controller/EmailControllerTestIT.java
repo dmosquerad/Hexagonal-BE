@@ -1,6 +1,7 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.controller;
 
-import com.architecture.hexagonal.application.port.in.*;
+import com.architecture.hexagonal.application.cqrs.query.dispatcher.QueryBus;
+import com.architecture.hexagonal.application.cqrs.query.request.GetBlockedRulesQuery;
 import com.architecture.hexagonal.domain.model.vo.EmailBlockRulesVo;
 import com.architecture.hexagonal.infrastructure.inbound.rest.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.inbound.rest.dto.EmailBlockRulesResponseDto;
@@ -12,6 +13,7 @@ import java.time.Clock;
 
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -41,7 +43,7 @@ public class EmailControllerTestIT {
     EmailController emailController;
 
     @MockitoBean
-    GetBlockedRulesUseCasePort getBlockedRulesUseCasePort;
+    QueryBus queryBus;
 
     @MockitoSpyBean
     EmailBlockRulesMapper emailBlockRulesMapper;
@@ -57,11 +59,13 @@ public class EmailControllerTestIT {
             .emailBlockRules();
 
         final EmailBlockRulesResponseDto expectedResponse = objectMapper.readValue(
-            new ClassPathResource("getBlockedRules_response.json", EmailControllerTestIT.class).getFile(),
+            new ClassPathResource("getBlockedRules_response.json", 
+                EmailControllerTestIT.class).getFile(),
             EmailBlockRulesResponseDto.class);
 
         Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
-        Mockito.when(getBlockedRulesUseCasePort.execute()).thenReturn(emailBlockRulesVo);
+    Mockito.when(queryBus.execute(ArgumentMatchers.any(GetBlockedRulesQuery.class)))
+        .thenReturn(emailBlockRulesVo);
 
         final MvcResult result = mockMvc.perform(
                 MockMvcRequestBuilders.get("/emails/blocks")
@@ -79,7 +83,7 @@ public class EmailControllerTestIT {
             .isEqualTo(expectedResponse);
 
         Mockito.verify(emailController).getBlockedRules();
-        Mockito.verify(getBlockedRulesUseCasePort).execute();
+        Mockito.verify(queryBus).execute(ArgumentMatchers.any(GetBlockedRulesQuery.class));
         Mockito.verify(emailBlockRulesMapper).toEmailBlockRulesDto(emailBlockRulesVo);
         Mockito.verify(clock).instant();
     }

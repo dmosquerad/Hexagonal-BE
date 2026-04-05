@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.application.testutils.data.input.query;
 
-import com.architecture.hexagonal.application.input.query.GetAllUserQuery;
+import com.architecture.hexagonal.application.cqrs.query.request.GetAllUserQuery;
 import lombok.Builder;
 
 @Builder
