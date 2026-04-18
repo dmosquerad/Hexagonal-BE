@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
+//TODO: Replace with real domain service logic coordinating two independent domain objects with no direct reference between them.
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EmailPolicy {
 

@@ -29,4 +29,17 @@ class EmailPolicyTest {
 
     Assertions.assertThat(result).isFalse();
   }
+
+  @Test
+  void filterAllowedEmailHost_shouldReturnFalse_whenHostIsBlank() {
+    User user = UserTestDataBuilder.builder().email(
+        EmailVoTestDataBuilder.builder()
+            .host("")
+            .build().emailVo())
+        .build().user();
+
+    boolean result = EmailPolicy.filterAllowedEmailHost(user);
+
+    Assertions.assertThat(result).isFalse();
+  }
 }

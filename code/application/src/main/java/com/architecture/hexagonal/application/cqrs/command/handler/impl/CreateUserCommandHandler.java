@@ -14,11 +14,6 @@ public class CreateUserCommandHandler implements CommandHandler<CreateUserComman
   private final CreateUserUseCasePort createUserUseCasePort;
 
   @Override
-  public Class<CreateUserCommand> getCommandType() {
-    return CreateUserCommand.class;
-  }
-
-  @Override
   public User handle(final CreateUserCommand command) {
     return createUserUseCasePort.execute(command);
   }

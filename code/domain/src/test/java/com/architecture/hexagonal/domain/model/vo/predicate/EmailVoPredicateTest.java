@@ -8,14 +8,14 @@ import org.junit.jupiter.api.Test;
 class EmailVoPredicateTest {
 
   @Test
-  void isValidMail_shouldReturnTrue_forValidEmail() {
+  void isValidMail_shouldReturnTrue_whenEmailIsValid() {
     boolean result = EmailVoPredicate.IS_VALID_MAIL.test("user@example.com");
 
     Assertions.assertThat(result).isTrue();
   }
 
   @Test
-  void isValidMail_shouldReturnFalse_forInvalidEmail() {
+  void isValidMail_shouldReturnFalse_whenEmailIsInvalid() {
     boolean result = EmailVoPredicate.IS_VALID_MAIL.test("invalid-email");
 
     Assertions.assertThat(result).isFalse();
@@ -53,6 +53,33 @@ class EmailVoPredicateTest {
     EmailVo emailVo = EmailVoTestDataBuilder.builder().build().emailVo();
 
     boolean result = EmailVoPredicate.hostEquals("host").test(emailVo);
+
+    Assertions.assertThat(result).isFalse();
+  }
+
+  @Test
+  void canFormDomain_shouldReturnTrue_whenHostAndTldPresent() {
+    EmailVo emailVo = EmailVoTestDataBuilder.builder().build().emailVo();
+
+    boolean result = EmailVoPredicate.CAN_FORM_DOMAIN.test(emailVo);
+
+    Assertions.assertThat(result).isTrue();
+  }
+
+  @Test
+  void canFormDomain_shouldReturnFalse_whenHostIsBlank() {
+    EmailVo emailVo = EmailVoTestDataBuilder.builder().host(null).build().emailVo();
+
+    boolean result = EmailVoPredicate.CAN_FORM_DOMAIN.test(emailVo);
+
+    Assertions.assertThat(result).isFalse();
+  }
+
+  @Test
+  void hostEquals_shouldReturnFalse_whenNullPassedAsHost() {
+    EmailVo emailVo = EmailVoTestDataBuilder.builder().build().emailVo();
+
+    boolean result = EmailVoPredicate.hostEquals(null).test(emailVo);
 
     Assertions.assertThat(result).isFalse();
   }

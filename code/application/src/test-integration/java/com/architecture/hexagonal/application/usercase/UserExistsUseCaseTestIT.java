@@ -24,7 +24,7 @@ class UserExistsUseCaseTestIT {
   UserRepositoryReadPort userRepositoryReadPort;
 
   @Test
-  void execute() throws ResourceNotFoundException {
+  void execute_shouldNotThrow_whenUserExists() throws ResourceNotFoundException {
     final User user = UserTestDataBuilder
         .builder()
         .build()

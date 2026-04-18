@@ -94,7 +94,7 @@ class UserControllerTest {
   Clock clock = TestClock.FIXED_CLOCK;
 
   @Test
-  void getAllUsers() throws Exception {
+  void getAllUsers_shouldReturnOk_whenUsersExist() throws Exception {
     final User user = UserTestDataBuilder
         .builder()
         .build()
@@ -125,7 +125,7 @@ class UserControllerTest {
   }
 
   @Test
-  void createUser() throws Exception {
+  void createUser_shouldReturnOk_whenRequestIsValid() throws Exception {
     final User user = UserTestDataBuilder
         .builder()
         .build()
@@ -157,7 +157,7 @@ class UserControllerTest {
   }
 
   @Test
-  void getUserByUuid() throws Exception {
+  void getUserByUuid_shouldReturnOk_whenUserExists() throws Exception {
     final User user = UserTestDataBuilder
         .builder()
         .build()
@@ -187,7 +187,7 @@ class UserControllerTest {
   }
 
   @Test
-  void deleteUserByUuid() throws Exception {
+  void deleteUserByUuid_shouldReturnOk_whenUserExists() throws Exception {
     final User user = UserTestDataBuilder
         .builder()
         .build()
@@ -216,7 +216,7 @@ class UserControllerTest {
   }
 
   @Test
-  void updateUserByUuid() throws Exception {
+  void updateUserByUuid_shouldReturnOk_whenRequestIsValid() throws Exception {
     final User user = UserTestDataBuilder
         .builder()
         .build()
@@ -250,7 +250,7 @@ class UserControllerTest {
   }
 
   @Test
-  void updateUserByUuidUserNotFound() throws Exception {
+  void updateUserByUuid_shouldThrowErrorResponseException_whenUserNotFound() throws Exception {
     final User user = UserTestDataBuilder
         .builder()
         .build()
@@ -284,7 +284,7 @@ class UserControllerTest {
   }
 
   @Test
-  void patchUserByUuid() throws Exception {
+  void patchUserByUuid_shouldReturnOk_whenRequestIsValid() throws Exception {
     final User user = UserTestDataBuilder
         .builder()
         .build()
@@ -323,7 +323,7 @@ class UserControllerTest {
   }
 
   @Test
-  void patchUserByUuidUserNotFound() throws Exception {
+  void patchUserByUuid_shouldThrowErrorResponseException_whenUserNotFound() throws Exception {
     final User user = UserTestDataBuilder
         .builder()
         .build()
@@ -357,7 +357,7 @@ class UserControllerTest {
   }
 
   @Test
-  void headUserByUuid() throws Exception {
+  void headUserByUuid_shouldReturnOk_whenUserExists() throws Exception {
     final User user = UserTestDataBuilder
         .builder()
         .build()
@@ -379,7 +379,7 @@ class UserControllerTest {
   }
 
   @Test
-  void headUserByUuidUserNotFound() throws Exception {
+  void headUserByUuid_shouldThrowErrorResponseException_whenUserNotFound() throws Exception {
     final User user = UserTestDataBuilder
         .builder()
         .build()
@@ -389,8 +389,11 @@ class UserControllerTest {
     Mockito.when(queryBus.execute(ArgumentMatchers.any(UserExistsQuery.class)))
         .thenThrow(new ResourceNotFoundException(errorMessage));
 
+    final ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND.value());
+    problemDetail.setDetail(errorMessage);
     final ErrorResponseException errorException = new ErrorResponseException(
         HttpStatus.NOT_FOUND,
+        problemDetail,
         null);
 
     AssertionsForClassTypes.assertThatThrownBy(() ->

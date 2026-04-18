@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.application.cqrs.query.handler;
 
+import com.architecture.hexagonal.domain.exception.DomainException;
+
 public interface QueryHandler<Q, R> {
 
-  Class<Q> getQueryType();
-
-  R handle(Q query) throws Exception;
+  R handle(Q query) throws DomainException;
 }

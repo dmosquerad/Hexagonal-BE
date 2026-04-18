@@ -19,24 +19,25 @@ The API follows a **contract-first** approach with OpenAPI, includes unit/integr
 
 ## 🏗️ Project Structure
 
-The project is organized into Maven modules plus deployment resources:
+The project is organized as a multi-module Maven workspace with deployment resources:
 
 ```
 Hexagonal-BE/
 ├── code/
-│   ├── pom.xml                      # Parent Maven module
-│   ├── domain/                      # Domain layer
-│   ├── application/                 # Application layer (use cases + ports)
+│   ├── pom.xml                      # Parent module
+│   ├── domain/                      # Domain model (entities, VOs, services)
+│   ├── application/                 # Use cases, ports and CQRS handlers
 │   ├── infrastructure/
 │   │   ├── inbound/
-│   │   │   └── rest/                # REST adapter + OpenAPI contracts
+│   │   │   └── rest/                # REST controllers + OpenAPI contracts
 │   │   └── outbound/
-│   │       └── database/            # Database adapter (JPA/PostgreSQL)
-│   ├── boot/                        # Spring Boot main application
+│   │       ├── database/            # DB adapters (JPA/Postgres)
+│   │       └── configuration/       # Config/adapters
+│   ├── boot/                        # Spring Boot composition root
 ├── e2e/
-│   └── karate/                      # End-to-end API tests (Karate + JUnit 5)
+│   └── karate/                      # End-to-end API tests (Karate)
 └── deployment/
-    └── docker/                     # Docker Compose + Postgres init scripts
+    └── docker/                      # Docker Compose + Postgres init SQL
 ```
 
 ## 🔄 Module Communication
@@ -45,17 +46,17 @@ Hexagonal-BE/
 flowchart LR
     Client([HTTP Client])
     POSTGRES[(PostgreSQL)]
+    Config[(Configuration)]
 
     subgraph INBOUND["Infrastructure · Inbound"]
         direction TB
-        REST[UserController]
+        REST[REST Controllers]
     end
 
     subgraph APP["Application"]
         direction TB
-        IN_PORT[Ports In]
+        BUS[CommandBus / QueryBus]
         UC[Use Cases]
-        OUT_PORT[Ports Out]
     end
 
     subgraph DOMAIN["Domain"]
@@ -65,7 +66,7 @@ flowchart LR
 
     subgraph OUTBOUND["Infrastructure · Outbound"]
         direction TB
-        DB[DB Adapters]
+        OR[Outbound Repositories]
     end
 
     APP ~~~ DOMAIN
@@ -76,16 +77,15 @@ flowchart LR
     end
 
     Client --> REST
-    REST --> IN_PORT
-    UC -.-> IN_PORT
+    REST --> BUS
+    BUS --> UC
     UC --> MODEL
-    UC --> OUT_PORT
-    DB -.-> OUT_PORT
-    DB --> POSTGRES
+    UC -.-> OR
+    OR --> POSTGRES
+    OR --> Config
 
     COMP -.wires.-> REST
-    COMP -.wires.-> UC
-    COMP -.wires.-> DB
+    COMP -.wires.-> OR
 ```
 
 > `-->` runtime flow &nbsp;&nbsp; `-.->` implementation/wiring
@@ -111,36 +111,36 @@ Application available at: **http://localhost:8080/api**
 ## 📚 Modules
 
 ### Domain
-Contains the business model and core rules. This module is framework-agnostic and does not depend on Spring.
+Framework-agnostic module containing the core business model. Has no Spring dependency.
 
 **Content:**
 - Entities and value objects
-- Domain services/factories
-- Domain exceptions and error messages
+- Domain services and factories
+- Predicates for domain rules
+- Domain exceptions
 
 ### Application
-Implements use cases and defines the contracts (ports) to interact with infrastructure.
+Orchestrates the domain through use cases and defines the port contracts consumed by infrastructure.
 
 **Content:**
-- Ports In (input contracts for inbound adapters)
-- Ports Out (output contracts for outbound adapters)
-- Commands and queries for use case execution
-- Use case implementations and orchestration
+- Use cases for User CRUD and email rules retrieval
+- Ports In — one input contract per use case
+- Ports Out — contracts for persistence and configuration access
+- `CommandBus` / `QueryBus` dispatchers and their handler implementations
 
 ### Infrastructure
-Provides adapter implementations for external interaction.
 
-#### Inbound (REST)
-Exposes the API and translates HTTP requests/responses to application use cases.
+#### Inbound — REST (`code/infrastructure/inbound/rest`)
+Exposes the HTTP API and translates requests into application commands/queries.
 
-**Features:**
+**Content:**
 - REST controllers
 - OpenAPI contract-first documentation
 - API code generation from OpenAPI specs
 - Centralized REST exception handling
+- Use request for communicate to cqrs
 
-**Contract location:**
-- `code/infrastructure/inbound/rest/src/main/resources/contract/`
+**Contract location:** `code/infrastructure/inbound/rest/src/main/resources/contract/`
 
 #### Outbound (Database)
 Implements persistence with PostgreSQL using Spring Data JPA.
@@ -149,6 +149,13 @@ Implements persistence with PostgreSQL using Spring Data JPA.
 - Repository adapters implementing Ports Out
 - JPA repositories and DAO mappings
 - Persistence configuration and data access
+
+#### Outbound (Configuration)
+Implements configuration-driven business rules loaded from `application.yml`.
+
+**Content:**
+- Repository adapters implementing Ports Out
+- Configuration reader module
 
 ### Boot
 Application composition root that wires all modules and launches Spring Boot.
@@ -243,5 +250,6 @@ Application configuration is organized by concerns:
 - **Main**: `code/boot/src/main/resources/application.yml` - Composition layer
 - **REST**: `code/infrastructure/inbound/rest/src/main/resources/application-rest.yml` - API configuration
 - **Database**: `code/infrastructure/outbound/database/src/main/resources/application-database.yml` - Persistence configuration
+- **Config**: `code/infrastructure/outbound/configuration/src/main/resources/application-database.yml` 
 
 **Built as a practical Hexagonal Architecture example in Java.**

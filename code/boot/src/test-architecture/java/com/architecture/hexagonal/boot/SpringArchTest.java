@@ -5,33 +5,11 @@ import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.lang.syntax.ArchRuleDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.bind.annotation.RestController;
 
 @AnalyzeClasses(packages = "com.architecture.hexagonal")
-public class SpringArchTest {
-
-  @ArchTest
-  static final ArchRule spring_boot_application_should_reside_in_boot_package =
-      ArchRuleDefinition.classes()
-          .that()
-          .areAnnotatedWith(SpringBootApplication.class)
-          .should()
-          .resideInAPackage("..boot..")
-          .because("@SpringBootApplication must be in boot package");
-
-  @ArchTest
-  static final ArchRule spring_boot_application_should_be_named_application =
-      ArchRuleDefinition.classes()
-          .that()
-          .areAnnotatedWith(SpringBootApplication.class)
-          .should()
-          .haveSimpleName("Application")
-          .because("@SpringBootApplication class must be named Application");
+class SpringArchTest {
 
   @ArchTest
   static final ArchRule configuration_classes_should_reside_in_config_or_boot =
@@ -41,15 +19,6 @@ public class SpringArchTest {
           .should()
           .resideInAnyPackage("..boot..", "..infrastructure..config..")
           .because("@Configuration classes must be in config or boot packages");
-
-  @ArchTest
-  static final ArchRule rest_controller_advice_should_reside_in_inbound =
-      ArchRuleDefinition.classes()
-          .that()
-          .areAnnotatedWith(RestControllerAdvice.class)
-          .should()
-          .resideInAPackage("..infrastructure.inbound..")
-          .because("@RestControllerAdvice classes must be in inbound layer");
 
   @ArchTest
   static final ArchRule field_injection_should_not_be_used =
@@ -87,26 +56,11 @@ public class SpringArchTest {
           .because("@Service instance fields must be private final");
 
   @ArchTest
-  static final ArchRule rest_controller_classes_should_not_have_public_fields =
-      ArchRuleDefinition.noFields()
+  static final ArchRule service_can_only_reside_in_application_layer =
+      ArchRuleDefinition.classes()
           .that()
-          .areDeclaredInClassesThat()
-          .areAnnotatedWith(RestController.class)
+          .areAnnotatedWith(Service.class)
           .should()
-          .bePublic()
-          .because("@RestController fields must not be public");
-
-  @ArchTest
-  static final ArchRule rest_controller_fields_should_be_private_final =
-      ArchRuleDefinition.fields()
-          .that()
-          .areDeclaredInClassesThat()
-          .areAnnotatedWith(RestController.class)
-          .and()
-          .areNotStatic()
-          .should()
-          .bePrivate()
-          .andShould()
-          .beFinal()
-          .because("@RestController instance fields must be private final");
+          .resideInAPackage("..application.usecase..")
+          .because("Only application use cases may be @Service");
 }

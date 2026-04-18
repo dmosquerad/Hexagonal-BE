@@ -3,6 +3,7 @@ package com.architecture.hexagonal.application.cqrs.command.handler.impl;
 import com.architecture.hexagonal.application.cqrs.command.handler.CommandHandler;
 import com.architecture.hexagonal.application.cqrs.command.request.DeleteUserCommand;
 import com.architecture.hexagonal.application.port.in.DeleteUserUseCasePort;
+import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import com.architecture.hexagonal.domain.model.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -14,12 +15,7 @@ public class DeleteUserCommandHandler implements CommandHandler<DeleteUserComman
   private final DeleteUserUseCasePort deleteUserUseCasePort;
 
   @Override
-  public Class<DeleteUserCommand> getCommandType() {
-    return DeleteUserCommand.class;
-  }
-
-  @Override
-  public User handle(final DeleteUserCommand command) throws Exception {
+  public User handle(final DeleteUserCommand command) throws ResourceNotFoundException {
     return deleteUserUseCasePort.execute(command);
   }
 }

@@ -32,8 +32,6 @@ class DomainArchTest {
           .areNotStatic()
           .should()
           .bePublic()
-          .andShould()
-          .beFinal()
           .because("Domain must not expose public mutable state");
 
   @ArchTest
@@ -90,8 +88,9 @@ class DomainArchTest {
           .should()
           .resideInAnyPackage(
               "..domain.model.entity..",
-              "..domain.model.vo..")
-          .because("Domain model must follow the entity/vo taxonomy");
+              "..domain.model.vo..",
+              "..domain.model.vo.factory..")
+          .because("Domain model classes must reside in entity, VO, or VO factory packages");
 
   @ArchTest
   static final ArchRule value_objects_should_reside_in_domain_data_vo_package =
@@ -100,7 +99,7 @@ class DomainArchTest {
           .haveSimpleNameEndingWith("Vo")
           .should()
           .resideInAPackage("..domain.model.vo..")
-          .because("Value objects must reside in model.data.vo");
+          .because("Value objects must reside in domain.model.vo");
 
   @ArchTest
   static final ArchRule value_object_factories_should_reside_in_domain_data_vo_factory_package =
@@ -109,7 +108,71 @@ class DomainArchTest {
           .haveSimpleNameEndingWith("VoFactory")
           .should()
           .resideInAPackage("..domain.model.vo.factory..")
-          .because("Value object factories must reside in model.vo.factory");
-  
+          .because("Value object factories must reside in domain.model.vo.factory");
+
+  @ArchTest
+  static final ArchRule predicates_should_reside_in_domain_model =
+      ArchRuleDefinition.classes()
+          .that()
+          .haveSimpleNameEndingWith("Predicate")
+          .should()
+          .resideInAPackage("..domain.model..")
+          .because("Domain predicates must reside in domain model");
+
+  @ArchTest
+  static final ArchRule domain_exceptions_should_reside_in_domain_exception_package =
+      ArchRuleDefinition.classes()
+          .that()
+          .resideInAPackage("..domain..")
+          .and()
+          .haveSimpleNameEndingWith("Exception")
+          .or()
+          .haveSimpleNameEndingWith("ExceptionMessage")
+          .should()
+          .resideInAPackage("..domain.exception..")
+          .because("Domain exceptions must be centralized in domain.exception"
+              + " to keep error semantics within the domain boundary");
+
+  @ArchTest
+  static final ArchRule domain_services_should_reside_in_domain_service_package =
+      ArchRuleDefinition.classes()
+          .that()
+          .resideInAPackage("..domain.service..")
+          .should()
+          .resideInAPackage("..domain.service..")
+          .andShould()
+          .notBeAnnotatedWith("org.springframework.stereotype.Service")
+          .because("Domain services must reside in domain.service and must not carry"
+              + " Spring annotations — they are pure domain logic, not Spring beans");
+
+  @ArchTest
+  static final ArchRule domain_vo_fields_should_be_private_final =
+      ArchRuleDefinition.fields()
+          .that()
+          .areDeclaredInClassesThat()
+          .haveSimpleNameEndingWith("Vo")
+          .and()
+          .areNotStatic()
+          .should()
+          .beFinal()
+          .andShould()
+          .bePrivate()
+          .because("Value Objects are immutable by definition;"
+              + " all their instance fields must be private final to prevent external mutation");
+
+  @ArchTest
+  static final ArchRule domain_exceptions_should_not_have_public_fields =
+      ArchRuleDefinition.noFields()
+          .that()
+          .areDeclaredInClassesThat()
+          .resideInAPackage("..domain.exception..")
+          .and()
+          .areNotStatic()
+          .should()
+          .bePublic()
+          .because("Domain exception fields must be encapsulated;"
+              + " expose information via methods, not public state")
+          .allowEmptyShould(true);
+
 }
 

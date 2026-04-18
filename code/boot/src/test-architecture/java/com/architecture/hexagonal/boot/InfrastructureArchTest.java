@@ -16,5 +16,6 @@ class InfrastructureArchTest {
           .should()
           .resideInAPackage("..infrastructure..")
           .because("Mappers must stay in infrastructure");
+
 }
 

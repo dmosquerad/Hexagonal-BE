@@ -48,12 +48,15 @@ public class RestControllerExceptionHandler extends ResponseEntityExceptionHandl
   @ExceptionHandler(ConstraintViolationException.class)
   public ResponseEntity<Object> handleConstraintViolationException(
       final ConstraintViolationException ex, final WebRequest request) {
-    return this.handleExceptionInternal(ex, ex.getMessage(), null, HttpStatus.BAD_REQUEST, request);
+    final ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+    problemDetail.setDetail(ex.getMessage());
+    return this.handleExceptionInternal(ex, problemDetail, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
   }
 
   @ExceptionHandler(Exception.class)
   public ResponseEntity<Object> handleNonControlledException(final Exception ex, final WebRequest request) {
-    return this.handleExceptionInternal(
-        ex, ex.getMessage(), null, HttpStatusCode.valueOf(500), request);
+    final ProblemDetail problemDetail = ProblemDetail.forStatus( HttpStatus.INTERNAL_SERVER_ERROR);
+    problemDetail.setDetail(ex.getMessage());
+    return this.handleExceptionInternal(ex, problemDetail, null, HttpStatus.INTERNAL_SERVER_ERROR, request);
   }
 }

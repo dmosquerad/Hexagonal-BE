@@ -9,7 +9,7 @@ function fn() {
   karate.configure('afterScenario', function() {
     var cleanupUserId = karate.get('cleanupUserId');
     if (cleanupUserId) {
-      karate.call('classpath:helpers/users/cleanup-user.feature', {
+      karate.call('classpath:helpers/users/cleanup.feature', {
         baseUrl: config.baseUrl,
         userIdToDelete: cleanupUserId
       });

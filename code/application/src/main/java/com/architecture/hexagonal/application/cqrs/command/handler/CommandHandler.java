@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.application.cqrs.command.handler;
 
+import com.architecture.hexagonal.domain.exception.DomainException;
+
 public interface CommandHandler<C, R> {
 
-  Class<C> getCommandType();
-
-  R handle(C command) throws Exception;
+  R handle(C command) throws DomainException;
 }

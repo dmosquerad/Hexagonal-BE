@@ -27,7 +27,7 @@ class DeleteUserUseCaseTest {
   UserRepositoryWritePort userRepositoryWritePort;
 
   @Test
-  void execute() throws ResourceNotFoundException {
+  void execute_shouldDeleteUser_whenUserExists() throws ResourceNotFoundException {
     final User user = UserTestDataBuilder
         .builder()
         .build()
@@ -50,7 +50,7 @@ class DeleteUserUseCaseTest {
   }
 
   @Test
-  void executeUserNotFound() {
+  void execute_shouldThrowResourceNotFoundException_whenUserNotFound() {
     final DeleteUserCommand deleteUserCommand = DeleteUserCommandTestDataBuilder
         .builder()
         .build()

@@ -35,7 +35,7 @@ class UserRepositoryDatabaseWriteAdapterTest {
   UserDaoMapper userDaoMapper = Mappers.getMapper(UserDaoMapper.class);
 
   @Test
-  void saveUser() {
+  void saveUser_shouldPersistUser_whenUserIsValid() {
     final User user = UserTestDataBuilder
         .builder()
         .build()
@@ -60,7 +60,7 @@ class UserRepositoryDatabaseWriteAdapterTest {
   }
 
   @Test
-  void deleteUser() {
+  void deleteUser_shouldReturnUser_whenUserExists() {
     final User user = UserTestDataBuilder
         .builder()
         .build()
@@ -82,6 +82,24 @@ class UserRepositoryDatabaseWriteAdapterTest {
 
     Mockito.verify(userDatabaseWriteRepository).deleteByUserId(user.getUserId());
     Mockito.verify(userMapper).toUser(userDao);
+  }
+
+  @Test
+  void deleteUser_shouldReturnEmpty_whenUserNotFound() {
+    final UserDao userDao = UserDaoTestDataBuilder
+            .builder()
+            .build()
+            .userDao();
+
+    Mockito.when(userDatabaseWriteRepository.deleteByUserId(userDao.getUserId()))
+        .thenReturn(Optional.empty());
+
+    final Optional<User> result = userRepositoryDatabaseWriteAdapter.deleteUser(userDao.getUserId());
+
+    AssertionsForClassTypes.assertThat(result).isEqualTo(Optional.empty());
+
+    Mockito.verify(userDatabaseWriteRepository).deleteByUserId(userDao.getUserId());
+    Mockito.verify(userMapper, Mockito.never()).toUser(userDao);
   }
 
 }

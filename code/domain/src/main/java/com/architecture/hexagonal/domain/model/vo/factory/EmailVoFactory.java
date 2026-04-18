@@ -1,5 +1,6 @@
 package com.architecture.hexagonal.domain.model.vo.factory;
 
+import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.model.vo.EmailVo;
 
 import com.architecture.hexagonal.domain.model.vo.predicate.EmailVoPredicate;
@@ -12,7 +13,7 @@ public class EmailVoFactory {
 
   public static EmailVo from(final String email) {
     if (!EmailVoPredicate.IS_VALID_MAIL.test(email)) {
-      throw new IllegalArgumentException("Invalid email format");
+      throw new IllegalArgumentException(ExceptionMessage.INVALID_EMAIL_FORMAT);
     }
 
     final String atSign = "@";

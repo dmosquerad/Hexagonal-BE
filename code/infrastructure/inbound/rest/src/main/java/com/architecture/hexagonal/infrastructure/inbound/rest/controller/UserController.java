@@ -2,6 +2,7 @@ package com.architecture.hexagonal.infrastructure.inbound.rest.controller;
 
 import com.architecture.hexagonal.application.cqrs.command.dispatcher.CommandBus;
 import com.architecture.hexagonal.application.cqrs.query.dispatcher.QueryBus;
+import com.architecture.hexagonal.domain.exception.DomainException;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import com.architecture.hexagonal.domain.model.entity.User;
 import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UserCreateDto;
@@ -59,8 +60,9 @@ public class UserController implements UsersApi {
   public ResponseEntity<UsersResponseDto> getAllUsers(final String host, final Boolean blockEmail) {
     try {
       return ResponseEntity.ok(buildUsersResponse(
-          queryBus.execute(
-              getAllUserQueryMapper.toGetAllUserQuery(host, blockEmail))));
+          queryBus.execute(getAllUserQueryMapper.toGetAllUserQuery(host, blockEmail))));
+    } catch (DomainException e) {
+      throw ErrorResponseFactory.of(HttpStatus.UNPROCESSABLE_ENTITY, e);
     } catch (Exception e) {
       throw ErrorResponseFactory.of(HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
@@ -70,10 +72,11 @@ public class UserController implements UsersApi {
   public ResponseEntity<UserResponseDto> createUser(final UserCreateDto userCreateDto) {
     try {
       return ResponseEntity.ok(buildUserResponse(
-          commandBus.execute(
-            createUserCommandMapper.toCreateUserCommand(userCreateDto))));
+          commandBus.execute(createUserCommandMapper.toCreateUserCommand(userCreateDto))));
     } catch (IllegalArgumentException e) {
       throw ErrorResponseFactory.of(HttpStatus.BAD_REQUEST, e);
+    } catch (DomainException e) {
+      throw ErrorResponseFactory.of(HttpStatus.UNPROCESSABLE_ENTITY, e);
     } catch (Exception e) {
       throw ErrorResponseFactory.of(HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
@@ -83,10 +86,11 @@ public class UserController implements UsersApi {
   public ResponseEntity<UserResponseDto> getUserByUuid(final UUID userUuid) {
     try {
       return ResponseEntity.ok(buildUserResponse(
-          queryBus.execute(
-              findUserByUserIdQueryMapper.toFindUserByUserIdQuery(userUuid))));
+          queryBus.execute(findUserByUserIdQueryMapper.toFindUserByUserIdQuery(userUuid))));
     } catch (ResourceNotFoundException e) {
       throw ErrorResponseFactory.of(HttpStatus.NOT_FOUND, e);
+    } catch (DomainException e) {
+      throw ErrorResponseFactory.of(HttpStatus.UNPROCESSABLE_ENTITY, e);
     } catch (Exception e) {
       throw ErrorResponseFactory.of(HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
@@ -99,6 +103,8 @@ public class UserController implements UsersApi {
           commandBus.execute(deleteUserCommandMapper.toDeleteUserCommand(userUuid))));
     } catch (ResourceNotFoundException e) {
       throw ErrorResponseFactory.of(HttpStatus.NOT_FOUND, e);
+    } catch (DomainException e) {
+      throw ErrorResponseFactory.of(HttpStatus.UNPROCESSABLE_ENTITY, e);
     } catch (Exception e) {
       throw ErrorResponseFactory.of(HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
@@ -109,12 +115,13 @@ public class UserController implements UsersApi {
       final UUID userUuid, final UserUpdateDto userUpdateDto) {
     try {
       return ResponseEntity.ok(buildUserResponse(
-          commandBus.execute(
-            updateUserCommandMapper.toUpdateUserCommand(userUuid, userUpdateDto))));
+          commandBus.execute(updateUserCommandMapper.toUpdateUserCommand(userUuid, userUpdateDto))));
     } catch (ResourceNotFoundException e) {
       throw ErrorResponseFactory.of(HttpStatus.NOT_FOUND, e);
     } catch (IllegalArgumentException e) {
       throw ErrorResponseFactory.of(HttpStatus.BAD_REQUEST, e);
+    } catch (DomainException e) {
+      throw ErrorResponseFactory.of(HttpStatus.UNPROCESSABLE_ENTITY, e);
     } catch (Exception e) {
       throw ErrorResponseFactory.of(HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
@@ -125,12 +132,13 @@ public class UserController implements UsersApi {
       final UUID userUuid, final UserPatchDto userPatchDto) {
     try {
       return ResponseEntity.ok(buildUserResponse(
-          commandBus.execute(
-            patchUserCommandMapper.toPatchUserCommand(userUuid, userPatchDto))));
+          commandBus.execute(patchUserCommandMapper.toPatchUserCommand(userUuid, userPatchDto))));
     } catch (ResourceNotFoundException e) {
       throw ErrorResponseFactory.of(HttpStatus.NOT_FOUND, e);
     } catch (IllegalArgumentException e) {
       throw ErrorResponseFactory.of(HttpStatus.BAD_REQUEST, e);
+    } catch (DomainException e) {
+      throw ErrorResponseFactory.of(HttpStatus.UNPROCESSABLE_ENTITY, e);
     } catch (Exception e) {
       throw ErrorResponseFactory.of(HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
@@ -141,11 +149,12 @@ public class UserController implements UsersApi {
     try {
       queryBus.execute(userExistsQueryMapper.toUserExistsQuery(userUuid));
     } catch (ResourceNotFoundException e) {
-      throw new ErrorResponseException(HttpStatus.NOT_FOUND, e);
+      throw ErrorResponseFactory.of(HttpStatus.NOT_FOUND, e);
+    } catch (DomainException e) {
+      throw ErrorResponseFactory.of(HttpStatus.UNPROCESSABLE_ENTITY, e);
     } catch (Exception e) {
       throw ErrorResponseFactory.of(HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
-
     return ResponseEntity.ok().build();
   }
 

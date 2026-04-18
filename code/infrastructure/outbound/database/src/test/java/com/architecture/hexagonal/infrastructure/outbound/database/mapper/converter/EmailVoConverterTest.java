@@ -1,4 +1,4 @@
-package com.architecture.hexagonal.infrastructure.outbound.database.mapper.util;
+package com.architecture.hexagonal.infrastructure.outbound.database.mapper.converter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -6,11 +6,11 @@ import com.architecture.hexagonal.domain.model.vo.EmailVo;
 import com.architecture.hexagonal.infrastructure.outbound.database.testutils.data.vo.EmailVoTestDataBuilder;
 import org.junit.jupiter.api.Test;
 
-class ToEmailVoUtilTest {
+class EmailVoConverterTest {
 
   @Test
-  void toEmailVoShouldConvertValidEmail() {
-    final EmailVo result = ToEmailVoUtil.toEmailVo("test@example.com");
+  void toEmailVo_shouldReturnEmailVo_whenEmailIsValid() {
+    final EmailVo result = EmailVoConverter.toEmailVo("test@example.com");
     final EmailVo expected = EmailVoTestDataBuilder.builder()
       .build()
       .emailVo();
@@ -19,8 +19,8 @@ class ToEmailVoUtilTest {
   }
 
   @Test
-  void toEmailVoShouldReturnEmptyEmailVoWhenInputIsNull() {
-    final EmailVo result = ToEmailVoUtil.toEmailVo(null);
+  void toEmailVo_shouldReturnEmpty_whenInputIsNull() {
+    final EmailVo result = EmailVoConverter.toEmailVo(null);
 
     assertThat(result).isEqualTo(EmailVoTestDataBuilder.builder()
         .username(null)

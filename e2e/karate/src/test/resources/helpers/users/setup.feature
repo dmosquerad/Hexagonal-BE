@@ -20,7 +20,10 @@ Feature: Global test data pre-cleanup
         'patched-user@test.com',
         'delete-user@test.com',
         'e2e-flow-user@test.com',
-        'e2e-flow-updated@test.com'
+        'e2e-flow-updated@test.com',
+        'get-users-host@gmail.com',
+        'get-users-blocked@banned.com',
+        'get-users-allowed@allowed.com'
       ]
       """
 

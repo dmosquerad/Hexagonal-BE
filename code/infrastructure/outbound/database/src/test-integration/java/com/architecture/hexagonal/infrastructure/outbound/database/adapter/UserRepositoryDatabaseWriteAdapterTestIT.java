@@ -40,7 +40,7 @@ class UserRepositoryDatabaseWriteAdapterTestIT extends DatabaseIT {
   UserDaoMapper userDaoMapper;
 
   @Test
-  void saveUser_create() {
+  void saveUser_shouldPersistUser_whenUserIsValid() {
     final User user = UserTestDataBuilder.builder()
         .build()
         .user();
@@ -58,7 +58,7 @@ class UserRepositoryDatabaseWriteAdapterTestIT extends DatabaseIT {
   }
 
   @Test
-  void deleteUser() {
+  void deleteUser_shouldReturnUser_whenUserExists() {
     final User user = UserTestDataBuilder
         .builder()
         .build()

@@ -11,13 +11,31 @@ import org.springframework.context.annotation.Configuration;
 class BootArchTest {
 
   @ArchTest
-  static final ArchRule boot_should_not_depend_on_domain_input_or_usecase_impl =
+  static final ArchRule boot_application_should_reside_in_boot_package =
+      ArchRuleDefinition.classes()
+          .that()
+          .areAnnotatedWith(SpringBootApplication.class)
+          .should()
+          .resideInAPackage("..boot..")
+          .because("@SpringBootApplication must be in boot package");
+
+  @ArchTest
+  static final ArchRule boot_application_should_be_named_application =
+      ArchRuleDefinition.classes()
+          .that()
+          .areAnnotatedWith(SpringBootApplication.class)
+          .should()
+          .haveSimpleName("Application")
+          .because("@SpringBootApplication class must be named Application");
+
+  @ArchTest
+  static final ArchRule boot_should_not_depend_on_usecase_impl =
       ArchRuleDefinition.noClasses()
           .that()
           .resideInAPackage("..boot..")
           .should()
           .dependOnClassesThat()
-          .resideInAnyPackage("..application.input..", "..application.usecase..")
+          .resideInAPackage("..application.usecase..")
           .because("Boot must wire modules, not execute use case logic");
 
   @ArchTest

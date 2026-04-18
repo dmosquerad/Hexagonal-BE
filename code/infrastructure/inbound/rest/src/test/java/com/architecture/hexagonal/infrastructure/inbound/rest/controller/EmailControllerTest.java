@@ -27,19 +27,19 @@ import org.springframework.http.ResponseEntity;
 class EmailControllerTest {
 
   @InjectMocks
-  private EmailController emailController;
+  EmailController emailController;
 
   @Mock
-  private QueryBus queryBus;
+  QueryBus queryBus;
 
   @Mock
-  private EmailBlockRulesMapper emailBlockRulesMapper;
+  EmailBlockRulesMapper emailBlockRulesMapper;
 
   @Spy
-  private Clock clock = TestClock.FIXED_CLOCK;
+  Clock clock = TestClock.FIXED_CLOCK;
 
   @Test
-  void getBlockedRules_shouldReturnOkBlockRulesResponse() throws Exception {
+  void getBlockedRules_shouldReturnOkBlockRulesResponse_whenBlockedRulesExist() throws Exception {
     final EmailBlockRulesVo emailBlockRulesVo = EmailBlockRulesTestDataBuilder.builder()
         .build()
         .emailBlockRules();
