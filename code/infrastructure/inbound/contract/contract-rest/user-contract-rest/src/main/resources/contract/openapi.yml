@@ -1,0 +1,23 @@
+openapi: 3.0.3
+info:
+  version: 0.0.1
+  title: User API
+
+tags:
+  - name: users
+    description: Operations related to user management
+
+servers:
+  - url: http://localhost:8080/api
+
+paths:
+  /users:
+    $ref: './users/users-path.yml#/users'
+  /users/{userUuid}:
+    $ref: './users/users-path.yml#/user'
+components:
+  schemas:
+    response:
+      $ref: './common-schema.yml#/schemas/response'
+    responseError:
+      $ref: './common-schema.yml#/schemas/responseError'

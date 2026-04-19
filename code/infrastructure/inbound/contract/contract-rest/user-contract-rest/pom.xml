@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>user-contract-rest</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <parent>
+        <groupId>com.architecture.hexagonal</groupId>
+        <artifactId>contract-rest</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-api</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <generatorName>spring</generatorName>
+                            <skipOperationExample>true</skipOperationExample>
+                            <generateSupportingFiles>false</generateSupportingFiles>
+                            <modelNameSuffix>Dto</modelNameSuffix>
+                            <output>${project.build.directory}/generated-sources</output>
+                            <invokerPackage>com.architecture.hexagonal.infrastructure.inbound.contract.rest.user</invokerPackage>
+                            <apiPackage>com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.controller</apiPackage>
+                            <modelPackage>com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.dto</modelPackage>
+                            <inputSpec>${project.basedir}/src/main/resources/contract/openapi.yml</inputSpec>
+                            <configOptions>
+                                <java8>false</java8>
+                                <useJakartaEe>true</useJakartaEe>
+                                <interfaceOnly>true</interfaceOnly>
+                                <openApiNullable>false</openApiNullable>
+                                <useBeanValidation>true</useBeanValidation>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.dto;
 
-import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UserReadDto;
-import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UsersResponseDto;
+import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.dto.UserReadDto;
+import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.dto.UsersResponseDto;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.time.TestClock;
 import java.time.OffsetDateTime;
 import java.util.Collections;

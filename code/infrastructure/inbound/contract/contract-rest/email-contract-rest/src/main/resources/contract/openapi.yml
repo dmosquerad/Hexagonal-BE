@@ -1,20 +1,16 @@
 openapi: 3.0.3
 info:
   version: 0.0.1
-  title: User API
+  title: Email API
 
 tags:
-  - name: users
-    description: Operations related to user management
+  - name: emails
+    description: Operations related to email block rules
 
 servers:
   - url: http://localhost:8080/api
 
 paths:
-  /users:
-    $ref: './users/users-path.yml#/users'
-  /users/{userUuid}:
-    $ref: './users/users-path.yml#/user'
   /emails/blocks:
     $ref: './emails/emails-path.yml#/emails'
 components:

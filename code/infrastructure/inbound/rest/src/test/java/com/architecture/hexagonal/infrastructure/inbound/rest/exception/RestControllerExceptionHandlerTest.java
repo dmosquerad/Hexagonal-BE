@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.exception;
 
-import com.architecture.hexagonal.infrastructure.inbound.rest.dto.ResponseErrorDto;
+import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.dto.ResponseErrorDto;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.dto.ResponseErrorDtoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.time.TestClock;
 import jakarta.validation.ConstraintViolationException;
