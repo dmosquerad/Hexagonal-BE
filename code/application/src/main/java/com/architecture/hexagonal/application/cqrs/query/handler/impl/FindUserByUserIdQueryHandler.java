@@ -15,12 +15,7 @@ public class FindUserByUserIdQueryHandler implements QueryHandler<FindUserByUser
   private final FindUserByUserIdUseCasePort findUserByUserIdUseCasePort;
 
   @Override
-  public Class<FindUserByUserIdQuery> getQueryType() {
-    return FindUserByUserIdQuery.class;
-  }
-
-  @Override
-  public User handle(final FindUserByUserIdQuery query) throws Exception {
+  public User handle(final FindUserByUserIdQuery query) throws ResourceNotFoundException {
     return findUserByUserIdUseCasePort.execute(query);
   }
 }

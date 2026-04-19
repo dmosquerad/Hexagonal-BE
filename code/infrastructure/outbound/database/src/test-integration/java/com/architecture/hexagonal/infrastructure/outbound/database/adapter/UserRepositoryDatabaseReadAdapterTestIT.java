@@ -38,7 +38,7 @@ class UserRepositoryDatabaseReadAdapterTestIT extends DatabaseIT {
   UserMapper userMapper;
 
   @Test
-  void getAllUsers() {
+  void getAllUsers_shouldReturnAllUsers_whenDatabaseHasUsers() {
     final Set<User> result = userRepositoryDatabaseReadAdapter.getAllUsers();
 
     AssertionsForClassTypes.assertThat(result)
@@ -54,7 +54,7 @@ class UserRepositoryDatabaseReadAdapterTestIT extends DatabaseIT {
   }
 
   @Test
-  void findUserById() {
+  void findUserById_shouldReturnUser_whenUserExists() {
     final User user = UserTestDataBuilder
             .builder()
             .build()

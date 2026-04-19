@@ -2,27 +2,32 @@ package com.architecture.hexagonal.application.cqrs.query.dispatcher.impl;
 
 import com.architecture.hexagonal.application.cqrs.query.dispatcher.QueryBus;
 import com.architecture.hexagonal.application.cqrs.query.handler.QueryHandler;
-import java.util.HashMap;
+import com.architecture.hexagonal.domain.exception.DomainException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
+import java.util.stream.Collectors;
+import org.springframework.core.ResolvableType;
 import org.springframework.stereotype.Component;
 
 @Component
 public class QueryBusImpl implements QueryBus {
 
-  private final List<QueryHandler<?, ?>> queryHandlers;
-
-  private final Map<Class<?>, QueryHandler<?, ?>> handlersByQuery = new HashMap<>();
+  private final Map<Class<?>, QueryHandler<?, ?>> handlersByQuery;
 
   public QueryBusImpl(final List<QueryHandler<?, ?>> queryHandlers) {
-    this.queryHandlers = queryHandlers;
-    this.queryHandlers.forEach(handler -> handlersByQuery.put(handler.getQueryType(), handler));
+    this.handlersByQuery = queryHandlers.stream()
+        .collect(Collectors.toMap(
+            handler -> ResolvableType.forClass(handler.getClass())
+                .as(QueryHandler.class)
+                .getGeneric(0)
+                .resolve(),
+            handler -> handler
+        ));
   }
 
   @Override
-  public <Q, R> R execute(final Q query) throws Exception {
+  public <Q, R> R execute(final Q query) throws DomainException {
     final QueryHandler<Q, R> handler = (QueryHandler<Q, R>) handlersByQuery.get(query.getClass());
 
     if (Objects.isNull(handler)) {

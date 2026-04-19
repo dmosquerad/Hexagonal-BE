@@ -34,7 +34,7 @@ class UserRepositoryDatabaseReadAdapterTest
   UserMapper userMapper = Mappers.getMapper(UserMapper.class);
 
   @Test
-  void getAllUsers() {
+  void getAllUsers_shouldReturnAllUsers_whenUsersExist() {
     final UserDao userDao = UserDaoTestDataBuilder
       .builder()
       .build()
@@ -58,7 +58,7 @@ class UserRepositoryDatabaseReadAdapterTest
   }
 
   @Test
-  void findUserById() {
+  void findUserById_shouldReturnUser_whenUserExists() {
     final UserDao userDao = UserDaoTestDataBuilder
         .builder()
         .build()
@@ -76,6 +76,24 @@ class UserRepositoryDatabaseReadAdapterTest
 
     Mockito.verify(userDatabaseReadRepository).findByUserId(userDao.getUserId());
     Mockito.verify(userMapper).toUser(userDao);
+  }
+
+  @Test
+  void findUserById_shouldReturnEmpty_whenUserNotFound() {
+    final UserDao userDao = UserDaoTestDataBuilder
+            .builder()
+            .build()
+            .userDao();
+
+    Mockito.when(userDatabaseReadRepository.findByUserId(userDao.getUserId()))
+        .thenReturn(Optional.empty());
+
+    final Optional<User> result = userRepositoryDatabaseReadAdapter.findUserById(userDao.getUserId());
+
+    AssertionsForClassTypes.assertThat(result).isEqualTo(Optional.empty());
+
+    Mockito.verify(userDatabaseReadRepository).findByUserId(userDao.getUserId());
+    Mockito.verify(userMapper, Mockito.never()).toUser(userDao);
   }
 
 }

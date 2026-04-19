@@ -27,19 +27,8 @@ class HexagonalArchitectureTest {
           .resideInAnyPackage("..infrastructure.outbound.database..",
               "..infrastructure.outbound.configuration..",
               "..infrastructure.inbound.rest..")
-          .because("Infrastructure may contain only declared adapters");
-
-  @ArchTest
-  static final ArchRule hexagonal_architecture_layers_check =
-      Architectures.onionArchitecture()
-          .domainModels("..domain.model..")
-          .domainServices("..domain.service..")
-          .applicationServices("..application.usecase..",
-            "..application.port..",
-            "..application.cqrs..")
-          .adapter("inbound", "..infrastructure.inbound..")
-          .adapter("outbound", "..infrastructure.outbound..")
-          .because("Architecture must follow onion/hexagonal layering");
+          .because("Infrastructure may contain only declared adapters;"
+              + " undeclared adapter packages break the explicit port-adapter mapping");
 
   @ArchTest
   static final ArchRule layers_should_follow_hexagonal_architecture =
@@ -51,5 +40,19 @@ class HexagonalArchitectureTest {
           .whereLayer("Domain").mayOnlyBeAccessedByLayers("Application", "Infrastructure")
           .whereLayer("Application").mayOnlyBeAccessedByLayers("Infrastructure")
           .whereLayer("Infrastructure").mayNotBeAccessedByAnyLayer()
-          .because("Dependencies must follow the defined layer boundaries");
+          .because("Dependencies must always point inward:"
+              + " Infrastructure -> Application -> Domain;"
+              + " no outer layer may be accessed from a layer inside it");
+
+  @ArchTest
+  static final ArchRule inbound_adapters_should_not_depend_on_outbound_adapters =
+      ArchRuleDefinition.noClasses()
+          .that()
+          .resideInAPackage("..infrastructure.inbound..")
+          .should()
+          .dependOnClassesThat()
+          .resideInAPackage("..infrastructure.outbound..")
+          .because("Inbound and outbound adapters must not communicate directly;"
+              + " cross-adapter interaction must go through the application core via ports");
+
 }

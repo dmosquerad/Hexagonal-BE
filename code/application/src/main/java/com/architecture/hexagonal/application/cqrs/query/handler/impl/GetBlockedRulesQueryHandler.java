@@ -14,11 +14,6 @@ public class GetBlockedRulesQueryHandler implements QueryHandler<GetBlockedRules
   private final GetBlockedRulesUseCasePort getBlockedRulesUseCasePort;
 
   @Override
-  public Class<GetBlockedRulesQuery> getQueryType() {
-    return GetBlockedRulesQuery.class;
-  }
-
-  @Override
   public EmailBlockRulesVo handle(final GetBlockedRulesQuery query) {
     return getBlockedRulesUseCasePort.execute();
   }

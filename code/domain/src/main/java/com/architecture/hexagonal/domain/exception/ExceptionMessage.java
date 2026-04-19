@@ -6,4 +6,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ExceptionMessage {
   public static final String NOT_FOUND_DATA_MESSAGE = "Not found data by uuid: ";
+  public static final String INVALID_EMAIL_FORMAT = "Invalid email format";
 }

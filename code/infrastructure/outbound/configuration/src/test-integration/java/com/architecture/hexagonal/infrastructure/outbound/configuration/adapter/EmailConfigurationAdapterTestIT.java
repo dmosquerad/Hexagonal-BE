@@ -4,7 +4,7 @@ import com.architecture.hexagonal.domain.model.vo.EmailVo;
 import com.architecture.hexagonal.infrastructure.outbound.configuration.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.outbound.configuration.config.EmailBlockConfig;
 import com.architecture.hexagonal.infrastructure.outbound.configuration.testutils.data.vo.EmailVoTestDataBuilder;
-import org.junit.jupiter.api.Assertions;
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,23 +17,31 @@ import java.util.Set;
 @ContextConfiguration(classes = TestApplication.class)
 class EmailConfigurationAdapterTestIT {
 
-    @Autowired
-    private EmailConfigurationAdapter emailConfigurationAdapter;
+  @Autowired
+  EmailConfigurationAdapter emailConfigurationAdapter;
 
-    @MockitoSpyBean
-    private EmailBlockConfig emailBlockConfig;
+  @MockitoSpyBean
+  EmailBlockConfig emailBlockConfig;
 
-    @Test
-    void integrationFilterBlocked_respectsConfiguredBlockedHost() {
-        EmailVo blocked = EmailVoTestDataBuilder.builder().build().emailVo();
+  @Test
+  void filterBlocked_shouldRespectConfiguredBlockedHost_whenHostIsBlocked() {
+    final EmailVo blocked = EmailVoTestDataBuilder.builder().build().emailVo();
 
-        Assertions.assertTrue(emailConfigurationAdapter.filterBlocked(Set.of(blocked)).contains(blocked));
-    }
+    final Set<EmailVo> result = emailConfigurationAdapter.filterBlocked(Set.of(blocked));
 
-    @Test
-    void integrationFilterAllowed_willIncludeGenericHostNotConfiguredAsBlocked() {
-        EmailVo normal = EmailVoTestDataBuilder.builder().username("pepe").build().emailVo();
+    AssertionsForClassTypes.assertThat(result)
+        .usingRecursiveComparison()
+        .isEqualTo(Set.of(blocked));
+  }
 
-        Assertions.assertTrue(emailConfigurationAdapter.filterAllowed(Set.of(normal)).contains(normal));
-    }
+  @Test
+  void filterAllowed_shouldIncludeGenericHost_whenHostIsNotConfiguredAsBlocked() {
+    final EmailVo normal = EmailVoTestDataBuilder.builder().username("pepe").build().emailVo();
+
+    final Set<EmailVo> result = emailConfigurationAdapter.filterAllowed(Set.of(normal));
+
+    AssertionsForClassTypes.assertThat(result)
+        .usingRecursiveComparison()
+        .isEqualTo(Set.of(normal));
+  }
 }

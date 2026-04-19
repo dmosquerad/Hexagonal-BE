@@ -15,11 +15,6 @@ public class GetAllUsersQueryHandler implements QueryHandler<GetAllUserQuery, Se
   private final GetAllUsersUseCasePort getAllUsersUseCasePort;
 
   @Override
-  public Class<GetAllUserQuery> getQueryType() {
-    return GetAllUserQuery.class;
-  }
-
-  @Override
   public Set<User> handle(final GetAllUserQuery query) {
     return getAllUsersUseCasePort.execute(query);
   }

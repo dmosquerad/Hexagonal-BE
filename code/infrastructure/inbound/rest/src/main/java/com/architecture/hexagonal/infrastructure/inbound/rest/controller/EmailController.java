@@ -2,6 +2,7 @@ package com.architecture.hexagonal.infrastructure.inbound.rest.controller;
 
 import com.architecture.hexagonal.application.cqrs.query.dispatcher.QueryBus;
 import com.architecture.hexagonal.application.cqrs.query.request.GetBlockedRulesQuery;
+import com.architecture.hexagonal.domain.exception.DomainException;
 import com.architecture.hexagonal.domain.model.vo.EmailBlockRulesVo;
 import com.architecture.hexagonal.infrastructure.inbound.rest.dto.EmailBlockRulesResponseDto;
 import com.architecture.hexagonal.infrastructure.inbound.rest.factory.ErrorResponseFactory;
@@ -28,7 +29,9 @@ public class EmailController implements EmailsApi {
   public ResponseEntity<EmailBlockRulesResponseDto> getBlockedRules() {
     try {
       return ResponseEntity.ok(
-          buildEmailBlockRulesResponse(queryBus.execute(new GetBlockedRulesQuery())));
+          buildEmailBlockRulesResponse(queryBus.execute(GetBlockedRulesQuery.INSTANCE)));
+    } catch (DomainException e) {
+      throw ErrorResponseFactory.of(HttpStatus.UNPROCESSABLE_ENTITY, e);
     } catch (Exception e) {
       throw ErrorResponseFactory.of(HttpStatus.INTERNAL_SERVER_ERROR, e);
     }

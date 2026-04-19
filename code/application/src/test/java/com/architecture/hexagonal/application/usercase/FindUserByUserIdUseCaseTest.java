@@ -27,7 +27,7 @@ class FindUserByUserIdUseCaseTest {
   UserRepositoryReadPort userRepositoryReadPort;
 
   @Test
-  void execute() throws ResourceNotFoundException {
+  void execute_shouldReturnUser_whenUserExists() throws ResourceNotFoundException {
     final User user = UserTestDataBuilder
         .builder()
         .build()
@@ -50,7 +50,7 @@ class FindUserByUserIdUseCaseTest {
   }
 
   @Test
-  void executeUserNotFound() {
+  void execute_shouldThrowResourceNotFoundException_whenUserNotFound() {
     final FindUserByUserIdQuery findUserByUserIdQuery = FindUserByUserIdQueryTestDataBuilder
         .builder()
         .build()

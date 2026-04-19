@@ -14,11 +14,6 @@ public class UserExistsQueryHandler implements QueryHandler<UserExistsQuery, Voi
   private final UserExistsUseCasePort userExistsUseCasePort;
 
   @Override
-  public Class<UserExistsQuery> getQueryType() {
-    return UserExistsQuery.class;
-  }
-
-  @Override
   public Void handle(final UserExistsQuery query) throws ResourceNotFoundException {
     userExistsUseCasePort.execute(query);
     return null;

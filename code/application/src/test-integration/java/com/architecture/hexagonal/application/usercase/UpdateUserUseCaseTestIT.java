@@ -29,7 +29,7 @@ class UpdateUserUseCaseTestIT {
   UserRepositoryWritePort userRepositoryWritePort;
 
   @Test
-  void execute() throws ResourceNotFoundException {
+  void execute_shouldUpdateUser_whenUserExists() throws ResourceNotFoundException {
     final User user = UserTestDataBuilder
         .builder()
         .build()

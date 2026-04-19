@@ -31,61 +31,61 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @SpringBootTest(classes = EmailController.class)
 @AutoConfigureMockMvc
 @ContextConfiguration(classes = TestApplication.class)
-public class EmailControllerTestIT {
+class EmailControllerTestIT {
 
-    @Autowired
-    MockMvc mockMvc;
+  @Autowired
+  MockMvc mockMvc;
 
-    @Autowired
-    ObjectMapper objectMapper;
+  @Autowired
+  ObjectMapper objectMapper;
 
-    @MockitoSpyBean
-    EmailController emailController;
+  @MockitoSpyBean
+  EmailController emailController;
 
-    @MockitoBean
-    QueryBus queryBus;
+  @MockitoBean
+  QueryBus queryBus;
 
-    @MockitoSpyBean
-    EmailBlockRulesMapper emailBlockRulesMapper;
+  @MockitoSpyBean
+  EmailBlockRulesMapper emailBlockRulesMapper;
 
-    @MockitoSpyBean
-    Clock clock;
+  @MockitoSpyBean
+  Clock clock;
 
-    @Test
-    void getBlockedRules_shouldReturnBlockedRulesResponse() throws Exception {
+  @Test
+  void getBlockedRules_shouldReturnBlockedRulesResponse_whenBlockedRulesExist() throws Exception {
 
-        final EmailBlockRulesVo emailBlockRulesVo = EmailBlockRulesTestDataBuilder.builder()
-            .build()
-            .emailBlockRules();
+    final EmailBlockRulesVo emailBlockRulesVo = EmailBlockRulesTestDataBuilder.builder()
+        .build()
+        .emailBlockRules();
 
-        final EmailBlockRulesResponseDto expectedResponse = objectMapper.readValue(
-            new ClassPathResource("getBlockedRules_response.json", 
-                EmailControllerTestIT.class).getFile(),
-            EmailBlockRulesResponseDto.class);
+    final EmailBlockRulesResponseDto expectedResponse = objectMapper.readValue(
+        new ClassPathResource("getBlockedRules_response.json",
+            EmailControllerTestIT.class).getFile(),
+        EmailBlockRulesResponseDto.class);
 
-        Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
+    Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
     Mockito.when(queryBus.execute(ArgumentMatchers.any(GetBlockedRulesQuery.class)))
         .thenReturn(emailBlockRulesVo);
 
-        final MvcResult result = mockMvc.perform(
-                MockMvcRequestBuilders.get("/emails/blocks")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON))
-            .andExpect(MockMvcResultMatchers.status().isOk())
-            .andReturn();
+    final MvcResult result = mockMvc.perform(
+            MockMvcRequestBuilders.get("/emails/blocks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andReturn();
 
-        final EmailBlockRulesResponseDto actualResponse = objectMapper.readValue(
-            result.getResponse().getContentAsString(),
-            EmailBlockRulesResponseDto.class);
+    final EmailBlockRulesResponseDto actualResponse = objectMapper.readValue(
+        result.getResponse().getContentAsString(),
+        EmailBlockRulesResponseDto.class);
 
-        AssertionsForClassTypes.assertThat(actualResponse)
-            .usingRecursiveComparison()
-            .isEqualTo(expectedResponse);
+    AssertionsForClassTypes.assertThat(actualResponse)
+        .usingRecursiveComparison()
+        .isEqualTo(expectedResponse);
 
-        Mockito.verify(emailController).getBlockedRules();
-        Mockito.verify(queryBus).execute(ArgumentMatchers.any(GetBlockedRulesQuery.class));
-        Mockito.verify(emailBlockRulesMapper).toEmailBlockRulesDto(emailBlockRulesVo);
-        Mockito.verify(clock).instant();
-    }
+    Mockito.verify(emailController).getBlockedRules();
+    Mockito.verify(queryBus).execute(ArgumentMatchers.any(GetBlockedRulesQuery.class));
+    Mockito.verify(emailBlockRulesMapper).toEmailBlockRulesDto(emailBlockRulesVo);
+    Mockito.verify(clock).instant();
+  }
 }
 

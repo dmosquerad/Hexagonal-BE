@@ -6,6 +6,7 @@ import com.architecture.hexagonal.application.testutils.data.entity.UserTestData
 import com.architecture.hexagonal.application.testutils.data.input.command.DeleteUserCommandTestDataBuilder;
 import com.architecture.hexagonal.application.usecase.DeleteUserUseCase;
 import com.architecture.hexagonal.domain.model.entity.User;
+import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import java.util.Optional;
 import org.assertj.core.api.AssertionsForClassTypes;
@@ -25,7 +26,7 @@ class DeleteUserUseCaseTestIT {
   UserRepositoryWritePort userRepositoryWritePort;
 
   @Test
-  void execute() throws ResourceNotFoundException {
+  void execute_shouldDeleteUser_whenUserExists() throws ResourceNotFoundException {
     final User user = UserTestDataBuilder
         .builder()
         .build()
@@ -44,6 +45,24 @@ class DeleteUserUseCaseTestIT {
     AssertionsForClassTypes.assertThat(result)
         .usingRecursiveComparison()
         .isEqualTo(user);
+
+    Mockito.verify(userRepositoryWritePort).deleteUser(deleteUserCommand.getUserId());
+  }
+
+  @Test
+  void execute_shouldThrowResourceNotFoundException_whenUserNotFound() {
+    final DeleteUserCommand deleteUserCommand = DeleteUserCommandTestDataBuilder
+        .builder()
+        .build()
+        .deleteUserCommand();
+
+    Mockito.when(userRepositoryWritePort.deleteUser(deleteUserCommand.getUserId()))
+        .thenReturn(Optional.empty());
+
+    AssertionsForClassTypes.assertThatThrownBy(() ->
+        deleteUserUseCase.execute(deleteUserCommand))
+        .isInstanceOf(ResourceNotFoundException.class)
+        .hasMessage(ExceptionMessage.NOT_FOUND_DATA_MESSAGE + deleteUserCommand.getUserId());
 
     Mockito.verify(userRepositoryWritePort).deleteUser(deleteUserCommand.getUserId());
   }

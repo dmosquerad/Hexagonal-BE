@@ -24,7 +24,7 @@ class CreateUserUserCaseTestIT {
   UserRepositoryWritePort userRepositoryWritePort;
 
   @Test
-  void execute() {
+  void execute_shouldCreateUser_whenCommandIsValid() {
     final User user = UserTestDataBuilder
         .builder()
         .build()

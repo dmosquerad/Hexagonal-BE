@@ -25,7 +25,7 @@ class FindUserByUserIdUseCaseTestIT {
   UserRepositoryReadPort userRepositoryReadPort;
 
   @Test
-  void execute() throws ResourceNotFoundException {
+  void execute_shouldReturnUser_whenUserExists() throws ResourceNotFoundException {
     final User user = UserTestDataBuilder
         .builder()
         .build()

@@ -29,7 +29,7 @@ class PatchUserUseCaseTestIT {
   UserRepositoryWritePort userRepositoryWritePort;
 
   @Test
-  void executeNamePatch() throws ResourceNotFoundException {
+  void execute_shouldPatchUserName_whenRequestIsValid() throws ResourceNotFoundException {
     final User user = UserTestDataBuilder
         .builder()
         .build()
