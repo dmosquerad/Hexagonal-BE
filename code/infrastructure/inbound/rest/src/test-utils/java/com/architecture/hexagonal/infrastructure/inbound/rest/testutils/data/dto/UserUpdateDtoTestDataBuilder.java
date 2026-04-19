@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.dto;
 
-import com.architecture.hexagonal.infrastructure.inbound.rest.dto.UserUpdateDto;
+import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.dto.UserUpdateDto;
 import lombok.Builder;
 
 @Builder

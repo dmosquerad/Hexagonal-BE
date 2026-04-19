@@ -26,7 +26,8 @@ class HexagonalArchitectureTest {
           .should()
           .resideInAnyPackage("..infrastructure.outbound.database..",
               "..infrastructure.outbound.configuration..",
-              "..infrastructure.inbound.rest..")
+              "..infrastructure.inbound.rest..",
+              "..infrastructure.inbound.contract..")
           .because("Infrastructure may contain only declared adapters;"
               + " undeclared adapter packages break the explicit port-adapter mapping");
 

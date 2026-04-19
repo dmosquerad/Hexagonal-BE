@@ -13,51 +13,22 @@
     </parent>
 
     <dependencies>
+        <!-- PROJECT CONTRACT -->
+        <dependency>
+            <groupId>com.architecture.hexagonal</groupId>
+            <artifactId>user-contract-rest</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.architecture.hexagonal</groupId>
+            <artifactId>email-contract-rest</artifactId>
+        </dependency>
+
         <!-- SPRINGBOOT -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- OPENAPI -->
-        <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-        </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.openapitools</groupId>
-                <artifactId>openapi-generator-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <generatorName>spring</generatorName>
-                            <skipOperationExample>true</skipOperationExample>
-                            <generateSupportingFiles>false</generateSupportingFiles>
-                            <modelNameSuffix>Dto</modelNameSuffix>
-                            <output>${project.build.directory}/generated-sources</output>
-                            <invokerPackage>com.architecture.hexagonal.infrastructure.inbound.rest</invokerPackage>
-                            <apiPackage>com.architecture.hexagonal.infrastructure.inbound.rest.controller</apiPackage>
-                            <modelPackage>com.architecture.hexagonal.infrastructure.inbound.rest.dto</modelPackage>
-                            <inputSpec>${project.basedir}/src/main/resources/contract/openapi.yml</inputSpec>
-                            <configOptions>
-                                <java8>false</java8>
-                                <useJakartaEe>true</useJakartaEe>
-                                <interfaceOnly>true</interfaceOnly>
-                                <openApiNullable>false</openApiNullable>
-                                <useBeanValidation>true</useBeanValidation>
-                            </configOptions>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

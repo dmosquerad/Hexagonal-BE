@@ -19,7 +19,7 @@
     <mapstruct.version>1.6.3</mapstruct.version>
     <mapstruct-processor.version>1.5.5.Final</mapstruct-processor.version>
     <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
-    <springdoc-openapi-starter-webmvc-ui.version>2.8.15</springdoc-openapi-starter-webmvc-ui.version>
+    <springdoc-openapi-bom.version>2.8.17</springdoc-openapi-bom.version>
     <jakarta.mail.version>2.0.5</jakarta.mail.version>
     <!-- PLUGIN -->
     <openapi-generator-maven-plugin.version>7.7.0</openapi-generator-maven-plugin.version>
@@ -63,8 +63,10 @@
       <!-- OPENAPI -->
       <dependency>
         <groupId>org.springdoc</groupId>
-        <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-        <version>${springdoc-openapi-starter-webmvc-ui.version}</version>
+        <artifactId>springdoc-openapi-bom</artifactId>
+        <version>${springdoc-openapi-bom.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
 
       <!-- PROJECT-MODULES -->
@@ -86,6 +88,16 @@
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>rest</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.architecture.hexagonal</groupId>
+        <artifactId>user-contract-rest</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.architecture.hexagonal</groupId>
+        <artifactId>email-contract-rest</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
