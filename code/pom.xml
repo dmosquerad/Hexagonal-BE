@@ -221,6 +221,20 @@
               </sources>
             </configuration>
           </execution>
+          <execution>
+            <id>add-test-resources</id>
+            <phase>generate-test-resources</phase>
+            <goals>
+              <goal>add-test-resource</goal>
+            </goals>
+            <configuration>
+              <resources>
+                <resource>
+                  <directory>src/test-integration/resources</directory>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
       <!-- ============================================ -->

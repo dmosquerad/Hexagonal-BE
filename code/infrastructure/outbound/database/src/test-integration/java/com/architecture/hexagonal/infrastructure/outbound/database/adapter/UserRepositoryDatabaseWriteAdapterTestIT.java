@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest(classes = {UserRepositoryDatabaseWriteAdapter.class})
 @Transactional
-@Sql(scripts = "user.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
+@Sql(scripts = "/user/user.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 @ContextConfiguration(classes = TestApplication.class)
 class UserRepositoryDatabaseWriteAdapterTestIT extends DatabaseIT {
 

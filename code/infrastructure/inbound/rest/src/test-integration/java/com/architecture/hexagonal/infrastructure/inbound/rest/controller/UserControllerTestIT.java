@@ -20,42 +20,64 @@ import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.dto.
 import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.dto.UserUpdateDto;
 import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.dto.UsersResponseDto;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.*;
+import com.architecture.hexagonal.infrastructure.inbound.rest.resources.user.UserRequestResource;
+import com.architecture.hexagonal.infrastructure.inbound.rest.resources.user.UserResponseResource;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.dto.ResponseErrorDtoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.entity.UserTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.time.TestClock;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Clock;
 import java.util.Collections;
-import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 @SpringBootTest(classes = UserController.class)
 @AutoConfigureMockMvc
+@AutoConfigureJsonTesters
 @ContextConfiguration(classes = TestApplication.class)
+@Import({UserRequestResource.class, UserResponseResource.class})
 class UserControllerTestIT {
 
   @Autowired
   MockMvc mockMvc;
 
   @Autowired
-  ObjectMapper objectMapper;
+  JacksonTester<UsersResponseDto> usersResponseDtoJson;
+
+  @Autowired
+  JacksonTester<UserResponseDto> userResponseDtoJson;
+
+  @Autowired
+  JacksonTester<UserCreateDto> userCreateDtoJson;
+
+  @Autowired
+  JacksonTester<UserUpdateDto> userUpdateDtoJson;
+
+  @Autowired
+  JacksonTester<UserPatchDto> userPatchDtoJson;
+
+  @Autowired
+  JacksonTester<ResponseErrorDto> responseErrorDtoJson;
+
+  @Autowired
+  UserRequestResource userRequestResource;
+
+  @Autowired
+  UserResponseResource userResponseResource;
 
   @MockitoSpyBean
   UserController userController;
@@ -95,9 +117,8 @@ class UserControllerTestIT {
 
   @Test
   void getAllUsers_shouldReturnOk_whenUsersExist() throws Exception {
-    final UsersResponseDto getAllUsersResponse = objectMapper.readValue(
-          new ClassPathResource("getAllUsers_response.json", UserControllerTestIT.class).getFile(),
-          UsersResponseDto.class);
+    final UsersResponseDto getAllUsersResponse = usersResponseDtoJson
+        .readObject(userResponseResource.getAllUsers);
 
     final String host = "";
     final Boolean blockEmail = false;
@@ -108,24 +129,15 @@ class UserControllerTestIT {
     Mockito.when(queryBus.execute(ArgumentMatchers.any(GetAllUserQuery.class)))
         .thenReturn(Collections.singleton(user));
 
-    final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-    params.add("host", host);
-    params.add("blockEmail", String.valueOf(blockEmail));
-
-    final MvcResult result = mockMvc.perform(
+    mockMvc.perform(
             MockMvcRequestBuilders.get("/users")
-                .queryParams(params)
+                .queryParam("host",host)
+                .queryParam("blockEmail", String.valueOf(blockEmail))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(MockMvcResultMatchers.status().isOk())
-        .andReturn();
-
-    AssertionsForClassTypes.assertThat(
-            objectMapper.readValue(
-                result.getResponse().getContentAsString(),
-                UsersResponseDto.class))
-        .usingRecursiveComparison()
-        .isEqualTo(getAllUsersResponse);
+        .andExpect(MockMvcResultMatchers.content()
+            .json(usersResponseDtoJson.write(getAllUsersResponse).getJson()));
 
     Mockito.verify(userController).getAllUsers(host, blockEmail);
     Mockito.verify(getAllUserQueryMapper).toGetAllUserQuery(host, blockEmail);
@@ -135,32 +147,24 @@ class UserControllerTestIT {
 
   @Test
   void createUser_shouldReturnOk_whenRequestIsValid() throws Exception {
-    final UserCreateDto createUserRequest = objectMapper.readValue(
-        new ClassPathResource("createUser_request.json", UserControllerTestIT.class).getFile(),
-        UserCreateDto.class);
-    final UserResponseDto createUserResponse = objectMapper.readValue(
-          new ClassPathResource("createUser_response.json", UserControllerTestIT.class).getFile(),
-          UserResponseDto.class);
+    final UserCreateDto createUserRequest = userCreateDtoJson
+        .readObject(userRequestResource.createUser);
+    final UserResponseDto createUserResponse = userResponseDtoJson
+        .readObject(userResponseResource.createUser);
     final User user = UserTestDataBuilder.builder().build().user();
 
     Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
     Mockito.when(commandBus.execute(ArgumentMatchers.any(CreateUserCommand.class)))
         .thenReturn(user);
 
-    final MvcResult result = mockMvc.perform(
+    mockMvc.perform(
             MockMvcRequestBuilders.post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(createUserRequest)))
+                .content(userCreateDtoJson.write(createUserRequest).getJson()))
         .andExpect(MockMvcResultMatchers.status().isOk())
-        .andReturn();
-
-    AssertionsForClassTypes.assertThat(
-            objectMapper.readValue(
-                result.getResponse().getContentAsString(),
-                UserResponseDto.class))
-        .usingRecursiveComparison()
-        .isEqualTo(createUserResponse);
+        .andExpect(MockMvcResultMatchers.content()
+            .json(userResponseDtoJson.write(createUserResponse).getJson()));
 
     Mockito.verify(userController).createUser(createUserRequest);
     Mockito.verify(createUserCommandMapper).toCreateUserCommand(createUserRequest);
@@ -171,11 +175,8 @@ class UserControllerTestIT {
 
   @Test
   void getUserByUuid_shouldReturnOk_whenUserExists() throws Exception {
-    final UserResponseDto getUserByUuidResponse = objectMapper.readValue(
-          new ClassPathResource(
-              "getUserByUuid_response.json",
-              UserControllerTestIT.class).getFile(),
-          UserResponseDto.class);
+    final UserResponseDto getUserByUuidResponse = userResponseDtoJson
+        .readObject(userResponseResource.getUserByUuid);
 
     final User user = UserTestDataBuilder
         .builder()
@@ -187,19 +188,13 @@ class UserControllerTestIT {
         queryBus.execute(ArgumentMatchers.any(FindUserByUserIdQuery.class)))
         .thenReturn(user);
 
-    final MvcResult result = mockMvc.perform(
+    mockMvc.perform(
             MockMvcRequestBuilders.get("/users/{userUuid}", user.getUserId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(MockMvcResultMatchers.status().isOk())
-        .andReturn();
-
-    AssertionsForClassTypes.assertThat(
-            objectMapper.readValue(
-                result.getResponse().getContentAsString(),
-                UserResponseDto.class))
-        .usingRecursiveComparison()
-        .isEqualTo(getUserByUuidResponse);
+        .andExpect(MockMvcResultMatchers.content()
+            .json(userResponseDtoJson.write(getUserByUuidResponse).getJson()));
 
     Mockito.verify(userController).getUserByUuid(user.getUserId());
     Mockito.verify(findUserByUserIdQueryMapper).toFindUserByUserIdQuery(user.getUserId());
@@ -211,11 +206,8 @@ class UserControllerTestIT {
 
   @Test
   void deleteUserByUuid_shouldReturnOk_whenUserExists() throws Exception {
-    final UserResponseDto deleteUserByUuidResponse = objectMapper.readValue(
-        new ClassPathResource(
-            "deleteUserByUuid_response.json",
-            UserControllerTestIT.class).getFile(),
-        UserResponseDto.class);
+    final UserResponseDto deleteUserByUuidResponse = userResponseDtoJson
+        .readObject(userResponseResource.deleteUserByUuid);
 
     final User user = UserTestDataBuilder
         .builder()
@@ -226,19 +218,13 @@ class UserControllerTestIT {
     Mockito.when(commandBus.execute(ArgumentMatchers.any(DeleteUserCommand.class)))
         .thenReturn(user);
 
-    final MvcResult result = mockMvc.perform(
+    mockMvc.perform(
             MockMvcRequestBuilders.delete("/users/{userUuid}", user.getUserId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(MockMvcResultMatchers.status().isOk())
-        .andReturn();
-
-    AssertionsForClassTypes.assertThat(
-            objectMapper.readValue(
-                result.getResponse().getContentAsString(),
-                UserResponseDto.class))
-        .usingRecursiveComparison()
-        .isEqualTo(deleteUserByUuidResponse);
+        .andExpect(MockMvcResultMatchers.content()
+            .json(userResponseDtoJson.write(deleteUserByUuidResponse).getJson()));
 
     Mockito.verify(userController).deleteUserByUuid(user.getUserId());
     Mockito.verify(deleteUserCommandMapper).toDeleteUserCommand(user.getUserId());
@@ -249,16 +235,10 @@ class UserControllerTestIT {
 
   @Test
   void updateUserByUuid_shouldReturnOk_whenRequestIsValid() throws Exception {
-    final UserUpdateDto updateUserByUuidRequest = objectMapper.readValue(
-        new ClassPathResource(
-            "updateUserByUuid_request.json",
-            UserControllerTestIT.class).getFile(),
-        UserUpdateDto.class);
-    final UserResponseDto updateUserByUuidResponse = objectMapper.readValue(
-        new ClassPathResource(
-            "updateUserByUuid_response.json",
-            UserControllerTestIT.class).getFile(),
-        UserResponseDto.class);
+    final UserUpdateDto updateUserByUuidRequest = userUpdateDtoJson
+        .readObject(userRequestResource.updateUserByUuid);
+    final UserResponseDto updateUserByUuidResponse = userResponseDtoJson
+        .readObject(userResponseResource.updateUserByUuid);
 
     final User user = UserTestDataBuilder
         .builder()
@@ -269,20 +249,14 @@ class UserControllerTestIT {
     Mockito.when(commandBus.execute(ArgumentMatchers.any(UpdateUserCommand.class)))
         .thenReturn(user);
 
-    final MvcResult result = mockMvc.perform(
+    mockMvc.perform(
             MockMvcRequestBuilders.put("/users/{userUuid}", user.getUserId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(updateUserByUuidRequest)))
+                .content(userUpdateDtoJson.write(updateUserByUuidRequest).getJson()))
         .andExpect(MockMvcResultMatchers.status().isOk())
-        .andReturn();
-
-    AssertionsForClassTypes.assertThat(
-            objectMapper.readValue(
-                result.getResponse().getContentAsString(),
-                UserResponseDto.class))
-        .usingRecursiveComparison()
-        .isEqualTo(updateUserByUuidResponse);
+        .andExpect(MockMvcResultMatchers.content()
+            .json(userResponseDtoJson.write(updateUserByUuidResponse).getJson()));
 
     Mockito.verify(userController).updateUserByUuid(user.getUserId(), updateUserByUuidRequest);
     Mockito.verify(updateUserCommandMapper)
@@ -294,14 +268,10 @@ class UserControllerTestIT {
 
   @Test
   void patchUserByUuid_shouldReturnOk_whenRequestIsValid() throws Exception {
-    final UserPatchDto patchUserByUuidRequest = objectMapper.readValue(
-        new ClassPathResource("patchUserByUuid_request.json", UserControllerTestIT.class).getFile(),
-        UserPatchDto.class);
-    final UserResponseDto patchUserByUuidResponse = objectMapper.readValue(
-        new ClassPathResource(
-            "patchUserByUuid_response.json",
-            UserControllerTestIT.class).getFile(),
-        UserResponseDto.class);
+    final UserPatchDto patchUserByUuidRequest = userPatchDtoJson
+        .readObject(userRequestResource.patchUserByUuid);
+    final UserResponseDto patchUserByUuidResponse = userResponseDtoJson
+        .readObject(userResponseResource.patchUserByUuid);
 
     final User user = UserTestDataBuilder
         .builder()
@@ -312,20 +282,14 @@ class UserControllerTestIT {
     Mockito.when(commandBus.execute(ArgumentMatchers.any(PatchUserCommand.class)))
         .thenReturn(user);
 
-    final MvcResult result = mockMvc.perform(
+    mockMvc.perform(
             MockMvcRequestBuilders.patch("/users/{userUuid}", user.getUserId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(patchUserByUuidRequest)))
+                .content(userPatchDtoJson.write(patchUserByUuidRequest).getJson()))
         .andExpect(MockMvcResultMatchers.status().isOk())
-        .andReturn();
-
-    AssertionsForClassTypes.assertThat(
-            objectMapper.readValue(
-                result.getResponse().getContentAsString(),
-                UserResponseDto.class))
-        .usingRecursiveComparison()
-        .isEqualTo(patchUserByUuidResponse);
+        .andExpect(MockMvcResultMatchers.content()
+            .json(userResponseDtoJson.write(patchUserByUuidResponse).getJson()));
 
     Mockito.verify(userController).patchUserByUuid(user.getUserId(), patchUserByUuidRequest);
     Mockito.verify(patchUserCommandMapper)
@@ -349,8 +313,7 @@ class UserControllerTestIT {
             MockMvcRequestBuilders.head("/users/{userUuid}", user.getUserId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
-        .andExpect(MockMvcResultMatchers.status().isOk())
-        .andReturn();
+        .andExpect(MockMvcResultMatchers.status().isOk());
 
     Mockito.verify(userExistsQueryMapper).toUserExistsQuery(user.getUserId());
     Mockito.verify(queryBus).execute(ArgumentMatchers.any(UserExistsQuery.class));
@@ -371,17 +334,13 @@ class UserControllerTestIT {
         .thenThrow(new ResourceNotFoundException(
             ExceptionMessage.NOT_FOUND_DATA_MESSAGE + user.getUserId()));
 
-    final MvcResult result = mockMvc.perform(
+    mockMvc.perform(
             MockMvcRequestBuilders.get("/users/{userUuid}", user.getUserId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(MockMvcResultMatchers.status().isNotFound())
-        .andReturn();
-
-    AssertionsForClassTypes.assertThat(
-            objectMapper.readValue(result.getResponse().getContentAsString(), ResponseErrorDto.class))
-        .usingRecursiveComparison()
-        .isEqualTo(expected);
+        .andExpect(MockMvcResultMatchers.content()
+            .json(responseErrorDtoJson.write(expected).getJson()));
 
     Mockito.verify(userController).getUserByUuid(user.getUserId());
     Mockito.verify(queryBus).execute(ArgumentMatchers.any(FindUserByUserIdQuery.class));
@@ -403,17 +362,13 @@ class UserControllerTestIT {
         .thenThrow(new ResourceNotFoundException(
             ExceptionMessage.NOT_FOUND_DATA_MESSAGE + user.getUserId()));
 
-    final MvcResult result = mockMvc.perform(
+    mockMvc.perform(
             MockMvcRequestBuilders.delete("/users/{userUuid}", user.getUserId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(MockMvcResultMatchers.status().isNotFound())
-        .andReturn();
-
-    AssertionsForClassTypes.assertThat(
-            objectMapper.readValue(result.getResponse().getContentAsString(), ResponseErrorDto.class))
-        .usingRecursiveComparison()
-        .isEqualTo(expected);
+        .andExpect(MockMvcResultMatchers.content()
+            .json(responseErrorDtoJson.write(expected).getJson()));
 
     Mockito.verify(userController).deleteUserByUuid(user.getUserId());
     Mockito.verify(commandBus).execute(ArgumentMatchers.any(DeleteUserCommand.class));
@@ -422,9 +377,8 @@ class UserControllerTestIT {
 
   @Test
   void createUser_shouldReturn400_whenEmailIsInvalid() throws Exception {
-    final UserCreateDto createUserRequest = objectMapper.readValue(
-        new ClassPathResource("createUser_request.json", UserControllerTestIT.class).getFile(),
-        UserCreateDto.class);
+    final UserCreateDto createUserRequest = userCreateDtoJson
+        .readObject(userRequestResource.createUser);
     final ResponseErrorDto expected = ResponseErrorDtoTestDataBuilder.builder()
         .status(HttpStatus.BAD_REQUEST.value())
         .title(HttpStatus.BAD_REQUEST.getReasonPhrase())
@@ -436,18 +390,14 @@ class UserControllerTestIT {
     Mockito.when(commandBus.execute(ArgumentMatchers.any(CreateUserCommand.class)))
         .thenThrow(new IllegalArgumentException(ExceptionMessage.INVALID_EMAIL_FORMAT));
 
-    final MvcResult result = mockMvc.perform(
+    mockMvc.perform(
             MockMvcRequestBuilders.post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(createUserRequest)))
+                .content(userCreateDtoJson.write(createUserRequest).getJson()))
         .andExpect(MockMvcResultMatchers.status().isBadRequest())
-        .andReturn();
-
-    AssertionsForClassTypes.assertThat(
-            objectMapper.readValue(result.getResponse().getContentAsString(), ResponseErrorDto.class))
-        .usingRecursiveComparison()
-        .isEqualTo(expected);
+        .andExpect(MockMvcResultMatchers.content()
+            .json(responseErrorDtoJson.write(expected).getJson()));
 
     Mockito.verify(userController).createUser(ArgumentMatchers.any());
     Mockito.verify(commandBus).execute(ArgumentMatchers.any(CreateUserCommand.class));
