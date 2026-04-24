@@ -15,10 +15,25 @@
   <packaging>jar</packaging>
 
   <properties>
+    <!-- ============================================ -->
+    <!-- JAVA & MVN -->
+    <!-- ============================================ -->
+    <java.version>21</java.version>
+    <mvn.version>3.9.15</mvn.version>
+    <!-- ============================================ -->
+    <!-- KARATE -->
+    <!-- ============================================ -->
     <karate.version>1.4.1</karate.version>
+    <!-- ============================================ -->
+    <!-- PLUGIN -->
+    <!-- ============================================ -->
+    <maven-enforcer-plugin.version>3.6.2</maven-enforcer-plugin.version>
   </properties>
 
   <dependencies>
+    <!-- ============================================ -->
+    <!-- KARATE -->
+    <!-- ============================================ -->
     <dependency>
       <groupId>com.intuit.karate</groupId>
       <artifactId>karate-junit5</artifactId>
@@ -27,4 +42,35 @@
     </dependency>
   </dependencies>
 
+  <build>
+    <plugins>
+      <!-- ============================================ -->
+      <!-- ENFORCER PLUGIN -->
+      <!-- ============================================ -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>${maven-enforcer-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>enforce-maven-and-java</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireMavenVersion>
+                  <version>${mvn.version}</version>
+                </requireMavenVersion>
+                <requireJavaVersion>
+                  <version>${java.version}</version>
+                </requireJavaVersion>
+                <banDuplicatePomDependencyVersions/>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>

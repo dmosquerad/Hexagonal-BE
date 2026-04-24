@@ -14,12 +14,16 @@
     </parent>
 
     <dependencies>
-        <!-- PROJECT-MODULES -->
+        <!-- ============================================ -->
+        <!-- PROJECT MODULES -->
+        <!-- ============================================ -->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>domain</artifactId>
         </dependency>
+        <!-- ============================================ -->
         <!-- SPRING BOOT -->
+        <!-- ============================================ -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
@@ -28,14 +32,13 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-tx</artifactId>
         </dependency>
+        <!-- ============================================ -->
         <!-- TEST -->
-        <!-- SPRINGBOOT -->
+        <!-- ============================================ -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
-
 </project>
