@@ -10,24 +10,36 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.5.9</version>
+    <version>4.0.5</version>
   </parent>
 
   <properties>
+    <!-- ============================================ -->
+    <!-- JAVA & MVN -->
+    <!-- ============================================ -->
     <java.version>21</java.version>
-    <lombok.version>1.18.34</lombok.version>
+    <mvn.version>3.9.15</mvn.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <!-- ============================================ -->
+    <!-- SPRING DOC -->
+    <!-- ============================================ -->
+    <springdoc-openapi-bom.version>3.0.3</springdoc-openapi-bom.version>
+    <!-- ============================================ -->
+    <!-- MAPSTRUCT -->
+    <!-- ============================================ -->
     <mapstruct.version>1.6.3</mapstruct.version>
-    <mapstruct-processor.version>1.5.5.Final</mapstruct-processor.version>
+    <mapstruct-processor.version>1.6.3</mapstruct-processor.version>
     <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
-    <springdoc-openapi-bom.version>2.8.17</springdoc-openapi-bom.version>
-    <jakarta.mail.version>2.0.5</jakarta.mail.version>
+    <!-- ============================================ -->
     <!-- PLUGIN -->
-    <openapi-generator-maven-plugin.version>7.7.0</openapi-generator-maven-plugin.version>
-    <com.puppycrawl.tools.version>13.3.0</com.puppycrawl.tools.version>
+    <!-- ============================================ -->
+    <maven-enforcer-plugin.version>3.6.2</maven-enforcer-plugin.version>
+    <openapi-generator-maven-plugin.version>7.21.0</openapi-generator-maven-plugin.version>
+    <com.puppycrawl.tools.version>13.4.0</com.puppycrawl.tools.version>
+    <!-- ============================================ -->
     <!-- TEST -->
-    <junit-jupiter.version>6.0.3</junit-jupiter.version>
-    <assertj.version>3.27.7</assertj.version>
-    <archunit-junit5.version>1.4.1</archunit-junit5.version>
+    <!-- ============================================ -->
+    <archunit-junit5.version>1.4.2</archunit-junit5.version>
   </properties>
 
   <modules>
@@ -39,67 +51,54 @@
 
   <dependencyManagement>
     <dependencies>
-      <!-- LOMBOK -->
-      <dependency>
-        <groupId>org.projectlombok</groupId>
-        <artifactId>lombok</artifactId>
-        <version>${lombok.version}</version>
-      </dependency>
-
-      <!-- MAPSTRUCT -->
-      <dependency>
-        <groupId>org.mapstruct</groupId>
-        <artifactId>mapstruct</artifactId>
-        <version>${mapstruct.version}</version>
-      </dependency>
-
-      <!-- ANGUS -->
-      <dependency>
-        <groupId>org.eclipse.angus</groupId>
-        <artifactId>jakarta.mail</artifactId>
-        <version>${jakarta.mail.version}</version>
-      </dependency>
-      
-      <!-- OPENAPI -->
-      <dependency>
-        <groupId>org.springdoc</groupId>
-        <artifactId>springdoc-openapi-bom</artifactId>
-        <version>${springdoc-openapi-bom.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-
-      <!-- PROJECT-MODULES -->
+      <!-- ============================================ -->
+      <!-- PROJECT MODULES -->
+      <!-- ============================================ -->
+      <!-- ============================================ -->
+      <!-- BOOT -->
+      <!-- ============================================ -->
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>boot</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <!-- ============================================ -->
+      <!-- APPLICATION -->
+      <!-- ============================================ -->
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>application</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <!-- ============================================ -->
+      <!-- DOMAIN -->
+      <!-- ============================================ -->
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>domain</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <!-- ============================================ -->
+      <!-- INFRASTRUCTURE INBOUND -->
+      <!-- ============================================ -->
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>rest</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.architecture.hexagonal</groupId>
+        <groupId>${project.groupId}</groupId>
         <artifactId>user-contract-rest</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.architecture.hexagonal</groupId>
+        <groupId>${project.groupId}</groupId>
         <artifactId>email-contract-rest</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <!-- ============================================ -->
+      <!-- INFRASTRUCTURE OUTBOUND -->
+      <!-- ============================================ -->
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>database</artifactId>
@@ -110,22 +109,27 @@
         <artifactId>configuration</artifactId>
         <version>${project.version}</version>
       </dependency>
-
+      <!-- ============================================ -->
+      <!-- MAPSTRUCT -->
+      <!-- ============================================ -->
+      <dependency>
+        <groupId>org.mapstruct</groupId>
+        <artifactId>mapstruct</artifactId>
+        <version>${mapstruct.version}</version>
+      </dependency>
+      <!-- ============================================ -->
+      <!-- SPRING DOC -->
+      <!-- ============================================ -->
+      <dependency>
+        <groupId>org.springdoc</groupId>
+        <artifactId>springdoc-openapi-bom</artifactId>
+        <version>${springdoc-openapi-bom.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <!-- ============================================ -->
       <!-- TESTING -->
-      <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter</artifactId>
-        <version>${junit-jupiter.version}</version>
-        <scope>test</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>org.assertj</groupId>
-        <artifactId>assertj-core</artifactId>
-        <version>${assertj.version}</version>
-        <scope>test</scope>
-      </dependency>
-
+      <!-- ============================================ -->
       <dependency>
         <groupId>com.tngtech.archunit</groupId>
         <artifactId>archunit-junit5</artifactId>
@@ -173,8 +177,9 @@
           </annotationProcessorPaths>
         </configuration>
       </plugin>
-
+      <!-- ============================================ -->
       <!-- RESOURCES TEST -->
+      <!-- ============================================ -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
@@ -195,8 +200,9 @@
           </execution>
         </executions>
       </plugin>
-
+      <!-- ============================================ -->
       <!-- SOURCE TEST -->
+      <!-- ============================================ -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
@@ -217,8 +223,36 @@
           </execution>
         </executions>
       </plugin>
-
+      <!-- ============================================ -->
+      <!-- ENFORCER -->
+      <!-- ============================================ -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>${maven-enforcer-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>enforce</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireMavenVersion>
+                  <version>${mvn.version}</version>
+                </requireMavenVersion>
+                <requireJavaVersion>
+                  <version>${java.version}</version>
+                </requireJavaVersion>
+                <banDuplicatePomDependencyVersions/>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- ============================================ -->
       <!-- CHECK-STYLES -->
+      <!-- ============================================ -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>

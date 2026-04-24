@@ -14,26 +14,30 @@
     </parent>
 
     <dependencies>
-        <!-- APACHE COMMONS -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-        </dependency>
-
-        <!-- ANGUS -->
-        <dependency>
-            <groupId>org.eclipse.angus</groupId>
-            <artifactId>jakarta.mail</artifactId>
-        </dependency>
-
+        <!-- ============================================ -->
         <!-- LOMBOK -->
+        <!-- ============================================ -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
-
+        <!-- ============================================ -->
+        <!-- APACHE COMMONS -->
+        <!-- ============================================ -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <!-- ============================================ -->
+        <!-- ANGUS -->
+        <!-- ============================================ -->
+        <dependency>
+            <groupId>org.eclipse.angus</groupId>
+            <artifactId>jakarta.mail</artifactId>
+        </dependency>
+        <!-- ============================================ -->
         <!-- TEST -->
-        <!-- JUNIT5 -->
+        <!-- ============================================ -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>

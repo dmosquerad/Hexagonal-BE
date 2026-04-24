@@ -17,20 +17,27 @@
     </modules>
 
     <dependencies>
-        <!-- PROJECT-MODULES -->
+        <!-- ============================================ -->
+        <!-- PROJECT MODULES -->
+        <!-- ============================================ -->
+         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>domain</artifactId>
+        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>application</artifactId>
         </dependency>
-        
+        <!-- ============================================ -->
         <!-- MAPSTRUCT -->
+        <!-- ============================================ -->
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
         </dependency>
-
+        <!-- ============================================ -->
         <!-- TEST -->
-        <!-- SPRINGBOOT -->
+        <!-- ============================================ -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>

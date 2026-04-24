@@ -13,7 +13,9 @@
     </parent>
 
     <dependencies>
-        <!-- PROJECT CONTRACT -->
+        <!-- ============================================ -->
+        <!-- PROJECT MODULES -->
+        <!-- ============================================ -->
         <dependency>
             <groupId>com.architecture.hexagonal</groupId>
             <artifactId>user-contract-rest</artifactId>
@@ -22,13 +24,20 @@
             <groupId>com.architecture.hexagonal</groupId>
             <artifactId>email-contract-rest</artifactId>
         </dependency>
-
+        <!-- ============================================ -->
         <!-- SPRINGBOOT -->
+        <!-- ============================================ -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter-webmvc</artifactId>
         </dependency>
-
+        <!-- ============================================ -->
+        <!-- TEST -->
+        <!-- ============================================ -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webmvc-test</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
-
 </project>
