@@ -3,6 +3,7 @@ package com.architecture.hexagonal.application.usercase;
 import com.architecture.hexagonal.application.cqrs.command.request.UpdateUserCommand;
 import com.architecture.hexagonal.application.port.out.UserRepositoryReadPort;
 import com.architecture.hexagonal.application.port.out.UserRepositoryWritePort;
+import com.architecture.hexagonal.application.port.out.UserSenderPort;
 import com.architecture.hexagonal.application.testutils.data.entity.UserTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.data.input.command.UpdateUserCommandTestDataBuilder;
 import com.architecture.hexagonal.application.usecase.UpdateUserUseCase;
@@ -30,6 +31,9 @@ class UpdateUserUseCaseTest {
   @Mock
   UserRepositoryWritePort userRepositoryWritePort;
 
+  @Mock
+  UserSenderPort eventPublisherPort;
+
   @Test
   void execute_shouldUpdateUser_whenUserExists() throws ResourceNotFoundException {
     final User user = UserTestDataBuilder
@@ -54,6 +58,7 @@ class UpdateUserUseCaseTest {
 
     Mockito.verify(userRepositoryReadPort).findUserById(updateUserCommand.getUserId());
     Mockito.verify(userRepositoryWritePort).saveUser(user);
+    Mockito.verify(eventPublisherPort).userSenderUpdated(user);
   }
 
   @Test
@@ -72,6 +77,7 @@ class UpdateUserUseCaseTest {
 
     Mockito.verify(userRepositoryReadPort).findUserById(updateUserCommand.getUserId());
     Mockito.verifyNoInteractions(userRepositoryWritePort);
+    Mockito.verifyNoInteractions(eventPublisherPort);
   }
 
 }

@@ -2,6 +2,7 @@ package com.architecture.hexagonal.application.usecase;
 
 import com.architecture.hexagonal.application.cqrs.command.request.CreateUserCommand;
 import com.architecture.hexagonal.application.port.in.CreateUserUseCasePort;
+import com.architecture.hexagonal.application.port.out.UserSenderPort;
 import com.architecture.hexagonal.application.port.out.UserRepositoryWritePort;
 import com.architecture.hexagonal.domain.model.entity.User;
 import com.architecture.hexagonal.domain.model.vo.factory.EmailVoFactory;
@@ -14,14 +15,18 @@ import org.springframework.transaction.annotation.Transactional;
 public class CreateUserUseCase implements CreateUserUseCasePort {
 
   private final UserRepositoryWritePort userRepositoryWritePort;
+  private final UserSenderPort userSenderPort;
 
   @Override
   @Transactional
   public User execute(final CreateUserCommand createUserCommand) {
-    return userRepositoryWritePort.saveUser(
+    User createdUser = userRepositoryWritePort.saveUser(
         User.builder()
             .name(createUserCommand.getName())
             .email(EmailVoFactory.from(createUserCommand.getEmail()))
             .build());
+
+    userSenderPort.userSenderCreated(createdUser);
+    return createdUser;
   }
 }

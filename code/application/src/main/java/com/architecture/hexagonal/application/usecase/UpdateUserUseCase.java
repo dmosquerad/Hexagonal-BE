@@ -2,6 +2,7 @@ package com.architecture.hexagonal.application.usecase;
 
 import com.architecture.hexagonal.application.cqrs.command.request.UpdateUserCommand;
 import com.architecture.hexagonal.application.port.in.UpdateUserUseCasePort;
+import com.architecture.hexagonal.application.port.out.UserSenderPort;
 import com.architecture.hexagonal.application.port.out.UserRepositoryReadPort;
 import com.architecture.hexagonal.application.port.out.UserRepositoryWritePort;
 import com.architecture.hexagonal.domain.model.entity.User;
@@ -21,6 +22,8 @@ public class UpdateUserUseCase implements UpdateUserUseCasePort {
 
   private final UserRepositoryWritePort userRepositoryWritePort;
 
+  private final UserSenderPort userSenderPort;
+
   @Override
   @Transactional
   public User execute(final UpdateUserCommand updateUserCommand) throws ResourceNotFoundException {
@@ -30,11 +33,14 @@ public class UpdateUserUseCase implements UpdateUserUseCasePort {
         .orElseThrow(() ->
             new ResourceNotFoundException(ExceptionMessage.NOT_FOUND_DATA_MESSAGE + uuid));
 
-    return userRepositoryWritePort.saveUser(
+    User updatedUser = userRepositoryWritePort.saveUser(
         User.builder()
           .userId(uuid)
           .name(updateUserCommand.getName())
           .email(EmailVoFactory.from(updateUserCommand.getEmail()))
           .build());
+
+    userSenderPort.userSenderUpdated(updatedUser);
+    return updatedUser;
   }
 }

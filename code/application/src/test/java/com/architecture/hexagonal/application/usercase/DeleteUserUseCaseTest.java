@@ -2,6 +2,7 @@ package com.architecture.hexagonal.application.usercase;
 
 import com.architecture.hexagonal.application.cqrs.command.request.DeleteUserCommand;
 import com.architecture.hexagonal.application.port.out.UserRepositoryWritePort;
+import com.architecture.hexagonal.application.port.out.UserSenderPort;
 import com.architecture.hexagonal.application.testutils.data.entity.UserTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.data.input.command.DeleteUserCommandTestDataBuilder;
 import com.architecture.hexagonal.application.usecase.DeleteUserUseCase;
@@ -26,6 +27,9 @@ class DeleteUserUseCaseTest {
   @Mock
   UserRepositoryWritePort userRepositoryWritePort;
 
+  @Mock
+  UserSenderPort eventPublisherPort;
+
   @Test
   void execute_shouldDeleteUser_whenUserExists() throws ResourceNotFoundException {
     final User user = UserTestDataBuilder
@@ -47,6 +51,7 @@ class DeleteUserUseCaseTest {
         .isEqualTo(user);
 
     Mockito.verify(userRepositoryWritePort).deleteUser(deleteUserCommand.getUserId());
+    Mockito.verify(eventPublisherPort).userSenderDeleted(user);
   }
 
   @Test
@@ -65,6 +70,7 @@ class DeleteUserUseCaseTest {
         .hasMessage(ExceptionMessage.NOT_FOUND_DATA_MESSAGE + deleteUserCommand.getUserId());
 
     Mockito.verify(userRepositoryWritePort).deleteUser(deleteUserCommand.getUserId());
+    Mockito.verifyNoInteractions(eventPublisherPort);
   }
 
 }

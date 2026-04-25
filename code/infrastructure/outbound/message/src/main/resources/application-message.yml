@@ -1,0 +1,26 @@
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  cloud:
+    stream:
+      bindings:
+        publishUserCreated-out-0:
+          destination: user.created
+        publishUserUpdated-out-0:
+          destination: user.updated
+        publishUserDeleted-out-0:
+          destination: user.deleted
+      rabbit:
+        bindings:
+          publishUserCreated-out-0:
+            producer:
+              exchangeType: topic
+          publishUserUpdated-out-0:
+            producer:
+              exchangeType: topic
+          publishUserDeleted-out-0:
+            producer:
+              exchangeType: topic
