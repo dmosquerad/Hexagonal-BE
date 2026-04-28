@@ -3,6 +3,7 @@ package com.architecture.hexagonal.application.usercase;
 import com.architecture.hexagonal.application.cqrs.command.request.PatchUserCommand;
 import com.architecture.hexagonal.application.port.out.UserRepositoryReadPort;
 import com.architecture.hexagonal.application.port.out.UserRepositoryWritePort;
+import com.architecture.hexagonal.application.port.out.UserSenderPort;
 import com.architecture.hexagonal.application.testutils.data.entity.UserTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.data.input.command.PatchUserCommandTestDataBuilder;
 import com.architecture.hexagonal.application.usecase.PatchUserUseCase;
@@ -28,6 +29,9 @@ class PatchUserUseCaseTestIT {
   @MockitoBean
   UserRepositoryWritePort userRepositoryWritePort;
 
+  @MockitoBean
+  UserSenderPort eventPublisherPort;
+
   @Test
   void execute_shouldPatchUserName_whenRequestIsValid() throws ResourceNotFoundException {
     final User user = UserTestDataBuilder
@@ -52,5 +56,6 @@ class PatchUserUseCaseTestIT {
 
     Mockito.verify(userRepositoryReadPort).findUserById(patchUserCommand.getUserId());
     Mockito.verify(userRepositoryWritePort).saveUser(user);
+    Mockito.verify(eventPublisherPort).userSenderUpdated(user);
   }
 }

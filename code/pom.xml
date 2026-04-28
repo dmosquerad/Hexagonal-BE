@@ -25,6 +25,10 @@
     <!-- ============================================ -->
     <springdoc-openapi-bom.version>3.0.3</springdoc-openapi-bom.version>
     <!-- ============================================ -->
+    <!-- SPRING CLOUD -->
+    <!-- ============================================ -->
+    <spring-cloud.version>2025.1.1</spring-cloud.version>
+    <!-- ============================================ -->
     <!-- MAPSTRUCT -->
     <!-- ============================================ -->
     <mapstruct.version>1.6.3</mapstruct.version>
@@ -109,6 +113,11 @@
         <artifactId>configuration</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>message</artifactId>
+        <version>${project.version}</version>
+      </dependency>
       <!-- ============================================ -->
       <!-- MAPSTRUCT -->
       <!-- ============================================ -->
@@ -124,6 +133,16 @@
         <groupId>org.springdoc</groupId>
         <artifactId>springdoc-openapi-bom</artifactId>
         <version>${springdoc-openapi-bom.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <!-- ============================================ -->
+      <!-- SPRING CLOUD -->
+      <!-- ============================================ -->
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-dependencies</artifactId>
+        <version>${spring-cloud.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>

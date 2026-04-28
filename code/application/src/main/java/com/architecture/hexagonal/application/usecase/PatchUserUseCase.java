@@ -2,6 +2,7 @@ package com.architecture.hexagonal.application.usecase;
 
 import com.architecture.hexagonal.application.cqrs.command.request.PatchUserCommand;
 import com.architecture.hexagonal.application.port.in.PatchUserUseCasePort;
+import com.architecture.hexagonal.application.port.out.UserSenderPort;
 import com.architecture.hexagonal.application.port.out.UserRepositoryReadPort;
 import com.architecture.hexagonal.domain.model.entity.User;
 import com.architecture.hexagonal.domain.model.vo.EmailVo;
@@ -24,6 +25,8 @@ public class PatchUserUseCase implements PatchUserUseCasePort {
 
   private final UserRepositoryWritePort userRepositoryWritePort;
 
+  private final UserSenderPort userSenderPort;
+
   @Override
   @Transactional
   public User execute(final PatchUserCommand patchUserCommand) throws ResourceNotFoundException {
@@ -38,11 +41,14 @@ public class PatchUserUseCase implements PatchUserUseCasePort {
     final EmailVo email = StringUtils.isBlank(patchUserCommand.getEmail()) ?
             currentUser.getEmail() : EmailVoFactory.from(patchUserCommand.getEmail());
 
-    return userRepositoryWritePort.saveUser(
+    User updatedUser = userRepositoryWritePort.saveUser(
         User.builder()
             .userId(uuid)
             .name(name)
             .email(email)
             .build());
+
+    userSenderPort.userSenderUpdated(updatedUser);
+    return updatedUser;
   }
 }

@@ -1,6 +1,7 @@
 package com.architecture.hexagonal.application.usercase;
 
 import com.architecture.hexagonal.application.cqrs.command.request.CreateUserCommand;
+import com.architecture.hexagonal.application.port.out.UserSenderPort;
 import com.architecture.hexagonal.application.port.out.UserRepositoryWritePort;
 import com.architecture.hexagonal.application.testutils.data.entity.UserTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.data.input.command.CreateUserCommandTestDataBuilder;
@@ -24,6 +25,9 @@ class CreateUserUserCaseTest {
   @Mock
   UserRepositoryWritePort userRepositoryWritePort;
 
+  @Mock
+  UserSenderPort eventPublisherPort;
+
   @Test
   void execute_shouldCreateUser_whenCommandIsValid() {
     final User user = UserTestDataBuilder
@@ -46,6 +50,7 @@ class CreateUserUserCaseTest {
         .isEqualTo(user);
 
     Mockito.verify(userRepositoryWritePort).saveUser(ArgumentMatchers.any(User.class));
+    Mockito.verify(eventPublisherPort).userSenderCreated(user);
   }
 
 }
