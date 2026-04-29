@@ -29,9 +29,9 @@ Hexagonal-BE/
 │   ├── application/                 # Use cases, ports and CQRS handlers
 │   ├── infrastructure/
 │   │   ├── inbound/
-│   │   │   ├── contract/            # OpenAPI contract modules
-│   │   │   │   └── contract-rest/   # OpenAPI submodule with rest contracts
 │   │   │   └── rest/                # REST controllers implementation
+│   │   ├── contract/                # Contract modules
+│   │   │   └── rest/                # OpenAPI submodule with rest contracts
 │   │   └── outbound/
 │   │       ├── database/            # DB adapters (JPA/Postgres)
 │   │       └── configuration/       # Config/adapters
@@ -143,8 +143,8 @@ Exposes the HTTP API and translates requests into application commands/queries.
 - Use request for communicate to cqrs
 
 **Contract location:**
-- `code/infrastructure/inbound/contract/contract-rest/user-contract-rest/src/main/resources/contract/`
-- `code/infrastructure/inbound/contract/contract-rest/email-contract-rest/src/main/resources/contract/`
+- `code/infrastructure/contract/rest/user-rest-server/src/main/resources/contract/`
+- `code/infrastructure/contract/rest/email-rest-server/src/main/resources/contract/`
 
 #### Outbound (Database)
 Implements persistence with PostgreSQL using Spring Data JPA.

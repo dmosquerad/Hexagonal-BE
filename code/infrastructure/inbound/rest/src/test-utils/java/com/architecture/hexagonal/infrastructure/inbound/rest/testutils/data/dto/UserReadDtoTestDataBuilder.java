@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.dto;
 
-import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.dto.UserReadDto;
+import com.architecture.hexagonal.infrastructure.contract.rest.user.server.dto.UserReadDto;
 import java.util.UUID;
 import lombok.Builder;
 
