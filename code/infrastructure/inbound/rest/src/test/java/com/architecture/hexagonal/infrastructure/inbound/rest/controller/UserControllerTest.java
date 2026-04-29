@@ -11,9 +11,9 @@ import com.architecture.hexagonal.application.cqrs.query.request.UserExistsQuery
 import com.architecture.hexagonal.application.cqrs.query.dispatcher.QueryBus;
 import com.architecture.hexagonal.domain.model.entity.User;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
-import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.dto.UserCreateDto;
-import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.dto.UserResponseDto;
-import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.dto.UsersResponseDto;
+import com.architecture.hexagonal.infrastructure.contract.rest.user.server.dto.UserCreateDto;
+import com.architecture.hexagonal.infrastructure.contract.rest.user.server.dto.UserResponseDto;
+import com.architecture.hexagonal.infrastructure.contract.rest.user.server.dto.UsersResponseDto;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.CreateUserCommandMapper;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.DeleteUserCommandMapper;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.FindUserByUserIdQueryMapper;

@@ -12,7 +12,6 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>contract</module>
         <module>rest</module>
     </modules>
 </project>

@@ -8,12 +8,12 @@
 
     <parent>
         <groupId>com.architecture.hexagonal</groupId>
-        <artifactId>inbound</artifactId>
+        <artifactId>infrastructure</artifactId>
         <version>0.0.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modules>
-        <module>contract-rest</module>
+        <module>rest</module>
     </modules>
 </project>

@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.exception;
 
-import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.dto.ResponseErrorDto;
+import com.architecture.hexagonal.infrastructure.contract.rest.user.server.dto.ResponseErrorDto;
 import jakarta.validation.ConstraintViolationException;
 import java.sql.SQLException;
 import java.time.Clock;

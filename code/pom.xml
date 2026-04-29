@@ -92,12 +92,12 @@
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>user-contract-rest</artifactId>
+        <artifactId>user-rest-server</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>email-contract-rest</artifactId>
+        <artifactId>email-rest-server</artifactId>
         <version>${project.version}</version>
       </dependency>
       <!-- ============================================ -->

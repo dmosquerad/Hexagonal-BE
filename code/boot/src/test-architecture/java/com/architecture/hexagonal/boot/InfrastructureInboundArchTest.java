@@ -20,15 +20,6 @@ class InfrastructureInboundArchTest {
           .because("Controllers must be in infrastructure.inbound");
 
   @ArchTest
-  static final ArchRule dtos_should_reside_in_inbound =
-      ArchRuleDefinition.classes()
-          .that()
-          .haveSimpleNameEndingWith("Dto")
-          .should()
-          .resideInAPackage("..infrastructure.inbound..")
-          .because("DTOs must be in infrastructure.inbound");
-
-  @ArchTest
   static final ArchRule inbound_not_depend_on_outbound_ports =
       ArchRuleDefinition.noClasses()
           .that()

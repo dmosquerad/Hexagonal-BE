@@ -18,11 +18,11 @@
         <!-- ============================================ -->
         <dependency>
             <groupId>com.architecture.hexagonal</groupId>
-            <artifactId>user-contract-rest</artifactId>
+            <artifactId>user-rest-server</artifactId>
         </dependency>
         <dependency>
             <groupId>com.architecture.hexagonal</groupId>
-            <artifactId>email-contract-rest</artifactId>
+            <artifactId>email-rest-server</artifactId>
         </dependency>
         <!-- ============================================ -->
         <!-- SPRINGBOOT -->

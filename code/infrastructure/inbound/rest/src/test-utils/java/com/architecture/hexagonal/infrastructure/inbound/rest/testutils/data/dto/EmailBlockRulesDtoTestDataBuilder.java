@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.dto;
 
-import com.architecture.hexagonal.infrastructure.inbound.contract.rest.email.dto.EmailBlockRulesDto;
+import com.architecture.hexagonal.infrastructure.contract.rest.email.server.dto.EmailBlockRulesDto;
 import java.util.List;
 import lombok.Builder;
 

@@ -14,7 +14,7 @@
     </parent>
 
     <modules>
-        <module>user-contract-rest</module>
-        <module>email-contract-rest</module>
+        <module>user-rest-server</module>
+        <module>email-rest-server</module>
     </modules>
 </project>

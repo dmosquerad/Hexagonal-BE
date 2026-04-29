@@ -24,11 +24,11 @@ class HexagonalArchitectureTest {
           .that()
           .resideInAPackage("..infrastructure..")
           .should()
-          .resideInAnyPackage("..infrastructure.outbound.database..",
+          .resideInAnyPackage("..infrastructure.contract..",
+              "..infrastructure.outbound.database..",
               "..infrastructure.outbound.configuration..",
               "..infrastructure.outbound.message..",
-              "..infrastructure.inbound.rest..",
-              "..infrastructure.inbound.contract..")
+              "..infrastructure.inbound.rest..")
           .because("Infrastructure may contain only declared adapters;"
               + " undeclared adapter packages break the explicit port-adapter mapping");
 
