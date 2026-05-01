@@ -3,6 +3,7 @@ package com.architecture.hexagonal.application.cqrs.command.handler.impl;
 import com.architecture.hexagonal.application.cqrs.command.handler.CommandHandler;
 import com.architecture.hexagonal.application.cqrs.command.request.UpdateUserCommand;
 import com.architecture.hexagonal.application.port.in.UpdateUserUseCasePort;
+import com.architecture.hexagonal.domain.exception.InvalidValueException;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import com.architecture.hexagonal.domain.model.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,7 @@ public class UpdateUserCommandHandler implements CommandHandler<UpdateUserComman
   private final UpdateUserUseCasePort updateUserUseCasePort;
 
   @Override
-  public User handle(final UpdateUserCommand command) throws ResourceNotFoundException {
+  public User handle(final UpdateUserCommand command) throws ResourceNotFoundException, InvalidValueException {
     return updateUserUseCasePort.execute(command);
   }
 }

@@ -5,15 +5,15 @@ import com.architecture.hexagonal.application.port.out.EmailConfigurationPort;
 import com.architecture.hexagonal.application.port.out.UserRepositoryReadPort;
 import com.architecture.hexagonal.application.testutils.data.entity.UserTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.data.input.query.GetAllUserQueryTestDataBuilder;
+import com.architecture.hexagonal.application.testutils.data.vo.EmailBlockRulesVoTestDataBuilder;
 import com.architecture.hexagonal.application.usecase.GetAllUsersUseCase;
 import com.architecture.hexagonal.domain.model.entity.User;
-import com.architecture.hexagonal.domain.model.vo.EmailVo;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -52,8 +52,7 @@ class GetAllUsersUseCaseTestIT {
         .isEqualTo(userSet);
 
     Mockito.verify(userRepositoryReadPort).getAllUsers();
-    Mockito.verify(emailConfigurationPort, Mockito.never())
-            .filterAllowed(ArgumentMatchers.anySet());
+    Mockito.verify(emailConfigurationPort, Mockito.never()).getBlockedRules();
   }
 
   @Test
@@ -77,15 +76,13 @@ class GetAllUsersUseCaseTestIT {
         .isEqualTo(allUsers);
 
     Mockito.verify(userRepositoryReadPort).getAllUsers();
-    Mockito.verify(emailConfigurationPort, Mockito.never())
-        .filterAllowed(ArgumentMatchers.anySet());
+    Mockito.verify(emailConfigurationPort, Mockito.never()).getBlockedRules();
   }
 
   @Test
   void execute_shouldReturnBlockedEmailUsers_whenBlockEmailIsTrue() {
     final User user = UserTestDataBuilder.builder().build().user();
     final Set<User> userSet = Collections.singleton(user);
-    final Set<EmailVo> emailVos = Collections.singleton(user.getEmail());
 
     final GetAllUserQuery getAllUserQuery = GetAllUserQueryTestDataBuilder
         .builder()
@@ -95,8 +92,11 @@ class GetAllUsersUseCaseTestIT {
         .getAllUserQuery();
 
     Mockito.when(userRepositoryReadPort.getAllUsers()).thenReturn(userSet);
-    Mockito.when(emailConfigurationPort.filterBlocked(ArgumentMatchers.anySet()))
-        .thenReturn(emailVos);
+    Mockito.when(emailConfigurationPort.getBlockedRules())
+        .thenReturn(EmailBlockRulesVoTestDataBuilder.builder()
+            .email(List.of("test@example.com"))
+            .build()
+            .emailBlockRulesVo());
 
     Set<User> result = getAllUsersUseCase.execute(getAllUserQuery);
 
@@ -105,14 +105,13 @@ class GetAllUsersUseCaseTestIT {
         .isEqualTo(userSet);
 
     Mockito.verify(userRepositoryReadPort).getAllUsers();
-    Mockito.verify(emailConfigurationPort).filterBlocked(emailVos);
+    Mockito.verify(emailConfigurationPort).getBlockedRules();
   }
 
   @Test
   void execute_shouldReturnAllowedEmailUsers_whenBlockEmailIsFalse() {
     final User user = UserTestDataBuilder.builder().build().user();
     final Set<User> userSet = Collections.singleton(user);
-    final Set<EmailVo> emailVos = Collections.singleton(user.getEmail());
 
     final GetAllUserQuery getAllUserQuery = GetAllUserQueryTestDataBuilder
         .builder()
@@ -122,8 +121,8 @@ class GetAllUsersUseCaseTestIT {
         .getAllUserQuery();
 
     Mockito.when(userRepositoryReadPort.getAllUsers()).thenReturn(userSet);
-    Mockito.when(emailConfigurationPort.filterAllowed(ArgumentMatchers.anySet()))
-        .thenReturn(emailVos);
+    Mockito.when(emailConfigurationPort.getBlockedRules())
+        .thenReturn(EmailBlockRulesVoTestDataBuilder.builder().build().emailBlockRulesVo());
 
     Set<User> result = getAllUsersUseCase.execute(getAllUserQuery);
 
@@ -132,7 +131,7 @@ class GetAllUsersUseCaseTestIT {
         .isEqualTo(userSet);
 
     Mockito.verify(userRepositoryReadPort).getAllUsers();
-    Mockito.verify(emailConfigurationPort).filterAllowed(emailVos);
+    Mockito.verify(emailConfigurationPort).getBlockedRules();
   }
 
 }

@@ -1,15 +1,19 @@
 package com.architecture.hexagonal.application.usercase;
 
 import com.architecture.hexagonal.application.cqrs.command.request.PatchUserCommand;
+import com.architecture.hexagonal.application.port.out.EmailConfigurationPort;
 import com.architecture.hexagonal.application.port.out.UserSenderPort;
 import com.architecture.hexagonal.application.port.out.UserRepositoryReadPort;
 import com.architecture.hexagonal.application.port.out.UserRepositoryWritePort;
 import com.architecture.hexagonal.application.testutils.data.entity.UserTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.data.input.command.PatchUserCommandTestDataBuilder;
+import com.architecture.hexagonal.application.testutils.data.vo.EmailBlockRulesVoTestDataBuilder;
 import com.architecture.hexagonal.application.usecase.PatchUserUseCase;
+import com.architecture.hexagonal.domain.exception.InvalidValueException;
 import com.architecture.hexagonal.domain.model.entity.User;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
+import java.util.List;
 import java.util.Optional;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
@@ -32,10 +36,13 @@ class PatchUserUseCaseTest {
   UserRepositoryWritePort userRepositoryWritePort;
 
   @Mock
-  UserSenderPort eventPublisherPort;
+  UserSenderPort userSenderPort;
+
+  @Mock
+  EmailConfigurationPort emailConfigurationPort;
 
   @Test
-  void execute_shouldPatchUserName_whenRequestIsValid() throws ResourceNotFoundException {
+  void execute_shouldPatchUserName_whenRequestIsValid() throws ResourceNotFoundException, InvalidValueException {
     final User user = UserTestDataBuilder
         .builder()
         .build()
@@ -47,6 +54,8 @@ class PatchUserUseCaseTest {
 
     Mockito.when(userRepositoryReadPort.findUserById(patchUserCommand.getUserId()))
         .thenReturn(Optional.of(user));
+    Mockito.when(emailConfigurationPort.getBlockedRules())
+        .thenReturn(EmailBlockRulesVoTestDataBuilder.builder().build().emailBlockRulesVo());
     Mockito.when(userRepositoryWritePort.saveUser(user))
         .thenReturn(user);
 
@@ -57,8 +66,32 @@ class PatchUserUseCaseTest {
         .isEqualTo(user);
 
     Mockito.verify(userRepositoryReadPort).findUserById(patchUserCommand.getUserId());
+    Mockito.verify(emailConfigurationPort).getBlockedRules();
     Mockito.verify(userRepositoryWritePort).saveUser(user);
-    Mockito.verify(eventPublisherPort).userSenderUpdated(user);
+    Mockito.verify(userSenderPort).userSenderUpdated(user);
+  }
+
+  @Test
+  void execute_shouldThrowPolicyViolationException_whenEmailIsBlocked() {
+    final User user = UserTestDataBuilder.builder().build().user();
+    final PatchUserCommand patchUserCommand = PatchUserCommandTestDataBuilder
+        .builder()
+        .build()
+        .patchUserCommand();
+
+    Mockito.when(userRepositoryReadPort.findUserById(patchUserCommand.getUserId()))
+        .thenReturn(Optional.of(user));
+    Mockito.when(emailConfigurationPort.getBlockedRules())
+        .thenReturn(EmailBlockRulesVoTestDataBuilder.builder()
+            .email(List.of("test@example.com"))
+            .build()
+            .emailBlockRulesVo());
+
+    AssertionsForClassTypes.assertThatThrownBy(() -> patchUserUseCase.execute(patchUserCommand))
+        .isInstanceOf(InvalidValueException.class);
+
+    Mockito.verifyNoInteractions(userRepositoryWritePort);
+    Mockito.verifyNoInteractions(userSenderPort);
   }
 
   @Test
@@ -78,6 +111,6 @@ class PatchUserUseCaseTest {
 
     Mockito.verify(userRepositoryReadPort).findUserById(patchUserCommand.getUserId());
     Mockito.verifyNoInteractions(userRepositoryWritePort);
-    Mockito.verifyNoInteractions(eventPublisherPort);
+    Mockito.verifyNoInteractions(userSenderPort);
   }
 }

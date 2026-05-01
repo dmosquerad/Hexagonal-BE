@@ -6,7 +6,9 @@ import com.architecture.hexagonal.application.port.out.EmailConfigurationPort;
 import com.architecture.hexagonal.application.port.out.UserRepositoryReadPort;
 import com.architecture.hexagonal.domain.model.entity.User;
 import com.architecture.hexagonal.domain.model.entity.predicate.UserPredicate;
+import com.architecture.hexagonal.domain.model.vo.EmailBlockRulesVo;
 import com.architecture.hexagonal.domain.model.vo.EmailVo;
+import com.architecture.hexagonal.domain.service.EmailBlockPolicy;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -43,9 +45,14 @@ public class GetAllUsersUseCase implements GetAllUsersUseCasePort {
         .map(User::getEmail)
         .collect(Collectors.toSet());
 
+    final EmailBlockRulesVo rules = emailConfigurationPort.getBlockedRules();
     final Set<EmailVo> filteredEmailVos = Boolean.TRUE.equals(blockEmail)
-        ? emailConfigurationPort.filterBlocked(emailVos)
-        : emailConfigurationPort.filterAllowed(emailVos);
+        ? emailVos.stream()
+            .filter(email -> EmailBlockPolicy.isBlocked(email, rules))
+            .collect(Collectors.toUnmodifiableSet())
+        : emailVos.stream()
+            .filter(email -> !EmailBlockPolicy.isBlocked(email, rules))
+            .collect(Collectors.toUnmodifiableSet());
 
     return usersByHost.stream()
         .filter(user -> filteredEmailVos.contains(user.getEmail()))
