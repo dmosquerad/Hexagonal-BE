@@ -23,7 +23,11 @@ Feature: Global test data pre-cleanup
         'e2e-flow-updated@test.com',
         'get-users-host@gmail.com',
         'get-users-blocked@banned.com',
-        'get-users-allowed@allowed.com'
+        'get-users-allowed@allowed.com',
+        'messaging-create-user@test.com',
+        'messaging-update-user@test.com',
+        'messaging-patch-user@test.com',
+        'messaging-delete-user@test.com'
       ]
       """
 
