@@ -3,7 +3,7 @@ Feature: Users Error Contract - 404 responses
 
   Background:
     * url baseUrl
-    * def nonExistentId = java.util.UUID.randomUUID() + ''
+    * def nonExistentId = '00000000-0000-0000-0000-000000000000'
 
   Scenario: GET non-existing user returns 404 with error schema
     Given url baseUrl + '/users/' + nonExistentId
