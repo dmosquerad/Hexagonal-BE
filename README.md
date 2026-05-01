@@ -12,7 +12,7 @@ It is organized around four main modules:
 
 - **Domain**: business model and core rules, framework-agnostic
 - **Application**: use cases and port contracts that orchestrate the domain
-- **Infrastructure**: inbound REST adapters and outbound database adapters
+- **Infrastructure**: contract stubs, inbound REST adapters, and outbound database/messaging/configuration adapters
 - **Boot**: Spring Boot composition root and runtime wiring
 
 The API follows a **contract-first** approach with OpenAPI, includes unit/integration/E2E testing, and is prepared to run with PostgreSQL via Docker Compose.
@@ -28,14 +28,15 @@ Hexagonal-BE/
 │   ├── domain/                      # Domain model (entities, VOs, services)
 │   ├── application/                 # Use cases, ports and CQRS handlers
 │   ├── infrastructure/
+│   │   ├── contract/
+│   │   │   └── rest/                # OpenAPI server stubs (user / email)
 │   │   ├── inbound/
 │   │   │   └── rest/                # REST controllers implementation
-│   │   ├── contract/                # Contract modules
-│   │   │   └── rest/                # OpenAPI submodule with rest contracts
 │   │   └── outbound/
 │   │       ├── database/            # DB adapters (JPA/Postgres)
-│   │       └── configuration/       # Config/adapters
-│   ├── boot/                        # Spring Boot composition root
+│   │       ├── message/             # Messaging adapters (RabbitMQ)
+│   │       └── configuration/       # Config adapters (application.yml rules)
+│   └── boot/                        # Spring Boot composition root
 ├── e2e/
 │   └── karate/                      # End-to-end API tests (Karate)
 └── deployment/
@@ -48,7 +49,13 @@ Hexagonal-BE/
 flowchart LR
     Client([HTTP Client])
     POSTGRES[(PostgreSQL)]
+    RABBIT[(RabbitMQ)]
     Config[(Configuration)]
+
+    subgraph CONTRACT["Infrastructure · Contract"]
+        direction TB
+        OAS[OpenAPI Stubs\nuser / email]
+    end
 
     subgraph INBOUND["Infrastructure · Inbound"]
         direction TB
@@ -68,37 +75,45 @@ flowchart LR
 
     subgraph OUTBOUND["Infrastructure · Outbound"]
         direction TB
-        OR[Outbound Repositories]
+        DB[Database Adapter]
+        MSG[Message Adapter]
+        CFG[Configuration Adapter]
     end
-
-    APP ~~~ DOMAIN
 
     subgraph BOOT["Boot"]
         direction TB
         COMP[Composition Root]
     end
 
+    OAS -.implements.-> REST
     Client --> REST
     REST --> BUS
     BUS --> UC
     UC --> MODEL
-    UC -.-> OR
-    OR --> POSTGRES
-    OR --> Config
+    UC -.-> DB
+    UC -.-> MSG
+    UC -.-> CFG
+    DB --> POSTGRES
+    MSG --> RABBIT
+    CFG --> Config
 
     COMP -.wires.-> REST
-    COMP -.wires.-> OR
+    COMP -.wires.-> DB
+    COMP -.wires.-> MSG
+    COMP -.wires.-> CFG
 ```
 
 > `-->` runtime flow &nbsp;&nbsp; `-.->` implementation/wiring
 
 ## 🚀 Quick Start
 
-### 1. Start PostgreSQL
+### 1. Start infrastructure
 ```bash
 cd deployment/docker
 docker compose up -d
 ```
+
+This starts **PostgreSQL** (port 5432) and **RabbitMQ** (ports 5672 / 15672).
 
 ### 2. Build & Run
 ```bash
@@ -132,21 +147,24 @@ Orchestrates the domain through use cases and defines the port contracts consume
 
 ### Infrastructure
 
+#### Contract — REST (`code/infrastructure/contract/rest`)
+Holds the OpenAPI 3.0 specifications and generates server-side stubs consumed by the inbound controllers.
+
+**Content:**
+- `user-rest-server`: OpenAPI spec for the User API
+- `email-rest-server`: OpenAPI spec for the Email rules API
+- Generated Java interfaces implemented by REST controllers
+
 #### Inbound — REST (`code/infrastructure/inbound/rest`)
 Exposes the HTTP API and translates requests into application commands/queries.
 
 **Content:**
-- REST controllers
-- OpenAPI contract-first documentation
-- API code generation from OpenAPI specs
+- REST controllers implementing the generated OpenAPI interfaces
+- Request-to-command/query mappers (MapStruct)
 - Centralized REST exception handling
 - Use request for communicate to cqrs
 
-**Contract location:**
-- `code/infrastructure/contract/rest/user-rest-server/src/main/resources/contract/`
-- `code/infrastructure/contract/rest/email-rest-server/src/main/resources/contract/`
-
-#### Outbound (Database)
+#### Outbound — Database (`code/infrastructure/outbound/database`)
 Implements persistence with PostgreSQL using Spring Data JPA.
 
 **Content:**
@@ -154,12 +172,20 @@ Implements persistence with PostgreSQL using Spring Data JPA.
 - JPA repositories and DAO mappings
 - Persistence configuration and data access
 
-#### Outbound (Configuration)
+#### Outbound — Message (`code/infrastructure/outbound/message`)
+Publishes domain events to RabbitMQ via Spring Cloud Stream.
+
+**Content:**
+- `UserSenderAdapter` implementing the message Port Out
+- Domain event DTOs: `UserCreated`, `UserUpdated`, `UserDeleted`
+- `UserMessageSender` using `StreamBridge` for topic bindings
+
+#### Outbound — Configuration (`code/infrastructure/outbound/configuration`)
 Implements configuration-driven business rules loaded from `application.yml`.
 
 **Content:**
 - Repository adapters implementing Ports Out
-- Configuration reader module
+- Configuration reader for email block-rules
 
 ### Boot
 Application composition root that wires all modules and launches Spring Boot.
@@ -193,7 +219,7 @@ Once the application is running, you can access the interactive API documentatio
 - **Redoc**: http://localhost:8080/api/redoc.html
 
 The API follows an **OpenAPI 3.0 contract-first** approach.
-Contracts are defined in `code/infrastructure/inbound/rest/src/main/resources/contract/`.
+Contracts are defined in `code/infrastructure/contract/rest/`.
 
 ## 🧪 Testing
 
@@ -254,6 +280,7 @@ Application configuration is organized by concerns:
 - **Main**: `code/boot/src/main/resources/application.yml` - Composition layer
 - **REST**: `code/infrastructure/inbound/rest/src/main/resources/application-rest.yml` - API configuration
 - **Database**: `code/infrastructure/outbound/database/src/main/resources/application-database.yml` - Persistence configuration
-- **Config**: `code/infrastructure/outbound/configuration/src/main/resources/application-database.yml` 
+- **Message**: `code/infrastructure/outbound/message/src/main/resources/application-message.yml` - RabbitMQ / Spring Cloud Stream bindings
+- **Configuration**: `code/infrastructure/outbound/configuration/src/main/resources/application-configuration.yml` - Email block rules
 
 **Built as a practical Hexagonal Architecture example in Java.**
