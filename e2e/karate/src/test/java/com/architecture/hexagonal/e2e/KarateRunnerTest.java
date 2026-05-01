@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.e2e;
 
-import com.intuit.karate.junit5.Karate;
+import io.karatelabs.junit6.Karate;
 import java.util.Locale;
 
 class KarateRunnerTest {

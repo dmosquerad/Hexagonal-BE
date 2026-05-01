@@ -3,6 +3,7 @@ Feature: Users Bad Request Contract - 400 responses
 
   Background:
     * url baseUrl
+    * def nonExistentId = '00000000-0000-0000-0000-000000000001'
 
   Scenario: POST without email returns 400
     Given url baseUrl + '/users'
@@ -35,8 +36,7 @@ Feature: Users Bad Request Contract - 400 responses
     And match response.title == 'Bad Request'
 
   Scenario: PUT without email returns 400
-    * def randomId = java.util.UUID.randomUUID() + ''
-    Given url baseUrl + '/users/' + randomId
+    Given url baseUrl + '/users/' + nonExistentId
     And header Content-Type = 'application/json'
     And request { name: 'Missing Email' }
     When method PUT
@@ -46,8 +46,7 @@ Feature: Users Bad Request Contract - 400 responses
     And match response.title == 'Bad Request'
 
   Scenario: PUT without name returns 400
-    * def randomId = java.util.UUID.randomUUID() + ''
-    Given url baseUrl + '/users/' + randomId
+    Given url baseUrl + '/users/' + nonExistentId
     And header Content-Type = 'application/json'
     And request { email: 'missing-name@test.com' }
     When method PUT
@@ -57,8 +56,7 @@ Feature: Users Bad Request Contract - 400 responses
     And match response.title == 'Bad Request'
 
   Scenario: PUT with invalid email format returns 400
-    * def randomId = java.util.UUID.randomUUID() + ''
-    Given url baseUrl + '/users/' + randomId
+    Given url baseUrl + '/users/' + nonExistentId
     And header Content-Type = 'application/json'
     And request { name: 'Test', email: 'not-an-email' }
     When method PUT
@@ -68,8 +66,7 @@ Feature: Users Bad Request Contract - 400 responses
     And match response.title == 'Bad Request'
 
   Scenario: PATCH with invalid email format returns 400
-    * def randomId = java.util.UUID.randomUUID() + ''
-    Given url baseUrl + '/users/' + randomId
+    Given url baseUrl + '/users/' + nonExistentId
     And header Content-Type = 'application/json'
     And request { email: 'not-an-email' }
     When method PATCH

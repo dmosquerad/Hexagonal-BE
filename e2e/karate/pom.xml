@@ -18,12 +18,12 @@
     <!-- ============================================ -->
     <!-- JAVA & MVN -->
     <!-- ============================================ -->
-    <java.version>21</java.version>
+    <java.version>25</java.version>
     <mvn.version>3.9.15</mvn.version>
     <!-- ============================================ -->
     <!-- KARATE -->
     <!-- ============================================ -->
-    <karate.version>1.4.1</karate.version>
+    <karate.version>2.0.6</karate.version>
     <!-- ============================================ -->
     <!-- PLUGIN -->
     <!-- ============================================ -->
@@ -35,9 +35,14 @@
     <!-- KARATE -->
     <!-- ============================================ -->
     <dependency>
-      <groupId>com.intuit.karate</groupId>
-      <artifactId>karate-junit5</artifactId>
+      <groupId>io.karatelabs</groupId>
+      <artifactId>karate-junit6</artifactId>
       <version>${karate.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
