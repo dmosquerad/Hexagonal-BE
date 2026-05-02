@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pagination",
+  "title": "Pagination",
+  "type": "object",
+  "properties": {
+    "page": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Page number, zero-based"
+    },
+    "size": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Page size"
+    }
+  },
+  "additionalProperties": false
+}

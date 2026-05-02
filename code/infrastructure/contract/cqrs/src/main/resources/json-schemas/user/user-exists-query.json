@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "user-exists-query",
+  "title": "UserExistsQuery",
+  "type": "object",
+  "properties": {
+    "userId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Identifier of the user to verify existence"
+    }
+  },
+  "required": [
+    "userId"
+  ],
+  "additionalProperties": false
+}

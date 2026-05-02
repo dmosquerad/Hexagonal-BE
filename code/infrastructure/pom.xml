@@ -19,17 +19,6 @@
 
     <dependencies>
         <!-- ============================================ -->
-        <!-- PROJECT MODULES -->
-        <!-- ============================================ -->
-         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>domain</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>application</artifactId>
-        </dependency>
-        <!-- ============================================ -->
         <!-- MAPSTRUCT -->
         <!-- ============================================ -->
         <dependency>

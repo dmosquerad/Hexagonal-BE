@@ -23,33 +23,27 @@ import org.springframework.http.ResponseEntity;
 @ExtendWith(MockitoExtension.class)
 class RestControllerExceptionHandlerTest {
 
-  @InjectMocks
-  RestControllerExceptionHandler restControllerExceptionHandler;
+  @InjectMocks RestControllerExceptionHandler restControllerExceptionHandler;
 
-  @Spy
-  Clock clock = TestClock.FIXED_CLOCK;
+  @Spy Clock clock = TestClock.FIXED_CLOCK;
 
   @Test
   void createResponseEntity_shouldReturnResponseEntity_whenProblemDetailProvided() {
-    final ResponseErrorDto responseErrorDto = ResponseErrorDtoTestDataBuilder
-        .builder()
-        .build()
-        .responseErrorDto();
+    final ResponseErrorDto responseErrorDto =
+        ResponseErrorDtoTestDataBuilder.builder().build().responseErrorDto();
 
-    final ResponseEntity<Object> responseExpected = new ResponseEntity<>(
-        responseErrorDto,
-        new HttpHeaders(),
-        responseErrorDto.getStatus());
+    final ResponseEntity<Object> responseExpected =
+        new ResponseEntity<>(responseErrorDto, new HttpHeaders(), responseErrorDto.getStatus());
 
     final ProblemDetail problemDetail = ProblemDetail.forStatus(responseErrorDto.getStatus());
     problemDetail.setDetail(responseErrorDto.getDetail());
 
-    final ResponseEntity<Object> response = restControllerExceptionHandler.createResponseEntity(
-        problemDetail,
-        new HttpHeaders(),
-        HttpStatusCode.valueOf(responseErrorDto.getStatus()),
-        null
-    );
+    final ResponseEntity<Object> response =
+        restControllerExceptionHandler.createResponseEntity(
+            problemDetail,
+            new HttpHeaders(),
+            HttpStatusCode.valueOf(responseErrorDto.getStatus()),
+            null);
 
     AssertionsForClassTypes.assertThat(response)
         .usingRecursiveComparison()
@@ -60,23 +54,23 @@ class RestControllerExceptionHandlerTest {
 
   @Test
   void handleConstraintViolationException_shouldReturn400() {
-    final ConstraintViolationException ex = new ConstraintViolationException("constraint violated", Set.of());
+    final ConstraintViolationException ex =
+        new ConstraintViolationException("constraint violated", Set.of());
 
     final ResponseEntity<Object> response =
         restControllerExceptionHandler.handleConstraintViolationException(ex, null);
 
-    final ResponseErrorDto expected = ResponseErrorDtoTestDataBuilder.builder()
-        .status(HttpStatus.BAD_REQUEST.value())
-        .title(HttpStatus.BAD_REQUEST.getReasonPhrase())
-        .detail(ex.getMessage())
-        .date(OffsetDateTime.now(TestClock.FIXED_CLOCK))
-        .build()
-        .responseErrorDto();
+    final ResponseErrorDto expected =
+        ResponseErrorDtoTestDataBuilder.builder()
+            .status(HttpStatus.BAD_REQUEST.value())
+            .title(HttpStatus.BAD_REQUEST.getReasonPhrase())
+            .detail(ex.getMessage())
+            .date(OffsetDateTime.now(TestClock.FIXED_CLOCK))
+            .build()
+            .responseErrorDto();
 
-    final ResponseEntity<Object> responseExpected = new ResponseEntity<>(
-        expected,
-        new HttpHeaders(),
-        expected.getStatus());
+    final ResponseEntity<Object> responseExpected =
+        new ResponseEntity<>(expected, new HttpHeaders(), expected.getStatus());
 
     AssertionsForClassTypes.assertThat(response)
         .usingRecursiveComparison()
@@ -92,18 +86,17 @@ class RestControllerExceptionHandlerTest {
     final ResponseEntity<Object> response =
         restControllerExceptionHandler.handleNonControlledException(ex, null);
 
-    final ResponseErrorDto expected = ResponseErrorDtoTestDataBuilder.builder()
-        .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-        .title(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
-        .detail(ex.getMessage())
-        .date(OffsetDateTime.now(TestClock.FIXED_CLOCK))
-        .build()
-        .responseErrorDto();
+    final ResponseErrorDto expected =
+        ResponseErrorDtoTestDataBuilder.builder()
+            .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+            .title(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
+            .detail(ex.getMessage())
+            .date(OffsetDateTime.now(TestClock.FIXED_CLOCK))
+            .build()
+            .responseErrorDto();
 
-    final ResponseEntity<Object> responseExpected = new ResponseEntity<>(
-        expected,
-        new HttpHeaders(),
-        expected.getStatus());
+    final ResponseEntity<Object> responseExpected =
+        new ResponseEntity<>(expected, new HttpHeaders(), expected.getStatus());
 
     AssertionsForClassTypes.assertThat(response)
         .usingRecursiveComparison()
@@ -111,5 +104,4 @@ class RestControllerExceptionHandlerTest {
 
     Mockito.verify(clock).instant();
   }
-
 }

@@ -15,4 +15,13 @@
         <module>configuration</module>
         <module>message</module>
     </modules>
+        <dependencies>
+        <!-- ============================================ -->
+        <!-- PROJECT MODULES -->
+        <!-- ============================================ -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>application</artifactId>
+        </dependency>
+    </dependencies>
 </project>

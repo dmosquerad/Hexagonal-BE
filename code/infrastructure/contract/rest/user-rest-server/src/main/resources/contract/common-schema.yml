@@ -15,6 +15,26 @@ schemas:
         minimum: 100
         maximum: 599
         nullable: false
+      pagination:
+        type: object
+        properties:
+          page:
+            type: integer
+            format: int32
+            minimum: 0
+          size:
+            type: integer
+            format: int32
+            minimum: 1
+          totalElements:
+            type: integer
+            format: int64
+            minimum: 0
+          totalPages:
+            type: integer
+            format: int32
+            minimum: 0
+        nullable: true
       data:
         type: object
         nullable: true
@@ -41,3 +61,25 @@ schemas:
       detail:
         type: string
         nullable: false
+
+parameters:
+  page:
+    name: page
+    in: query
+    description: Page number (zero-based)
+    required: false
+    schema:
+      type: integer
+      format: int32
+      minimum: 0
+      default: 0
+  size:
+    name: size
+    in: query
+    description: Page size
+    required: false
+    schema:
+      type: integer
+      format: int32
+      minimum: 1
+      default: 100

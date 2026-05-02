@@ -10,9 +10,7 @@ class EmailVoToStringConverterTest {
 
   @Test
   void toEmail_shouldConvertEmailVo_whenEmailVoIsValid() {
-    final EmailVo emailVo = EmailVoTestDataBuilder.builder()
-        .build()
-        .emailVo();
+    final EmailVo emailVo = EmailVoTestDataBuilder.builder().build().emailVo();
 
     final String result = EmailVoToStringConverter.toEmail(emailVo);
 

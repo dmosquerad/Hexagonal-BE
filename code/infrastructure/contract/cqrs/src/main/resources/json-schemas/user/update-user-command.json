@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "update-user-command",
+  "title": "UpdateUserCommand",
+  "type": "object",
+  "properties": {
+    "userId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Identifier of the user to update"
+    },
+    "name": {
+      "type": "string",
+      "description": "New name of the user"
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "description": "New email of the user"
+    }
+  },
+  "required": [
+    "userId",
+    "name",
+    "email"
+  ],
+  "additionalProperties": false
+}

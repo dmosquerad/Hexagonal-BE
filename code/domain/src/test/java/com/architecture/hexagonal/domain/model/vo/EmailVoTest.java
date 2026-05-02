@@ -18,12 +18,8 @@ class EmailVoTest {
 
   @Test
   void getEmail_shouldReturnEmpty_whenEmailIsInvalid() {
-    final EmailVo emailVo = EmailVoTestDataBuilder.builder()
-        .username(null)
-        .host(null)
-        .tld(null)
-        .build()
-        .emailVo();
+    final EmailVo emailVo =
+        EmailVoTestDataBuilder.builder().username(null).host(null).tld(null).build().emailVo();
 
     final String result = emailVo.getEmail();
 
@@ -41,11 +37,7 @@ class EmailVoTest {
 
   @Test
   void getDomain_shouldReturnEmpty_whenEmailIsInvalid() {
-    final EmailVo emailVo = EmailVoTestDataBuilder.builder()
-        .host(null)
-        .tld(null)
-        .build()
-        .emailVo();
+    final EmailVo emailVo = EmailVoTestDataBuilder.builder().host(null).tld(null).build().emailVo();
 
     final String result = emailVo.getDomain();
 

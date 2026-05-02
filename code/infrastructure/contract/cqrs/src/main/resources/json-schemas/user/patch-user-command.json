@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "patch-user-command",
+  "title": "PatchUserCommand",
+  "type": "object",
+  "properties": {
+    "userId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Identifier of the user to patch"
+    },
+    "name": {
+      "type": "string",
+      "description": "Optional new name"
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "description": "Optional new email"
+    }
+  },
+  "required": [
+    "userId"
+  ],
+  "additionalProperties": false
+}

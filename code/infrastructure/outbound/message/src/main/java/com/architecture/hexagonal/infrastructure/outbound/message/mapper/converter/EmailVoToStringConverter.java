@@ -1,12 +1,11 @@
 package com.architecture.hexagonal.infrastructure.outbound.message.mapper.converter;
 
 import com.architecture.hexagonal.domain.model.vo.EmailVo;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.Named;
-
-import java.util.Objects;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EmailVoToStringConverter {

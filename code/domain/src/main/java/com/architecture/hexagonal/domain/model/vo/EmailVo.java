@@ -27,5 +27,4 @@ public class EmailVo {
 
     return this.getHost() + "." + this.getTld();
   }
-
 }

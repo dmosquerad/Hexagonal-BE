@@ -17,11 +17,9 @@ import org.springframework.cloud.stream.function.StreamBridge;
 @ExtendWith(MockitoExtension.class)
 class UserMessageSenderTest {
 
-  @InjectMocks
-  UserMessageSender userMessageSender;
+  @InjectMocks UserMessageSender userMessageSender;
 
-  @Mock
-  StreamBridge streamBridge;
+  @Mock StreamBridge streamBridge;
 
   @Test
   void sendUserCreatedMessage_shouldSendToStreamBridge_whenEventIsReceived() {
@@ -29,7 +27,7 @@ class UserMessageSenderTest {
 
     userMessageSender.sendUserCreatedMessage(event);
 
-    Mockito.verify(streamBridge).send(UserMessageSender.PUBLISH_USER_CREATED_OUT_BINDING, event);
+    Mockito.verify(streamBridge).send(UserMessageNaming.PUBLISH_USER_CREATED_OUT_BINDING, event);
   }
 
   @Test
@@ -38,7 +36,7 @@ class UserMessageSenderTest {
 
     userMessageSender.sendUserUpdatedMessage(event);
 
-    Mockito.verify(streamBridge).send(UserMessageSender.PUBLISH_USER_UPDATED_OUT_BINDING, event);
+    Mockito.verify(streamBridge).send(UserMessageNaming.PUBLISH_USER_UPDATED_OUT_BINDING, event);
   }
 
   @Test
@@ -47,6 +45,6 @@ class UserMessageSenderTest {
 
     userMessageSender.sendUserDeletedMessage(event);
 
-    Mockito.verify(streamBridge).send(UserMessageSender.PUBLISH_USER_DELETED_OUT_BINDING, event);
+    Mockito.verify(streamBridge).send(UserMessageNaming.PUBLISH_USER_DELETED_OUT_BINDING, event);
   }
 }

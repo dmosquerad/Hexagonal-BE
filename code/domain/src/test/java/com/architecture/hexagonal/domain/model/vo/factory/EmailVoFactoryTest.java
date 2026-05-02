@@ -23,6 +23,6 @@ class EmailVoFactoryTest {
   void from_shouldThrowIllegalArgumentException_whenEmailIsInvalid() {
     assertThatThrownBy(() -> EmailVoFactory.from("not-an-email"))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage(ExceptionMessage.INVALID_EMAIL_FORMAT);
+        .hasMessage(ExceptionMessage.INVALID_EMAIL_FORMAT + "not-an-email");
   }
 }

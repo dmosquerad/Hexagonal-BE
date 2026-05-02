@@ -11,9 +11,7 @@ class EmailVoConverterTest {
   @Test
   void toEmailVo_shouldReturnEmailVo_whenEmailIsValid() {
     final EmailVo result = EmailVoConverter.toEmailVo("test@example.com");
-    final EmailVo expected = EmailVoTestDataBuilder.builder()
-      .build()
-      .emailVo();
+    final EmailVo expected = EmailVoTestDataBuilder.builder().build().emailVo();
 
     assertThat(result).isEqualTo(expected);
   }
@@ -22,11 +20,8 @@ class EmailVoConverterTest {
   void toEmailVo_shouldReturnEmpty_whenInputIsNull() {
     final EmailVo result = EmailVoConverter.toEmailVo(null);
 
-    assertThat(result).isEqualTo(EmailVoTestDataBuilder.builder()
-        .username(null)
-        .host(null)
-        .tld(null)
-        .build()
-        .emailVo());
+    assertThat(result)
+        .isEqualTo(
+            EmailVoTestDataBuilder.builder().username(null).host(null).tld(null).build().emailVo());
   }
 }

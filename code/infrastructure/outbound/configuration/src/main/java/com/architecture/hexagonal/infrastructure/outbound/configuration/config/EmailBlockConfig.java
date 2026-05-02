@@ -1,22 +1,21 @@
 package com.architecture.hexagonal.infrastructure.outbound.configuration.config;
 
 import jakarta.validation.constraints.Email;
+import java.util.Set;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-
-import java.util.List;
 
 @Data
 @ConfigurationProperties(prefix = "email.block")
 public class EmailBlockConfig {
 
-    private List<@Email String> email;
+  private Set<@Email String> email = Set.of();
 
-    private List<String> host;
+  private Set<String> host = Set.of();
 
-    private List<String> tld;
+  private Set<String> tld = Set.of();
 
-    private List<String> domain;
+  private Set<String> domain = Set.of();
 
-    private List<String> username;
+  private Set<String> username = Set.of();
 }

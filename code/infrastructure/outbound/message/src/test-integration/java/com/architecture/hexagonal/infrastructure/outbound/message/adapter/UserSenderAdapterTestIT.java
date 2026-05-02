@@ -1,13 +1,14 @@
 package com.architecture.hexagonal.infrastructure.outbound.message.adapter;
 
-import com.architecture.hexagonal.domain.model.entity.User;
+import com.architecture.hexagonal.domain.model.aggregate.User;
 import com.architecture.hexagonal.infrastructure.outbound.message.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.outbound.message.data.UserCreated;
 import com.architecture.hexagonal.infrastructure.outbound.message.data.UserDeleted;
 import com.architecture.hexagonal.infrastructure.outbound.message.data.UserUpdated;
-import com.architecture.hexagonal.infrastructure.outbound.message.mapper.UserMessageDaoMapper;
+import com.architecture.hexagonal.infrastructure.outbound.message.mapper.user.UserMessageDaoMapper;
+import com.architecture.hexagonal.infrastructure.outbound.message.sender.UserMessageNaming;
 import com.architecture.hexagonal.infrastructure.outbound.message.sender.UserMessageSender;
-import com.architecture.hexagonal.infrastructure.outbound.message.testutils.data.entity.UserTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.message.testutils.data.aggregate.UserTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.message.testutils.data.message.UserCreatedTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.message.testutils.data.message.UserDeletedTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.message.testutils.data.message.UserUpdatedTestDataBuilder;
@@ -50,7 +51,7 @@ class UserSenderAdapterTestIT {
     });
 
     Mockito.verify(userMessageDaoMapper).toUserCreated(user);
-    Mockito.verify(streamBridge).send(UserMessageSender.PUBLISH_USER_CREATED_OUT_BINDING, userCreated);
+    Mockito.verify(streamBridge).send(UserMessageNaming.PUBLISH_USER_CREATED_OUT_BINDING, userCreated);
   }
 
   @Test
@@ -64,7 +65,7 @@ class UserSenderAdapterTestIT {
     });
 
     Mockito.verify(userMessageDaoMapper).toUserUpdated(user);
-    Mockito.verify(streamBridge).send(UserMessageSender.PUBLISH_USER_UPDATED_OUT_BINDING, userUpdated);
+    Mockito.verify(streamBridge).send(UserMessageNaming.PUBLISH_USER_UPDATED_OUT_BINDING, userUpdated);
   }
 
   @Test
@@ -78,6 +79,6 @@ class UserSenderAdapterTestIT {
     });
 
     Mockito.verify(userMessageDaoMapper).toUserDeleted(user);
-    Mockito.verify(streamBridge).send(UserMessageSender.PUBLISH_USER_DELETED_OUT_BINDING, userDeleted);
+    Mockito.verify(streamBridge).send(UserMessageNaming.PUBLISH_USER_DELETED_OUT_BINDING, userDeleted);
   }
 }
