@@ -95,6 +95,18 @@ user:
           application/json:
             schema:
               $ref: '#/components/schemas/userResponse'
+      '400':
+        description: Bad Request
+        content:
+          application/json:
+            schema:
+              $ref: '../common-schema.yml#/schemas/responseError'
+      '422':
+        description: Unprocessable Entity
+        content:
+          application/json:
+            schema:
+              $ref: '../common-schema.yml#/schemas/responseError'
       '404':
         description: Not Found
         content:
@@ -126,6 +138,18 @@ user:
           application/json:
             schema:
               $ref: '#/components/schemas/userResponse'
+      '400':
+        description: Bad Request
+        content:
+          application/json:
+            schema:
+              $ref: '../common-schema.yml#/schemas/responseError'
+      '422':
+        description: Unprocessable Entity
+        content:
+          application/json:
+            schema:
+              $ref: '../common-schema.yml#/schemas/responseError'
       '404':
         description: Not Found
         content:
@@ -190,13 +214,24 @@ users:
           application/json:
             schema:
               $ref: '#/components/schemas/userResponse'
+      '400':
+        description: Bad Request
+        content:
+          application/json:
+            schema:
+              $ref: '../common-schema.yml#/schemas/responseError'
+      '422':
+        description: Unprocessable Entity
+        content:
+          application/json:
+            schema:
+              $ref: '../common-schema.yml#/schemas/responseError'
       '500':
         description: Error
         content:
           application/json:
             schema:
               $ref: '../common-schema.yml#/schemas/responseError'
-
 
 components:
   schemas:
