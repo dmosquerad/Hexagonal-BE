@@ -27,7 +27,7 @@ class DeleteUserUseCaseTestIT {
   UserRepositoryWritePort userRepositoryWritePort;
 
   @MockitoBean
-  UserSenderPort eventPublisherPort;
+  UserSenderPort userSenderPort;
 
   @Test
   void execute_shouldDeleteUser_whenUserExists() throws ResourceNotFoundException {
@@ -51,7 +51,7 @@ class DeleteUserUseCaseTestIT {
         .isEqualTo(user);
 
     Mockito.verify(userRepositoryWritePort).deleteUser(deleteUserCommand.getUserId());
-    Mockito.verify(eventPublisherPort).userSenderDeleted(user);
+    Mockito.verify(userSenderPort).userSenderDeleted(user);
   }
 
   @Test

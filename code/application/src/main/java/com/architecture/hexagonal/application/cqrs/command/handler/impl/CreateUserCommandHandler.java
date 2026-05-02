@@ -3,6 +3,7 @@ package com.architecture.hexagonal.application.cqrs.command.handler.impl;
 import com.architecture.hexagonal.application.cqrs.command.handler.CommandHandler;
 import com.architecture.hexagonal.application.cqrs.command.request.CreateUserCommand;
 import com.architecture.hexagonal.application.port.in.CreateUserUseCasePort;
+import com.architecture.hexagonal.domain.exception.InvalidValueException;
 import com.architecture.hexagonal.domain.model.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -14,7 +15,7 @@ public class CreateUserCommandHandler implements CommandHandler<CreateUserComman
   private final CreateUserUseCasePort createUserUseCasePort;
 
   @Override
-  public User handle(final CreateUserCommand command) {
+  public User handle(final CreateUserCommand command) throws InvalidValueException {
     return createUserUseCasePort.execute(command);
   }
 }
