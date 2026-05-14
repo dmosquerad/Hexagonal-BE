@@ -2,7 +2,8 @@ package com.architecture.hexagonal.domain.service;
 
 import com.architecture.hexagonal.domain.testutils.data.vo.EmailBlockRulesVoTestDataBuilder;
 import com.architecture.hexagonal.domain.testutils.data.vo.EmailVoTestDataBuilder;
-import java.util.List;
+import java.util.Set;
+
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +23,7 @@ class EmailBlockPolicyTest {
         EmailVoTestDataBuilder.builder().build().emailVo(),
         EmailBlockRulesVoTestDataBuilder
           .builder()
-          .email(List.of("test@example.com"))
+          .email(Set.of("test@example.com"))
           .build().emailBlockRulesVo()))
         .isTrue();
   }
@@ -33,7 +34,7 @@ class EmailBlockPolicyTest {
         EmailVoTestDataBuilder.builder().build().emailVo(),
         EmailBlockRulesVoTestDataBuilder
           .builder()
-          .username(List.of("test"))
+          .username(Set.of("test"))
           .build().emailBlockRulesVo()))
         .isTrue();
   }
@@ -44,7 +45,7 @@ class EmailBlockPolicyTest {
         EmailVoTestDataBuilder.builder().build().emailVo(),
         EmailBlockRulesVoTestDataBuilder
           .builder()
-          .host(List.of("example"))
+          .host(Set.of("example"))
           .build()
           .emailBlockRulesVo()))
         .isTrue();
@@ -56,7 +57,7 @@ class EmailBlockPolicyTest {
         EmailVoTestDataBuilder.builder().build().emailVo(),
         EmailBlockRulesVoTestDataBuilder
           .builder()
-          .tld(List.of("com"))
+          .tld(Set.of("com"))
           .build()
           .emailBlockRulesVo()))
         .isTrue();
@@ -68,7 +69,7 @@ class EmailBlockPolicyTest {
         EmailVoTestDataBuilder.builder().build().emailVo(),
         EmailBlockRulesVoTestDataBuilder
           .builder()
-          .domain(List.of("example.com"))
+          .domain(Set.of("example.com"))
           .build()
           .emailBlockRulesVo()))
         .isTrue();

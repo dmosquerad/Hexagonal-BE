@@ -6,6 +6,8 @@ import com.architecture.hexagonal.application.cqrs.command.request.PatchUserComm
 import com.architecture.hexagonal.application.cqrs.command.request.UpdateUserCommand;
 import com.architecture.hexagonal.application.cqrs.query.request.FindUserByUserIdQuery;
 import com.architecture.hexagonal.application.cqrs.query.request.GetAllUserQuery;
+import com.architecture.hexagonal.application.cqrs.query.request.pagination.PaginationResult;
+import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.pagination.PaginationTestDataBuilder;
 import com.architecture.hexagonal.application.cqrs.query.request.UserExistsQuery;
 import com.architecture.hexagonal.application.cqrs.command.dispatcher.CommandBus;
 import com.architecture.hexagonal.application.cqrs.query.dispatcher.QueryBus;
@@ -27,6 +29,7 @@ import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.ent
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.time.TestClock;
 import java.time.Clock;
 import java.util.Collections;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
@@ -127,7 +130,13 @@ class UserControllerTestIT {
 
     Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
     Mockito.when(queryBus.execute(ArgumentMatchers.any(GetAllUserQuery.class)))
-        .thenReturn(Collections.singleton(user));
+        .thenReturn(PaginationResult.<User>builder()
+            .data(Collections.singleton(user))
+            .page(0)
+            .size(100)
+            .totalElements(1L)
+            .totalPages(1)
+            .build());
 
     mockMvc.perform(
             MockMvcRequestBuilders.get("/users")
@@ -139,8 +148,8 @@ class UserControllerTestIT {
         .andExpect(MockMvcResultMatchers.content()
             .json(usersResponseDtoJson.write(getAllUsersResponse).getJson()));
 
-    Mockito.verify(userController).getAllUsers(host, blockEmail);
-    Mockito.verify(getAllUserQueryMapper).toGetAllUserQuery(host, blockEmail);
+    Mockito.verify(userController).getAllUsers(host, blockEmail, 0, 100);
+    Mockito.verify(getAllUserQueryMapper).toGetAllUserQuery(host, blockEmail, PaginationTestDataBuilder.builder().build().pagination());
     Mockito.verify(queryBus).execute(ArgumentMatchers.any(GetAllUserQuery.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
   }
@@ -171,6 +180,42 @@ class UserControllerTestIT {
     Mockito.verify(commandBus).execute(ArgumentMatchers.any(CreateUserCommand.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
+  }
+
+  @Test
+  void getAllUsers_shouldReturnOk_whenCustomPaginationIsProvided() throws Exception {
+    final Integer page = 1;
+    final Integer size = 10;
+    final long totalElements = 50L;
+    final int totalPages = 5;
+
+    final User user = UserTestDataBuilder.builder().build().user();
+
+    Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
+    Mockito.when(queryBus.execute(ArgumentMatchers.any(GetAllUserQuery.class)))
+        .thenReturn(PaginationResult.<User>builder()
+            .data(Collections.singleton(user))
+            .page(page)
+            .size(size)
+            .totalElements(totalElements)
+            .totalPages(totalPages)
+            .build());
+
+    mockMvc.perform(
+            MockMvcRequestBuilders.get("/users")
+                .queryParam("page", String.valueOf(page))
+                .queryParam("size", String.valueOf(size))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.status().isOk());
+            /*
+        .andExpect(MockMvcResultMatchers.content()
+            .json(userResponseDtoJson.write(createUserResponse).getJson()));
+*/
+    Mockito.verify(userController).getAllUsers(null, null, page, size);
+    Mockito.verify(getAllUserQueryMapper).toGetAllUserQuery(
+        null, null, PaginationTestDataBuilder.builder().page(page).size(size).build().pagination());
+    Mockito.verify(queryBus).execute(ArgumentMatchers.any(GetAllUserQuery.class));
   }
 
   @Test

@@ -3,17 +3,16 @@ package com.architecture.hexagonal.domain.service;
 import com.architecture.hexagonal.domain.model.vo.EmailBlockRulesVo;
 import com.architecture.hexagonal.domain.model.vo.EmailVo;
 import com.architecture.hexagonal.domain.model.vo.predicate.EmailVoPredicate;
-import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EmailBlockPolicy {
 
   public static boolean isBlocked(
-      final EmailVo emailVo, final EmailBlockRulesVo rules) {
-    if (Objects.isNull(emailVo)
-        || !EmailVoPredicate.CAN_FORM_EMAIL.test(emailVo)
+      @NonNull final EmailVo emailVo, @NonNull final EmailBlockRulesVo rules) {
+    if (!EmailVoPredicate.CAN_FORM_EMAIL.test(emailVo)
         || !EmailVoPredicate.CAN_FORM_DOMAIN.test(emailVo)) {
       return false;
     }

@@ -13,8 +13,9 @@ import com.architecture.hexagonal.domain.exception.InvalidValueException;
 import com.architecture.hexagonal.domain.model.entity.User;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -83,7 +84,7 @@ class PatchUserUseCaseTest {
         .thenReturn(Optional.of(user));
     Mockito.when(emailConfigurationPort.getBlockedRules())
         .thenReturn(EmailBlockRulesVoTestDataBuilder.builder()
-            .email(List.of("test@example.com"))
+            .email(Set.of("test@example.com"))
             .build()
             .emailBlockRulesVo());
 

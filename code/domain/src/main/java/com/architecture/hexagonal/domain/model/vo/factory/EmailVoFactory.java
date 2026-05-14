@@ -7,11 +7,12 @@ import com.architecture.hexagonal.domain.model.vo.predicate.EmailVoPredicate;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EmailVoFactory {
 
-  public static EmailVo from(final String email) {
+  public static EmailVo from(@NonNull final String email) {
     if (!EmailVoPredicate.IS_VALID_MAIL.test(email)) {
       throw new IllegalArgumentException(ExceptionMessage.INVALID_EMAIL_FORMAT);
     }

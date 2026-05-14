@@ -1,4 +1,4 @@
-package com.architecture.hexagonal.domain.testutils.data.vo;
+package com.architecture.hexagonal.infrastructure.outbound.database.testutils.data.vo;
 
 import com.architecture.hexagonal.domain.model.vo.EmailBlockRulesVo;
 import java.util.Set;

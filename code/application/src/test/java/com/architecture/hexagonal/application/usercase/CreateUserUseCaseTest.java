@@ -10,7 +10,8 @@ import com.architecture.hexagonal.application.testutils.data.vo.EmailBlockRulesV
 import com.architecture.hexagonal.application.usecase.CreateUserUseCase;
 import com.architecture.hexagonal.domain.exception.InvalidValueException;
 import com.architecture.hexagonal.domain.model.entity.User;
-import java.util.List;
+import java.util.Set;
+
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -93,7 +94,7 @@ class CreateUserUseCaseTest {
 
     Mockito.when(emailConfigurationPort.getBlockedRules())
             .thenReturn(EmailBlockRulesVoTestDataBuilder.builder()
-                .email(List.of("test@example.com"))
+                .email(Set.of("test@example.com"))
                 .build()
                 .emailBlockRulesVo());
 

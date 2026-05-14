@@ -1,12 +1,13 @@
 package com.architecture.hexagonal.application.port.out;
 
 import com.architecture.hexagonal.domain.model.entity.User;
+import lombok.NonNull;
 
 public interface UserSenderPort {
 
-  void userSenderCreated(User user);
+  void userSenderCreated(@NonNull User user);
 
-  void userSenderUpdated(User user);
+  void userSenderUpdated(@NonNull User user);
 
-  void userSenderDeleted(User user);
+  void userSenderDeleted(@NonNull User user);
 }

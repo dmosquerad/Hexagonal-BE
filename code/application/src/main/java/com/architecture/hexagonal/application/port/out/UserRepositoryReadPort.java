@@ -1,12 +1,28 @@
 package com.architecture.hexagonal.application.port.out;
 
+import com.architecture.hexagonal.application.cqrs.query.request.pagination.Pagination;
+import com.architecture.hexagonal.application.cqrs.query.request.pagination.PaginationResult;
 import com.architecture.hexagonal.domain.model.entity.User;
+import com.architecture.hexagonal.domain.model.vo.EmailBlockRulesVo;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
+import lombok.NonNull;
 
 public interface UserRepositoryReadPort {
-  Set<User> getAllUsers();
-  
-  Optional<User> findUserById(UUID uuid);
+  PaginationResult<User> getAllUsers(
+      @NonNull String host,
+      @NonNull Boolean blockEmail,
+      @NonNull EmailBlockRulesVo blockedRules,
+      @NonNull Pagination pagination);
+
+  PaginationResult<User> getAllUsers(
+      @NonNull String host,
+      @NonNull Boolean blockEmail,
+      @NonNull EmailBlockRulesVo blockedRules);
+
+  PaginationResult<User> getAllUsers(@NonNull String host, @NonNull Pagination pagination);
+
+  PaginationResult<User> getAllUsers(@NonNull String host);
+
+  Optional<User> findUserById(@NonNull UUID uuid);
 }

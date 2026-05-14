@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.vo;
 
 import com.architecture.hexagonal.domain.model.vo.EmailBlockRulesVo;
-import java.util.List;
+import java.util.Set;
 
 import lombok.Builder;
 
@@ -9,19 +9,19 @@ import lombok.Builder;
 public class EmailBlockRulesTestDataBuilder {
 
   @Builder.Default
-  private List<String> email = List.of("test@example.com");
+  private Set<String> email = Set.of("test@example.com");
 
   @Builder.Default
-  private List<String> host = List.of("example");
+  private Set<String> host = Set.of("example");
 
   @Builder.Default
-  private List<String> tld = List.of("com");
+  private Set<String> tld = Set.of("com");
 
   @Builder.Default
-  private List<String> domain = List.of("example.com");
+  private Set<String> domain = Set.of("example.com");
 
   @Builder.Default
-  private List<String> username = List.of("test");
+  private Set<String> username = Set.of("test");
 
   public EmailBlockRulesVo emailBlockRules() {
     return EmailBlockRulesVo.builder()

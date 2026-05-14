@@ -3,9 +3,10 @@ package com.architecture.hexagonal.application.port.out;
 import com.architecture.hexagonal.domain.model.entity.User;
 import java.util.Optional;
 import java.util.UUID;
+import lombok.NonNull;
 
 public interface UserRepositoryWritePort {
-  User saveUser(User user);
+  User saveUser(@NonNull User user);
 
-  Optional<User> deleteUser(UUID uuid);
+  Optional<User> deleteUser(@NonNull UUID uuid);
 }

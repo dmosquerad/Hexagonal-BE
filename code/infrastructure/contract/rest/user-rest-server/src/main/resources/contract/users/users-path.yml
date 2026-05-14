@@ -182,6 +182,8 @@ users:
         required: false
         schema:
           type: boolean
+      - $ref: '../common-schema.yml#/parameters/page'
+      - $ref: '../common-schema.yml#/parameters/size'
     responses:
       '200':
         description: Expected response

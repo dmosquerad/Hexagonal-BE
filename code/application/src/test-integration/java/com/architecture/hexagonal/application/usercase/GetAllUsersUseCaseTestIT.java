@@ -1,15 +1,19 @@
 package com.architecture.hexagonal.application.usercase;
 
 import com.architecture.hexagonal.application.cqrs.query.request.GetAllUserQuery;
+import com.architecture.hexagonal.application.cqrs.query.request.pagination.Pagination;
+import com.architecture.hexagonal.application.cqrs.query.request.pagination.PaginationResult;
 import com.architecture.hexagonal.application.port.out.EmailConfigurationPort;
 import com.architecture.hexagonal.application.port.out.UserRepositoryReadPort;
 import com.architecture.hexagonal.application.testutils.data.entity.UserTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.data.input.query.GetAllUserQueryTestDataBuilder;
+import com.architecture.hexagonal.application.testutils.data.input.query.PaginationResultTestDataBuilder;
+import com.architecture.hexagonal.application.testutils.data.input.query.PaginationTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.data.vo.EmailBlockRulesVoTestDataBuilder;
 import com.architecture.hexagonal.application.usecase.GetAllUsersUseCase;
 import com.architecture.hexagonal.domain.model.entity.User;
+import com.architecture.hexagonal.domain.model.vo.EmailBlockRulesVo;
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
 import org.assertj.core.api.AssertionsForClassTypes;
@@ -33,49 +37,66 @@ class GetAllUsersUseCaseTestIT {
 
   @Test
   void execute_shouldReturnUsers_whenNoFilterIsApplied() {
+    final String host = "";
+    final Boolean blockEmail = null;
     final Set<User> userSet = Collections.singleton(UserTestDataBuilder
         .builder()
         .build()
         .user());
 
+    final Pagination pagination = PaginationTestDataBuilder.builder().build().pagination();
     final GetAllUserQuery getAllUserQuery = GetAllUserQueryTestDataBuilder
         .builder()
+        .host(host)
+        .blockEmail(blockEmail)
+        .pagination(pagination)
         .build()
         .getAllUserQuery();
 
-    Mockito.when(userRepositoryReadPort.getAllUsers()).thenReturn(userSet);
+    Mockito.when(userRepositoryReadPort.getAllUsers(host, pagination))
+        .thenReturn(PaginationResultTestDataBuilder.<User>builder()
+            .data(userSet)
+            .build()
+            .paginationResult());
 
-    Set<User> result = getAllUsersUseCase.execute(getAllUserQuery);
+    PaginationResult<User> result = getAllUsersUseCase.execute(getAllUserQuery);
 
-    AssertionsForClassTypes.assertThat(result)
+    AssertionsForClassTypes.assertThat(result.getData())
         .usingRecursiveComparison()
         .isEqualTo(userSet);
-
-    Mockito.verify(userRepositoryReadPort).getAllUsers();
+    Mockito.verify(userRepositoryReadPort).getAllUsers(host, pagination);
     Mockito.verify(emailConfigurationPort, Mockito.never()).getBlockedRules();
   }
 
   @Test
   void execute_shouldReturnOnlyUsersMatchingHost_whenHostFilterIsApplied() {
+    final String host = "example";
+    final Boolean blockEmail = null;
     final User matchingUser = UserTestDataBuilder.builder().build().user();
     final Set<User> allUsers = Collections.singleton(matchingUser);
 
+    final Pagination pagination = PaginationTestDataBuilder.builder().build().pagination();
     final GetAllUserQuery getAllUserQuery = GetAllUserQueryTestDataBuilder
         .builder()
-        .host("example")
-        .blockEmail(null)
+        .host(host)
+        .blockEmail(blockEmail)
+        .pagination(pagination)
         .build()
         .getAllUserQuery();
 
-    Mockito.when(userRepositoryReadPort.getAllUsers()).thenReturn(allUsers);
+    Mockito.when(userRepositoryReadPort.getAllUsers(host, pagination))
+        .thenReturn(PaginationResultTestDataBuilder.<User>builder()
+            .data(allUsers)
+            .build()
+            .paginationResult());
 
-    Set<User> result = getAllUsersUseCase.execute(getAllUserQuery);
+    PaginationResult<User> result = getAllUsersUseCase.execute(getAllUserQuery);
 
-    AssertionsForClassTypes.assertThat(result)
+    AssertionsForClassTypes.assertThat(result.getData())
         .usingRecursiveComparison()
         .isEqualTo(allUsers);
 
-    Mockito.verify(userRepositoryReadPort).getAllUsers();
+    Mockito.verify(userRepositoryReadPort).getAllUsers(host, pagination);
     Mockito.verify(emailConfigurationPort, Mockito.never()).getBlockedRules();
   }
 
@@ -84,27 +105,40 @@ class GetAllUsersUseCaseTestIT {
     final User user = UserTestDataBuilder.builder().build().user();
     final Set<User> userSet = Collections.singleton(user);
 
+    final String host = "";
+    final Boolean blockEmail = true;
+    final Pagination pagination = PaginationTestDataBuilder.builder().build().pagination();
     final GetAllUserQuery getAllUserQuery = GetAllUserQueryTestDataBuilder
         .builder()
-        .host("")
-        .blockEmail(true)
+        .host(host)
+        .blockEmail(blockEmail)
+        .pagination(pagination)
         .build()
         .getAllUserQuery();
 
-    Mockito.when(userRepositoryReadPort.getAllUsers()).thenReturn(userSet);
+    final Set<String> blockedHosts = Set.of("example");
+    final EmailBlockRulesVo blockedRules = EmailBlockRulesVoTestDataBuilder.builder()
+        .host(blockedHosts)
+        .build()
+        .emailBlockRulesVo();
     Mockito.when(emailConfigurationPort.getBlockedRules())
-        .thenReturn(EmailBlockRulesVoTestDataBuilder.builder()
-            .email(List.of("test@example.com"))
+        .thenReturn(blockedRules);
+
+    Mockito.when(userRepositoryReadPort.getAllUsers(host, blockEmail,
+            blockedRules,
+            pagination))
+        .thenReturn(PaginationResultTestDataBuilder.<User>builder()
+            .data(userSet)
             .build()
-            .emailBlockRulesVo());
+            .paginationResult());
 
-    Set<User> result = getAllUsersUseCase.execute(getAllUserQuery);
+    PaginationResult<User> result = getAllUsersUseCase.execute(getAllUserQuery);
 
-    AssertionsForClassTypes.assertThat(result)
+    AssertionsForClassTypes.assertThat(result.getData())
         .usingRecursiveComparison()
         .isEqualTo(userSet);
 
-    Mockito.verify(userRepositoryReadPort).getAllUsers();
+    Mockito.verify(userRepositoryReadPort).getAllUsers(host, blockEmail, blockedRules, pagination);
     Mockito.verify(emailConfigurationPort).getBlockedRules();
   }
 
@@ -113,25 +147,73 @@ class GetAllUsersUseCaseTestIT {
     final User user = UserTestDataBuilder.builder().build().user();
     final Set<User> userSet = Collections.singleton(user);
 
+    final String host = "";
+    final Boolean blockEmail = false;
+    final Pagination pagination = PaginationTestDataBuilder.builder().build().pagination();
     final GetAllUserQuery getAllUserQuery = GetAllUserQueryTestDataBuilder
         .builder()
-        .host("")
-        .blockEmail(false)
+        .host(host)
+        .blockEmail(blockEmail)
+        .pagination(pagination)
         .build()
         .getAllUserQuery();
 
-    Mockito.when(userRepositoryReadPort.getAllUsers()).thenReturn(userSet);
+    final EmailBlockRulesVo blockedRules = EmailBlockRulesVoTestDataBuilder.builder().build().emailBlockRulesVo();
     Mockito.when(emailConfigurationPort.getBlockedRules())
-        .thenReturn(EmailBlockRulesVoTestDataBuilder.builder().build().emailBlockRulesVo());
+        .thenReturn(blockedRules);
 
-    Set<User> result = getAllUsersUseCase.execute(getAllUserQuery);
+    Mockito.when(userRepositoryReadPort.getAllUsers(host, blockEmail,
+            blockedRules,
+            pagination))
+        .thenReturn(PaginationResultTestDataBuilder.<User>builder()
+            .data(userSet)
+            .build()
+            .paginationResult());
 
-    AssertionsForClassTypes.assertThat(result)
+    PaginationResult<User> result = getAllUsersUseCase.execute(getAllUserQuery);
+
+    AssertionsForClassTypes.assertThat(result.getData())
         .usingRecursiveComparison()
         .isEqualTo(userSet);
 
-    Mockito.verify(userRepositoryReadPort).getAllUsers();
+    Mockito.verify(userRepositoryReadPort).getAllUsers(host, blockEmail, blockedRules, pagination);
     Mockito.verify(emailConfigurationPort).getBlockedRules();
+  }
+
+  @Test
+  void execute_shouldRespectPaginationParameters_whenCustomPageAndSizeAreProvided() {
+    final String host = "";
+    final Boolean blockEmail = null;
+    final Set<User> userSet = Collections.singleton(UserTestDataBuilder.builder().build().user());
+    final Pagination pagination = PaginationTestDataBuilder.builder().page(2).size(5).build().pagination();
+    final GetAllUserQuery getAllUserQuery = GetAllUserQueryTestDataBuilder
+        .builder()
+        .host(host)
+        .blockEmail(blockEmail)
+        .pagination(pagination)
+        .build()
+        .getAllUserQuery();
+
+    final PaginationResult<User> expectedResult = PaginationResultTestDataBuilder.<User>builder()
+        .data(userSet)
+        .totalElements(11L)
+        .totalPages(3)
+        .page(2)
+        .size(5)
+        .build()
+        .paginationResult();
+
+    Mockito.when(userRepositoryReadPort.getAllUsers(host, pagination))
+        .thenReturn(expectedResult);
+
+    PaginationResult<User> result = getAllUsersUseCase.execute(getAllUserQuery);
+
+    AssertionsForClassTypes.assertThat(result)
+        .usingRecursiveComparison()
+        .isEqualTo(expectedResult);
+
+    Mockito.verify(userRepositoryReadPort).getAllUsers(host, pagination);
+    Mockito.verify(emailConfigurationPort, Mockito.never()).getBlockedRules();
   }
 
 }
