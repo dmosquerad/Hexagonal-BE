@@ -5,13 +5,13 @@ import com.architecture.hexagonal.application.cqrs.query.request.pagination.Pagi
 import com.architecture.hexagonal.application.cqrs.query.request.pagination.PaginationResult;
 import com.architecture.hexagonal.application.port.out.EmailConfigurationPort;
 import com.architecture.hexagonal.application.port.out.UserRepositoryReadPort;
-import com.architecture.hexagonal.application.testutils.data.entity.UserTestDataBuilder;
+import com.architecture.hexagonal.application.testutils.data.aggregate.UserTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.data.input.query.GetAllUserQueryTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.data.input.query.PaginationResultTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.data.input.query.PaginationTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.data.vo.EmailBlockRulesVoTestDataBuilder;
 import com.architecture.hexagonal.application.usecase.GetAllUsersUseCase;
-import com.architecture.hexagonal.domain.model.entity.User;
+import com.architecture.hexagonal.domain.model.aggregate.User;
 import com.architecture.hexagonal.domain.model.vo.EmailBlockRulesVo;
 import java.util.Collections;
 import java.util.Set;

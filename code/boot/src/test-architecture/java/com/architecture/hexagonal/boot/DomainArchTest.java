@@ -81,16 +81,16 @@ class DomainArchTest {
           .because("Domain names must avoid technical adapter suffixes");
 
   @ArchTest
-  static final ArchRule domain_data_should_reside_in_entity_vo_or_vo_factory_packages =
+  static final ArchRule domain_data_should_reside_in_aggregate_entity_or_vo_packages =
       ArchRuleDefinition.classes()
           .that()
           .resideInAPackage("..domain.model..")
           .should()
           .resideInAnyPackage(
+              "..domain.model.aggregate..",
               "..domain.model.entity..",
-              "..domain.model.vo..",
-              "..domain.model.vo.factory..")
-          .because("Domain model classes must reside in entity, VO, or VO factory packages");
+              "..domain.model.vo..")
+          .because("Domain model classes must reside in aggregate, entity or VO packages");
 
   @ArchTest
   static final ArchRule value_objects_should_reside_in_domain_data_vo_package =

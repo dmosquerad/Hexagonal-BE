@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.application.port.out;
 
-import com.architecture.hexagonal.domain.model.entity.User;
+import com.architecture.hexagonal.domain.model.aggregate.User;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.NonNull;

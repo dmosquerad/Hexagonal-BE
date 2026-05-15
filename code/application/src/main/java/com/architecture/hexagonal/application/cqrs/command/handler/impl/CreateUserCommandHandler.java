@@ -4,7 +4,7 @@ import com.architecture.hexagonal.application.cqrs.command.handler.CommandHandle
 import com.architecture.hexagonal.application.cqrs.command.request.CreateUserCommand;
 import com.architecture.hexagonal.application.port.in.CreateUserUseCasePort;
 import com.architecture.hexagonal.domain.exception.InvalidValueException;
-import com.architecture.hexagonal.domain.model.entity.User;
+import com.architecture.hexagonal.domain.model.aggregate.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

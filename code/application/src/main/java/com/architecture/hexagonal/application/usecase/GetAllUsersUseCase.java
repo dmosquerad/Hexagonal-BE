@@ -6,7 +6,7 @@ import com.architecture.hexagonal.application.cqrs.query.request.pagination.Pagi
 import com.architecture.hexagonal.application.port.in.GetAllUsersUseCasePort;
 import com.architecture.hexagonal.application.port.out.EmailConfigurationPort;
 import com.architecture.hexagonal.application.port.out.UserRepositoryReadPort;
-import com.architecture.hexagonal.domain.model.entity.User;
+import com.architecture.hexagonal.domain.model.aggregate.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

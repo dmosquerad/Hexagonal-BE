@@ -4,7 +4,7 @@ import com.architecture.hexagonal.application.cqrs.command.request.DeleteUserCom
 import com.architecture.hexagonal.application.port.in.DeleteUserUseCasePort;
 import com.architecture.hexagonal.application.port.out.UserSenderPort;
 import com.architecture.hexagonal.application.port.out.UserRepositoryWritePort;
-import com.architecture.hexagonal.domain.model.entity.User;
+import com.architecture.hexagonal.domain.model.aggregate.User;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import java.util.UUID;

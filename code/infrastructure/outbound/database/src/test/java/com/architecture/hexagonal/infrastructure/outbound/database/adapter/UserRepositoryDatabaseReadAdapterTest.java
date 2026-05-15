@@ -2,13 +2,12 @@ package com.architecture.hexagonal.infrastructure.outbound.database.adapter;
 
 import com.architecture.hexagonal.application.cqrs.query.request.pagination.Pagination;
 import com.architecture.hexagonal.application.cqrs.query.request.pagination.PaginationResult;
-import com.architecture.hexagonal.domain.model.entity.User;
-import com.architecture.hexagonal.domain.model.vo.EmailBlockRulesVo;
+import com.architecture.hexagonal.domain.model.aggregate.User;
 import com.architecture.hexagonal.infrastructure.outbound.database.data.UserDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.mapper.UserMapper;
 import com.architecture.hexagonal.infrastructure.outbound.database.repository.UserDatabaseReadRepository;
 import com.architecture.hexagonal.infrastructure.outbound.database.testutils.data.dao.UserDaoTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.outbound.database.testutils.data.entity.UserTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.database.testutils.data.aggregate.UserTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.database.testutils.data.pagination.PaginationResultTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.database.testutils.data.pagination.PaginationTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.database.testutils.data.vo.EmailBlockRulesVoTestDataBuilder;

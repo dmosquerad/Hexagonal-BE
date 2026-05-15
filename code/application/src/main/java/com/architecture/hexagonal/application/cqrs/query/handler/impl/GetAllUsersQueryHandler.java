@@ -4,7 +4,7 @@ import com.architecture.hexagonal.application.cqrs.query.handler.QueryHandler;
 import com.architecture.hexagonal.application.cqrs.query.request.GetAllUserQuery;
 import com.architecture.hexagonal.application.cqrs.query.request.pagination.PaginationResult;
 import com.architecture.hexagonal.application.port.in.GetAllUsersUseCasePort;
-import com.architecture.hexagonal.domain.model.entity.User;
+import com.architecture.hexagonal.domain.model.aggregate.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

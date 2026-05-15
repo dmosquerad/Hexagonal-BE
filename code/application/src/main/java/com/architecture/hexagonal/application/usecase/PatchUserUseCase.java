@@ -7,7 +7,8 @@ import com.architecture.hexagonal.application.port.out.UserSenderPort;
 import com.architecture.hexagonal.application.port.out.UserRepositoryReadPort;
 import com.architecture.hexagonal.application.port.out.UserRepositoryWritePort;
 import com.architecture.hexagonal.domain.exception.InvalidValueException;
-import com.architecture.hexagonal.domain.model.entity.User;
+import com.architecture.hexagonal.domain.model.aggregate.User;
+import com.architecture.hexagonal.domain.model.entity.UserDo;
 import com.architecture.hexagonal.domain.model.vo.EmailVo;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
@@ -45,12 +46,14 @@ public class PatchUserUseCase implements PatchUserUseCasePort {
     }
 
     final String name = StringUtils.isBlank(patchUserCommand.getName()) ?
-            currentUser.getName() : patchUserCommand.getName();
+            currentUser.getUser().getName() : patchUserCommand.getName();
 
     User updatedUser = userRepositoryWritePort.saveUser(
         User.builder()
-            .userId(uuid)
-            .name(name)
+            .user(UserDo.builder()
+                .userId(uuid)
+                .name(name)
+                .build())
             .email(email)
             .build());
 

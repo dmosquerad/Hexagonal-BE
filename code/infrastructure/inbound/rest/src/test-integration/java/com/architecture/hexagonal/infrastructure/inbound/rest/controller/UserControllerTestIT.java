@@ -13,7 +13,7 @@ import com.architecture.hexagonal.application.cqrs.command.dispatcher.CommandBus
 import com.architecture.hexagonal.application.cqrs.query.dispatcher.QueryBus;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
-import com.architecture.hexagonal.domain.model.entity.User;
+import com.architecture.hexagonal.domain.model.aggregate.User;
 import com.architecture.hexagonal.infrastructure.inbound.rest.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.contract.rest.user.server.dto.ResponseErrorDto;
 import com.architecture.hexagonal.infrastructure.contract.rest.user.server.dto.UserCreateDto;
@@ -25,7 +25,7 @@ import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.*;
 import com.architecture.hexagonal.infrastructure.inbound.rest.resources.user.UserRequestResource;
 import com.architecture.hexagonal.infrastructure.inbound.rest.resources.user.UserResponseResource;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.dto.ResponseErrorDtoTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.entity.UserTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.aggregate.UserTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.time.TestClock;
 import java.time.Clock;
 import java.util.Collections;
@@ -234,15 +234,15 @@ class UserControllerTestIT {
         .thenReturn(user);
 
     mockMvc.perform(
-            MockMvcRequestBuilders.get("/users/{userUuid}", user.getUserId())
+            MockMvcRequestBuilders.get("/users/{userUuid}", user.getUser().getUserId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.content()
             .json(userResponseDtoJson.write(getUserByUuidResponse).getJson()));
 
-    Mockito.verify(userController).getUserByUuid(user.getUserId());
-    Mockito.verify(findUserByUserIdQueryMapper).toFindUserByUserIdQuery(user.getUserId());
+    Mockito.verify(userController).getUserByUuid(user.getUser().getUserId());
+    Mockito.verify(findUserByUserIdQueryMapper).toFindUserByUserIdQuery(user.getUser().getUserId());
     Mockito.verify(queryBus)
         .execute(ArgumentMatchers.any(FindUserByUserIdQuery.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
@@ -264,15 +264,15 @@ class UserControllerTestIT {
         .thenReturn(user);
 
     mockMvc.perform(
-            MockMvcRequestBuilders.delete("/users/{userUuid}", user.getUserId())
+            MockMvcRequestBuilders.delete("/users/{userUuid}", user.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.content()
             .json(userResponseDtoJson.write(deleteUserByUuidResponse).getJson()));
 
-    Mockito.verify(userController).deleteUserByUuid(user.getUserId());
-    Mockito.verify(deleteUserCommandMapper).toDeleteUserCommand(user.getUserId());
+    Mockito.verify(userController).deleteUserByUuid(user.getId());
+    Mockito.verify(deleteUserCommandMapper).toDeleteUserCommand(user.getId());
     Mockito.verify(commandBus).execute(ArgumentMatchers.any(DeleteUserCommand.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
@@ -295,7 +295,7 @@ class UserControllerTestIT {
         .thenReturn(user);
 
     mockMvc.perform(
-            MockMvcRequestBuilders.put("/users/{userUuid}", user.getUserId())
+            MockMvcRequestBuilders.put("/users/{userUuid}", user.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(userUpdateDtoJson.write(updateUserByUuidRequest).getJson()))
@@ -303,9 +303,9 @@ class UserControllerTestIT {
         .andExpect(MockMvcResultMatchers.content()
             .json(userResponseDtoJson.write(updateUserByUuidResponse).getJson()));
 
-    Mockito.verify(userController).updateUserByUuid(user.getUserId(), updateUserByUuidRequest);
+    Mockito.verify(userController).updateUserByUuid(user.getId(), updateUserByUuidRequest);
     Mockito.verify(updateUserCommandMapper)
-        .toUpdateUserCommand(ArgumentMatchers.eq(user.getUserId()), ArgumentMatchers.any());
+        .toUpdateUserCommand(ArgumentMatchers.eq(user.getId()), ArgumentMatchers.any());
     Mockito.verify(commandBus).execute(ArgumentMatchers.any(UpdateUserCommand.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
@@ -328,7 +328,7 @@ class UserControllerTestIT {
         .thenReturn(user);
 
     mockMvc.perform(
-            MockMvcRequestBuilders.patch("/users/{userUuid}", user.getUserId())
+            MockMvcRequestBuilders.patch("/users/{userUuid}", user.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(userPatchDtoJson.write(patchUserByUuidRequest).getJson()))
@@ -336,9 +336,9 @@ class UserControllerTestIT {
         .andExpect(MockMvcResultMatchers.content()
             .json(userResponseDtoJson.write(patchUserByUuidResponse).getJson()));
 
-    Mockito.verify(userController).patchUserByUuid(user.getUserId(), patchUserByUuidRequest);
+    Mockito.verify(userController).patchUserByUuid(user.getId(), patchUserByUuidRequest);
     Mockito.verify(patchUserCommandMapper)
-        .toPatchUserCommand(ArgumentMatchers.eq(user.getUserId()), ArgumentMatchers.any());
+        .toPatchUserCommand(ArgumentMatchers.eq(user.getId()), ArgumentMatchers.any());
     Mockito.verify(commandBus).execute(ArgumentMatchers.any(PatchUserCommand.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
@@ -355,12 +355,12 @@ class UserControllerTestIT {
         .thenReturn(null);
 
     mockMvc.perform(
-            MockMvcRequestBuilders.head("/users/{userUuid}", user.getUserId())
+            MockMvcRequestBuilders.head("/users/{userUuid}", user.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(MockMvcResultMatchers.status().isOk());
 
-    Mockito.verify(userExistsQueryMapper).toUserExistsQuery(user.getUserId());
+    Mockito.verify(userExistsQueryMapper).toUserExistsQuery(user.getId());
     Mockito.verify(queryBus).execute(ArgumentMatchers.any(UserExistsQuery.class));
   }
 
@@ -370,24 +370,24 @@ class UserControllerTestIT {
     final ResponseErrorDto expected = ResponseErrorDtoTestDataBuilder.builder()
         .status(HttpStatus.NOT_FOUND.value())
         .title(HttpStatus.NOT_FOUND.getReasonPhrase())
-        .detail(ExceptionMessage.NOT_FOUND_DATA_MESSAGE + user.getUserId())
+        .detail(ExceptionMessage.NOT_FOUND_DATA_MESSAGE + user.getId())
         .build()
         .responseErrorDto();
 
     Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
     Mockito.when(queryBus.execute(ArgumentMatchers.any(FindUserByUserIdQuery.class)))
         .thenThrow(new ResourceNotFoundException(
-            ExceptionMessage.NOT_FOUND_DATA_MESSAGE + user.getUserId()));
+            ExceptionMessage.NOT_FOUND_DATA_MESSAGE + user.getId()));
 
     mockMvc.perform(
-            MockMvcRequestBuilders.get("/users/{userUuid}", user.getUserId())
+            MockMvcRequestBuilders.get("/users/{userUuid}", user.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(MockMvcResultMatchers.status().isNotFound())
         .andExpect(MockMvcResultMatchers.content()
             .json(responseErrorDtoJson.write(expected).getJson()));
 
-    Mockito.verify(userController).getUserByUuid(user.getUserId());
+    Mockito.verify(userController).getUserByUuid(user.getId());
     Mockito.verify(queryBus).execute(ArgumentMatchers.any(FindUserByUserIdQuery.class));
     Mockito.verify(clock).instant();
   }
@@ -398,24 +398,24 @@ class UserControllerTestIT {
     final ResponseErrorDto expected = ResponseErrorDtoTestDataBuilder.builder()
         .status(HttpStatus.NOT_FOUND.value())
         .title(HttpStatus.NOT_FOUND.getReasonPhrase())
-        .detail(ExceptionMessage.NOT_FOUND_DATA_MESSAGE + user.getUserId())
+        .detail(ExceptionMessage.NOT_FOUND_DATA_MESSAGE + user.getId())
         .build()
         .responseErrorDto();
 
     Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
     Mockito.when(commandBus.execute(ArgumentMatchers.any(DeleteUserCommand.class)))
         .thenThrow(new ResourceNotFoundException(
-            ExceptionMessage.NOT_FOUND_DATA_MESSAGE + user.getUserId()));
+            ExceptionMessage.NOT_FOUND_DATA_MESSAGE + user.getId()));
 
     mockMvc.perform(
-            MockMvcRequestBuilders.delete("/users/{userUuid}", user.getUserId())
+            MockMvcRequestBuilders.delete("/users/{userUuid}", user.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(MockMvcResultMatchers.status().isNotFound())
         .andExpect(MockMvcResultMatchers.content()
             .json(responseErrorDtoJson.write(expected).getJson()));
 
-    Mockito.verify(userController).deleteUserByUuid(user.getUserId());
+    Mockito.verify(userController).deleteUserByUuid(user.getId());
     Mockito.verify(commandBus).execute(ArgumentMatchers.any(DeleteUserCommand.class));
     Mockito.verify(clock).instant();
   }

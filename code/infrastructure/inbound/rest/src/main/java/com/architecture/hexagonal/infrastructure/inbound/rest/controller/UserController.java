@@ -6,7 +6,7 @@ import com.architecture.hexagonal.application.cqrs.query.request.pagination.Pagi
 import com.architecture.hexagonal.application.cqrs.query.request.pagination.PaginationResult;
 import com.architecture.hexagonal.domain.exception.DomainException;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
-import com.architecture.hexagonal.domain.model.entity.User;
+import com.architecture.hexagonal.domain.model.aggregate.User;
 import com.architecture.hexagonal.infrastructure.contract.rest.user.server.controller.UsersApi;
 import com.architecture.hexagonal.infrastructure.contract.rest.user.server.dto.UserCreateDto;
 import com.architecture.hexagonal.infrastructure.inbound.rest.factory.ErrorResponseFactory;

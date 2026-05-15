@@ -7,7 +7,8 @@ import com.architecture.hexagonal.application.port.out.UserSenderPort;
 import com.architecture.hexagonal.application.port.out.UserRepositoryWritePort;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.InvalidValueException;
-import com.architecture.hexagonal.domain.model.entity.User;
+import com.architecture.hexagonal.domain.model.aggregate.User;
+import com.architecture.hexagonal.domain.model.entity.UserDo;
 import com.architecture.hexagonal.domain.model.vo.EmailVo;
 import com.architecture.hexagonal.domain.model.vo.factory.EmailVoFactory;
 import com.architecture.hexagonal.domain.service.EmailBlockPolicy;
@@ -34,7 +35,9 @@ public class CreateUserUseCase implements CreateUserUseCasePort {
 
     User createdUser = userRepositoryWritePort.saveUser(
         User.builder()
-            .name(createUserCommand.getName())
+            .user(UserDo.builder()
+                .name(createUserCommand.getName())
+                .build())
             .email(email)
             .build());
 

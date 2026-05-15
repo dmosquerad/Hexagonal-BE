@@ -2,7 +2,7 @@ package com.architecture.hexagonal.application.port.out;
 
 import com.architecture.hexagonal.application.cqrs.query.request.pagination.Pagination;
 import com.architecture.hexagonal.application.cqrs.query.request.pagination.PaginationResult;
-import com.architecture.hexagonal.domain.model.entity.User;
+import com.architecture.hexagonal.domain.model.aggregate.User;
 import com.architecture.hexagonal.domain.model.vo.EmailBlockRulesVo;
 import java.util.Optional;
 import java.util.UUID;

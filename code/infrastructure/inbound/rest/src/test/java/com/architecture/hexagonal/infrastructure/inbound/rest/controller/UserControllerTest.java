@@ -10,7 +10,7 @@ import com.architecture.hexagonal.application.cqrs.query.request.GetAllUserQuery
 import com.architecture.hexagonal.application.cqrs.query.request.UserExistsQuery;
 import com.architecture.hexagonal.application.cqrs.query.dispatcher.QueryBus;
 import com.architecture.hexagonal.application.cqrs.query.request.pagination.PaginationResult;
-import com.architecture.hexagonal.domain.model.entity.User;
+import com.architecture.hexagonal.domain.model.aggregate.User;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.InvalidValueException;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
@@ -32,7 +32,7 @@ import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.dto
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.dto.UserResponseDtoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.dto.UserUpdateDtoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.dto.UsersResponseDtoTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.entity.UserTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.aggregate.UserTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.pagination.PaginationTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.time.TestClock;
 import java.time.Clock;
@@ -202,13 +202,13 @@ class UserControllerTest {
             .build()
             .userResponseDto());
 
-    final ResponseEntity<UserResponseDto> response = userController.getUserByUuid(user.getUserId());
+    final ResponseEntity<UserResponseDto> response = userController.getUserByUuid(user.getId());
 
     AssertionsForClassTypes.assertThat(response)
         .usingRecursiveComparison()
         .isEqualTo(responseExpected);
 
-    Mockito.verify(findUserByUserIdQueryMapper).toFindUserByUserIdQuery(user.getUserId());
+    Mockito.verify(findUserByUserIdQueryMapper).toFindUserByUserIdQuery(user.getId());
     Mockito
         .verify(queryBus).execute(ArgumentMatchers.any(FindUserByUserIdQuery.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
@@ -232,13 +232,13 @@ class UserControllerTest {
             .userResponseDto());
 
     final ResponseEntity<UserResponseDto> response = userController.deleteUserByUuid(
-        user.getUserId());
+        user.getId());
 
     AssertionsForClassTypes.assertThat(response)
         .usingRecursiveComparison()
         .isEqualTo(responseExpected);
 
-    Mockito.verify(deleteUserCommandMapper).toDeleteUserCommand(user.getUserId());
+    Mockito.verify(deleteUserCommandMapper).toDeleteUserCommand(user.getId());
     Mockito.verify(commandBus).execute(ArgumentMatchers.any(DeleteUserCommand.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
@@ -261,7 +261,7 @@ class UserControllerTest {
             .userResponseDto());
 
     final ResponseEntity<UserResponseDto> response = userController.updateUserByUuid(
-        user.getUserId(),
+        user.getId(),
         UserUpdateDtoTestDataBuilder
             .builder()
             .build()
@@ -272,7 +272,7 @@ class UserControllerTest {
         .isEqualTo(responseExpected);
 
     Mockito.verify(updateUserCommandMapper)
-        .toUpdateUserCommand(ArgumentMatchers.eq(user.getUserId()), ArgumentMatchers.any());
+        .toUpdateUserCommand(ArgumentMatchers.eq(user.getId()), ArgumentMatchers.any());
     Mockito.verify(commandBus).execute(ArgumentMatchers.any(UpdateUserCommand.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
@@ -298,7 +298,7 @@ class UserControllerTest {
 
     AssertionsForClassTypes.assertThatThrownBy(() ->
         userController.updateUserByUuid(
-            user.getUserId(),
+            user.getId(),
             UserUpdateDtoTestDataBuilder
                .builder()
                .build()
@@ -308,7 +308,7 @@ class UserControllerTest {
         .isEqualTo(errorException);
 
     Mockito.verify(updateUserCommandMapper)
-        .toUpdateUserCommand(ArgumentMatchers.eq(user.getUserId()), ArgumentMatchers.any());
+        .toUpdateUserCommand(ArgumentMatchers.eq(user.getId()), ArgumentMatchers.any());
     Mockito.verify(commandBus).execute(ArgumentMatchers.any(UpdateUserCommand.class));
   }
 
@@ -334,7 +334,7 @@ class UserControllerTest {
             .userResponseDto());
 
     final ResponseEntity<UserResponseDto> response = userController.patchUserByUuid(
-        user.getUserId(),
+        user.getId(),
         UserPatchDtoTestDataBuilder
             .builder()
             .build()
@@ -345,7 +345,7 @@ class UserControllerTest {
         .isEqualTo(responseExpected);
 
     Mockito.verify(patchUserCommandMapper)
-        .toPatchUserCommand(ArgumentMatchers.eq(user.getUserId()), ArgumentMatchers.any());
+        .toPatchUserCommand(ArgumentMatchers.eq(user.getId()), ArgumentMatchers.any());
     Mockito.verify(commandBus).execute(ArgumentMatchers.any(PatchUserCommand.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
@@ -371,7 +371,7 @@ class UserControllerTest {
 
     AssertionsForClassTypes.assertThatThrownBy(() ->
         userController.patchUserByUuid(
-            user.getUserId(),
+            user.getId(),
             UserPatchDtoTestDataBuilder
                 .builder()
                 .build()
@@ -381,7 +381,7 @@ class UserControllerTest {
         .isEqualTo(errorException);
 
     Mockito.verify(patchUserCommandMapper)
-        .toPatchUserCommand(ArgumentMatchers.eq(user.getUserId()), ArgumentMatchers.any());
+        .toPatchUserCommand(ArgumentMatchers.eq(user.getId()), ArgumentMatchers.any());
     Mockito.verify(commandBus).execute(ArgumentMatchers.any(PatchUserCommand.class));
   }
 
@@ -397,13 +397,13 @@ class UserControllerTest {
     Mockito.when(queryBus.execute(ArgumentMatchers.any(UserExistsQuery.class)))
         .thenReturn(null);
 
-    final ResponseEntity<Void> response = userController.headUserByUuid(user.getUserId());
+    final ResponseEntity<Void> response = userController.headUserByUuid(user.getId());
 
     AssertionsForClassTypes.assertThat(response)
         .usingRecursiveComparison()
         .isEqualTo(responseExpected);
 
-    Mockito.verify(userExistsQueryMapper).toUserExistsQuery(user.getUserId());
+    Mockito.verify(userExistsQueryMapper).toUserExistsQuery(user.getId());
     Mockito.verify(queryBus).execute(ArgumentMatchers.any(UserExistsQuery.class));
   }
 
@@ -426,12 +426,12 @@ class UserControllerTest {
         null);
 
     AssertionsForClassTypes.assertThatThrownBy(() ->
-        userController.headUserByUuid(user.getUserId()))
+        userController.headUserByUuid(user.getId()))
         .isInstanceOf(ErrorResponseException.class)
         .usingRecursiveComparison()
         .isEqualTo(errorException);
 
-    Mockito.verify(userExistsQueryMapper).toUserExistsQuery(user.getUserId());
+    Mockito.verify(userExistsQueryMapper).toUserExistsQuery(user.getId());
     Mockito.verify(queryBus).execute(ArgumentMatchers.any(UserExistsQuery.class));
   }
 

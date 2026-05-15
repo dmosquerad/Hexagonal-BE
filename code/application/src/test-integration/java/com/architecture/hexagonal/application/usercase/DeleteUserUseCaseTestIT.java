@@ -3,10 +3,10 @@ package com.architecture.hexagonal.application.usercase;
 import com.architecture.hexagonal.application.cqrs.command.request.DeleteUserCommand;
 import com.architecture.hexagonal.application.port.out.UserRepositoryWritePort;
 import com.architecture.hexagonal.application.port.out.UserSenderPort;
-import com.architecture.hexagonal.application.testutils.data.entity.UserTestDataBuilder;
+import com.architecture.hexagonal.application.testutils.data.aggregate.UserTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.data.input.command.DeleteUserCommandTestDataBuilder;
 import com.architecture.hexagonal.application.usecase.DeleteUserUseCase;
-import com.architecture.hexagonal.domain.model.entity.User;
+import com.architecture.hexagonal.domain.model.aggregate.User;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import java.util.Optional;
@@ -37,7 +37,7 @@ class DeleteUserUseCaseTestIT {
         .user();
     final DeleteUserCommand deleteUserCommand = DeleteUserCommandTestDataBuilder
         .builder()
-        .userId(user.getUserId())
+        .userId(user.getUser().getUserId())
         .build()
         .deleteUserCommand();
 

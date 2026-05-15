@@ -7,7 +7,8 @@ import com.architecture.hexagonal.application.port.out.UserSenderPort;
 import com.architecture.hexagonal.application.port.out.UserRepositoryReadPort;
 import com.architecture.hexagonal.application.port.out.UserRepositoryWritePort;
 import com.architecture.hexagonal.domain.exception.InvalidValueException;
-import com.architecture.hexagonal.domain.model.entity.User;
+import com.architecture.hexagonal.domain.model.aggregate.User;
+import com.architecture.hexagonal.domain.model.entity.UserDo;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import com.architecture.hexagonal.domain.model.vo.EmailVo;
@@ -44,8 +45,10 @@ public class UpdateUserUseCase implements UpdateUserUseCasePort {
 
     User updatedUser = userRepositoryWritePort.saveUser(
         User.builder()
-            .userId(uuid)
-            .name(updateUserCommand.getName())
+            .user(UserDo.builder()
+                .userId(uuid)
+                .name(updateUserCommand.getName())
+                .build())
             .email(email)
             .build());
 

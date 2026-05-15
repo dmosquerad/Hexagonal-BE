@@ -1,7 +1,6 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.adapter;
 
-import com.architecture.hexagonal.domain.model.entity.User;
-import com.architecture.hexagonal.domain.model.vo.EmailBlockRulesVo;
+import com.architecture.hexagonal.domain.model.aggregate.User;
 import com.architecture.hexagonal.infrastructure.outbound.database.config.DatabaseIT;
 import com.architecture.hexagonal.infrastructure.outbound.database.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.outbound.database.data.UserDao;
@@ -9,7 +8,7 @@ import com.architecture.hexagonal.infrastructure.outbound.database.mapper.UserMa
 import com.architecture.hexagonal.infrastructure.outbound.database.repository.UserDatabaseReadRepository;
 import com.architecture.hexagonal.application.cqrs.query.request.pagination.Pagination;
 import com.architecture.hexagonal.application.cqrs.query.request.pagination.PaginationResult;
-import com.architecture.hexagonal.infrastructure.outbound.database.testutils.data.entity.UserTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.database.testutils.data.aggregate.UserTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.database.testutils.data.pagination.PaginationTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.database.testutils.data.vo.EmailBlockRulesVoTestDataBuilder;
 import java.util.Collections;
@@ -72,14 +71,14 @@ class UserRepositoryDatabaseReadAdapterTestIT extends DatabaseIT {
             .build()
             .user();
 
-    final Optional<User> result = userRepositoryDatabaseReadAdapter.findUserById(user.getUserId());
+    final Optional<User> result = userRepositoryDatabaseReadAdapter.findUserById(user.getUser().getUserId());
 
     AssertionsForClassTypes.assertThat(result)
         .usingRecursiveComparison()
         .ignoringFieldsOfTypes(UUID.class)
         .isEqualTo(Optional.of(user));
 
-    Mockito.verify(userDatabaseReadRepository).findByUserId(user.getUserId());
+    Mockito.verify(userDatabaseReadRepository).findByUserId(user.getUser().getUserId());
     Mockito.verify(userMapper).toUser(ArgumentMatchers.any(UserDao.class));
   }
 

@@ -5,7 +5,7 @@ import com.architecture.hexagonal.application.cqrs.command.request.PatchUserComm
 import com.architecture.hexagonal.application.port.in.PatchUserUseCasePort;
 import com.architecture.hexagonal.domain.exception.InvalidValueException;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
-import com.architecture.hexagonal.domain.model.entity.User;
+import com.architecture.hexagonal.domain.model.aggregate.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
