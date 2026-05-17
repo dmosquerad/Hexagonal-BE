@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.adapter;
 
-import com.architecture.hexagonal.application.port.out.UserRepositoryWritePort;
+import com.architecture.hexagonal.application.port.database.UserRepositoryWritePort;
 import com.architecture.hexagonal.domain.model.aggregate.User;
 import com.architecture.hexagonal.infrastructure.outbound.database.mapper.UserDaoMapper;
 import com.architecture.hexagonal.infrastructure.outbound.database.mapper.UserMapper;

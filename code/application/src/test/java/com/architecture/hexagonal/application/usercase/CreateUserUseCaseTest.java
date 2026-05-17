@@ -1,13 +1,13 @@
 package com.architecture.hexagonal.application.usercase;
 
-import com.architecture.hexagonal.application.cqrs.command.request.CreateUserCommand;
-import com.architecture.hexagonal.application.port.out.EmailConfigurationPort;
-import com.architecture.hexagonal.application.port.out.UserSenderPort;
-import com.architecture.hexagonal.application.port.out.UserRepositoryWritePort;
+import com.architecture.hexagonal.application.feature.user.create.command.CreateUserCommand;
+import com.architecture.hexagonal.application.port.configuration.EmailConfigurationPort;
+import com.architecture.hexagonal.application.port.message.UserSenderPort;
+import com.architecture.hexagonal.application.port.database.UserRepositoryWritePort;
 import com.architecture.hexagonal.application.testutils.data.aggregate.UserTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.data.input.command.CreateUserCommandTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.data.vo.EmailBlockRulesVoTestDataBuilder;
-import com.architecture.hexagonal.application.usecase.CreateUserUseCase;
+import com.architecture.hexagonal.application.feature.user.create.usecase.CreateUserUseCase;
 import com.architecture.hexagonal.domain.exception.InvalidValueException;
 import com.architecture.hexagonal.domain.model.aggregate.User;
 import java.util.Set;

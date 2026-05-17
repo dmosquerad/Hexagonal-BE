@@ -162,7 +162,7 @@ class ApplicationArchTest {
           .areNotInterfaces()
           .should()
           .beAssignableTo(
-              "com.architecture.hexagonal.application.cqrs.command.handler.CommandHandler")
+              "com.architecture.hexagonal.cqrs.comand.handler.CommandHandler")
           .because("Command handler implementations must implement the CommandHandler"
               + " interface to guarantee a uniform CQRS dispatch contract");
 
@@ -175,7 +175,7 @@ class ApplicationArchTest {
           .areNotInterfaces()
           .should()
           .beAssignableTo(
-              "com.architecture.hexagonal.application.cqrs.query.handler.QueryHandler")
+              "com.architecture.hexagonal.cqrs.query.handler.QueryHandler")
           .because("Query handler implementations must implement the QueryHandler"
               + " interface to guarantee a uniform CQRS dispatch contract");
 

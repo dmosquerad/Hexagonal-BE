@@ -18,6 +18,10 @@
         <!-- ============================================ -->
         <dependency>
             <groupId>com.architecture.hexagonal</groupId>
+            <artifactId>cqrs</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.architecture.hexagonal</groupId>
             <artifactId>user-rest-server</artifactId>
         </dependency>
         <dependency>

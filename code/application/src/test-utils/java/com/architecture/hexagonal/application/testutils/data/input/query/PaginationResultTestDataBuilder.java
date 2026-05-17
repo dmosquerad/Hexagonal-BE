@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.application.testutils.data.input.query;
 
-import com.architecture.hexagonal.application.cqrs.query.request.pagination.PaginationResult;
+import com.architecture.hexagonal.application.common.pagination.PaginationResult;
 import java.util.Collections;
 import java.util.Set;
 import lombok.Builder;

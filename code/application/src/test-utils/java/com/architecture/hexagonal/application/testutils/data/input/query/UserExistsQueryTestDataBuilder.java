@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.application.testutils.data.input.query;
 
-import com.architecture.hexagonal.application.cqrs.query.request.UserExistsQuery;
+import com.architecture.hexagonal.application.feature.user.exists.query.UserExistsQuery;
 import java.util.UUID;
 import lombok.Builder;
 

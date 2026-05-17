@@ -1,14 +1,14 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.controller;
 
-import com.architecture.hexagonal.application.cqrs.command.dispatcher.CommandBus;
-import com.architecture.hexagonal.application.cqrs.query.dispatcher.QueryBus;
-import com.architecture.hexagonal.application.cqrs.query.request.pagination.Pagination;
-import com.architecture.hexagonal.application.cqrs.query.request.pagination.PaginationResult;
+import com.architecture.hexagonal.application.common.pagination.Pagination;
+import com.architecture.hexagonal.application.common.pagination.PaginationResult;
 import com.architecture.hexagonal.domain.exception.DomainException;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import com.architecture.hexagonal.domain.model.aggregate.User;
 import com.architecture.hexagonal.infrastructure.contract.rest.user.server.controller.UsersApi;
 import com.architecture.hexagonal.infrastructure.contract.rest.user.server.dto.UserCreateDto;
+import com.architecture.hexagonal.infrastructure.cqrs.bus.command.CommandBus;
+import com.architecture.hexagonal.infrastructure.cqrs.bus.query.QueryBus;
 import com.architecture.hexagonal.infrastructure.inbound.rest.factory.ErrorResponseFactory;
 import com.architecture.hexagonal.infrastructure.contract.rest.user.server.dto.ResponsePaginationDto;
 import com.architecture.hexagonal.infrastructure.contract.rest.user.server.dto.UserPatchDto;

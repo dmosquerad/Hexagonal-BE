@@ -1,16 +1,16 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.controller;
 
-import com.architecture.hexagonal.application.cqrs.command.request.CreateUserCommand;
-import com.architecture.hexagonal.application.cqrs.command.request.DeleteUserCommand;
-import com.architecture.hexagonal.application.cqrs.command.request.PatchUserCommand;
-import com.architecture.hexagonal.application.cqrs.command.request.UpdateUserCommand;
-import com.architecture.hexagonal.application.cqrs.query.request.FindUserByUserIdQuery;
-import com.architecture.hexagonal.application.cqrs.query.request.GetAllUserQuery;
-import com.architecture.hexagonal.application.cqrs.query.request.pagination.PaginationResult;
+import com.architecture.hexagonal.application.feature.user.create.command.CreateUserCommand;
+import com.architecture.hexagonal.application.feature.user.delete.command.DeleteUserCommand;
+import com.architecture.hexagonal.application.feature.user.patch.command.PatchUserCommand;
+import com.architecture.hexagonal.application.feature.user.update.command.UpdateUserCommand;
+import com.architecture.hexagonal.application.feature.user.findbyid.query.FindUserByUserIdQuery;
+import com.architecture.hexagonal.application.feature.user.getall.query.GetAllUserQuery;
+import com.architecture.hexagonal.application.common.pagination.PaginationResult;
+import com.architecture.hexagonal.infrastructure.cqrs.bus.command.CommandBus;
+import com.architecture.hexagonal.infrastructure.cqrs.bus.query.QueryBus;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.pagination.PaginationTestDataBuilder;
-import com.architecture.hexagonal.application.cqrs.query.request.UserExistsQuery;
-import com.architecture.hexagonal.application.cqrs.command.dispatcher.CommandBus;
-import com.architecture.hexagonal.application.cqrs.query.dispatcher.QueryBus;
+import com.architecture.hexagonal.application.feature.user.exists.query.UserExistsQuery;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import com.architecture.hexagonal.domain.model.aggregate.User;

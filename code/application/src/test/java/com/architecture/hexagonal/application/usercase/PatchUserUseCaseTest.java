@@ -1,14 +1,14 @@
 package com.architecture.hexagonal.application.usercase;
 
-import com.architecture.hexagonal.application.cqrs.command.request.PatchUserCommand;
-import com.architecture.hexagonal.application.port.out.EmailConfigurationPort;
-import com.architecture.hexagonal.application.port.out.UserSenderPort;
-import com.architecture.hexagonal.application.port.out.UserRepositoryReadPort;
-import com.architecture.hexagonal.application.port.out.UserRepositoryWritePort;
+import com.architecture.hexagonal.application.feature.user.patch.command.PatchUserCommand;
+import com.architecture.hexagonal.application.port.configuration.EmailConfigurationPort;
+import com.architecture.hexagonal.application.port.message.UserSenderPort;
+import com.architecture.hexagonal.application.port.database.UserRepositoryReadPort;
+import com.architecture.hexagonal.application.port.database.UserRepositoryWritePort;
 import com.architecture.hexagonal.application.testutils.data.aggregate.UserTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.data.input.command.PatchUserCommandTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.data.vo.EmailBlockRulesVoTestDataBuilder;
-import com.architecture.hexagonal.application.usecase.PatchUserUseCase;
+import com.architecture.hexagonal.application.feature.user.patch.usecase.PatchUserUseCase;
 import com.architecture.hexagonal.domain.exception.InvalidValueException;
 import com.architecture.hexagonal.domain.model.aggregate.User;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;

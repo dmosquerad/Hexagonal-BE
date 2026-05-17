@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.application.testutils.data.input.command;
 
-import com.architecture.hexagonal.application.cqrs.command.request.UpdateUserCommand;
+import com.architecture.hexagonal.application.feature.user.update.command.UpdateUserCommand;
 import java.util.UUID;
 import lombok.Builder;
 

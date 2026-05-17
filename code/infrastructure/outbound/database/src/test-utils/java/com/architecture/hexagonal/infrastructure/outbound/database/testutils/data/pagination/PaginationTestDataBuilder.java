@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.testutils.data.pagination;
 
-import com.architecture.hexagonal.application.cqrs.query.request.pagination.Pagination;
+import com.architecture.hexagonal.application.common.pagination.Pagination;
 import lombok.Builder;
 
 @Builder

@@ -1,10 +1,10 @@
 package com.architecture.hexagonal.application.usercase;
 
-import com.architecture.hexagonal.application.cqrs.query.request.FindUserByUserIdQuery;
-import com.architecture.hexagonal.application.port.out.UserRepositoryReadPort;
+import com.architecture.hexagonal.application.feature.user.findbyid.query.FindUserByUserIdQuery;
+import com.architecture.hexagonal.application.port.database.UserRepositoryReadPort;
 import com.architecture.hexagonal.application.testutils.data.aggregate.UserTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.data.input.query.FindUserByUserIdQueryTestDataBuilder;
-import com.architecture.hexagonal.application.usecase.FindUserByUserIdUseCase;
+import com.architecture.hexagonal.application.feature.user.findbyid.usecase.FindUserByUserIdUseCase;
 import com.architecture.hexagonal.domain.model.aggregate.User;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import java.util.Optional;

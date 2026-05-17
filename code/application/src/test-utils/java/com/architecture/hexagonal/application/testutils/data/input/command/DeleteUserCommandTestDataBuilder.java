@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.application.testutils.data.input.command;
 
-import com.architecture.hexagonal.application.cqrs.command.request.DeleteUserCommand;
+import com.architecture.hexagonal.application.feature.user.delete.command.DeleteUserCommand;
 import java.util.UUID;
 import lombok.Builder;
 

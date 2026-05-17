@@ -1,11 +1,11 @@
 package com.architecture.hexagonal.application.usercase;
 
-import com.architecture.hexagonal.application.cqrs.command.request.DeleteUserCommand;
-import com.architecture.hexagonal.application.port.out.UserRepositoryWritePort;
-import com.architecture.hexagonal.application.port.out.UserSenderPort;
+import com.architecture.hexagonal.application.feature.user.delete.command.DeleteUserCommand;
+import com.architecture.hexagonal.application.port.database.UserRepositoryWritePort;
+import com.architecture.hexagonal.application.port.message.UserSenderPort;
 import com.architecture.hexagonal.application.testutils.data.aggregate.UserTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.data.input.command.DeleteUserCommandTestDataBuilder;
-import com.architecture.hexagonal.application.usecase.DeleteUserUseCase;
+import com.architecture.hexagonal.application.feature.user.delete.usecase.DeleteUserUseCase;
 import com.architecture.hexagonal.domain.model.aggregate.User;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;

@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.adapter;
 
-import com.architecture.hexagonal.application.cqrs.query.request.pagination.Pagination;
-import com.architecture.hexagonal.application.cqrs.query.request.pagination.PaginationResult;
-import com.architecture.hexagonal.application.port.out.UserRepositoryReadPort;
+import com.architecture.hexagonal.application.common.pagination.Pagination;
+import com.architecture.hexagonal.application.common.pagination.PaginationResult;
+import com.architecture.hexagonal.application.port.database.UserRepositoryReadPort;
 import com.architecture.hexagonal.domain.model.aggregate.User;
 import com.architecture.hexagonal.domain.model.vo.EmailBlockRulesVo;
 import com.architecture.hexagonal.infrastructure.outbound.database.data.UserDao;

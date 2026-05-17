@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.mapper;
 
-import com.architecture.hexagonal.application.cqrs.query.request.GetAllUserQuery;
-import com.architecture.hexagonal.application.cqrs.query.request.pagination.Pagination;
+import com.architecture.hexagonal.application.feature.user.getall.query.GetAllUserQuery;
+import com.architecture.hexagonal.application.common.pagination.Pagination;
 import com.architecture.hexagonal.infrastructure.inbound.rest.config.MapstructConfig;
 import org.mapstruct.Mapper;
 

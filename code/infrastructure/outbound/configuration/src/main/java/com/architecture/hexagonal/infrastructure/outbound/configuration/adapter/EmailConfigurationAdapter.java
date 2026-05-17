@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.outbound.configuration.adapter;
 
-import com.architecture.hexagonal.application.port.out.EmailConfigurationPort;
+import com.architecture.hexagonal.application.port.configuration.EmailConfigurationPort;
 import com.architecture.hexagonal.domain.model.vo.EmailBlockRulesVo;
 import com.architecture.hexagonal.infrastructure.outbound.configuration.config.EmailBlockConfig;
 

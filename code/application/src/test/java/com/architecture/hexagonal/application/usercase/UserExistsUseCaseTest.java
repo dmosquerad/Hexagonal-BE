@@ -1,10 +1,10 @@
 package com.architecture.hexagonal.application.usercase;
 
-import com.architecture.hexagonal.application.cqrs.query.request.UserExistsQuery;
-import com.architecture.hexagonal.application.port.out.UserRepositoryReadPort;
+import com.architecture.hexagonal.application.feature.user.exists.query.UserExistsQuery;
+import com.architecture.hexagonal.application.port.database.UserRepositoryReadPort;
 import com.architecture.hexagonal.application.testutils.data.aggregate.UserTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.data.input.query.UserExistsQueryTestDataBuilder;
-import com.architecture.hexagonal.application.usecase.UserExistsUseCase;
+import com.architecture.hexagonal.application.feature.user.exists.usecase.UserExistsUseCase;
 import com.architecture.hexagonal.domain.model.aggregate.User;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;

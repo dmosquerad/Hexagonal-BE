@@ -13,5 +13,7 @@
 
     <modules>
         <module>rest</module>
+        <module>cqrs</module>
     </modules>
+
 </project>
