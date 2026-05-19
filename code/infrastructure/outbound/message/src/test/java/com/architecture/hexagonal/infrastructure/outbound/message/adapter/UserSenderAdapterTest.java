@@ -1,11 +1,11 @@
 package com.architecture.hexagonal.infrastructure.outbound.message.adapter;
 
-import com.architecture.hexagonal.domain.model.entity.User;
+import com.architecture.hexagonal.domain.model.aggregate.User;
 import com.architecture.hexagonal.infrastructure.outbound.message.data.UserCreated;
 import com.architecture.hexagonal.infrastructure.outbound.message.data.UserDeleted;
 import com.architecture.hexagonal.infrastructure.outbound.message.data.UserUpdated;
 import com.architecture.hexagonal.infrastructure.outbound.message.mapper.UserMessageDaoMapper;
-import com.architecture.hexagonal.infrastructure.outbound.message.testutils.data.entity.UserTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.message.testutils.data.aggregate.UserTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.message.testutils.data.message.UserCreatedTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.message.testutils.data.message.UserDeletedTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.message.testutils.data.message.UserUpdatedTestDataBuilder;

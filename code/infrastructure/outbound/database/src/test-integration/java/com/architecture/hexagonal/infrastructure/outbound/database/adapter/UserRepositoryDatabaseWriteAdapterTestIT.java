@@ -1,13 +1,13 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.adapter;
 
-import com.architecture.hexagonal.domain.model.entity.User;
+import com.architecture.hexagonal.domain.model.aggregate.User;
 import com.architecture.hexagonal.infrastructure.outbound.database.config.DatabaseIT;
 import com.architecture.hexagonal.infrastructure.outbound.database.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.outbound.database.data.UserDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.mapper.UserDaoMapper;
 import com.architecture.hexagonal.infrastructure.outbound.database.mapper.UserMapper;
 import com.architecture.hexagonal.infrastructure.outbound.database.repository.UserDatabaseWriteRepository;
-import com.architecture.hexagonal.infrastructure.outbound.database.testutils.data.entity.UserTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.database.testutils.data.aggregate.UserTestDataBuilder;
 import java.util.Optional;
 import java.util.UUID;
 import org.assertj.core.api.AssertionsForClassTypes;
@@ -64,14 +64,14 @@ class UserRepositoryDatabaseWriteAdapterTestIT extends DatabaseIT {
         .build()
         .user();
 
-    final Optional<User> result = userRepositoryDatabaseWriteAdapter.deleteUser(user.getUserId());
+    final Optional<User> result = userRepositoryDatabaseWriteAdapter.deleteUser(user.getUser().getUserId());
 
     AssertionsForClassTypes.assertThat(result)
         .usingRecursiveComparison()
         .ignoringFieldsOfTypes(UUID.class)
         .isEqualTo(Optional.of(user));
 
-    Mockito.verify(userDatabaseWriteRepository).deleteByUserId(user.getUserId());
+    Mockito.verify(userDatabaseWriteRepository).deleteByUserId(user.getUser().getUserId());
     Mockito.verify(userMapper).toUser(ArgumentMatchers.any(UserDao.class));
   }
 

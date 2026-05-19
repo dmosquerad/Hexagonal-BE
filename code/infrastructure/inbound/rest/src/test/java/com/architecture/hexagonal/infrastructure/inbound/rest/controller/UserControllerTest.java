@@ -1,19 +1,23 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.controller;
 
-import com.architecture.hexagonal.application.cqrs.command.request.CreateUserCommand;
-import com.architecture.hexagonal.application.cqrs.command.request.DeleteUserCommand;
-import com.architecture.hexagonal.application.cqrs.command.request.PatchUserCommand;
-import com.architecture.hexagonal.application.cqrs.command.request.UpdateUserCommand;
-import com.architecture.hexagonal.application.cqrs.command.dispatcher.CommandBus;
-import com.architecture.hexagonal.application.cqrs.query.request.FindUserByUserIdQuery;
-import com.architecture.hexagonal.application.cqrs.query.request.GetAllUserQuery;
-import com.architecture.hexagonal.application.cqrs.query.request.UserExistsQuery;
-import com.architecture.hexagonal.application.cqrs.query.dispatcher.QueryBus;
-import com.architecture.hexagonal.domain.model.entity.User;
+import com.architecture.hexagonal.application.feature.user.create.command.CreateUserCommand;
+import com.architecture.hexagonal.application.feature.user.delete.command.DeleteUserCommand;
+import com.architecture.hexagonal.application.feature.user.getallfiltered.query.GetUsersFilteredQuery;
+import com.architecture.hexagonal.application.feature.user.patch.command.PatchUserCommand;
+import com.architecture.hexagonal.application.feature.user.update.command.UpdateUserCommand;
+import com.architecture.hexagonal.application.feature.user.findbyid.query.FindUserByUserIdQuery;
+import com.architecture.hexagonal.application.feature.user.exists.query.UserExistsQuery;
+import com.architecture.hexagonal.application.common.pagination.PaginationResult;
+import com.architecture.hexagonal.domain.model.aggregate.User;
+import com.architecture.hexagonal.domain.exception.ExceptionMessage;
+import com.architecture.hexagonal.domain.exception.InvalidValueException;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
+import com.architecture.hexagonal.infrastructure.contract.rest.user.server.dto.ResponsePaginationDto;
 import com.architecture.hexagonal.infrastructure.contract.rest.user.server.dto.UserCreateDto;
 import com.architecture.hexagonal.infrastructure.contract.rest.user.server.dto.UserResponseDto;
 import com.architecture.hexagonal.infrastructure.contract.rest.user.server.dto.UsersResponseDto;
+import com.architecture.hexagonal.infrastructure.inbound.cqrs.bus.command.CommandBus;
+import com.architecture.hexagonal.infrastructure.inbound.cqrs.bus.query.QueryBus;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.CreateUserCommandMapper;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.DeleteUserCommandMapper;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.FindUserByUserIdQueryMapper;
@@ -28,7 +32,8 @@ import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.dto
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.dto.UserResponseDtoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.dto.UserUpdateDtoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.dto.UsersResponseDtoTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.entity.UserTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.aggregate.UserTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.pagination.PaginationTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.time.TestClock;
 import java.time.Clock;
 import java.util.Collections;
@@ -102,24 +107,48 @@ class UserControllerTest {
 
     final String host = "";
     final Boolean blockEmail = false;
+    final Integer page = 0;
+    final Integer size = 100;
+    final int totalPages = 1;
+    final long totalElements = 1L;
 
-    Mockito.when(queryBus.execute(ArgumentMatchers.any(GetAllUserQuery.class)))
-        .thenReturn(Collections.singleton(user));
+    Mockito.when(queryBus.execute(ArgumentMatchers.any(GetUsersFilteredQuery.class)))
+        .thenReturn(PaginationResult.<User>builder()
+            .data(Collections.singleton(user))
+            .page(page)
+            .size(size)
+            .totalElements(totalElements)
+            .totalPages(totalPages)
+            .build());
 
-    final ResponseEntity<UsersResponseDto> responseExpected = ResponseEntity.ok(
-        UsersResponseDtoTestDataBuilder
-            .builder()
-            .build()
-            .usersResponseDto());
+    final UsersResponseDto expectedBody = UsersResponseDtoTestDataBuilder
+        .builder()
+        .build()
+        .usersResponseDto();
+    expectedBody.setPagination(new ResponsePaginationDto()
+        .page(page)
+        .size(size)
+        .totalElements(totalElements)
+        .totalPages(totalPages));
+    final ResponseEntity<UsersResponseDto> responseExpected = ResponseEntity.ok(expectedBody);
 
-    final ResponseEntity<UsersResponseDto> response = userController.getAllUsers(host, blockEmail);
+    final ResponseEntity<UsersResponseDto> response = userController.getAllUsers(
+        host,
+        blockEmail,
+        page,
+        size);
 
     AssertionsForClassTypes.assertThat(response)
         .usingRecursiveComparison()
         .isEqualTo(responseExpected);
 
-    Mockito.verify(getAllUserQueryMapper).toGetAllUserQuery(host, blockEmail);
-    Mockito.verify(queryBus).execute(ArgumentMatchers.any(GetAllUserQuery.class));
+    Mockito.verify(getAllUserQueryMapper).toGetAllUserQuery(host, blockEmail, PaginationTestDataBuilder
+        .builder()
+        .page(page)
+        .size(size)
+        .build()
+        .pagination());
+    Mockito.verify(queryBus).execute(ArgumentMatchers.any(GetUsersFilteredQuery.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
   }
@@ -173,13 +202,13 @@ class UserControllerTest {
             .build()
             .userResponseDto());
 
-    final ResponseEntity<UserResponseDto> response = userController.getUserByUuid(user.getUserId());
+    final ResponseEntity<UserResponseDto> response = userController.getUserByUuid(user.getId());
 
     AssertionsForClassTypes.assertThat(response)
         .usingRecursiveComparison()
         .isEqualTo(responseExpected);
 
-    Mockito.verify(findUserByUserIdQueryMapper).toFindUserByUserIdQuery(user.getUserId());
+    Mockito.verify(findUserByUserIdQueryMapper).toFindUserByUserIdQuery(user.getId());
     Mockito
         .verify(queryBus).execute(ArgumentMatchers.any(FindUserByUserIdQuery.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
@@ -203,13 +232,13 @@ class UserControllerTest {
             .userResponseDto());
 
     final ResponseEntity<UserResponseDto> response = userController.deleteUserByUuid(
-        user.getUserId());
+        user.getId());
 
     AssertionsForClassTypes.assertThat(response)
         .usingRecursiveComparison()
         .isEqualTo(responseExpected);
 
-    Mockito.verify(deleteUserCommandMapper).toDeleteUserCommand(user.getUserId());
+    Mockito.verify(deleteUserCommandMapper).toDeleteUserCommand(user.getId());
     Mockito.verify(commandBus).execute(ArgumentMatchers.any(DeleteUserCommand.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
@@ -232,7 +261,7 @@ class UserControllerTest {
             .userResponseDto());
 
     final ResponseEntity<UserResponseDto> response = userController.updateUserByUuid(
-        user.getUserId(),
+        user.getId(),
         UserUpdateDtoTestDataBuilder
             .builder()
             .build()
@@ -243,7 +272,7 @@ class UserControllerTest {
         .isEqualTo(responseExpected);
 
     Mockito.verify(updateUserCommandMapper)
-        .toUpdateUserCommand(ArgumentMatchers.eq(user.getUserId()), ArgumentMatchers.any());
+        .toUpdateUserCommand(ArgumentMatchers.eq(user.getId()), ArgumentMatchers.any());
     Mockito.verify(commandBus).execute(ArgumentMatchers.any(UpdateUserCommand.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
@@ -269,7 +298,7 @@ class UserControllerTest {
 
     AssertionsForClassTypes.assertThatThrownBy(() ->
         userController.updateUserByUuid(
-            user.getUserId(),
+            user.getId(),
             UserUpdateDtoTestDataBuilder
                .builder()
                .build()
@@ -279,7 +308,7 @@ class UserControllerTest {
         .isEqualTo(errorException);
 
     Mockito.verify(updateUserCommandMapper)
-        .toUpdateUserCommand(ArgumentMatchers.eq(user.getUserId()), ArgumentMatchers.any());
+        .toUpdateUserCommand(ArgumentMatchers.eq(user.getId()), ArgumentMatchers.any());
     Mockito.verify(commandBus).execute(ArgumentMatchers.any(UpdateUserCommand.class));
   }
 
@@ -305,7 +334,7 @@ class UserControllerTest {
             .userResponseDto());
 
     final ResponseEntity<UserResponseDto> response = userController.patchUserByUuid(
-        user.getUserId(),
+        user.getId(),
         UserPatchDtoTestDataBuilder
             .builder()
             .build()
@@ -316,7 +345,7 @@ class UserControllerTest {
         .isEqualTo(responseExpected);
 
     Mockito.verify(patchUserCommandMapper)
-        .toPatchUserCommand(ArgumentMatchers.eq(user.getUserId()), ArgumentMatchers.any());
+        .toPatchUserCommand(ArgumentMatchers.eq(user.getId()), ArgumentMatchers.any());
     Mockito.verify(commandBus).execute(ArgumentMatchers.any(PatchUserCommand.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
@@ -342,7 +371,7 @@ class UserControllerTest {
 
     AssertionsForClassTypes.assertThatThrownBy(() ->
         userController.patchUserByUuid(
-            user.getUserId(),
+            user.getId(),
             UserPatchDtoTestDataBuilder
                 .builder()
                 .build()
@@ -352,7 +381,7 @@ class UserControllerTest {
         .isEqualTo(errorException);
 
     Mockito.verify(patchUserCommandMapper)
-        .toPatchUserCommand(ArgumentMatchers.eq(user.getUserId()), ArgumentMatchers.any());
+        .toPatchUserCommand(ArgumentMatchers.eq(user.getId()), ArgumentMatchers.any());
     Mockito.verify(commandBus).execute(ArgumentMatchers.any(PatchUserCommand.class));
   }
 
@@ -368,13 +397,13 @@ class UserControllerTest {
     Mockito.when(queryBus.execute(ArgumentMatchers.any(UserExistsQuery.class)))
         .thenReturn(null);
 
-    final ResponseEntity<Void> response = userController.headUserByUuid(user.getUserId());
+    final ResponseEntity<Void> response = userController.headUserByUuid(user.getId());
 
     AssertionsForClassTypes.assertThat(response)
         .usingRecursiveComparison()
         .isEqualTo(responseExpected);
 
-    Mockito.verify(userExistsQueryMapper).toUserExistsQuery(user.getUserId());
+    Mockito.verify(userExistsQueryMapper).toUserExistsQuery(user.getId());
     Mockito.verify(queryBus).execute(ArgumentMatchers.any(UserExistsQuery.class));
   }
 
@@ -397,13 +426,92 @@ class UserControllerTest {
         null);
 
     AssertionsForClassTypes.assertThatThrownBy(() ->
-        userController.headUserByUuid(user.getUserId()))
+        userController.headUserByUuid(user.getId()))
         .isInstanceOf(ErrorResponseException.class)
         .usingRecursiveComparison()
         .isEqualTo(errorException);
 
-    Mockito.verify(userExistsQueryMapper).toUserExistsQuery(user.getUserId());
+    Mockito.verify(userExistsQueryMapper).toUserExistsQuery(user.getId());
     Mockito.verify(queryBus).execute(ArgumentMatchers.any(UserExistsQuery.class));
+  }
+
+  @Test
+  void getAllUsers_shouldReturnOk_withCustomPagination() throws Exception {
+    final User user = UserTestDataBuilder.builder().build().user();
+    final Integer page = 1;
+    final Integer size = 10;
+    final int totalPages = 5;
+    final long totalElements = 50L;
+
+    Mockito.when(queryBus.execute(ArgumentMatchers.any(GetUsersFilteredQuery.class)))
+        .thenReturn(PaginationResult.<User>builder()
+            .data(Collections.singleton(user))
+            .page(page)
+            .size(size)
+            .totalElements(totalElements)
+            .totalPages(totalPages)
+            .build());
+
+    final UsersResponseDto expectedBody = UsersResponseDtoTestDataBuilder.builder().build().usersResponseDto();
+    expectedBody.setPagination(new ResponsePaginationDto()
+        .page(page)
+        .size(size)
+        .totalElements(totalElements)
+        .totalPages(totalPages));
+    final ResponseEntity<UsersResponseDto> responseExpected = ResponseEntity.ok(expectedBody);
+
+    final ResponseEntity<UsersResponseDto> response = userController.getAllUsers(null, null, page, size);
+
+    AssertionsForClassTypes.assertThat(response)
+        .usingRecursiveComparison()
+        .isEqualTo(responseExpected);
+
+    Mockito.verify(getAllUserQueryMapper).toGetAllUserQuery(null, null, PaginationTestDataBuilder.builder().page(page).size(size).build().pagination());
+    Mockito.verify(queryBus).execute(ArgumentMatchers.any(GetUsersFilteredQuery.class));
+    Mockito.verify(userReadDtoMapper).toUserReadDto(user);
+    Mockito.verify(clock).instant();
+  }
+
+  @Test
+  void getAllUsers_shouldThrowErrorResponseException_whenDomainExceptionOccurs() throws Exception {
+    final String errorMessage = ExceptionMessage.EMAIL_NO_ALLOWED_MESSAGE + "blocked@banned.com";
+
+    Mockito.when(queryBus.execute(ArgumentMatchers.any(GetUsersFilteredQuery.class)))
+        .thenThrow(new InvalidValueException(errorMessage));
+
+    final ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.UNPROCESSABLE_ENTITY.value());
+    problemDetail.setDetail(errorMessage);
+    final ErrorResponseException errorException = new ErrorResponseException(
+        HttpStatus.UNPROCESSABLE_ENTITY, problemDetail, null);
+
+    AssertionsForClassTypes.assertThatThrownBy(() ->
+        userController.getAllUsers(null, null, 0, 100))
+        .isInstanceOf(ErrorResponseException.class)
+        .usingRecursiveComparison()
+        .isEqualTo(errorException);
+
+    Mockito.verify(queryBus).execute(ArgumentMatchers.any(GetUsersFilteredQuery.class));
+  }
+
+  @Test
+  void getAllUsers_shouldThrowErrorResponseException_whenUnexpectedExceptionOccurs() throws Exception {
+    final String errorMessage = "Unexpected error";
+
+    Mockito.when(queryBus.execute(ArgumentMatchers.any(GetUsersFilteredQuery.class)))
+        .thenThrow(new RuntimeException(errorMessage));
+
+    final ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+    problemDetail.setDetail(errorMessage);
+    final ErrorResponseException errorException = new ErrorResponseException(
+        HttpStatus.INTERNAL_SERVER_ERROR, problemDetail, null);
+
+    AssertionsForClassTypes.assertThatThrownBy(() ->
+        userController.getAllUsers(null, null, 0, 100))
+        .isInstanceOf(ErrorResponseException.class)
+        .usingRecursiveComparison()
+        .isEqualTo(errorException);
+
+    Mockito.verify(queryBus).execute(ArgumentMatchers.any(GetUsersFilteredQuery.class));
   }
 
 }

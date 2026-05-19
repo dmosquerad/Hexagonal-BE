@@ -25,28 +25,28 @@ class ScreamingArchTest {
               + " use a name that reflects the specific business or mapping responsibility");
 
   @ArchTest
-  static final ArchRule use_cases_should_not_depend_on_other_use_cases =
+  static final ArchRule feature_use_cases_should_not_depend_on_other_feature_use_cases =
       ArchRuleDefinition.noClasses()
           .that()
-          .resideInAPackage("..application.usecase..")
+          .resideInAPackage("..application.feature..usecase..")
           .should()
           .dependOnClassesThat()
-          .resideInAPackage("..application.usecase..")
-          .because("Use cases must be independent business operations;"
+          .resideInAPackage("..application.feature..usecase..")
+          .because("Feature use cases must be independent business operations;"
               + " orchestration must go through ports and the CQRS bus, not direct use case coupling");
 
   @ArchTest
-  static final ArchRule use_cases_should_follow_verb_concept_naming =
+  static final ArchRule feature_use_cases_should_follow_verb_concept_naming =
       ArchRuleDefinition.noClasses()
           .that()
-          .resideInAPackage("..application.usecase..")
+          .resideInAPackage("..application.feature..usecase..")
           .and()
           .haveNameNotMatching(
               ".*\\.(Create|Update|Patch|Delete|Find|Get|Exists|Validate|Process|Send|Notify)[A-Z].*UseCase"
                   + "|.*\\.[A-Z][a-zA-Z]+(Exists|Available|Valid)[A-Z]?.*UseCase")
           .should()
-          .resideInAPackage("..application.usecase..")
-          .because("Use case names must reflect a business intent starting with a verb or status concept"
+          .resideInAPackage("..application.feature..usecase..")
+          .because("Feature use case names must reflect a business intent starting with a verb or status concept"
               + " so that the codebase screams what the system does, not how it is built")
           .allowEmptyShould(true);
 

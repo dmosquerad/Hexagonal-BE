@@ -6,6 +6,7 @@ import jakarta.mail.internet.InternetAddress;
 import java.util.function.Predicate;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import org.apache.commons.lang3.StringUtils;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -28,7 +29,7 @@ public class EmailVoPredicate {
   public static final Predicate<EmailVo> CAN_FORM_DOMAIN = email ->
     StringUtils.isNoneBlank(email.getHost(), email.getTld());
 
-  public static Predicate<EmailVo> hostEquals(final String host) {
+  public static Predicate<EmailVo> hostEquals(@NonNull final String host) {
     return email -> StringUtils.isNotBlank(host)
         && StringUtils.isNotBlank(email.getHost())
         && host.equalsIgnoreCase(email.getHost());

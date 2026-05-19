@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.outbound.message.adapter;
 
-import com.architecture.hexagonal.application.port.out.UserSenderPort;
-import com.architecture.hexagonal.domain.model.entity.User;
+import com.architecture.hexagonal.application.port.message.UserSenderPort;
+import com.architecture.hexagonal.domain.model.aggregate.User;
 import com.architecture.hexagonal.infrastructure.outbound.message.mapper.UserMessageDaoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;

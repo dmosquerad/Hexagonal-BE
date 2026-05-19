@@ -54,7 +54,7 @@ class InfrastructureOutboundArchTest {
           .haveSimpleNameEndingWith("Adapter")
           .and()
           .resideInAPackage("..infrastructure.outbound..")
-          .should().implement(Predicates.resideInAPackage("..application.port.out.."))
+          .should().implement(Predicates.resideInAnyPackage("..application.port..", "..application.feature..port.."))
           .because("Outbound adapters must implement outbound ports");
 
   @ArchTest

@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.mapper;
 
-import com.architecture.hexagonal.application.cqrs.query.request.FindUserByUserIdQuery;
+import com.architecture.hexagonal.application.feature.user.findbyid.query.FindUserByUserIdQuery;
 import com.architecture.hexagonal.infrastructure.inbound.rest.config.MapstructConfig;
 import java.util.UUID;
 import org.mapstruct.Mapper;

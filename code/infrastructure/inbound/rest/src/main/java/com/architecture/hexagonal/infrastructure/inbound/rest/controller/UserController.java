@@ -1,13 +1,16 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.controller;
 
-import com.architecture.hexagonal.application.cqrs.command.dispatcher.CommandBus;
-import com.architecture.hexagonal.application.cqrs.query.dispatcher.QueryBus;
+import com.architecture.hexagonal.application.common.pagination.Pagination;
+import com.architecture.hexagonal.application.common.pagination.PaginationResult;
 import com.architecture.hexagonal.domain.exception.DomainException;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
-import com.architecture.hexagonal.domain.model.entity.User;
+import com.architecture.hexagonal.domain.model.aggregate.User;
 import com.architecture.hexagonal.infrastructure.contract.rest.user.server.controller.UsersApi;
 import com.architecture.hexagonal.infrastructure.contract.rest.user.server.dto.UserCreateDto;
+import com.architecture.hexagonal.infrastructure.inbound.cqrs.bus.command.CommandBus;
+import com.architecture.hexagonal.infrastructure.inbound.cqrs.bus.query.QueryBus;
 import com.architecture.hexagonal.infrastructure.inbound.rest.factory.ErrorResponseFactory;
+import com.architecture.hexagonal.infrastructure.contract.rest.user.server.dto.ResponsePaginationDto;
 import com.architecture.hexagonal.infrastructure.contract.rest.user.server.dto.UserPatchDto;
 import com.architecture.hexagonal.infrastructure.contract.rest.user.server.dto.UserResponseDto;
 import com.architecture.hexagonal.infrastructure.contract.rest.user.server.dto.UserUpdateDto;
@@ -22,13 +25,11 @@ import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.UserExistsQ
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.UpdateUserCommandMapper;
 import java.time.Clock;
 import java.time.OffsetDateTime;
-import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.ErrorResponseException;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -58,10 +59,19 @@ public class UserController implements UsersApi {
   private final Clock clock;
 
   @Override
-  public ResponseEntity<UsersResponseDto> getAllUsers(final String host, final Boolean blockEmail) {
+  public ResponseEntity<UsersResponseDto> getAllUsers(
+      final String host,
+      final Boolean blockEmail,
+      final Integer page,
+      final Integer size) {
     try {
-      return ResponseEntity.ok(buildUsersResponse(
-          queryBus.execute(getAllUserQueryMapper.toGetAllUserQuery(host, blockEmail))));
+      final PaginationResult<User> pageResult = queryBus.execute(
+          getAllUserQueryMapper.toGetAllUserQuery(host, blockEmail,
+            Pagination.builder()
+              .page(page)
+              .size(size)
+              .build()));
+      return ResponseEntity.ok(buildUsersResponse(pageResult));
     } catch (DomainException e) {
       throw ErrorResponseFactory.of(HttpStatus.UNPROCESSABLE_ENTITY, e);
     } catch (Exception e) {
@@ -167,14 +177,18 @@ public class UserController implements UsersApi {
     return userResponseDto;
   }
 
-  private UsersResponseDto buildUsersResponse(final Set<User> users) {
+  private UsersResponseDto buildUsersResponse(final PaginationResult<User> pageResult) {
     final UsersResponseDto usersResponseDto = new UsersResponseDto();
     usersResponseDto.setDate(OffsetDateTime.now(clock));
     usersResponseDto.setStatus(HttpStatus.OK.value());
-    usersResponseDto.setData(users.stream()
+    usersResponseDto.setPagination(new ResponsePaginationDto()
+            .page(pageResult.getPage())
+            .size(pageResult.getSize())
+            .totalElements(pageResult.getTotalElements())
+            .totalPages(pageResult.getTotalPages()));
+    usersResponseDto.setData(pageResult.getData().stream()
         .map(userReadDtoMapper::toUserReadDto)
         .collect(Collectors.toUnmodifiableSet()));
-
     return usersResponseDto;
   }
 }

@@ -1,11 +1,11 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.controller;
 
-import com.architecture.hexagonal.application.cqrs.query.dispatcher.QueryBus;
-import com.architecture.hexagonal.application.cqrs.query.request.GetBlockedRulesQuery;
+import com.architecture.hexagonal.application.feature.email.getblockedrules.query.GetBlockedRulesQuery;
 import com.architecture.hexagonal.domain.exception.DomainException;
 import com.architecture.hexagonal.domain.model.vo.EmailBlockRulesVo;
 import com.architecture.hexagonal.infrastructure.contract.rest.email.server.controller.EmailsApi;
 import com.architecture.hexagonal.infrastructure.contract.rest.email.server.dto.EmailBlockRulesResponseDto;
+import com.architecture.hexagonal.infrastructure.inbound.cqrs.bus.query.QueryBus;
 import com.architecture.hexagonal.infrastructure.inbound.rest.factory.ErrorResponseFactory;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.EmailBlockRulesMapper;
 import lombok.RequiredArgsConstructor;

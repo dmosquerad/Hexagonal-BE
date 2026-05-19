@@ -38,7 +38,7 @@ class InfrastructureInboundArchTest {
           .resideInAPackage("..infrastructure.inbound..")
           .should()
           .dependOnClassesThat()
-          .resideInAnyPackage("..application.cqrs..", "..application.port.in..")
+          .resideInAnyPackage("..infrastructure.inbound.cqrs..")
           .because("Controllers must depend on inbound ports or CQRS request types");
 
   @ArchTest
@@ -114,7 +114,7 @@ class InfrastructureInboundArchTest {
           .areAnnotatedWith(RestController.class)
           .should()
           .dependOnClassesThat()
-          .resideInAPackage("..application.usecase..")
+          .resideInAPackage("..application.*.usecase..")
           .because("Controllers must not bypass inbound ports when accessing use cases;"
               + " the port boundary is the canonical application boundary in Hexagonal Architecture");
 }

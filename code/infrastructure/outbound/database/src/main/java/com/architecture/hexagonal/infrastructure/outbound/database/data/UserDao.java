@@ -7,10 +7,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.util.UUID;
 import lombok.Data;
+import lombok.experimental.FieldNameConstants;
 import org.hibernate.annotations.UuidGenerator;
 
 @Data
 @Entity
+@FieldNameConstants
 @Table(name = "users")
 public class UserDao {
 
