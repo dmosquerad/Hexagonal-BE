@@ -4,7 +4,7 @@ import com.architecture.hexagonal.application.feature.email.getblockedrules.quer
 import com.architecture.hexagonal.domain.model.vo.EmailBlockRulesVo;
 import com.architecture.hexagonal.infrastructure.contract.rest.email.server.dto.EmailBlockRulesDto;
 import com.architecture.hexagonal.infrastructure.contract.rest.email.server.dto.EmailBlockRulesResponseDto;
-import com.architecture.hexagonal.infrastructure.cqrs.bus.query.QueryBus;
+import com.architecture.hexagonal.infrastructure.inbound.cqrs.bus.query.QueryBus;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.EmailBlockRulesMapper;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.dto.EmailBlockRulesDtoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.dto.EmailBlockRulesResponseDtoTestDataBuilder;

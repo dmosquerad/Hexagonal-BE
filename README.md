@@ -26,12 +26,24 @@ Hexagonal-BE/
 ├── code/
 │   ├── pom.xml                      # Parent module
 │   ├── domain/                      # Domain model (entities, VOs, services)
-│   ├── application/                 # Use cases, ports and CQRS handlers
+│   ├── application/                 # Use cases, feature slices, ports
+│   │   └── src/
+│   │       └── main/java/com/architecture/hexagonal/application/
+│   │           ├── common/                  # Shared CQRS contracts, pagination, etc.
+│   │           ├── feature/                 # Feature slices (user, email, ...)
+│   │           │   └── <feature>/           # e.g. user, email
+│   │           │       └── <action>/        # e.g. create, getall, update
+│   │           │           ├── command/     # Commands & handlers (CQRS)
+│   │           │           ├── query/       # Queries & handlers (CQRS)
+│   │           │           ├── port/        # Ports In/Out for the use case
+│   │           │           └── usecase/     # Use case logic
+│   │           └── port/                    # Shared ports (e.g. configuration, database)
 │   ├── infrastructure/
 │   │   ├── contract/
 │   │   │   └── rest/                # OpenAPI server stubs (user / email)
 │   │   ├── inbound/
-│   │   │   └── rest/                # REST controllers implementation
+│   │   │   ├── rest/                # REST controllers implementation
+│   │   │   └── cqrs/                # CQRS buses (CommandBus, QueryBus, EventBus)
 │   │   └── outbound/
 │   │       ├── database/            # DB adapters (JPA/Postgres)
 │   │       ├── message/             # Messaging adapters (RabbitMQ)
@@ -60,12 +72,14 @@ flowchart LR
     subgraph INBOUND["Infrastructure · Inbound"]
         direction TB
         REST[REST Controllers]
+        BUS[CommandBus / QueryBus\nEventBus]
     end
 
     subgraph APP["Application"]
         direction TB
-        BUS[CommandBus / QueryBus]
-        UC[Use Cases]
+        HANDLERS[Feature Handlers\nCommand / Query / Event]
+        UC[Feature Use Cases]
+        POUT[Ports Out]
     end
 
     subgraph DOMAIN["Domain"]
@@ -88,11 +102,13 @@ flowchart LR
     OAS -.implements.-> REST
     Client --> REST
     REST --> BUS
-    BUS --> UC
+    BUS --> HANDLERS
+    HANDLERS --> UC
     UC --> MODEL
-    UC -.-> DB
-    UC -.-> MSG
-    UC -.-> CFG
+    UC --> POUT
+    DB -.implements.-> POUT
+    MSG -.implements.-> POUT
+    CFG -.implements.-> POUT
     DB --> POSTGRES
     MSG --> RABBIT
     CFG --> Config

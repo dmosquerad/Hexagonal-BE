@@ -35,7 +35,7 @@ class ApplicationArchTest {
           .that()
           .haveSimpleNameEndingWith("UseCase")
           .and()
-          .resideInAPackage("..application.usecase..")
+          .resideInAPackage("..application.feature..")
           .should()
           .dependOnClassesThat()
           .resideInAnyPackage("..domain..")
@@ -56,8 +56,8 @@ class ApplicationArchTest {
           .that()
           .haveSimpleNameEndingWith("UseCase")
           .and()
-          .resideInAPackage("..application.usecase..")
-          .should().implement(Predicates.resideInAPackage("..application.port.in.."))
+          .resideInAPackage("..application.feature..")
+          .should().implement(Predicates.resideInAPackage("..application.feature..port.."))
           .because("Use cases must implement inbound ports");
 
   @ArchTest
@@ -66,7 +66,7 @@ class ApplicationArchTest {
           .that()
           .haveSimpleNameEndingWith("UseCase")
           .and()
-          .resideInAPackage("..application.usecase..")
+          .resideInAPackage("..application.feature..")
           .should().beAnnotatedWith(org.springframework.stereotype.Service.class)
           .because("Use cases must be annotated with @Service");
 
@@ -76,8 +76,8 @@ class ApplicationArchTest {
           .that()
           .haveSimpleNameEndingWith("Command")
           .should()
-          .resideInAPackage("..application.cqrs.command.request..")
-          .because("Commands must be in application.cqrs.command.request");
+          .resideInAPackage("..application.feature..command..")
+          .because("Commands must be in application.feature.{domain}.{feature}.command");
 
   @ArchTest
   static final ArchRule queries_should_reside_in_application_query_package =
@@ -85,8 +85,8 @@ class ApplicationArchTest {
           .that()
           .haveSimpleNameEndingWith("Query")
           .should()
-          .resideInAPackage("..application.cqrs.query.request..")
-          .because("Queries must be in application.cqrs.query.request");
+          .resideInAPackage("..application.feature..query..")
+          .because("Queries must be in application.feature.{domain}.{feature}.query");
 
   @ArchTest
   static final ArchRule ports_should_reside_in_application_port_package =
@@ -94,8 +94,9 @@ class ApplicationArchTest {
           .that()
           .haveSimpleNameEndingWith("Port")
           .should()
-          .resideInAPackage("..application.port..")
-          .because("Ports must be in application.port");
+          .resideInAnyPackage("..application.port..", "..application.feature..port..")
+          .because("Inbound ports must be in application.feature.{domain}.{feature}.port;"
+              + " outbound ports must be in application.port.{type}");
 
   @ArchTest
   static final ArchRule inbound_ports_should_reside_in_application_port_in =
@@ -103,8 +104,8 @@ class ApplicationArchTest {
           .that()
           .haveSimpleNameEndingWith("UseCasePort")
           .should()
-          .resideInAPackage("..application.port.in..")
-          .because("Inbound use case ports must be in application.port.in");
+          .resideInAPackage("..application.feature..port..")
+          .because("Inbound use case ports must be in application.feature.{domain}.{feature}.port");
 
   @ArchTest
   static final ArchRule outbound_ports_should_reside_in_application_port_out =
@@ -114,8 +115,8 @@ class ApplicationArchTest {
           .and()
           .haveSimpleNameNotEndingWith("UseCasePort")
           .should()
-          .resideInAPackage("..application.port.out..")
-          .because("Outbound ports must be in application.port.out");
+          .resideInAPackage("..application.port..")
+          .because("Outbound ports must be in application.port.{type}");
 
   @ArchTest
   static final ArchRule handler_implementations_should_reside_in_handler_impl =
@@ -125,10 +126,10 @@ class ApplicationArchTest {
           .and()
           .areNotInterfaces()
           .and()
-          .resideInAPackage("..application.cqrs..")
+          .resideInAPackage("..application.feature..")
           .should()
-          .resideInAPackage("..application.cqrs..handler.impl..")
-          .because("CQRS handler implementations must be in handler.impl");
+          .resideInAPackage("..application.feature..handler..")
+          .because("CQRS handler implementations must be in application.feature.{domain}.{feature}.{command|query}.handler");
 
   @ArchTest
   static final ArchRule bus_implementations_should_reside_in_dispatcher_impl =
@@ -136,14 +137,14 @@ class ApplicationArchTest {
           .that()
           .haveSimpleNameEndingWith("BusImpl")
           .should()
-          .resideInAPackage("..application.cqrs..dispatcher.impl..")
-          .because("Bus implementations must be in dispatcher.impl");
+          .resideInAPackage("..infrastructure.inbound.cqrs.bus..impl..")
+          .because("Bus implementations must be in infrastructure.cqrs.bus.{command|query|event}.impl");
 
   @ArchTest
   static final ArchRule inbound_ports_should_be_annotated_with_validated =
       ArchRuleDefinition.classes()
           .that()
-          .resideInAPackage("..application.port.in..")
+          .resideInAPackage("..application.feature..port..")
           .and()
           .areInterfaces()
           .should()
@@ -162,7 +163,7 @@ class ApplicationArchTest {
           .areNotInterfaces()
           .should()
           .beAssignableTo(
-              "com.architecture.hexagonal.cqrs.comand.handler.CommandHandler")
+              "com.architecture.hexagonal.application.common.cqrs.command.CommandHandler")
           .because("Command handler implementations must implement the CommandHandler"
               + " interface to guarantee a uniform CQRS dispatch contract");
 
@@ -175,7 +176,7 @@ class ApplicationArchTest {
           .areNotInterfaces()
           .should()
           .beAssignableTo(
-              "com.architecture.hexagonal.cqrs.query.handler.QueryHandler")
+              "com.architecture.hexagonal.application.common.cqrs.query.QueryHandler")
           .because("Query handler implementations must implement the QueryHandler"
               + " interface to guarantee a uniform CQRS dispatch contract");
 
@@ -213,7 +214,7 @@ class ApplicationArchTest {
   static final ArchRule ports_should_be_interfaces =
       ArchRuleDefinition.classes()
           .that()
-          .resideInAPackage("..application.port..")
+          .resideInAnyPackage("..application.port..", "..application.feature..port..")
           .should()
           .beInterfaces()
           .because("Ports define contracts between layers;"

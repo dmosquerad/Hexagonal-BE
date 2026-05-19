@@ -2,13 +2,13 @@ package com.architecture.hexagonal.infrastructure.inbound.rest.controller;
 
 import com.architecture.hexagonal.application.feature.user.create.command.CreateUserCommand;
 import com.architecture.hexagonal.application.feature.user.delete.command.DeleteUserCommand;
+import com.architecture.hexagonal.application.feature.user.getallfiltered.query.GetUsersFilteredQuery;
 import com.architecture.hexagonal.application.feature.user.patch.command.PatchUserCommand;
 import com.architecture.hexagonal.application.feature.user.update.command.UpdateUserCommand;
 import com.architecture.hexagonal.application.feature.user.findbyid.query.FindUserByUserIdQuery;
-import com.architecture.hexagonal.application.feature.user.getall.query.GetAllUserQuery;
 import com.architecture.hexagonal.application.common.pagination.PaginationResult;
-import com.architecture.hexagonal.infrastructure.cqrs.bus.command.CommandBus;
-import com.architecture.hexagonal.infrastructure.cqrs.bus.query.QueryBus;
+import com.architecture.hexagonal.infrastructure.inbound.cqrs.bus.command.CommandBus;
+import com.architecture.hexagonal.infrastructure.inbound.cqrs.bus.query.QueryBus;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.pagination.PaginationTestDataBuilder;
 import com.architecture.hexagonal.application.feature.user.exists.query.UserExistsQuery;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
@@ -129,7 +129,7 @@ class UserControllerTestIT {
     final User user = UserTestDataBuilder.builder().build().user();      
 
     Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
-    Mockito.when(queryBus.execute(ArgumentMatchers.any(GetAllUserQuery.class)))
+    Mockito.when(queryBus.execute(ArgumentMatchers.any(GetUsersFilteredQuery.class)))
         .thenReturn(PaginationResult.<User>builder()
             .data(Collections.singleton(user))
             .page(0)
@@ -150,7 +150,7 @@ class UserControllerTestIT {
 
     Mockito.verify(userController).getAllUsers(host, blockEmail, 0, 100);
     Mockito.verify(getAllUserQueryMapper).toGetAllUserQuery(host, blockEmail, PaginationTestDataBuilder.builder().build().pagination());
-    Mockito.verify(queryBus).execute(ArgumentMatchers.any(GetAllUserQuery.class));
+    Mockito.verify(queryBus).execute(ArgumentMatchers.any(GetUsersFilteredQuery.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
   }
 
@@ -192,7 +192,7 @@ class UserControllerTestIT {
     final User user = UserTestDataBuilder.builder().build().user();
 
     Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
-    Mockito.when(queryBus.execute(ArgumentMatchers.any(GetAllUserQuery.class)))
+    Mockito.when(queryBus.execute(ArgumentMatchers.any(GetUsersFilteredQuery.class)))
         .thenReturn(PaginationResult.<User>builder()
             .data(Collections.singleton(user))
             .page(page)
@@ -215,7 +215,7 @@ class UserControllerTestIT {
     Mockito.verify(userController).getAllUsers(null, null, page, size);
     Mockito.verify(getAllUserQueryMapper).toGetAllUserQuery(
         null, null, PaginationTestDataBuilder.builder().page(page).size(size).build().pagination());
-    Mockito.verify(queryBus).execute(ArgumentMatchers.any(GetAllUserQuery.class));
+    Mockito.verify(queryBus).execute(ArgumentMatchers.any(GetUsersFilteredQuery.class));
   }
 
   @Test

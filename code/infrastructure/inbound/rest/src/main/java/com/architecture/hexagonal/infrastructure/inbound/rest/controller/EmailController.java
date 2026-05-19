@@ -5,7 +5,7 @@ import com.architecture.hexagonal.domain.exception.DomainException;
 import com.architecture.hexagonal.domain.model.vo.EmailBlockRulesVo;
 import com.architecture.hexagonal.infrastructure.contract.rest.email.server.controller.EmailsApi;
 import com.architecture.hexagonal.infrastructure.contract.rest.email.server.dto.EmailBlockRulesResponseDto;
-import com.architecture.hexagonal.infrastructure.cqrs.bus.query.QueryBus;
+import com.architecture.hexagonal.infrastructure.inbound.cqrs.bus.query.QueryBus;
 import com.architecture.hexagonal.infrastructure.inbound.rest.factory.ErrorResponseFactory;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.EmailBlockRulesMapper;
 import lombok.RequiredArgsConstructor;

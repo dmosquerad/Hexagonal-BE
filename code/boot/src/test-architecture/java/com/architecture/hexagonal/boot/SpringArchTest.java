@@ -61,6 +61,6 @@ class SpringArchTest {
           .that()
           .areAnnotatedWith(Service.class)
           .should()
-          .resideInAPackage("..application.usecase..")
+          .resideInAPackage("..application.feature..usecase..")
           .because("Only application use cases may be @Service");
 }

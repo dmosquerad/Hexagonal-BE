@@ -28,7 +28,8 @@ class HexagonalArchitectureTest {
               "..infrastructure.outbound.database..",
               "..infrastructure.outbound.configuration..",
               "..infrastructure.outbound.message..",
-              "..infrastructure.inbound.rest..")
+              "..infrastructure.inbound.rest..",
+              "..infrastructure.inbound.cqrs..")
           .because("Infrastructure may contain only declared adapters;"
               + " undeclared adapter packages break the explicit port-adapter mapping");
 

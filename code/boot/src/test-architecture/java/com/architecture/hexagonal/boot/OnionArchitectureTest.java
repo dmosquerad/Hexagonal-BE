@@ -13,9 +13,9 @@ class OnionArchitectureTest {
       Architectures.onionArchitecture()
           .domainModels("..domain.model..", "..domain.exception..")
           .domainServices("..domain.service..")
-          .applicationServices("..application.usecase..",
-              "..application.port..",
-              "..application.cqrs..")
+          .applicationServices("..application.feature..",
+              "..application.common..",
+              "..application.port..")
           .adapter("inbound", "..infrastructure.inbound..")
           .adapter("outbound", "..infrastructure.outbound..")
           .because("Domain model and domain services must not depend on application or adapters;"
