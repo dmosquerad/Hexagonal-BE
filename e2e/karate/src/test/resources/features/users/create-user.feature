@@ -25,4 +25,4 @@ Feature: Create User - POST /users
     When method POST
     Then status 200
     * def cleanupUserId = response.data.userId
-    And match response == { date: '#string', status: 200, data: { userId: '#string', name: '#string', email: '#string' } }
+    And match response == { date: '#string', status: 200, data: { userId: '#string', name: '#string', email: '#string' }, pagination: '#null' }

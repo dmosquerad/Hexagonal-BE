@@ -9,7 +9,5 @@ import org.mapstruct.ReportingPolicy;
     componentModel = "spring",
     injectionStrategy = InjectionStrategy.CONSTRUCTOR,
     unmappedTargetPolicy = ReportingPolicy.ERROR,
-    nullValueMappingStrategy = NullValueMappingStrategy.RETURN_DEFAULT
-)
-public interface MapstructConfig {
-}
+    nullValueMappingStrategy = NullValueMappingStrategy.RETURN_DEFAULT)
+public interface MapstructConfig {}

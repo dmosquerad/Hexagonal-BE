@@ -7,7 +7,7 @@ import lombok.Value;
 @Builder
 public class UserDeleted {
 
-    String userId;
-    String name;
-    String email;
+  String userId;
+  String name;
+  String email;
 }

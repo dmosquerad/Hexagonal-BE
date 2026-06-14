@@ -13,25 +13,20 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @RequiredArgsConstructor
 public class UserMessageSender {
 
-  public static final String PUBLISH_USER_CREATED_OUT_BINDING = "publishUserCreated-out-0";
-  public static final String PUBLISH_USER_UPDATED_OUT_BINDING = "publishUserUpdated-out-0";
-  public static final String PUBLISH_USER_DELETED_OUT_BINDING = "publishUserDeleted-out-0";
-
   private final StreamBridge streamBridge;
 
   @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
   public void sendUserCreatedMessage(final UserCreated event) {
-    streamBridge.send(PUBLISH_USER_CREATED_OUT_BINDING, event);
+    streamBridge.send(UserMessageNaming.PUBLISH_USER_CREATED_OUT_BINDING, event);
   }
 
   @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
   public void sendUserUpdatedMessage(final UserUpdated event) {
-    streamBridge.send(PUBLISH_USER_UPDATED_OUT_BINDING, event);
+    streamBridge.send(UserMessageNaming.PUBLISH_USER_UPDATED_OUT_BINDING, event);
   }
 
   @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
   public void sendUserDeletedMessage(final UserDeleted event) {
-    streamBridge.send(PUBLISH_USER_DELETED_OUT_BINDING, event);
+    streamBridge.send(UserMessageNaming.PUBLISH_USER_DELETED_OUT_BINDING, event);
   }
 }
-

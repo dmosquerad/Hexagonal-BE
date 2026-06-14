@@ -22,6 +22,10 @@ Feature: Get All Users - GET /users
     And match response.date == '#string'
     And match response.data == '#array'
     And match each response.data == { userId: '#string', name: '#string', email: '#string' }
+    And match response.pagination == { page: '#number', size: '#number', totalElements: '#number', totalPages: '#number' }
+    * assert response.pagination.page >= 0
+    * assert response.pagination.size >= 1
+    * assert response.pagination.totalElements >= 0
 
     # Verify the newly created user is present in the list
     And match response.data contains { userId: '#(createdId)', name: 'GetAll Test', email: '#(testEmail)' }

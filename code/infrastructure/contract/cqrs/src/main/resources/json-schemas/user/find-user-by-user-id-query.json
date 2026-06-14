@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "find-user-by-user-id-query",
+  "title": "FindUserByUserIdQuery",
+  "type": "object",
+  "properties": {
+    "userId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Identifier of the user to find"
+    }
+  },
+  "required": [
+    "userId"
+  ],
+  "additionalProperties": false
+}

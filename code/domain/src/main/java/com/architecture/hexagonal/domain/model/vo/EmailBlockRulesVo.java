@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.domain.model.vo;
 
-import java.util.List;
+import java.util.Set;
 import lombok.Builder;
 import lombok.Value;
 
@@ -8,9 +8,9 @@ import lombok.Value;
 @Builder
 public class EmailBlockRulesVo {
 
-  List<String> email;
-  List<String> host;
-  List<String> tld;
-  List<String> domain;
-  List<String> username;
+  Set<String> email;
+  Set<String> host;
+  Set<String> tld;
+  Set<String> domain;
+  Set<String> username;
 }

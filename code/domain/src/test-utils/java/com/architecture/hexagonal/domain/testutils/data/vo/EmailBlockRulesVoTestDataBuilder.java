@@ -1,26 +1,27 @@
 package com.architecture.hexagonal.domain.testutils.data.vo;
 
 import com.architecture.hexagonal.domain.model.vo.EmailBlockRulesVo;
-import java.util.List;
+import java.util.Set;
+
 import lombok.Builder;
 
 @Builder
 public class EmailBlockRulesVoTestDataBuilder {
 
   @Builder.Default
-  private List<String> email = List.of();
+  private Set<String> email = Set.of();
 
   @Builder.Default
-  private List<String> host = List.of();
+  private Set<String> host = Set.of();
 
   @Builder.Default
-  private List<String> tld = List.of();
+  private Set<String> tld = Set.of();
 
   @Builder.Default
-  private List<String> domain = List.of();
+  private Set<String> domain = Set.of();
 
   @Builder.Default
-  private List<String> username = List.of();
+  private Set<String> username = Set.of();
 
   public EmailBlockRulesVo emailBlockRulesVo() {
     return EmailBlockRulesVo.builder()

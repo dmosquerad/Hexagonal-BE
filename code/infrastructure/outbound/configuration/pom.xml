@@ -11,4 +11,14 @@
         <artifactId>outbound</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
+
+    <dependencies>
+        <!-- ============================================ -->
+        <!-- SPRING BOOT -->
+        <!-- ============================================ -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-validation</artifactId>
+        </dependency>
+    </dependencies>
 </project>

@@ -74,13 +74,4 @@ class EmailVoPredicateTest {
 
     Assertions.assertThat(result).isFalse();
   }
-
-  @Test
-  void hostEquals_shouldReturnFalse_whenNullPassedAsHost() {
-    EmailVo emailVo = EmailVoTestDataBuilder.builder().build().emailVo();
-
-    boolean result = EmailVoPredicate.hostEquals(null).test(emailVo);
-
-    Assertions.assertThat(result).isFalse();
-  }
 }

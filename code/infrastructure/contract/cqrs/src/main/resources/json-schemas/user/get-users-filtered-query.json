@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "get-users-filtered-query",
+  "title": "GetUsersFilteredQuery",
+  "type": "object",
+  "properties": {
+    "host": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Optional host filter"
+    },
+    "blockEmail": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "Optional email blocking flag"
+    },
+    "pagination": {
+      "$ref": "../common/pagination.json"
+    }
+  },
+  "additionalProperties": false
+}
