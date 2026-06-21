@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.mapper.user;
 
-import com.architecture.hexagonal.infrastructure.contract.cqrs.generated.user.UpdateUserCommandDto;
+import com.architecture.hexagonal.infrastructure.contract.orchestration.generated.user.UpdateUserCommandDto;
 import com.architecture.hexagonal.infrastructure.contract.rest.user.server.dto.UserUpdateDto;
 import com.architecture.hexagonal.infrastructure.inbound.rest.config.MapstructConfig;
 import java.util.UUID;

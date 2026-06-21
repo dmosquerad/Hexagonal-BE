@@ -2,6 +2,7 @@ package com.architecture.hexagonal.infrastructure.outbound.database.testutils.da
 
 import com.architecture.hexagonal.domain.model.pagination.PaginationResult;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import lombok.Builder;
 
@@ -9,7 +10,7 @@ import lombok.Builder;
 public class PaginationResultTestDataBuilder<T> {
 
   @Builder.Default
-  private Set<T> data = Collections.emptySet();
+  private List<T> data = Collections.emptyList();
 
   @Builder.Default
   private long totalElements = 1L;

@@ -251,6 +251,5 @@ components:
           properties:
             data:
               type: array
-              uniqueItems: true
               items:
                 $ref: './users-schema.yml#/schemas/userRead'

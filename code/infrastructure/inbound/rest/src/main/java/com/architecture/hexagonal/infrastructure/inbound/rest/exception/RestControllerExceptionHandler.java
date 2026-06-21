@@ -1,5 +1,7 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.exception;
 
+import com.architecture.hexagonal.domain.exception.DomainException;
+import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import com.architecture.hexagonal.infrastructure.contract.rest.user.server.dto.ResponseErrorDto;
 import jakarta.validation.ConstraintViolationException;
 import java.time.Clock;
@@ -44,21 +46,47 @@ public class RestControllerExceptionHandler extends ResponseEntityExceptionHandl
     return new ResponseEntity<>(responseErrorDto, headers, statusCode);
   }
 
+  @ExceptionHandler(IllegalArgumentException.class)
+  public ResponseEntity<Object> handleIllegalArgumentException(
+      IllegalArgumentException ex, WebRequest request) {
+    final ProblemDetail problemDetail =
+        ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+    return this.handleExceptionInternal(
+        ex, problemDetail, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+  }
+
+  @ExceptionHandler(ResourceNotFoundException.class)
+  public ResponseEntity<Object> handleResourceNotFoundException(
+      ResourceNotFoundException ex, WebRequest request) {
+    final ProblemDetail problemDetail =
+        ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+    return this.handleExceptionInternal(
+        ex, problemDetail, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+  }
+
   @ExceptionHandler(ConstraintViolationException.class)
   public ResponseEntity<Object> handleConstraintViolationException(
       final ConstraintViolationException ex, final WebRequest request) {
-    final ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
-    problemDetail.setDetail(ex.getMessage());
+    final ProblemDetail problemDetail =
+        ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
     return this.handleExceptionInternal(
         ex, problemDetail, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+  }
+
+  @ExceptionHandler(DomainException.class)
+  public ResponseEntity<Object> handleDomainException(DomainException ex, WebRequest request) {
+    final ProblemDetail problemDetail =
+        ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage());
+    return this.handleExceptionInternal(
+        ex, problemDetail, new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY, request);
   }
 
   @ExceptionHandler(Exception.class)
   public ResponseEntity<Object> handleNonControlledException(
       final Exception ex, final WebRequest request) {
-    final ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-    problemDetail.setDetail(ex.getMessage());
+    final ProblemDetail problemDetail =
+        ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
     return this.handleExceptionInternal(
-        ex, problemDetail, null, HttpStatus.INTERNAL_SERVER_ERROR, request);
+        ex, problemDetail, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
   }
 }

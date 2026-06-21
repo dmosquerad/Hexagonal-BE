@@ -6,6 +6,7 @@ import com.architecture.hexagonal.infrastructure.outbound.database.repository.pr
 import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Predicate;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -37,6 +38,9 @@ public final class UserSpecifications {
 
   public static Specification<UserDao> blockedEmail(
       final Boolean blockEmail, final EmailBlockRulesVo rules) {
+    if (Objects.isNull(rules)) {
+      return blockedEmail();
+    }
     return (root, query, cb) -> {
       final Expression<String> email = cb.lower(root.get(UserDao.Fields.email));
       final List<Predicate> blockedPredicates =
@@ -52,11 +56,12 @@ public final class UserSpecifications {
       final Predicate emailMatchesBlockedRule =
           blockedPredicates.stream().reduce(cb::or).orElse(null);
 
-      if (emailMatchesBlockedRule == null) {
+      if (Objects.isNull(emailMatchesBlockedRule)) {
         return null;
       }
 
-      return blockEmail ? emailMatchesBlockedRule : cb.not(emailMatchesBlockedRule);
+      final boolean shouldBlock = Boolean.TRUE.equals(blockEmail);
+      return shouldBlock ? emailMatchesBlockedRule : cb.not(emailMatchesBlockedRule);
     };
   }
 }

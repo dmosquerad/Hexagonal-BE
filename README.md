@@ -26,13 +26,12 @@ Hexagonal-BE/
 ├── code/
 │   ├── pom.xml                      # Parent module
 │   ├── domain/                      # Domain model (entities, VOs, services)
-│   ├── application/                 # Use cases, feature slices, ports
+│   ├── application/                 # Use cases, business slices, ports
 │   │   └── src/
 │   │       └── main/java/com/architecture/hexagonal/application/
-│   │           ├── common/                  # Shared CQRS contracts, pagination, etc.
-│   │           ├── feature/                 # Feature slices (user, email, ...)
+│   │           ├── business/                # Business slices (user, email, ...)
 │   │           │   └── <feature>/           # e.g. user, email
-│   │           │       └── <action>/        # e.g. create, getall, update
+│   │           │       └── <action>/        # e.g. create, getall, update, patch, delete
 │   │           │           ├── command/     # Commands & handlers (CQRS)
 │   │           │           ├── query/       # Queries & handlers (CQRS)
 │   │           │           ├── port/        # Ports In/Out for the use case
@@ -42,8 +41,8 @@ Hexagonal-BE/
 │   │   ├── contract/
 │   │   │   └── rest/                # OpenAPI server stubs (user / email)
 │   │   ├── inbound/
-│   │   │   ├── rest/                # REST controllers implementation
-│   │   │   └── cqrs/                # CQRS buses (CommandBus, QueryBus, EventBus)
+│   │   │   ├── orchestration/       # CQRS buses (CommandBus, QueryBus)
+│   │   │   └── rest/                # REST controllers implementation
 │   │   └── outbound/
 │   │       ├── database/            # DB adapters (JPA/Postgres)
 │   │       ├── message/             # Messaging adapters (RabbitMQ)
@@ -72,13 +71,13 @@ flowchart LR
     subgraph INBOUND["Infrastructure · Inbound"]
         direction TB
         REST[REST Controllers]
-        BUS[CommandBus / QueryBus\nEventBus]
+        ORCH[Orchestration\nCommandBus / QueryBus]
     end
 
     subgraph APP["Application"]
         direction TB
-        HANDLERS[Feature Handlers\nCommand / Query / Event]
-        UC[Feature Use Cases]
+        HANDLERS[Business Handlers\nCommand / Query]
+        UC[Business Use Cases]
         POUT[Ports Out]
     end
 
@@ -101,8 +100,8 @@ flowchart LR
 
     OAS -.implements.-> REST
     Client --> REST
-    REST --> BUS
-    BUS --> HANDLERS
+    REST --> ORCH
+    ORCH --> HANDLERS
     HANDLERS --> UC
     UC --> MODEL
     UC --> POUT
@@ -114,6 +113,7 @@ flowchart LR
     CFG --> Config
 
     COMP -.wires.-> REST
+    COMP -.wires.-> ORCH
     COMP -.wires.-> DB
     COMP -.wires.-> MSG
     COMP -.wires.-> CFG
@@ -157,6 +157,7 @@ Orchestrates the domain through use cases and defines the port contracts consume
 
 **Content:**
 - Use cases for User CRUD and email rules retrieval
+- Business slices organized by domain features
 - Ports In — one input contract per use case
 - Ports Out — contracts for persistence and configuration access
 - `CommandBus` / `QueryBus` dispatchers and their handler implementations
@@ -171,6 +172,13 @@ Holds the OpenAPI 3.0 specifications and generates server-side stubs consumed by
 - `email-rest-server`: OpenAPI spec for the Email rules API
 - Generated Java interfaces implemented by REST controllers
 
+#### Inbound — Orchestration (`code/infrastructure/inbound/orchestration`)
+Implements CQRS buses for command and query orchestration.
+
+**Content:**
+- `CommandBus` and `QueryBus` implementations
+- Command/Query handler registration and dispatching
+
 #### Inbound — REST (`code/infrastructure/inbound/rest`)
 Exposes the HTTP API and translates requests into application commands/queries.
 
@@ -178,7 +186,6 @@ Exposes the HTTP API and translates requests into application commands/queries.
 - REST controllers implementing the generated OpenAPI interfaces
 - Request-to-command/query mappers (MapStruct)
 - Centralized REST exception handling
-- Use request for communicate to cqrs
 
 #### Outbound — Database (`code/infrastructure/outbound/database`)
 Implements persistence with PostgreSQL using Spring Data JPA.

@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.domain.model.pagination;
 
-import java.util.Set;
+import java.util.List;
 import lombok.Builder;
 import lombok.Value;
 
@@ -8,7 +8,7 @@ import lombok.Value;
 @Builder
 public class PaginationResult<T> {
 
-  Set<T> data;
+  List<T> data;
   long totalElements;
   int totalPages;
   int page;
