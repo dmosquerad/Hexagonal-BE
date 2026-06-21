@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.application.testutils.user.delete.input;
 
-import com.architecture.hexagonal.application.user.delete.input.DeleteUserCommand;
+import com.architecture.hexagonal.application.business.user.delete.input.DeleteUserCommand;
 import java.util.UUID;
 import lombok.Builder;
 

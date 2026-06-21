@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.application.testutils.user.getall.input;
 
-import com.architecture.hexagonal.application.user.getall.input.GetUsersQuery;
+import com.architecture.hexagonal.application.business.user.getall.input.GetUsersQuery;
 import com.architecture.hexagonal.domain.model.pagination.Pagination;
 import com.architecture.hexagonal.application.testutils.data.pagination.PaginationTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.data.vo.EmailBlockRulesVoTestDataBuilder;

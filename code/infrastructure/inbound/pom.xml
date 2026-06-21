@@ -13,7 +13,7 @@
 
     <modules>
         <module>rest</module>
-        <module>cqrs</module>
+        <module>orchestration</module>
     </modules>
 
 </project>

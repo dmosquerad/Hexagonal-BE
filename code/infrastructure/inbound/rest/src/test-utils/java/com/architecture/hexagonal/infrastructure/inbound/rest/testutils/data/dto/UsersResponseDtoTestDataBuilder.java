@@ -5,6 +5,7 @@ import com.architecture.hexagonal.infrastructure.contract.rest.user.server.dto.U
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.time.TestClock;
 import java.time.OffsetDateTime;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import lombok.Builder;
 
@@ -18,7 +19,7 @@ public class UsersResponseDtoTestDataBuilder {
   private Integer status = 200;
 
   @Builder.Default
-  private Set<UserReadDto> userReadDto = Collections.singleton(UserReadDtoTestDataBuilder
+  private List<UserReadDto> userReadDto = Collections.singletonList(UserReadDtoTestDataBuilder
       .builder()
       .build()
       .userReadDto());

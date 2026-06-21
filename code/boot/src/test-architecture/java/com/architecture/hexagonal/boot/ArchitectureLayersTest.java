@@ -30,7 +30,7 @@ class ArchitectureLayersTest {
               "..infrastructure.outbound.configuration..",
               "..infrastructure.outbound.message..",
               "..infrastructure.inbound.rest..",
-              "..infrastructure.inbound.cqrs..")
+              "..infrastructure.inbound.orchestration..")
           .because("Infrastructure may contain only declared adapters;"
               + " undeclared adapter packages break the explicit port-adapter mapping");
 
