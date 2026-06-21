@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.application.testutils.user.patch.input;
 
-import com.architecture.hexagonal.application.user.patch.input.PatchUserCommand;
+import com.architecture.hexagonal.application.business.user.patch.input.PatchUserCommand;
 import java.util.UUID;
 import lombok.Builder;
 
