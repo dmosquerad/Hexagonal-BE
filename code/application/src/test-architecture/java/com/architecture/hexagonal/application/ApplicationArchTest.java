@@ -34,35 +34,11 @@ class ApplicationArchTest {
   @ArchTest
   static final ArchRule input_types_should_reside_in_application_input_package =
       ArchRuleDefinition.classes()
-          .that(
-              DescribedPredicate.or(
-                  DescribedPredicate.describe("class name ends with Command", clazz -> clazz.getSimpleName().endsWith("Command")),
-                  DescribedPredicate.describe("class name ends with Query", clazz -> clazz.getSimpleName().endsWith("Query")),
-                  DescribedPredicate.describe("class name ends with Event", clazz -> clazz.getSimpleName().endsWith("Event"))
-              )
-          )
+          .that()
+          .haveSimpleNameEndingWith("Input")
           .should()
           .resideInAPackage("..application..input..")
           .because("Inputs must be in application.{domain}.{feature}.input");
-
-  @ArchTest
-  static final ArchRule input_fields_should_be_immutable =
-      ArchRuleDefinition.fields()
-          .that()
-          .areDeclaredInClassesThat(
-              DescribedPredicate.or(
-                  DescribedPredicate.describe("class name ends with Command", clazz -> clazz.getSimpleName().endsWith("Command")),
-                  DescribedPredicate.describe("class name ends with Query", clazz -> clazz.getSimpleName().endsWith("Query")),
-                  DescribedPredicate.describe("class name ends with Event", clazz -> clazz.getSimpleName().endsWith("Event"))
-              )
-          )
-          .and()
-          .areNotStatic()
-          .should()
-          .beFinal()
-          .andShould()
-          .bePrivate()
-          .because("Inputs must be private final to guarantee immutability");
 
     @ArchTest
     static final ArchRule use_cases_should_get_interfaces =

@@ -14,7 +14,7 @@ class InfrastructureInboundArchTest {
   static final ArchRule controller_should_reside_in_inbound =
       ArchRuleDefinition.classes()
           .that()
-          .haveSimpleNameEndingWith("Controller")
+          .haveSimpleNameEndingWith("ControllerImpl")
           .should()
           .resideInAPackage("..infrastructure.inbound..")
           .because("Controllers must be in infrastructure.inbound");
@@ -23,15 +23,15 @@ class InfrastructureInboundArchTest {
   static final ArchRule controller_and_handlers_should_depend_on_inbound_ports =
       ArchRuleDefinition.classes()
           .that()
-          .haveSimpleNameEndingWith("Controller")
+          .haveSimpleNameEndingWith("ControllerImpl")
           .and()
-          .haveSimpleNameNotEndingWith("Handler")
+          .haveSimpleNameNotEndingWith("HandlerImpl")
           .and()
           .resideInAPackage("..infrastructure.inbound..")
           .should()
           .dependOnClassesThat()
-          .resideInAnyPackage("..infrastructure.inbound.cqrs..")
-          .because("Controllers must depend on inbound ports or CQRS request types");
+          .resideInAnyPackage("..infrastructure.inbound.orchestration..")
+          .because("Controllers must depend on inbound ports or Orchestration request types");
 
   @ArchTest
   static final ArchRule rest_controller_advice_should_reside_in_inbound =

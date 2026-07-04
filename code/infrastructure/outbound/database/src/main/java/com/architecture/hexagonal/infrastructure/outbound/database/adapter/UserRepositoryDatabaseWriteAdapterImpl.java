@@ -1,0 +1,31 @@
+package com.architecture.hexagonal.infrastructure.outbound.database.adapter;
+
+import com.architecture.hexagonal.application.port.database.UserRepositoryWritePort;
+import com.architecture.hexagonal.domain.model.aggregate.User;
+import com.architecture.hexagonal.infrastructure.outbound.database.mapper.user.UserDaoMapper;
+import com.architecture.hexagonal.infrastructure.outbound.database.mapper.user.UserMapper;
+import com.architecture.hexagonal.infrastructure.outbound.database.repository.UserDatabaseWriteRepository;
+import java.util.Optional;
+import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
+
+@Repository
+@RequiredArgsConstructor
+public class UserRepositoryDatabaseWriteAdapterImpl implements UserRepositoryWritePort {
+  private final UserDatabaseWriteRepository userDatabaseWriteRepository;
+
+  private final UserMapper userMapper;
+
+  private final UserDaoMapper userDaoMapper;
+
+  @Override
+  public User saveUser(final User user) {
+    return userMapper.toUser(userDatabaseWriteRepository.save(userDaoMapper.toUserDao(user)));
+  }
+
+  @Override
+  public Optional<User> deleteUser(final UUID uuid) {
+    return userDatabaseWriteRepository.deleteByUserId(uuid).map(userMapper::toUser);
+  }
+}

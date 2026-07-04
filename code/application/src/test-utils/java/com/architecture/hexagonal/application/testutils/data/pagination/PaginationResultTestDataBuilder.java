@@ -2,14 +2,14 @@ package com.architecture.hexagonal.application.testutils.data.pagination;
 
 import com.architecture.hexagonal.domain.model.pagination.PaginationResult;
 import java.util.Collections;
-import java.util.Set;
+import java.util.List;
 import lombok.Builder;
 
 @Builder
 public class PaginationResultTestDataBuilder<T> {
 
   @Builder.Default
-  private Set<T> data = Collections.emptySet();
+  private List<T> data = Collections.emptyList();
 
   @Builder.Default
   private long totalElements = 1L;

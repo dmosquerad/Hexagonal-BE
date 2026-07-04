@@ -14,7 +14,7 @@ class InfrastructureOutboundArchTest {
   static final ArchRule adapters_should_reside_in_outbound_adapter =
       ArchRuleDefinition.classes()
           .that()
-          .haveSimpleNameEndingWith("Adapter")
+          .haveSimpleNameEndingWith("AdapterImpl")
           .should()
           .resideInAPackage("..infrastructure.outbound..")
           .because("Adapters must be in infrastructure.outbound");
@@ -23,7 +23,7 @@ class InfrastructureOutboundArchTest {
   static final ArchRule outbound_adapters_should_depend_on_outbound_ports =
       ArchRuleDefinition.classes()
           .that()
-          .haveSimpleNameEndingWith("Adapter")
+          .haveSimpleNameEndingWith("AdapterImpl")
           .and()
           .resideInAPackage("..infrastructure.outbound..")
           .should().implement(Predicates.resideInAPackage("..application.port.."))

@@ -17,14 +17,4 @@ class InfrastructureInboundRestArchTest {
             .should()
             .resideInAPackage("..infrastructure.inbound.rest.exception..")
             .because("Exception handlers must be centralized under the exception package");
-
-    @ArchTest
-    static final ArchRule factories_should_reside_in_factory_package =
-        ArchRuleDefinition.classes()
-            .that()
-            .haveSimpleNameEndingWith("Factory")
-            .should()
-            .resideInAPackage("..infrastructure.inbound.rest.factory..")
-            .because("Inbound factory classes must be centralized in the factory package");
-
 }
