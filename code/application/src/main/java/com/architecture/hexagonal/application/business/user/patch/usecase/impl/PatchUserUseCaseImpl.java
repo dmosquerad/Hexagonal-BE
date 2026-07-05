@@ -9,12 +9,13 @@ import com.architecture.hexagonal.application.port.message.UserSenderPort;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.InvalidValueException;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
-import com.architecture.hexagonal.domain.model.aggregate.User;
+import com.architecture.hexagonal.domain.model.aggregate.user.User;
 import com.architecture.hexagonal.domain.model.entity.UserDo;
 import com.architecture.hexagonal.domain.model.vo.EmailVo;
 import com.architecture.hexagonal.domain.model.vo.factory.EmailVoFactory;
 import com.architecture.hexagonal.domain.service.EmailBlockPolicy;
 import java.util.UUID;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
@@ -27,7 +28,7 @@ public class PatchUserUseCaseImpl implements PatchUserUseCase {
   private final EmailConfigurationPort emailConfigurationPort;
 
   @Override
-  public User execute(final PatchUserInput patchUserInput) {
+  public User execute(final @NonNull PatchUserInput patchUserInput) {
     final UUID uuid = patchUserInput.getUserId();
 
     final User currentUser =

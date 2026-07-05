@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>rest</artifactId>
+    <artifactId>rest-server</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
@@ -22,11 +22,11 @@
         </dependency>
         <dependency>
             <groupId>com.architecture.hexagonal</groupId>
-            <artifactId>user-rest-server</artifactId>
+            <artifactId>inbound-user-rest-server</artifactId>
         </dependency>
         <dependency>
             <groupId>com.architecture.hexagonal</groupId>
-            <artifactId>email-rest-server</artifactId>
+            <artifactId>inbound-email-rest-server</artifactId>
         </dependency>
         <!-- ============================================ -->
         <!-- SPRINGBOOT -->

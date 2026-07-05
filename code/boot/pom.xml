@@ -19,19 +19,31 @@
         <!-- ============================================ -->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>rest</artifactId>
+            <artifactId>rest-server</artifactId>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>database</artifactId>
+            <artifactId>execution-outbox</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>database-postgresql</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>database-mongodb</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mesage-rabbitmq</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>outbox</artifactId>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>configuration</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>message</artifactId>
         </dependency>
     </dependencies>
 </project>

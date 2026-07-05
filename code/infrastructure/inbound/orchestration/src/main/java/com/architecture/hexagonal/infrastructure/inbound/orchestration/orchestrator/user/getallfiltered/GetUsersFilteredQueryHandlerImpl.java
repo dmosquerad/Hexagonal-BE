@@ -3,13 +3,14 @@ package com.architecture.hexagonal.infrastructure.inbound.orchestration.orchestr
 import com.architecture.hexagonal.application.business.email.getblockedrules.usecase.GetBlockedRulesUseCase;
 import com.architecture.hexagonal.application.business.user.getall.input.GetUsersInput;
 import com.architecture.hexagonal.application.business.user.getall.usecase.GetAllUsersUseCase;
-import com.architecture.hexagonal.domain.model.aggregate.User;
+import com.architecture.hexagonal.domain.model.aggregate.user.User;
 import com.architecture.hexagonal.domain.model.pagination.Pagination;
 import com.architecture.hexagonal.domain.model.pagination.PaginationResult;
-import com.architecture.hexagonal.infrastructure.contract.orchestration.generated.user.GetUsersFilteredQueryDto;
-import com.architecture.hexagonal.infrastructure.inbound.orchestration.config.TransactionBoundary;
+import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.user.GetUsersFilteredQueryDto;
+import com.architecture.hexagonal.infrastructure.inbound.orchestration.config.transaction.TransactionBoundary;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.dispatcher.query.QueryHandler;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.mapper.pagination.PaginationMapper;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.stereotype.Component;
@@ -25,7 +26,8 @@ public class GetUsersFilteredQueryHandlerImpl
   private final PaginationMapper paginationMapper;
 
   @Override
-  public PaginationResult<User> handle(final GetUsersFilteredQueryDto getUsersFilteredQueryDto) {
+  public PaginationResult<User> handle(
+      final @NonNull GetUsersFilteredQueryDto getUsersFilteredQueryDto) {
     final Pagination pagination =
         paginationMapper.toPagination(getUsersFilteredQueryDto.getPagination());
     final String host = getUsersFilteredQueryDto.getHost();

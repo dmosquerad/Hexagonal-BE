@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.domain.testutils.data.aggregate;
 
-import com.architecture.hexagonal.domain.model.aggregate.User;
+import com.architecture.hexagonal.domain.model.aggregate.user.User;
 import com.architecture.hexagonal.domain.model.entity.UserDo;
 import com.architecture.hexagonal.domain.model.vo.EmailVo;
 import com.architecture.hexagonal.domain.testutils.data.entity.UserDoTestDataBuilder;

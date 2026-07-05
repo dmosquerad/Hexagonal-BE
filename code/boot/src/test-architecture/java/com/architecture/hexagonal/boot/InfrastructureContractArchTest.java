@@ -13,13 +13,15 @@ class InfrastructureContractArchTest {
   static final ArchRule contract_should_not_depend_on_adapter_layers =
       ArchRuleDefinition.noClasses()
           .that()
-          .resideInAPackage("..infrastructure.contract..")
+          .resideInAPackage("..infrastructure.inbound.contract..")
           .should()
           .dependOnClassesThat()
           .resideInAnyPackage(
               "..domain..",
               "..application..",
-              "..infrastructure.inbound..",
+              "..infrastructure.inbound.rest..",
+              "..infrastructure.inbound.orchestration..",
+              "..infrastructure.inbound.execution..",
               "..infrastructure.outbound..",
               "..boot..")
           .because("Infrastructure contracts must not depend on any other project module");

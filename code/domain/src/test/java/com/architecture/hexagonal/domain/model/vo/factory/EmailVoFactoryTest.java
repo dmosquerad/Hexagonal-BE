@@ -1,11 +1,9 @@
 package com.architecture.hexagonal.domain.model.vo.factory;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.model.vo.EmailVo;
 import com.architecture.hexagonal.domain.testutils.data.vo.EmailVoTestDataBuilder;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class EmailVoFactoryTest {
@@ -16,12 +14,12 @@ class EmailVoFactoryTest {
 
     final EmailVo result = EmailVoFactory.from("test@example.com");
 
-    assertThat(result).isEqualTo(expected);
+    Assertions.assertThat(result).isEqualTo(expected);
   }
 
   @Test
   void from_shouldThrowIllegalArgumentException_whenEmailIsInvalid() {
-    assertThatThrownBy(() -> EmailVoFactory.from("not-an-email"))
+    Assertions.assertThatThrownBy(() -> EmailVoFactory.from("not-an-email"))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage(ExceptionMessage.INVALID_EMAIL_FORMAT + "not-an-email");
   }

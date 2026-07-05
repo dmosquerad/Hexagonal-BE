@@ -103,9 +103,9 @@ class DomainArchTest {
       ArchRuleDefinition.classes()
           .that()
           .resideInAPackage("..domain.model.aggregate..")
+          .and()
+          .doNotHaveSimpleName("Aggregate")
           .should()
-          .resideInAPackage("..domain.model.aggregate..")
-          .andShould()
           .notBeInterfaces()
           .because("Aggregate roots must be concrete classes confined to domain.model.aggregate");
 

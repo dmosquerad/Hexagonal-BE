@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.inbound.orchestration.testutils.data.query;
 
-import com.architecture.hexagonal.infrastructure.contract.orchestration.generated.user.FindUserByUserIdQueryDto;
+import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.user.FindUserByUserIdQueryDto;
 import lombok.Builder;
 
 import java.util.UUID;

@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.inbound.orchestration.testutils.data.common;
 
-import com.architecture.hexagonal.infrastructure.contract.orchestration.generated.common.PaginationDto;
+import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.common.PaginationDto;
 import lombok.Builder;
 
 @Builder

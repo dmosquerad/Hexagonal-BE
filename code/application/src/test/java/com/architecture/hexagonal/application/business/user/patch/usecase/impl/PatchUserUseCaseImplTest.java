@@ -11,7 +11,7 @@ import com.architecture.hexagonal.application.testutils.user.patch.input.PatchUs
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.InvalidValueException;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
-import com.architecture.hexagonal.domain.model.aggregate.User;
+import com.architecture.hexagonal.domain.model.aggregate.user.User;
 import java.util.Optional;
 import java.util.Set;
 import org.assertj.core.api.AssertionsForClassTypes;

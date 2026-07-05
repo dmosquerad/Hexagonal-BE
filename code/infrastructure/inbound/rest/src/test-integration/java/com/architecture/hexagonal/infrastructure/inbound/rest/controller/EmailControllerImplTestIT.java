@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.controller;
 
 import com.architecture.hexagonal.domain.model.vo.EmailBlockRulesVo;
-import com.architecture.hexagonal.infrastructure.contract.orchestration.generated.email.GetBlockedRulesQueryDto;
-import com.architecture.hexagonal.infrastructure.contract.rest.email.server.dto.EmailBlockRulesResponseDto;
+import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.email.GetBlockedRulesQueryDto;
+import com.architecture.hexagonal.infrastructure.inbound.contract.rest.email.server.dto.EmailBlockRulesResponseDto;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.dispatcher.query.QueryBus;
 import com.architecture.hexagonal.infrastructure.inbound.rest.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.email.EmailBlockRulesDtoMapper;

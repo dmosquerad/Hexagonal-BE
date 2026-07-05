@@ -1,9 +1,9 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.controller;
 
 import com.architecture.hexagonal.domain.model.vo.EmailBlockRulesVo;
-import com.architecture.hexagonal.infrastructure.contract.orchestration.generated.email.GetBlockedRulesQueryDto;
-import com.architecture.hexagonal.infrastructure.contract.rest.email.server.controller.EmailsApi;
-import com.architecture.hexagonal.infrastructure.contract.rest.email.server.dto.EmailBlockRulesResponseDto;
+import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.email.GetBlockedRulesQueryDto;
+import com.architecture.hexagonal.infrastructure.inbound.contract.rest.email.server.controller.EmailsApi;
+import com.architecture.hexagonal.infrastructure.inbound.contract.rest.email.server.dto.EmailBlockRulesResponseDto;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.dispatcher.query.QueryBus;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.email.EmailBlockRulesDtoMapper;
 import java.time.Clock;
@@ -18,9 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class EmailControllerImpl implements EmailsApi {
 
   private final QueryBus queryBus;
-
   private final EmailBlockRulesDtoMapper emailBlockRulesDtoMapper;
-
   private final Clock clock;
 
   @Override

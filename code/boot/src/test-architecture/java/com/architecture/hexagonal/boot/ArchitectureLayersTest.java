@@ -25,12 +25,13 @@ class ArchitectureLayersTest {
           .that()
           .resideInAPackage("..infrastructure..")
           .should()
-          .resideInAnyPackage("..infrastructure.contract..",
+          .resideInAnyPackage("..infrastructure.inbound.contract..",
               "..infrastructure.outbound.database..",
               "..infrastructure.outbound.configuration..",
               "..infrastructure.outbound.message..",
               "..infrastructure.inbound.rest..",
-              "..infrastructure.inbound.orchestration..")
+              "..infrastructure.inbound.orchestration..",
+              "..infrastructure.inbound.execution..")
           .because("Infrastructure may contain only declared adapters;"
               + " undeclared adapter packages break the explicit port-adapter mapping");
 
@@ -53,14 +54,13 @@ class ArchitectureLayersTest {
   @ArchTest
   static final ArchRule onion_architecture_layers_check =
       Architectures.onionArchitecture()
-          .domainModels("..domain.model..")
+          .domainModels("..domain..")
           .domainServices("..domain.service..")
           .applicationServices("..application..")
-          .adapter("inbound", "..infrastructure.inbound..")
+          .adapter("inbound", "..infrastructure.inbound..", "..infrastructure.inbound.contract..")
           .adapter("outbound", "..infrastructure.outbound..")
           .adapter("boot", "..boot..")
           .because("Domain model and domain services must not depend on application or adapters;"
               + " application services must not depend on adapters;"
               + " adapters may only depend inward toward the application core");
-
 }

@@ -2,11 +2,12 @@ package com.architecture.hexagonal.infrastructure.inbound.orchestration.orchestr
 
 import com.architecture.hexagonal.application.business.user.create.input.CreateUserInput;
 import com.architecture.hexagonal.application.business.user.create.usecase.CreateUserUseCase;
-import com.architecture.hexagonal.domain.model.aggregate.User;
-import com.architecture.hexagonal.infrastructure.contract.orchestration.generated.user.CreateUserCommandDto;
-import com.architecture.hexagonal.infrastructure.inbound.orchestration.config.TransactionBoundary;
+import com.architecture.hexagonal.domain.model.aggregate.user.User;
+import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.user.CreateUserCommandDto;
+import com.architecture.hexagonal.infrastructure.inbound.orchestration.config.transaction.TransactionBoundary;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.dispatcher.command.CommandHandler;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.mapper.user.CreateUserCommandMapper;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +20,7 @@ public class CreateUserCommandHandlerImpl implements CommandHandler<CreateUserCo
   private final CreateUserUseCase createUserUseCase;
 
   @Override
-  public User handle(final CreateUserCommandDto createUserCommandDto) {
+  public User handle(final @NonNull CreateUserCommandDto createUserCommandDto) {
     final CreateUserInput createUserInput =
         createUserCommandMapper.toCreateUserCommand(createUserCommandDto);
     return transactionBoundary.write(() -> createUserUseCase.execute(createUserInput));

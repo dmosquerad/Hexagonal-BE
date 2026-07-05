@@ -6,8 +6,9 @@ import com.architecture.hexagonal.application.port.database.UserRepositoryWriteP
 import com.architecture.hexagonal.application.port.message.UserSenderPort;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
-import com.architecture.hexagonal.domain.model.aggregate.User;
+import com.architecture.hexagonal.domain.model.aggregate.user.User;
 import java.util.UUID;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -17,7 +18,7 @@ public class DeleteUserUseCaseImpl implements DeleteUserUseCase {
   private final UserSenderPort userSenderPort;
 
   @Override
-  public User execute(final DeleteUserInput deleteUserInput) {
+  public User execute(final @NonNull DeleteUserInput deleteUserInput) {
     final UUID uuid = deleteUserInput.getUserId();
 
     User deletedUser =

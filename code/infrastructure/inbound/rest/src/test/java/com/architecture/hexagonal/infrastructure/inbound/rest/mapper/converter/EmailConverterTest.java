@@ -1,9 +1,8 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.mapper.converter;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.architecture.hexagonal.domain.model.vo.EmailVo;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.vo.EmailVoTestDataBuilder;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class EmailConverterTest {
@@ -14,13 +13,13 @@ class EmailConverterTest {
 
     final String result = EmailConverter.toEmail(emailVo);
 
-    assertThat(result).isEqualTo("test@example.com");
+    Assertions.assertThat(result).isEqualTo("test@example.com");
   }
 
   @Test
   void toEmail_shouldReturnEmpty_whenEmailVoIsNull() {
     final String result = EmailConverter.toEmail(null);
 
-    assertThat(result).isEmpty();
+    Assertions.assertThat(result).isEmpty();
   }
 }

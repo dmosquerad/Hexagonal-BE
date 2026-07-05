@@ -36,6 +36,25 @@ services:
       test: ["CMD", "rabbitmq-diagnostics", "ping"]
       interval: 5s
       retries: 5
+  mongo:
+    image: mongo:8.3
+    container_name: mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: mydatabase
+    volumes:
+      - mongo_data:/data/db
+      - ./mongo:/docker-entrypoint-initdb.d
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      retries: 5
 
 networks:
   backend:
@@ -43,3 +62,4 @@ networks:
 volumes:
   postgres_data:
   rabbitmq_data:
+  mongo_data:

@@ -13,3 +13,7 @@ email:
       - malicious
       - spam-host
     tld: []
+scheduler:
+  outbox:
+    polling-interval: PT1M
+    max-retries: 5

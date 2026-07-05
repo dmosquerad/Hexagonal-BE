@@ -2,11 +2,12 @@ package com.architecture.hexagonal.infrastructure.inbound.orchestration.orchestr
 
 import com.architecture.hexagonal.application.business.user.update.input.UpdateUserInput;
 import com.architecture.hexagonal.application.business.user.update.usecase.UpdateUserUseCase;
-import com.architecture.hexagonal.domain.model.aggregate.User;
-import com.architecture.hexagonal.infrastructure.contract.orchestration.generated.user.UpdateUserCommandDto;
-import com.architecture.hexagonal.infrastructure.inbound.orchestration.config.TransactionBoundary;
+import com.architecture.hexagonal.domain.model.aggregate.user.User;
+import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.user.UpdateUserCommandDto;
+import com.architecture.hexagonal.infrastructure.inbound.orchestration.config.transaction.TransactionBoundary;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.dispatcher.command.CommandHandler;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.mapper.user.UpdateUserCommandMapper;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +20,7 @@ public class UpdateUserCommandHandlerImpl implements CommandHandler<UpdateUserCo
   private final UpdateUserUseCase updateUserUseCase;
 
   @Override
-  public User handle(final UpdateUserCommandDto updateUserCommandDto) {
+  public User handle(final @NonNull UpdateUserCommandDto updateUserCommandDto) {
     final UpdateUserInput updateUserInput =
         updateUserCommandMapper.toUpdateUserCommand(updateUserCommandDto);
     return transactionBoundary.write(() -> updateUserUseCase.execute(updateUserInput));

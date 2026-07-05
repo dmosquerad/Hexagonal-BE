@@ -36,16 +36,25 @@ Hexagonal-BE/
 │   │           │           ├── query/       # Queries & handlers (CQRS)
 │   │           │           ├── port/        # Ports In/Out for the use case
 │   │           │           └── usecase/     # Use case logic
+│   │           ├── technical/               # Technical use cases (infrastructure patterns)
+│   │           │   └── outbox/              # Outbox event processing
+│   │           │       ├── block/           # Block/suspend event processing
+│   │           │       ├── find/            # Find pending events
+│   │           │       └── process/         # Process and publish events
 │   │           └── port/                    # Shared ports (e.g. configuration, database)
 │   ├── infrastructure/
 │   │   ├── contract/
 │   │   │   └── rest/                # OpenAPI server stubs (user / email)
 │   │   ├── inbound/
 │   │   │   ├── orchestration/       # CQRS buses (CommandBus, QueryBus)
+│   │   │   ├── execution/           # Schedulers (Outbox polling)
 │   │   │   └── rest/                # REST controllers implementation
 │   │   └── outbound/
-│   │       ├── database/            # DB adapters (JPA/Postgres)
-│   │       ├── message/             # Messaging adapters (RabbitMQ)
+│   │       ├── database/
+│   │       │   ├── postgresql/      # DB adapters (JPA/PostgreSQL)
+│   │       │   └── mongodb/         # DB adapters (MongoDB/Outbox events)
+│   │       ├── message/
+│   │       │   └── rabbitmq/        # Messaging adapters (RabbitMQ)
 │   │       └── configuration/       # Config adapters (application.yml rules)
 │   └── boot/                        # Spring Boot composition root
 ├── e2e/
@@ -60,6 +69,7 @@ Hexagonal-BE/
 flowchart LR
     Client([HTTP Client])
     POSTGRES[(PostgreSQL)]
+    MONGO[(MongoDB)]
     RABBIT[(RabbitMQ)]
     Config[(Configuration)]
 
@@ -72,12 +82,12 @@ flowchart LR
         direction TB
         REST[REST Controllers]
         ORCH[Orchestration\nCommandBus / QueryBus]
+        EXEC[Execution\nOutbox Scheduler]
     end
 
     subgraph APP["Application"]
         direction TB
-        HANDLERS[Business Handlers\nCommand / Query]
-        UC[Business Use Cases]
+        UC[Use Cases]
         POUT[Ports Out]
     end
 
@@ -88,8 +98,8 @@ flowchart LR
 
     subgraph OUTBOUND["Infrastructure · Outbound"]
         direction TB
-        DB[Database Adapter]
-        MSG[Message Adapter]
+        DB["Database Adapters\n(PostgreSQL / MongoDB)"]
+        MSG[Message Adapter\nRabbitMQ]
         CFG[Configuration Adapter]
     end
 
@@ -108,12 +118,16 @@ flowchart LR
     DB -.implements.-> POUT
     MSG -.implements.-> POUT
     CFG -.implements.-> POUT
+    
     DB --> POSTGRES
+    DB --> MONGO
     MSG --> RABBIT
+    EXEC -.triggers.-> ORCH
     CFG --> Config
 
     COMP -.wires.-> REST
     COMP -.wires.-> ORCH
+    COMP -.wires.-> EXEC
     COMP -.wires.-> DB
     COMP -.wires.-> MSG
     COMP -.wires.-> CFG
@@ -156,20 +170,21 @@ Framework-agnostic module containing the core business model. Has no Spring depe
 Orchestrates the domain through use cases and defines the port contracts consumed by infrastructure.
 
 **Content:**
-- Use cases for User CRUD and email rules retrieval
+- Business use cases for User CRUD and email rules retrieval
 - Business slices organized by domain features
+- Technical use cases for infrastructure patterns (Outbox event processing)
 - Ports In — one input contract per use case
 - Ports Out — contracts for persistence and configuration access
 - `CommandBus` / `QueryBus` dispatchers and their handler implementations
 
 ### Infrastructure
 
-#### Contract — REST (`code/infrastructure/contract/rest`)
+#### Contract — REST (`code/infrastructure/inbound/contract/rest`)
 Holds the OpenAPI 3.0 specifications and generates server-side stubs consumed by the inbound controllers.
 
 **Content:**
-- `user-rest-server`: OpenAPI spec for the User API
-- `email-rest-server`: OpenAPI spec for the Email rules API
+- `inbound-user-rest-server`: OpenAPI spec for the User API
+- `inbound-email-rest-server`: OpenAPI spec for the Email rules API
 - Generated Java interfaces implemented by REST controllers
 
 #### Inbound — Orchestration (`code/infrastructure/inbound/orchestration`)
@@ -179,29 +194,52 @@ Implements CQRS buses for command and query orchestration.
 - `CommandBus` and `QueryBus` implementations
 - Command/Query handler registration and dispatching
 
+#### Inbound — Execution (`code/infrastructure/inbound/execution`)
+Manages scheduled tasks and event processing workflows.
+
+**Content:**
+- Outbox event polling scheduler with configurable retry policies
+- Scheduler configuration and Spring scheduling integration
+
 #### Inbound — REST (`code/infrastructure/inbound/rest`)
 Exposes the HTTP API and translates requests into application commands/queries.
 
 **Content:**
 - REST controllers implementing the generated OpenAPI interfaces
-- Request-to-command/query mappers (MapStruct)
+- MapStruct mappers: `UserToRestMapper`, `UserFromRestMapper` (following `[Entity][From/To][Module]Mapper` naming convention)
 - Centralized REST exception handling
 
 #### Outbound — Database (`code/infrastructure/outbound/database`)
-Implements persistence with PostgreSQL using Spring Data JPA.
+Implements persistence with PostgreSQL and MongoDB through modular adapters.
+
+**Modules:**
+- **PostgreSQL** (`postgresql/`): User data persistence with Spring Data JPA
+  - Repository adapters implementing Ports Out
+  - MapStruct mappers: `UserFromPostgresqlMapper`, `UserToPostgresqlMapper`
+  - Persistence configuration and data access
+
+- **MongoDB** (`mongodb/`): Outbox event storage for reliable message publishing
+  - Outbox event repositories (read/write)
+  - MapStruct mappers: `OutboxDaoMapper`, `OutboxDoFromMongodbMapper`
+  - Outbox configuration
 
 **Content:**
-- Repository adapters implementing Ports Out
-- JPA repositories and DAO mappings
-- Persistence configuration and data access
+- Data access abstractions for domain persistence
+- Database-specific adapters and configurations
 
 #### Outbound — Message (`code/infrastructure/outbound/message`)
-Publishes domain events to RabbitMQ via Spring Cloud Stream.
+Publishes domain events to external messaging systems.
+
+**Modules:**
+- **RabbitMQ** (`rabbitmq/`): Publishes domain events via Spring Cloud Stream
+  - `UserSenderAdapter` implementing the message Port Out
+  - Domain event DTOs: `UserCreated`, `UserUpdated`, `UserDeleted`
+  - MapStruct mapper: `UserToRabbitmqMapper`
+  - RabbitMQ configuration and bindings
 
 **Content:**
-- `UserSenderAdapter` implementing the message Port Out
-- Domain event DTOs: `UserCreated`, `UserUpdated`, `UserDeleted`
-- `UserMessageSender` using `StreamBridge` for topic bindings
+- Messaging adapters implementing Ports Out
+- Event serialization and routing
 
 #### Outbound — Configuration (`code/infrastructure/outbound/configuration`)
 Implements configuration-driven business rules loaded from `application.yml`.
@@ -232,6 +270,10 @@ Adapters are infrastructure implementations that connect external systems to por
 - **Inbound adapters** (for example REST): translate external requests into calls to **Ports In**
 - **Outbound adapters** (for example database): implement **Ports Out** to persist and retrieve data
 
+MapStruct mappers follow a consistent naming pattern: `[Entity][From/To][Module]Mapper`, where:
+- `From[Module]` indicates data flowing from the module's infrastructure to the domain
+- `To[Module]` indicates data flowing from the domain to the module's infrastructure
+
 This separation keeps business logic independent from HTTP, database, and framework details.
 
 ## 📖 API Documentation
@@ -242,7 +284,7 @@ Once the application is running, you can access the interactive API documentatio
 - **Redoc**: http://localhost:8080/api/redoc.html
 
 The API follows an **OpenAPI 3.0 contract-first** approach.
-Contracts are defined in `code/infrastructure/contract/rest/`.
+Contracts are defined in `code/infrastructure/inbound/contract/rest/`.
 
 ## 🧪 Testing
 
@@ -301,9 +343,11 @@ This keeps endpoint features focused on happy paths and centralizes negative con
 Application configuration is organized by concerns:
 
 - **Main**: `code/boot/src/main/resources/application.yml` - Composition layer
-- **REST**: `code/infrastructure/inbound/rest/src/main/resources/application-rest.yml` - API configuration
-- **Database**: `code/infrastructure/outbound/database/src/main/resources/application-database.yml` - Persistence configuration
-- **Message**: `code/infrastructure/outbound/message/src/main/resources/application-message.yml` - RabbitMQ / Spring Cloud Stream bindings
-- **Configuration**: `code/infrastructure/outbound/configuration/src/main/resources/application-configuration.yml` - Email block rules
+- **REST**: `code/infrastructure/inbound/rest/src/main/resources/application-restserver.yml` - API configuration
+- **Execution**: `code/infrastructure/inbound/execution/outbox/src/main/resources/application-execution.yml` - Scheduler configuration
+- **Database**: `code/infrastructure/outbound/database/postgresql/src/main/resources/application-postgresql.yml` - PostgreSQL persistence
+- **Database**: `code/infrastructure/outbound/database/mongodb/src/main/resources/application-mongodb.yml` - MongoDB persistence (Outbox events)
+- **Message**: `code/infrastructure/outbound/message/rabbitmq/src/main/resources/application-rabbitmq.yml` - RabbitMQ / Spring Cloud Stream bindings
+- **Configuration**: `code/infrastructure/outbound/configuration/src/main/resources/application-configuration.yml` - Email block rules and scheduler policies
 
 **Built as a practical Hexagonal Architecture example in Java.**

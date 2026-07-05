@@ -2,9 +2,9 @@ package com.architecture.hexagonal.infrastructure.inbound.orchestration.orchestr
 
 import com.architecture.hexagonal.application.business.user.findbyid.input.FindUserByUserIdInput;
 import com.architecture.hexagonal.application.business.user.findbyid.usecase.FindUserByUserIdUseCase;
-import com.architecture.hexagonal.domain.model.aggregate.User;
-import com.architecture.hexagonal.infrastructure.contract.orchestration.generated.user.FindUserByUserIdQueryDto;
-import com.architecture.hexagonal.infrastructure.inbound.orchestration.config.TransactionBoundary;
+import com.architecture.hexagonal.domain.model.aggregate.user.User;
+import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.user.FindUserByUserIdQueryDto;
+import com.architecture.hexagonal.infrastructure.inbound.orchestration.config.transaction.TransactionBoundary;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.mapper.user.FindUserByUserIdQueryMapper;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.testutils.data.aggregate.UserTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.testutils.data.query.FindUserByUserIdQueryDtoTestDataBuilder;
