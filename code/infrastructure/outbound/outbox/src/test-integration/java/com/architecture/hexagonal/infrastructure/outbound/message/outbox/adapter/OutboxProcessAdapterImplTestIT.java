@@ -32,46 +32,46 @@ class OutboxProcessAdapterImplTestIT {
 
   @Test
   void process_shouldSendCreatedMessage_whenActionIsUserCreated() {
-    final Outbox outboxDo =
+    final Outbox outbox =
         OutboxTestDataBuilder.builder()
             .action(UserMessageNaming.ACTION_USER_CREATED)
             .payload(UserCreatedTestDataBuilder.builder().build().userCreated())
             .build()
             .outbox();
 
-    outboxProcessAdapterImpl.process(outboxDo);
+    outboxProcessAdapterImpl.process(outbox);
 
-    Mockito.verify(outboxService).process(outboxDo);
+    Mockito.verify(outboxService).process(outbox);
     Mockito.verify(userSenderPort).userSenderCreated(ArgumentMatchers.any(User.class));
   }
 
   @Test
   void process_shouldSendUpdatedMessage_whenActionIsUserUpdated() {
-    final Outbox outboxDo =
+    final Outbox outbox =
         OutboxTestDataBuilder.builder()
             .action(UserMessageNaming.ACTION_USER_UPDATED)
             .payload(UserUpdatedTestDataBuilder.builder().build().userUpdated())
             .build()
             .outbox();
 
-      outboxProcessAdapterImpl.process(outboxDo);
+      outboxProcessAdapterImpl.process(outbox);
 
-      Mockito.verify(outboxService).process(outboxDo);
+      Mockito.verify(outboxService).process(outbox);
       Mockito.verify(userSenderPort).userSenderUpdated(ArgumentMatchers.any(User.class));
   }
 
   @Test
   void process_shouldSendDeletedMessage_whenActionIsUserDeleted() {
-    final Outbox outboxDo =
+    final Outbox outbox =
         OutboxTestDataBuilder.builder()
             .action(UserMessageNaming.ACTION_USER_DELETED)
             .payload(UserDeletedTestDataBuilder.builder().build().userDeleted())
             .build()
             .outbox();
 
-      outboxProcessAdapterImpl.process(outboxDo);
+      outboxProcessAdapterImpl.process(outbox);
 
-      Mockito.verify(outboxService).process(outboxDo);
+      Mockito.verify(outboxService).process(outbox);
       Mockito.verify(userSenderPort).userSenderDeleted(ArgumentMatchers.any(User.class));
   }
 }

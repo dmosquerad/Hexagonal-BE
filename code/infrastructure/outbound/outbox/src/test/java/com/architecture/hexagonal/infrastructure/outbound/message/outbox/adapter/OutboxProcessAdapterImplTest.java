@@ -22,22 +22,22 @@ class OutboxProcessAdapterImplTest {
 
   @Test
   void process_shouldDelegateToOutboxService_whenAggregateTypeIsUser() {
-    final Outbox outboxDo =
+    final Outbox outbox =
         OutboxTestDataBuilder.builder()
             .aggregateType(UserMessageNaming.AGGREGATE_USER_TYPE)
             .build()
             .outbox();
 
-    outboxProcessAdapterImpl.process(outboxDo);
+    outboxProcessAdapterImpl.process(outbox);
 
-    Mockito.verify(outboxService).process(outboxDo);
+    Mockito.verify(outboxService).process(outbox);
   }
 
   @Test
   void process_shouldThrowIllegalArgumentException_whenAggregateTypeIsUnsupported() {
-    final Outbox outboxDo = OutboxTestDataBuilder.builder().aggregateType("").build().outbox();
+    final Outbox outbox = OutboxTestDataBuilder.builder().aggregateType("").build().outbox();
 
-    AssertionsForClassTypes.assertThatThrownBy(() -> outboxProcessAdapterImpl.process(outboxDo))
+    AssertionsForClassTypes.assertThatThrownBy(() -> outboxProcessAdapterImpl.process(outbox))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining(OutboxNaming.UNSUPPORTED_AGGREGATE_TYPE);
 
