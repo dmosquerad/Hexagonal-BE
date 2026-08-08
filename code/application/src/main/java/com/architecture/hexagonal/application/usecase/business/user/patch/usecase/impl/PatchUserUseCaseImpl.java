@@ -1,0 +1,59 @@
+package com.architecture.hexagonal.application.usecase.business.user.patch.usecase.impl;
+
+import com.architecture.hexagonal.application.port.configuration.EmailConfigurationPort;
+import com.architecture.hexagonal.application.port.database.UserRepositoryReadPort;
+import com.architecture.hexagonal.application.port.database.UserRepositoryWritePort;
+import com.architecture.hexagonal.application.port.message.UserSenderPort;
+import com.architecture.hexagonal.application.usecase.business.user.patch.input.PatchUserInput;
+import com.architecture.hexagonal.application.usecase.business.user.patch.usecase.PatchUserUseCase;
+import com.architecture.hexagonal.domain.exception.ExceptionMessage;
+import com.architecture.hexagonal.domain.exception.InvalidValueException;
+import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
+import com.architecture.hexagonal.domain.model.entity.user.User;
+import com.architecture.hexagonal.domain.model.vo.email.EmailVo;
+import com.architecture.hexagonal.domain.model.vo.email.factory.EmailVoFactory;
+import com.architecture.hexagonal.domain.service.EmailBlockPolicy;
+import java.util.UUID;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+
+@RequiredArgsConstructor
+public class PatchUserUseCaseImpl implements PatchUserUseCase {
+
+  private final UserRepositoryReadPort userRepositoryReadPort;
+  private final UserRepositoryWritePort userRepositoryWritePort;
+  private final UserSenderPort userSenderPort;
+  private final EmailConfigurationPort emailConfigurationPort;
+
+  @Override
+  public User execute(final @NonNull PatchUserInput patchUserInput) {
+    final UUID uuid = patchUserInput.userId();
+
+    final User currentUser =
+        userRepositoryReadPort
+            .findUserById(uuid)
+            .orElseThrow(
+                () ->
+                    new ResourceNotFoundException(ExceptionMessage.NOT_FOUND_DATA_MESSAGE + uuid));
+
+    final EmailVo email =
+        StringUtils.isBlank(patchUserInput.email())
+            ? currentUser.email()
+            : EmailVoFactory.from(patchUserInput.email());
+
+    if (EmailBlockPolicy.isBlocked(email, emailConfigurationPort.getBlockedRules())) {
+      throw new InvalidValueException(ExceptionMessage.EMAIL_NO_ALLOWED_MESSAGE + email.getEmail());
+    }
+
+    final String name =
+        StringUtils.isBlank(patchUserInput.name()) ? currentUser.name() : patchUserInput.name();
+
+    User updatedUser =
+        userRepositoryWritePort.saveUser(
+            User.builder().userId(uuid).name(name).email(email).build());
+
+    userSenderPort.userSenderUpdated(updatedUser);
+    return updatedUser;
+  }
+}

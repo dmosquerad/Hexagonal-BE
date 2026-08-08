@@ -1,0 +1,24 @@
+package com.architecture.hexagonal.infrastructure.inbound.execution.inbox.model.vo;
+
+import com.architecture.hexagonal.domain.model.vo.inbox.SchedulerInboxConfigurationVo;
+import com.architecture.hexagonal.domain.model.vo.outbox.SchedulerOutboxConfigurationVo;
+import lombok.Builder;
+
+import java.time.Duration;
+
+@Builder
+public class SchedulerInboxConfigurationVoTestDataBuilder {
+
+  @Builder.Default
+  private Duration pollingInterval = Duration.parse("PT1M");
+
+  @Builder.Default
+  private int maxRetries = 5;
+
+  public SchedulerInboxConfigurationVo schedulerInboxConfigurationVo() {
+    return SchedulerInboxConfigurationVo.builder()
+        .pollingInterval(pollingInterval)
+        .maxRetries(maxRetries)
+        .build();
+  }
+}

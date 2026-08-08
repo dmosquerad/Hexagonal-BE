@@ -1,9 +1,11 @@
 package com.architecture.hexagonal.boot;
 
+import com.architecture.hexagonal.boot.config.UseCaseBeanRegistry;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.boot.persistence.autoconfigure.EntityScan;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
@@ -20,8 +22,9 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
     basePackages = {"com.architecture.hexagonal.infrastructure.outbound.database.postgresql.data"})
 @ConfigurationPropertiesScan(
     basePackages = {"com.architecture.hexagonal.infrastructure.outbound.configuration.config"})
+@Import(UseCaseBeanRegistry.class)
 public class Application {
-  public static void main(final String[] args) {
+  static void main(final String[] args) {
     SpringApplication.run(Application.class, args);
   }
 }

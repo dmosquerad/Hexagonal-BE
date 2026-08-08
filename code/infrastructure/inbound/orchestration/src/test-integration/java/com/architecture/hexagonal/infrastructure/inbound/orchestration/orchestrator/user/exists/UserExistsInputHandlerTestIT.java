@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.inbound.orchestration.orchestrator.user.exists;
 
-import com.architecture.hexagonal.application.business.user.exists.input.UserExistsInput;
-import com.architecture.hexagonal.application.business.user.exists.usecase.UserExistsUseCase;
+import com.architecture.hexagonal.application.usecase.business.user.exists.input.UserExistsInput;
+import com.architecture.hexagonal.application.usecase.business.user.exists.usecase.UserExistsUseCase;
 import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.user.UserExistsQueryDto;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.mapper.user.UserExistsQueryMapper;
@@ -39,7 +39,7 @@ class UserExistsInputHandlerTestIT {
 
     Mockito.doNothing()
         .when(userExistsUseCase)
-        .execute(ArgumentMatchers.any(UserExistsInput.class));
+        .execute(Mockito.any(UserExistsInput.class));
 
     Void result = userExistsQueryHandlerImpl.handle(queryDto);
 
@@ -47,7 +47,7 @@ class UserExistsInputHandlerTestIT {
         .isNull();
 
     Mockito.verify(userExistsQueryMapper).toUserExistsQuery(queryDto);
-    Mockito.verify(userExistsUseCase).execute(ArgumentMatchers.any(UserExistsInput.class));
+    Mockito.verify(userExistsUseCase).execute(Mockito.any(UserExistsInput.class));
     Mockito.verify(transactionBoundary).read(Mockito.any());
   }
 }

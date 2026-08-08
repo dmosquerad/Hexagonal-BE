@@ -13,6 +13,7 @@
     </parent>
 
     <modules>
+        <module>handler</module>
         <module>rest</module>
         <module>orchestration</module>
     </modules>

@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.infrastructure.inbound.orchestration.orchestrator.user.findbyid;
 
-import com.architecture.hexagonal.application.business.user.findbyid.input.FindUserByUserIdInput;
-import com.architecture.hexagonal.application.business.user.findbyid.usecase.FindUserByUserIdUseCase;
-import com.architecture.hexagonal.domain.model.aggregate.user.User;
+import com.architecture.hexagonal.application.usecase.business.user.findbyid.input.FindUserByUserIdInput;
+import com.architecture.hexagonal.application.usecase.business.user.findbyid.usecase.FindUserByUserIdUseCase;
+import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.user.FindUserByUserIdQueryDto;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.mapper.user.FindUserByUserIdQueryMapper;
@@ -39,7 +39,7 @@ class FindUserByUserIdInputHandlerTestIT {
     final FindUserByUserIdQueryDto queryDto = FindUserByUserIdQueryDtoTestDataBuilder.builder().build().findUserByUserIdQueryDto();
     final User user = Mockito.mock(User.class);
 
-    Mockito.when(findUserByUserIdUseCase.execute(ArgumentMatchers.any(FindUserByUserIdInput.class)))
+    Mockito.when(findUserByUserIdUseCase.execute(Mockito.any(FindUserByUserIdInput.class)))
         .thenReturn(user);
 
     User result = findUserByUserIdQueryHandlerImpl.handle(queryDto);
@@ -48,7 +48,7 @@ class FindUserByUserIdInputHandlerTestIT {
         .isSameAs(user);
 
     Mockito.verify(findUserByUserIdQueryMapper).toFindUserByUserIdQuery(queryDto);
-    Mockito.verify(findUserByUserIdUseCase).execute(ArgumentMatchers.any(FindUserByUserIdInput.class));
+    Mockito.verify(findUserByUserIdUseCase).execute(Mockito.any(FindUserByUserIdInput.class));
     Mockito.verify(transactionBoundary).read(Mockito.any());
   }
 }

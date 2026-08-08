@@ -1,13 +1,12 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.mapper.converter;
 
-import com.architecture.hexagonal.domain.model.vo.EmailVo;
+import com.architecture.hexagonal.domain.model.vo.email.EmailVo;
 import java.util.Objects;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.Named;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@UtilityClass
 public final class EmailConverter {
 
   public static final String TO_EMAIL = "toEmail";

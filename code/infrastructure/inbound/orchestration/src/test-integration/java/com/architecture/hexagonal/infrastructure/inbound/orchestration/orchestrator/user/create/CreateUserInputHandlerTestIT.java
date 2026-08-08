@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.infrastructure.inbound.orchestration.orchestrator.user.create;
 
-import com.architecture.hexagonal.application.business.user.create.input.CreateUserInput;
-import com.architecture.hexagonal.application.business.user.create.usecase.CreateUserUseCase;
-import com.architecture.hexagonal.domain.model.aggregate.user.User;
+import com.architecture.hexagonal.application.usecase.business.user.create.input.CreateUserInput;
+import com.architecture.hexagonal.application.usecase.business.user.create.usecase.CreateUserUseCase;
+import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.user.CreateUserCommandDto;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.mapper.user.CreateUserCommandMapper;
@@ -39,7 +39,7 @@ class CreateUserInputHandlerTestIT {
     final CreateUserCommandDto createUserCommandDto = CreateUserCommandDtoTestDataBuilder.builder().build().createUserCommandDto();
     final User user = Mockito.mock(User.class);
 
-    Mockito.when(createUserUseCase.execute(ArgumentMatchers.any(CreateUserInput.class)))
+    Mockito.when(createUserUseCase.execute(Mockito.any(CreateUserInput.class)))
         .thenReturn(user);
 
     User result = createUserCommandHandlerImpl.handle(createUserCommandDto);
@@ -48,7 +48,7 @@ class CreateUserInputHandlerTestIT {
         .isSameAs(user);
 
     Mockito.verify(createUserCommandMapper).toCreateUserCommand(createUserCommandDto);
-    Mockito.verify(createUserUseCase).execute(ArgumentMatchers.any(CreateUserInput.class));
+    Mockito.verify(createUserUseCase).execute(Mockito.any(CreateUserInput.class));
     Mockito.verify(transactionBoundary).write(Mockito.any());
   }
 }

@@ -1,9 +1,8 @@
 package com.architecture.hexagonal.infrastructure.outbound.message.outbox.naming;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@UtilityClass
 public class OutboxNaming {
 
   public static final String UNSUPPORTED_AGGREGATE_TYPE = "Unsupported aggregate type: ";

@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.controller;
 
-import com.architecture.hexagonal.domain.model.aggregate.pagination.Pagination;
-import com.architecture.hexagonal.domain.model.aggregate.pagination.PaginationResult;
-import com.architecture.hexagonal.domain.model.aggregate.user.User;
+import com.architecture.hexagonal.domain.model.entity.user.User;
+import com.architecture.hexagonal.domain.model.vo.pagination.Pagination;
+import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResult;
 import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.server.controller.UsersApi;
 import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.server.dto.ResponsePaginationDto;
 import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.server.dto.UserCreateDto;

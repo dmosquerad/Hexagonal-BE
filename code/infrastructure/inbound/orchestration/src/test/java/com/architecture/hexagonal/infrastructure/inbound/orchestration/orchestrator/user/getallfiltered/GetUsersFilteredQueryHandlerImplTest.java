@@ -1,11 +1,11 @@
 package com.architecture.hexagonal.infrastructure.inbound.orchestration.orchestrator.user.getallfiltered;
 
-import com.architecture.hexagonal.application.business.email.getblockedrules.usecase.GetBlockedRulesUseCase;
-import com.architecture.hexagonal.application.business.user.getall.input.GetUsersInput;
-import com.architecture.hexagonal.application.business.user.getall.usecase.GetAllUsersUseCase;
-import com.architecture.hexagonal.domain.model.aggregate.pagination.PaginationResult;
-import com.architecture.hexagonal.domain.model.aggregate.user.User;
-import com.architecture.hexagonal.domain.model.vo.EmailBlockRulesVo;
+import com.architecture.hexagonal.application.usecase.business.email.getblockedrules.usecase.GetBlockedRulesUseCase;
+import com.architecture.hexagonal.application.usecase.business.user.getall.input.GetUsersInput;
+import com.architecture.hexagonal.application.usecase.business.user.getall.usecase.GetAllUsersUseCase;
+import com.architecture.hexagonal.domain.model.entity.user.User;
+import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;
+import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResult;
 import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.common.PaginationDto;
 import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.user.GetUsersFilteredQueryDto;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.config.transaction.TransactionBoundary;
@@ -18,7 +18,6 @@ import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -56,15 +55,15 @@ class GetUsersFilteredQueryHandlerImplTest {
             .pagination(null)
             .build()
             .getUsersFilteredQueryDto();
-    Mockito.when(getAllUsersUseCase.execute(ArgumentMatchers.any(GetUsersInput.class)))
+    Mockito.when(getAllUsersUseCase.execute(Mockito.any(GetUsersInput.class)))
         .thenReturn(expectedResult);
 
     PaginationResult<User> result = queryHandler.handle(queryDto);
 
     AssertionsForClassTypes.assertThat(result).isSameAs(expectedResult);
 
-    Mockito.verify(paginationMapper).toPagination((PaginationDto) ArgumentMatchers.isNull());
-    Mockito.verify(getAllUsersUseCase).execute(ArgumentMatchers.any(GetUsersInput.class));
+    Mockito.verify(paginationMapper).toPagination(Mockito.any());
+    Mockito.verify(getAllUsersUseCase).execute(Mockito.any(GetUsersInput.class));
     Mockito.verify(getBlockedRulesUseCase, Mockito.never()).execute();
     Mockito.verify(transactionBoundary).read(Mockito.any());
   }
@@ -90,16 +89,16 @@ class GetUsersFilteredQueryHandlerImplTest {
             .build()
             .getUsersFilteredQueryDto();
     Mockito.when(getBlockedRulesUseCase.execute()).thenReturn(blockedRules);
-    Mockito.when(getAllUsersUseCase.execute(ArgumentMatchers.any(GetUsersInput.class)))
+    Mockito.when(getAllUsersUseCase.execute(Mockito.any(GetUsersInput.class)))
         .thenReturn(expectedResult);
 
     PaginationResult<User> result = queryHandler.handle(queryDto);
 
     AssertionsForClassTypes.assertThat(result).isSameAs(expectedResult);
 
-    Mockito.verify(paginationMapper).toPagination(ArgumentMatchers.any(PaginationDto.class));
+    Mockito.verify(paginationMapper).toPagination(Mockito.any(PaginationDto.class));
     Mockito.verify(getBlockedRulesUseCase).execute();
-    Mockito.verify(getAllUsersUseCase).execute(ArgumentMatchers.any(GetUsersInput.class));
+    Mockito.verify(getAllUsersUseCase).execute(Mockito.any(GetUsersInput.class));
     Mockito.verify(transactionBoundary, Mockito.times(2)).read(Mockito.any());
   }
 }

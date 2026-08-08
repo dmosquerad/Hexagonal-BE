@@ -1,19 +1,19 @@
 package com.architecture.hexagonal.application.business.user.create.usecase.impl;
 
-import com.architecture.hexagonal.application.business.user.create.input.CreateUserInput;
 import com.architecture.hexagonal.application.port.configuration.EmailConfigurationPort;
 import com.architecture.hexagonal.application.port.database.UserRepositoryWritePort;
 import com.architecture.hexagonal.application.port.message.UserSenderPort;
-import com.architecture.hexagonal.application.testutils.data.aggregate.user.UserTestDataBuilder;
-import com.architecture.hexagonal.application.testutils.data.vo.EmailBlockRulesVoTestDataBuilder;
-import com.architecture.hexagonal.application.testutils.user.create.input.CreateUserInputTestDataBuilder;
+import com.architecture.hexagonal.application.testutils.model.aggregate.user.UserTestDataBuilder;
+import com.architecture.hexagonal.application.testutils.model.vo.email.EmailBlockRulesVoTestDataBuilder;
+import com.architecture.hexagonal.application.testutils.usecase.business.user.create.input.CreateUserInputTestDataBuilder;
+import com.architecture.hexagonal.application.usecase.business.user.create.input.CreateUserInput;
+import com.architecture.hexagonal.application.usecase.business.user.create.usecase.impl.CreateUserUseCaseImpl;
 import com.architecture.hexagonal.domain.exception.InvalidValueException;
-import com.architecture.hexagonal.domain.model.aggregate.user.User;
+import com.architecture.hexagonal.domain.model.entity.user.User;
 import java.util.Set;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -38,15 +38,14 @@ class CreateUserUseCaseImplTest {
 
     Mockito.when(emailConfigurationPort.getBlockedRules())
         .thenReturn(EmailBlockRulesVoTestDataBuilder.builder().build().emailBlockRulesVo());
-    Mockito.when(userRepositoryWritePort.saveUser(ArgumentMatchers.any(User.class)))
-        .thenReturn(user);
+    Mockito.when(userRepositoryWritePort.saveUser(Mockito.any(User.class))).thenReturn(user);
 
     final User result = createUserUseCaseImpl.execute(createUserInput);
 
     AssertionsForClassTypes.assertThat(result).usingRecursiveComparison().isEqualTo(user);
 
     Mockito.verify(emailConfigurationPort).getBlockedRules();
-    Mockito.verify(userRepositoryWritePort).saveUser(ArgumentMatchers.any(User.class));
+    Mockito.verify(userRepositoryWritePort).saveUser(Mockito.any(User.class));
     Mockito.verify(userSenderPort).userSenderCreated(user);
   }
 

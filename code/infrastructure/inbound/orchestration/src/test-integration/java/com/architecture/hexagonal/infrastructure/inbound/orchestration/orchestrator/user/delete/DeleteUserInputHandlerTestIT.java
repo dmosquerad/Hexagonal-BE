@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.infrastructure.inbound.orchestration.orchestrator.user.delete;
 
-import com.architecture.hexagonal.application.business.user.delete.input.DeleteUserInput;
-import com.architecture.hexagonal.application.business.user.delete.usecase.DeleteUserUseCase;
-import com.architecture.hexagonal.domain.model.aggregate.user.User;
+import com.architecture.hexagonal.application.usecase.business.user.delete.input.DeleteUserInput;
+import com.architecture.hexagonal.application.usecase.business.user.delete.usecase.DeleteUserUseCase;
+import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.user.DeleteUserCommandDto;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.mapper.user.DeleteUserCommandMapper;
@@ -39,7 +39,7 @@ class DeleteUserInputHandlerTestIT {
     final DeleteUserCommandDto deleteUserCommandDto = DeleteUserCommandDtoTestDataBuilder.builder().build().deleteUserCommandDto();
     final User user = Mockito.mock(User.class);
 
-    Mockito.when(deleteUserUseCase.execute(ArgumentMatchers.any(DeleteUserInput.class)))
+    Mockito.when(deleteUserUseCase.execute(Mockito.any(DeleteUserInput.class)))
         .thenReturn(user);
 
     User result = deleteUserCommandHandlerImpl.handle(deleteUserCommandDto);
@@ -48,7 +48,7 @@ class DeleteUserInputHandlerTestIT {
         .isSameAs(user);
 
     Mockito.verify(deleteUserCommandMapper).toDeleteUserCommand(deleteUserCommandDto);
-    Mockito.verify(deleteUserUseCase).execute(ArgumentMatchers.any(DeleteUserInput.class));
+    Mockito.verify(deleteUserUseCase).execute(Mockito.any(DeleteUserInput.class));
     Mockito.verify(transactionBoundary).write(Mockito.any());
   }
 }
