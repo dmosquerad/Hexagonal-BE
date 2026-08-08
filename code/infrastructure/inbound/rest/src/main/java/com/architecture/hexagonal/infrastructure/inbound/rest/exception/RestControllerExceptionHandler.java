@@ -2,7 +2,7 @@ package com.architecture.hexagonal.infrastructure.inbound.rest.exception;
 
 import com.architecture.hexagonal.domain.exception.DomainException;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
-import com.architecture.hexagonal.infrastructure.contract.rest.user.server.dto.ResponseErrorDto;
+import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.server.dto.ResponseErrorDto;
 import jakarta.validation.ConstraintViolationException;
 import java.time.Clock;
 import java.time.OffsetDateTime;

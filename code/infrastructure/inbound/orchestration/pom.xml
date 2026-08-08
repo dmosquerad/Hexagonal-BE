@@ -23,7 +23,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>contract-orchestration</artifactId>
+            <artifactId>inbound-contract-orchestration</artifactId>
         </dependency>
         <!-- ============================================ -->
         <!-- SPRINGBOOT -->

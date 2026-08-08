@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.application.port.message;
 
-import com.architecture.hexagonal.domain.model.aggregate.User;
+import com.architecture.hexagonal.domain.model.aggregate.user.User;
 import lombok.NonNull;
 
 public interface UserSenderPort {

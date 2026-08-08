@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.inbound.orchestration.testutils.transaction;
 
-import com.architecture.hexagonal.infrastructure.inbound.orchestration.config.TransactionBoundary;
+import com.architecture.hexagonal.infrastructure.inbound.orchestration.config.transaction.TransactionBoundary;
 import java.util.function.Supplier;
 
 public class TransactionBoundaryTest implements TransactionBoundary {

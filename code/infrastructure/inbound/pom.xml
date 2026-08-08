@@ -12,8 +12,10 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>contract</module>
         <module>rest</module>
         <module>orchestration</module>
+        <module>execution</module>
     </modules>
 
 </project>

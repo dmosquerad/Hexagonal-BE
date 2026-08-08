@@ -8,7 +8,7 @@ import com.architecture.hexagonal.application.testutils.data.aggregate.UserTestD
 import com.architecture.hexagonal.application.testutils.data.vo.EmailBlockRulesVoTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.user.create.input.CreateUserInputTestDataBuilder;
 import com.architecture.hexagonal.domain.exception.InvalidValueException;
-import com.architecture.hexagonal.domain.model.aggregate.User;
+import com.architecture.hexagonal.domain.model.aggregate.user.User;
 import java.util.Set;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
@@ -31,9 +31,8 @@ class CreateUserUseCaseImplTest {
   @Mock EmailConfigurationPort emailConfigurationPort;
 
   @Test
-  void execute_shouldCreateUser_whenCommandIsValid() throws InvalidValueException {
+  void execute_shouldCreateUser_whenEmailIsAllowed() throws InvalidValueException {
     final User user = UserTestDataBuilder.builder().build().user();
-
     final CreateUserInput createUserInput =
         CreateUserInputTestDataBuilder.builder().build().createUserInput();
 
@@ -42,7 +41,7 @@ class CreateUserUseCaseImplTest {
     Mockito.when(userRepositoryWritePort.saveUser(ArgumentMatchers.any(User.class)))
         .thenReturn(user);
 
-    User result = createUserUseCaseImpl.execute(createUserInput);
+    final User result = createUserUseCaseImpl.execute(createUserInput);
 
     AssertionsForClassTypes.assertThat(result).usingRecursiveComparison().isEqualTo(user);
 
@@ -52,25 +51,7 @@ class CreateUserUseCaseImplTest {
   }
 
   @Test
-  void execute_shouldCreateUser_whenEmailIsAllowed() throws InvalidValueException {
-    final User user = UserTestDataBuilder.builder().build().user();
-    final CreateUserInput createUserInput =
-        CreateUserInputTestDataBuilder.builder().build().createUserInput();
-
-    Mockito.when(emailConfigurationPort.getBlockedRules())
-        .thenReturn(EmailBlockRulesVoTestDataBuilder.builder().build().emailBlockRulesVo());
-    Mockito.when(userRepositoryWritePort.saveUser(Mockito.any(User.class))).thenReturn(user);
-
-    final User result = createUserUseCaseImpl.execute(createUserInput);
-
-    AssertionsForClassTypes.assertThat(result).isEqualTo(user);
-    Mockito.verify(emailConfigurationPort).getBlockedRules();
-    Mockito.verify(userRepositoryWritePort).saveUser(Mockito.any(User.class));
-    Mockito.verify(userSenderPort).userSenderCreated(user);
-  }
-
-  @Test
-  void execute_shouldThrowPolicyViolationException_whenEmailIsBlocked() {
+  void execute_shouldThrowInvalidValueException_whenEmailIsBlocked() {
     final CreateUserInput createUserInput =
         CreateUserInputTestDataBuilder.builder().build().createUserInput();
 

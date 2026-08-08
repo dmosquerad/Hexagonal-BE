@@ -1,8 +1,7 @@
 package com.architecture.hexagonal.domain.model.vo;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.architecture.hexagonal.domain.testutils.data.vo.EmailVoTestDataBuilder;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class EmailVoTest {
@@ -13,7 +12,7 @@ class EmailVoTest {
 
     final String result = emailVo.getEmail();
 
-    assertThat(result).isEqualTo("test@example.com");
+    Assertions.assertThat(result).isEqualTo("test@example.com");
   }
 
   @Test
@@ -23,7 +22,7 @@ class EmailVoTest {
 
     final String result = emailVo.getEmail();
 
-    assertThat(result).isEmpty();
+    Assertions.assertThat(result).isEmpty();
   }
 
   @Test
@@ -32,7 +31,7 @@ class EmailVoTest {
 
     final String result = emailVo.getDomain();
 
-    assertThat(result).isEqualTo("example.com");
+    Assertions.assertThat(result).isEqualTo("example.com");
   }
 
   @Test
@@ -41,6 +40,6 @@ class EmailVoTest {
 
     final String result = emailVo.getDomain();
 
-    assertThat(result).isEmpty();
+    Assertions.assertThat(result).isEmpty();
   }
 }

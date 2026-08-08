@@ -6,6 +6,7 @@ import com.architecture.hexagonal.application.port.database.UserRepositoryReadPo
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import java.util.UUID;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -14,7 +15,7 @@ public class UserExistsUseCaseImpl implements UserExistsUseCase {
   private final UserRepositoryReadPort userRepositoryReadPort;
 
   @Override
-  public void execute(final UserExistsInput userExistsInput) {
+  public void execute(final @NonNull UserExistsInput userExistsInput) {
     final UUID uuid = userExistsInput.getUserId();
 
     userRepositoryReadPort

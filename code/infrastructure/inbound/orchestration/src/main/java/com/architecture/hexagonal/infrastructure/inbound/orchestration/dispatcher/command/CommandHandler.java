@@ -1,6 +1,8 @@
 package com.architecture.hexagonal.infrastructure.inbound.orchestration.dispatcher.command;
 
+import lombok.NonNull;
+
 public interface CommandHandler<C, R> {
 
-  R handle(C command);
+  R handle(@NonNull C command);
 }

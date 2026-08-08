@@ -85,4 +85,15 @@ class ApplicationArchTest {
             .resideInAPackage("..application..usecase..")
             .because("Feature use cases must be independent business operations;"
                     + " orchestration must go through ports and the CQRS bus, not direct use case coupling");
+
+    @ArchTest
+    static final ArchRule business_use_cases_should_not_depend_on_technical_use_cases =
+        ArchRuleDefinition.noClasses()
+            .that()
+            .resideInAPackage("..application.business..")
+            .should()
+            .dependOnClassesThat()
+            .resideInAPackage("..application.technical..")
+            .because("Business use cases must not depend on technical (non-business) use cases;"
+                    + " technical use cases (e.g. outbox) support infrastructure concerns");
 }

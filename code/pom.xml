@@ -27,7 +27,7 @@
     <!-- ============================================ -->
     <!-- SPRING CLOUD -->
     <!-- ============================================ -->
-    <spring-cloud.version>2025.1.1</spring-cloud.version>
+    <spring-cloud.version>2025.1.2</spring-cloud.version>
     <!-- ============================================ -->
     <!-- MAPSTRUCT -->
     <!-- ============================================ -->
@@ -91,7 +91,7 @@
       <!-- ============================================ -->
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>rest</artifactId>
+        <artifactId>rest-server</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -101,17 +101,22 @@
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>user-rest-server</artifactId>
+        <artifactId>execution-outbox</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>email-rest-server</artifactId>
+        <artifactId>inbound-user-rest-server</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>contract-orchestration</artifactId>
+        <artifactId>inbound-email-rest-server</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>inbound-contract-orchestration</artifactId>
         <version>${project.version}</version>
       </dependency>
       <!-- ============================================ -->
@@ -119,7 +124,12 @@
       <!-- ============================================ -->
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>database</artifactId>
+        <artifactId>database-postgresql</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>database-mongodb</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -129,7 +139,12 @@
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>message</artifactId>
+        <artifactId>mesage-rabbitmq</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>outbox</artifactId>
         <version>${project.version}</version>
       </dependency>
       <!-- ============================================ -->

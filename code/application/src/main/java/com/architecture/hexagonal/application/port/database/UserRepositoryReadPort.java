@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.application.port.database;
 
 import com.architecture.hexagonal.application.port.database.query.UserQuery;
-import com.architecture.hexagonal.domain.model.aggregate.User;
+import com.architecture.hexagonal.domain.model.aggregate.user.User;
 import com.architecture.hexagonal.domain.model.pagination.Pagination;
 import com.architecture.hexagonal.domain.model.pagination.PaginationResult;
 import java.util.Optional;

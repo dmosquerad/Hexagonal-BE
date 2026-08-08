@@ -2,7 +2,7 @@ package com.architecture.hexagonal.application.testutils.data.aggregate;
 
 import com.architecture.hexagonal.application.testutils.data.entity.UserDoTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.data.vo.EmailVoTestDataBuilder;
-import com.architecture.hexagonal.domain.model.aggregate.User;
+import com.architecture.hexagonal.domain.model.aggregate.user.User;
 import com.architecture.hexagonal.domain.model.entity.UserDo;
 import com.architecture.hexagonal.domain.model.vo.EmailVo;
 import lombok.Builder;

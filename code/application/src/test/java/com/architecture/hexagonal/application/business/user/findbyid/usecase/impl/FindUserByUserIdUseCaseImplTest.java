@@ -6,7 +6,7 @@ import com.architecture.hexagonal.application.testutils.data.aggregate.UserTestD
 import com.architecture.hexagonal.application.testutils.user.findbyid.input.FindUserByUserIdInputTestDataBuilder;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
-import com.architecture.hexagonal.domain.model.aggregate.User;
+import com.architecture.hexagonal.domain.model.aggregate.user.User;
 import java.util.Optional;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;

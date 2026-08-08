@@ -1,0 +1,9 @@
+spring:
+  mongodb:
+    port: 27017
+    database: mydatabase
+    username: root
+    password: example
+    authentication-database: admin
+    representation:
+      uuid: STANDARD

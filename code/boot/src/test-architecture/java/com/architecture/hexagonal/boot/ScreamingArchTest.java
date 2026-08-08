@@ -32,7 +32,7 @@ class ScreamingArchTest {
           .areInterfaces()
           .and()
           .haveNameNotMatching(
-              ".*\\.(Create|Update|Patch|Delete|Find|Get|Exists|Validate|Process|Send|Notify)[A-Z].*UseCase"
+              ".*\\.(Persist|Create|Update|Patch|Delete|Find|Get|Exists|Validate|Process|Retry|Send|Notify|Block)[A-Z].*UseCase"
                   + "|.*\\.[A-Z][a-zA-Z]+(Exists|Available|Valid)[A-Z]?.*UseCase")
           .should()
           .resideInAPackage("..application..usecase..")

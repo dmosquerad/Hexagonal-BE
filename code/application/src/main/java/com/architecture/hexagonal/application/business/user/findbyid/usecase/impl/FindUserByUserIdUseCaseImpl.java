@@ -5,8 +5,9 @@ import com.architecture.hexagonal.application.business.user.findbyid.usecase.Fin
 import com.architecture.hexagonal.application.port.database.UserRepositoryReadPort;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
-import com.architecture.hexagonal.domain.model.aggregate.User;
+import com.architecture.hexagonal.domain.model.aggregate.user.User;
 import java.util.UUID;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -15,7 +16,7 @@ public class FindUserByUserIdUseCaseImpl implements FindUserByUserIdUseCase {
   private final UserRepositoryReadPort userRepositoryReadPort;
 
   @Override
-  public User execute(final FindUserByUserIdInput findUserByUserIdInput) {
+  public User execute(final @NonNull FindUserByUserIdInput findUserByUserIdInput) {
     final UUID uuid = findUserByUserIdInput.getUserId();
 
     return userRepositoryReadPort

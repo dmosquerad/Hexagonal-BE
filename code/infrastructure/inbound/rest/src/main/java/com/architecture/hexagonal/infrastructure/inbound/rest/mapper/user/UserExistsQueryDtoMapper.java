@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.mapper.user;
 
-import com.architecture.hexagonal.infrastructure.contract.orchestration.generated.user.UserExistsQueryDto;
-import com.architecture.hexagonal.infrastructure.inbound.rest.config.MapstructConfig;
+import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.user.UserExistsQueryDto;
+import com.architecture.hexagonal.infrastructure.inbound.rest.config.mapstruct.MapstructConfig;
 import java.util.UUID;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

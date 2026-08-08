@@ -14,8 +14,9 @@
         <module>database</module>
         <module>configuration</module>
         <module>message</module>
+        <module>outbox</module>
     </modules>
-        <dependencies>
+    <dependencies>
         <!-- ============================================ -->
         <!-- PROJECT MODULES -->
         <!-- ============================================ -->

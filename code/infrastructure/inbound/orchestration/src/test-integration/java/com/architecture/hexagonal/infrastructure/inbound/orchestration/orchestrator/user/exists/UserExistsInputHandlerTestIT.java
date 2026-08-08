@@ -2,11 +2,11 @@ package com.architecture.hexagonal.infrastructure.inbound.orchestration.orchestr
 
 import com.architecture.hexagonal.application.business.user.exists.input.UserExistsInput;
 import com.architecture.hexagonal.application.business.user.exists.usecase.UserExistsUseCase;
-import com.architecture.hexagonal.infrastructure.contract.orchestration.generated.user.UserExistsQueryDto;
+import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.user.UserExistsQueryDto;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.mapper.user.UserExistsQueryMapper;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.testutils.data.query.UserExistsQueryDtoTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.inbound.orchestration.config.TransactionBoundary;
+import com.architecture.hexagonal.infrastructure.inbound.orchestration.config.transaction.TransactionBoundary;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

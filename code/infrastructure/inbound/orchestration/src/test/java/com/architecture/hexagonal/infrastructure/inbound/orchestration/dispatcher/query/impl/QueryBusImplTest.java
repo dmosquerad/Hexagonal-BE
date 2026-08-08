@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.infrastructure.inbound.orchestration.dispatcher.query.impl;
 
-import com.architecture.hexagonal.domain.model.aggregate.User;
+import com.architecture.hexagonal.domain.model.aggregate.user.User;
 import com.architecture.hexagonal.domain.model.pagination.PaginationResult;
-import com.architecture.hexagonal.infrastructure.contract.orchestration.generated.user.GetUsersFilteredQueryDto;
+import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.user.GetUsersFilteredQueryDto;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.dispatcher.query.QueryHandler;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.orchestrator.user.getallfiltered.GetUsersFilteredQueryHandlerImpl;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.testutils.data.query.GetUsersFilteredQueryDtoTestDataBuilder;

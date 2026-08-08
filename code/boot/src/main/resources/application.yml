@@ -1,7 +1,9 @@
 spring:
+  jackson: {}
   config:
     import:
-      - classpath:application-rest.yml
-      - classpath:application-database.yml
+      - classpath:application-restserver.yml
+      - classpath:application-postgresql.yml
+      - classpath:application-mongodb.yml
       - classpath:application-configuration.yml
-      - classpath:application-message.yml
+      - classpath:application-rabbitmq.yml

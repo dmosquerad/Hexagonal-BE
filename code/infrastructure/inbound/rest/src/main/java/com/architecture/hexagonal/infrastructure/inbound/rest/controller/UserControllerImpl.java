@@ -1,15 +1,15 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.controller;
 
-import com.architecture.hexagonal.domain.model.aggregate.User;
+import com.architecture.hexagonal.domain.model.aggregate.user.User;
 import com.architecture.hexagonal.domain.model.pagination.Pagination;
 import com.architecture.hexagonal.domain.model.pagination.PaginationResult;
-import com.architecture.hexagonal.infrastructure.contract.rest.user.server.controller.UsersApi;
-import com.architecture.hexagonal.infrastructure.contract.rest.user.server.dto.ResponsePaginationDto;
-import com.architecture.hexagonal.infrastructure.contract.rest.user.server.dto.UserCreateDto;
-import com.architecture.hexagonal.infrastructure.contract.rest.user.server.dto.UserPatchDto;
-import com.architecture.hexagonal.infrastructure.contract.rest.user.server.dto.UserResponseDto;
-import com.architecture.hexagonal.infrastructure.contract.rest.user.server.dto.UserUpdateDto;
-import com.architecture.hexagonal.infrastructure.contract.rest.user.server.dto.UsersResponseDto;
+import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.server.controller.UsersApi;
+import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.server.dto.ResponsePaginationDto;
+import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.server.dto.UserCreateDto;
+import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.server.dto.UserPatchDto;
+import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.server.dto.UserResponseDto;
+import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.server.dto.UserUpdateDto;
+import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.server.dto.UsersResponseDto;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.dispatcher.command.CommandBus;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.dispatcher.query.QueryBus;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.user.*;
@@ -44,7 +44,6 @@ public class UserControllerImpl implements UsersApi {
   private final UserExistsQueryDtoMapper userExistsQueryDtoMapper;
 
   private final GetAllUserQueryDtoMapper getAllUserQueryDtoMapper;
-
   private final Clock clock;
 
   @Override

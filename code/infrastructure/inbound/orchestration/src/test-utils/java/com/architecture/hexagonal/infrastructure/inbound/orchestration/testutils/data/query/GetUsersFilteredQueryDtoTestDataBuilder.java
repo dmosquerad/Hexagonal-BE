@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.inbound.orchestration.testutils.data.query;
 
-import com.architecture.hexagonal.infrastructure.contract.orchestration.generated.common.PaginationDto;
-import com.architecture.hexagonal.infrastructure.contract.orchestration.generated.user.GetUsersFilteredQueryDto;
+import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.common.PaginationDto;
+import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.user.GetUsersFilteredQueryDto;
 import lombok.Builder;
 
 @Builder

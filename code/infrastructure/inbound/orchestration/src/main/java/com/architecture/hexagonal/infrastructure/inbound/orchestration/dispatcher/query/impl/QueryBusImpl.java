@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import lombok.NonNull;
 import org.springframework.core.ResolvableType;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +29,7 @@ public class QueryBusImpl implements QueryBus {
   }
 
   @Override
-  public <Q, R> R execute(final Q query) {
+  public <Q, R> R execute(final @NonNull Q query) {
     final QueryHandler<Q, R> handler = (QueryHandler<Q, R>) handlersByQuery.get(query.getClass());
 
     if (Objects.isNull(handler)) {

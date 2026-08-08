@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.inbound.orchestration.testutils.data.command;
 
-import com.architecture.hexagonal.infrastructure.contract.orchestration.generated.user.CreateUserCommandDto;
+import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.user.CreateUserCommandDto;
 import lombok.Builder;
 
 @Builder

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import lombok.NonNull;
 import org.springframework.core.ResolvableType;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +29,7 @@ public class CommandBusImpl implements CommandBus {
   }
 
   @Override
-  public <C, R> R execute(final C command) {
+  public <C, R> R execute(final @NonNull C command) {
     final CommandHandler<C, R> handler =
         (CommandHandler<C, R>) handlersByCommand.get(command.getClass());
 
