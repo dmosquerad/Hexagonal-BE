@@ -22,7 +22,7 @@ public class UserTestDataBuilder {
   public User user() {
     return User.builder()
         .userId(userId)
-            .name(name)
+        .name(name)
         .email(email)
         .build();
   }

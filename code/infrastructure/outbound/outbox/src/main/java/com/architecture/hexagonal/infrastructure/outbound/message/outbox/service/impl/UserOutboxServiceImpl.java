@@ -3,6 +3,7 @@ package com.architecture.hexagonal.infrastructure.outbound.message.outbox.servic
 import com.architecture.hexagonal.application.port.message.UserSenderPort;
 import com.architecture.hexagonal.domain.model.aggregate.outbox.Outbox;
 import com.architecture.hexagonal.infrastructure.outbound.message.outbox.mapper.user.UserFromOutboxMapper;
+import com.architecture.hexagonal.infrastructure.outbound.message.outbox.naming.OutboxNaming;
 import com.architecture.hexagonal.infrastructure.outbound.message.outbox.service.OutboxService;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserCreated;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserDeleted;
@@ -26,7 +27,7 @@ public class UserOutboxServiceImpl implements OutboxService {
   public void process(final @NonNull Outbox outbox) {
     final Consumer<Outbox> handler = actionHandlers().get(outbox.action());
     if (Objects.isNull(handler)) {
-      throw new IllegalArgumentException("Unsupported user action: " + outbox.action());
+      throw new IllegalArgumentException(OutboxNaming.UNSUPPORTED_USER_ACTION + outbox.action());
     }
     handler.accept(outbox);
   }

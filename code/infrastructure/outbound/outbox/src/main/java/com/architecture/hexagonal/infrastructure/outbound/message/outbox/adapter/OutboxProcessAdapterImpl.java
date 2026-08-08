@@ -2,6 +2,7 @@ package com.architecture.hexagonal.infrastructure.outbound.message.outbox.adapte
 
 import com.architecture.hexagonal.application.port.outbox.OutboxProcessPort;
 import com.architecture.hexagonal.domain.model.aggregate.outbox.Outbox;
+import com.architecture.hexagonal.infrastructure.outbound.message.outbox.naming.OutboxNaming;
 import com.architecture.hexagonal.infrastructure.outbound.message.outbox.service.OutboxService;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.naming.UserMessageNaming;
 import java.util.Map;
@@ -21,7 +22,8 @@ public class OutboxProcessAdapterImpl implements OutboxProcessPort {
   public void process(final @NonNull Outbox outbox) {
     final Consumer<Outbox> handler = aggregateHandlers().get(outbox.aggregateType());
     if (Objects.isNull(handler)) {
-      throw new IllegalArgumentException("Unsupported aggregate type: " + outbox.aggregateType());
+      throw new IllegalArgumentException(
+          OutboxNaming.UNSUPPORTED_AGGREGATE_TYPE + outbox.aggregateType());
     }
     handler.accept(outbox);
   }

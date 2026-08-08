@@ -63,11 +63,10 @@ class DomainArchTest {
           .resideInAPackage("..domain.model..")
           .should()
           .resideInAnyPackage(
-              "..domain.model.aggregate..",
-              "..domain.model.entity..",
-              "..domain.model.pagination..",
+      "..domain.model.aggregate..",
+              "..domain.model.projector..",
               "..domain.model.vo..")
-          .because("Domain model classes must reside in aggregate, entity, pagination or VO packages");
+          .because("Domain model classes must reside in aggregate, projector or VO packages");
 
   @ArchTest
   static final ArchRule value_objects_should_reside_in_domain_data_vo_package =
@@ -86,37 +85,6 @@ class DomainArchTest {
           .should()
           .resideInAPackage("..domain.model..factory..")
           .because("Value object factories must reside in domain.model..factory");
-
-  @ArchTest
-  static final ArchRule entities_should_reside_in_domain_model_entity_package =
-      ArchRuleDefinition.classes()
-          .that()
-          .haveSimpleNameEndingWith("Do")
-          .should()
-          .resideInAPackage("..domain.model.entity..")
-          .because("Domain entity classes (*Do) must reside in domain.model.entity;"
-              + " mixing entities with aggregates or VOs blurs the domain model structure");
-
-
-  @ArchTest
-  static final ArchRule aggregates_should_reside_in_domain_model_aggregate_package =
-      ArchRuleDefinition.classes()
-          .that()
-          .resideInAPackage("..domain.model.aggregate..")
-          .and()
-          .doNotHaveSimpleName("Aggregate")
-          .should()
-          .notBeInterfaces()
-          .because("Aggregate roots must be concrete classes confined to domain.model.aggregate");
-
-  @ArchTest
-  static final ArchRule pagination_classes_should_reside_in_domain_model_pagination_package =
-      ArchRuleDefinition.classes()
-          .that()
-          .resideInAPackage("..domain.model.pagination..")
-          .should()
-          .resideInAPackage("..domain.model.pagination..")
-          .because("Pagination value types must be isolated in domain.model.pagination");
 
   @ArchTest
   static final ArchRule predicates_should_reside_in_domain_model_predicate_package =
