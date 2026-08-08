@@ -157,6 +157,11 @@
         <artifactId>outbox</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>inbox</artifactId>
+        <version>${project.version}</version>
+      </dependency>
       <!-- ============================================ -->
       <!-- MAPSTRUCT -->
       <!-- ============================================ -->

@@ -4,26 +4,20 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.architecture.hexagonal</groupId>
-        <artifactId>infrastructure</artifactId>
+        <artifactId>outbound</artifactId>
         <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
-    <artifactId>outbound</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>inbox</artifactId>
+    <packaging>jar</packaging>
 
-    <modules>
-        <module>database</module>
-        <module>configuration</module>
-        <module>message</module>
-        <module>inbox</module>
-        <module>outbox</module>
-    </modules>
     <dependencies>
         <!-- ============================================ -->
         <!-- PROJECT MODULES -->
         <!-- ============================================ -->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>application</artifactId>
+            <artifactId>database-mongodb</artifactId>
         </dependency>
     </dependencies>
 </project>
