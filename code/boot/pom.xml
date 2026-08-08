@@ -23,7 +23,15 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>handler-rabbitmq</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>execution-outbox</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>execution-inbox</artifactId>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
