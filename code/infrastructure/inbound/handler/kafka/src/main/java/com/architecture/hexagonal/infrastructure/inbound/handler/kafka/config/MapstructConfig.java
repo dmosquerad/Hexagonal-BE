@@ -1,4 +1,4 @@
-package com.architecture.hexagonal.infrastructure.inbound.handler.rabbitmq.config;
+package com.architecture.hexagonal.infrastructure.inbound.handler.kafka.config;
 
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.MapperConfig;

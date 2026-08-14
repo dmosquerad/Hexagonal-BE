@@ -9,7 +9,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>handler-rabbitmq</artifactId>
+    <artifactId>handler-kafka</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>
@@ -19,6 +19,13 @@
         <dependency>
             <groupId>com.architecture.hexagonal</groupId>
             <artifactId>orchestration</artifactId>
+        </dependency>
+        <!-- ============================================ -->
+        <!-- SPRING KAFKA -->
+        <!-- ============================================ -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-kafka</artifactId>
         </dependency>
     </dependencies>
 </project>

@@ -96,7 +96,7 @@
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>handler-rabbitmq</artifactId>
+        <artifactId>handler-kafka</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -127,6 +127,11 @@
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>inbound-contract-orchestration</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>inbound-contract-rabbitmq</artifactId>
         <version>${project.version}</version>
       </dependency>
       <!-- ============================================ -->

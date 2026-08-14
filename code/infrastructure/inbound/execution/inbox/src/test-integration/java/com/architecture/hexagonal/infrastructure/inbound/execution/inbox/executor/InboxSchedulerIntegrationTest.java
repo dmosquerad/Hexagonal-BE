@@ -41,7 +41,7 @@ class InboxSchedulerIntegrationTest {
         ArgumentCaptor<Duration> durationCaptor = ArgumentCaptor.forClass(Duration.class);
 
         Mockito.verify(scheduledTaskRegistrar).addFixedDelayTask(scheduleProcessCaptor.capture(), durationCaptor.capture());
-        Duration expectedDuration = schedulerConfig.getPollingInterval();
+        Duration expectedDuration = schedulerConfig.pollingInterval();
         Duration capturedDuration = durationCaptor.getValue();
         
         assertEquals(expectedDuration, capturedDuration);

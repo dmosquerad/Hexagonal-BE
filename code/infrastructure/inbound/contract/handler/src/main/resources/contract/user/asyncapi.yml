@@ -1,0 +1,128 @@
+asyncapi: 3.0.0
+info:
+  title: Robot Events API
+  version: 1.0.0
+  description: |
+    AsyncAPI contract for robot events exchanged through Kafka.
+
+defaultContentType: application/json
+
+servers:
+  kafka:
+    host: ${KAFKA_BOOTSTRAP_SERVERS}
+    protocol: kafka
+    description: Kafka broker
+
+channels:
+  robot-status:
+    address: robot.status
+    messages:
+      robotStatus:
+        $ref: '#/components/messages/RobotStatus'
+
+  robot-command:
+    address: robot.command
+    messages:
+      robotCommand:
+        $ref: '#/components/messages/RobotCommand'
+
+operations:
+  publishRobotStatus:
+    action: send
+    channel:
+      $ref: '#/channels/robot-status'
+    summary: Publish the current robot status
+
+  consumeRobotCommand:
+    action: receive
+    channel:
+      $ref: '#/channels/robot-command'
+    summary: Consume commands for a robot
+
+components:
+  messages:
+    RobotStatus:
+      name: RobotStatus
+      title: Robot status event
+      payload:
+        $ref: '#/components/schemas/RobotStatus'
+
+    RobotCommand:
+      name: RobotCommand
+      title: Robot command
+      payload:
+        $ref: '#/components/schemas/RobotCommand'
+
+  schemas:
+    RobotStatus:
+      type: object
+      required:
+        - eventId
+        - robotId
+        - timestamp
+        - status
+      properties:
+        eventId:
+          type: string
+          format: uuid
+        robotId:
+          type: string
+          example: robot-001
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum:
+            - IDLE
+            - MOVING
+            - CHARGING
+            - ERROR
+            - OFFLINE
+        batteryLevel:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 100
+        location:
+          $ref: '#/components/schemas/Location'
+        error:
+          type: string
+          nullable: true
+
+    RobotCommand:
+      type: object
+      required:
+        - commandId
+        - robotId
+        - command
+      properties:
+        commandId:
+          type: string
+          format: uuid
+        robotId:
+          type: string
+          example: robot-001
+        command:
+          type: string
+          enum:
+            - START
+            - STOP
+            - MOVE
+            - CHARGE
+        parameters:
+          type: object
+          additionalProperties: true
+
+    Location:
+      type: object
+      required:
+        - latitude
+        - longitude
+      properties:
+        latitude:
+          type: number
+          format: double
+        longitude:
+          type: number
+          format: double

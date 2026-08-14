@@ -16,8 +16,7 @@ public class InboxSchedulerImpl implements InboxScheduler, SchedulingConfigurer 
   @Override
   public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
     taskRegistrar.addFixedDelayTask(
-        this::scheduleProcess,
-        schedulerConfigurationPort.getSchedulerOutbox().getPollingInterval());
+        this::scheduleProcess, schedulerConfigurationPort.getSchedulerOutbox().pollingInterval());
   }
 
   @Override
