@@ -10,7 +10,6 @@ import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.InvalidValueException;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import com.architecture.hexagonal.domain.model.aggregate.user.User;
-import com.architecture.hexagonal.domain.model.entity.UserDo;
 import com.architecture.hexagonal.domain.model.vo.EmailVo;
 import com.architecture.hexagonal.domain.model.vo.factory.EmailVoFactory;
 import com.architecture.hexagonal.domain.service.EmailBlockPolicy;
@@ -28,14 +27,14 @@ public class UpdateUserUseCaseImpl implements UpdateUserUseCase {
 
   @Override
   public User execute(final @NonNull UpdateUserInput updateUserInput) {
-    final UUID uuid = updateUserInput.getUserId();
+    final UUID uuid = updateUserInput.userId();
 
     userRepositoryReadPort
         .findUserById(uuid)
         .orElseThrow(
             () -> new ResourceNotFoundException(ExceptionMessage.NOT_FOUND_DATA_MESSAGE + uuid));
 
-    final EmailVo email = EmailVoFactory.from(updateUserInput.getEmail());
+    final EmailVo email = EmailVoFactory.from(updateUserInput.email());
 
     if (EmailBlockPolicy.isBlocked(email, emailConfigurationPort.getBlockedRules())) {
       throw new InvalidValueException(ExceptionMessage.EMAIL_NO_ALLOWED_MESSAGE + email.getEmail());
@@ -43,10 +42,7 @@ public class UpdateUserUseCaseImpl implements UpdateUserUseCase {
 
     User updatedUser =
         userRepositoryWritePort.saveUser(
-            User.builder()
-                .user(UserDo.builder().userId(uuid).name(updateUserInput.getName()).build())
-                .email(email)
-                .build());
+            User.builder().userId(uuid).name(updateUserInput.name()).email(email).build());
 
     userSenderPort.userSenderUpdated(updatedUser);
     return updatedUser;

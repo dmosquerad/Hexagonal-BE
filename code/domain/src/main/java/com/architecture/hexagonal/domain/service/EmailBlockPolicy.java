@@ -17,11 +17,10 @@ public class EmailBlockPolicy {
       return false;
     }
 
-    return rules.getEmail().stream().anyMatch(b -> b.equals(emailVo.getEmail().toLowerCase()))
-        || rules.getHost().stream().anyMatch(b -> b.equals(emailVo.getHost().toLowerCase()))
-        || rules.getTld().stream().anyMatch(b -> b.equals(emailVo.getTld().toLowerCase()))
-        || rules.getDomain().stream().anyMatch(b -> b.equals(emailVo.getDomain().toLowerCase()))
-        || rules.getUsername().stream()
-            .anyMatch(b -> b.equals(emailVo.getUsername().toLowerCase()));
+    return rules.email().stream().anyMatch(b -> b.equals(emailVo.getEmail().toLowerCase()))
+        || rules.host().stream().anyMatch(b -> b.equals(emailVo.host().toLowerCase()))
+        || rules.tld().stream().anyMatch(b -> b.equals(emailVo.tld().toLowerCase()))
+        || rules.domain().stream().anyMatch(b -> b.equals(emailVo.getDomain().toLowerCase()))
+        || rules.username().stream().anyMatch(b -> b.equals(emailVo.username().toLowerCase()));
   }
 }

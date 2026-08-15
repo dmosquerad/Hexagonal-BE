@@ -16,7 +16,7 @@ public class UserExistsUseCaseImpl implements UserExistsUseCase {
 
   @Override
   public void execute(final @NonNull UserExistsInput userExistsInput) {
-    final UUID uuid = userExistsInput.getUserId();
+    final UUID uuid = userExistsInput.userId();
 
     userRepositoryReadPort
         .findUserById(uuid)

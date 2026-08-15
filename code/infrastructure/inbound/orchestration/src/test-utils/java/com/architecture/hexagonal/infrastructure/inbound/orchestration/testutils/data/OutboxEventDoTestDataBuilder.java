@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.inbound.orchestration.testutils.data;
 
-import com.architecture.hexagonal.domain.model.entity.OutboxDo;
+import com.architecture.hexagonal.domain.model.aggregate.outbox.Outbox;
 import com.architecture.hexagonal.domain.model.vo.OutboxStatusVo;
 
 import java.time.OffsetDateTime;
@@ -22,8 +22,8 @@ public class OutboxEventDoTestDataBuilder {
   @Builder.Default private OffsetDateTime createdAt = OffsetDateTime.now(TestClock.FIXED_CLOCK);
   @Builder.Default private OffsetDateTime processedAt =  OffsetDateTime.now(TestClock.FIXED_CLOCK);
 
-  public OutboxDo outboxEventDo() {
-    return OutboxDo.builder()
+  public Outbox outboxEventDo() {
+    return Outbox.builder()
         .outboxId(eventId)
         .aggregateType(aggregateType)
         .aggregateId(aggregateId)

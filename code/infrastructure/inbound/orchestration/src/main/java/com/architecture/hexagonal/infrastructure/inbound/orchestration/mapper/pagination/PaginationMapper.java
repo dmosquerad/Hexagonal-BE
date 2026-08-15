@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.inbound.orchestration.mapper.pagination;
 
-import com.architecture.hexagonal.domain.model.pagination.Pagination;
+import com.architecture.hexagonal.domain.model.aggregate.pagination.Pagination;
 import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.common.PaginationDto;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.config.mapstruct.MapstructConfig;
 import org.mapstruct.Mapper;

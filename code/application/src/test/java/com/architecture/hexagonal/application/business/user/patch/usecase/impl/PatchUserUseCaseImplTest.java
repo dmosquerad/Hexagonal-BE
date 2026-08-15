@@ -5,7 +5,7 @@ import com.architecture.hexagonal.application.port.configuration.EmailConfigurat
 import com.architecture.hexagonal.application.port.database.UserRepositoryReadPort;
 import com.architecture.hexagonal.application.port.database.UserRepositoryWritePort;
 import com.architecture.hexagonal.application.port.message.UserSenderPort;
-import com.architecture.hexagonal.application.testutils.data.aggregate.UserTestDataBuilder;
+import com.architecture.hexagonal.application.testutils.data.aggregate.user.UserTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.data.vo.EmailBlockRulesVoTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.user.patch.input.PatchUserInputTestDataBuilder;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
@@ -42,7 +42,7 @@ class PatchUserUseCaseImplTest {
     final PatchUserInput patchUserInput =
         PatchUserInputTestDataBuilder.builder().build().patchUserInput();
 
-    Mockito.when(userRepositoryReadPort.findUserById(patchUserInput.getUserId()))
+    Mockito.when(userRepositoryReadPort.findUserById(patchUserInput.userId()))
         .thenReturn(Optional.of(user));
     Mockito.when(emailConfigurationPort.getBlockedRules())
         .thenReturn(EmailBlockRulesVoTestDataBuilder.builder().build().emailBlockRulesVo());
@@ -52,7 +52,7 @@ class PatchUserUseCaseImplTest {
 
     AssertionsForClassTypes.assertThat(result).usingRecursiveComparison().isEqualTo(user);
 
-    Mockito.verify(userRepositoryReadPort).findUserById(patchUserInput.getUserId());
+    Mockito.verify(userRepositoryReadPort).findUserById(patchUserInput.userId());
     Mockito.verify(emailConfigurationPort).getBlockedRules();
     Mockito.verify(userRepositoryWritePort).saveUser(user);
     Mockito.verify(userSenderPort).userSenderUpdated(user);
@@ -64,7 +64,7 @@ class PatchUserUseCaseImplTest {
     final PatchUserInput patchUserInput =
         PatchUserInputTestDataBuilder.builder().build().patchUserInput();
 
-    Mockito.when(userRepositoryReadPort.findUserById(patchUserInput.getUserId()))
+    Mockito.when(userRepositoryReadPort.findUserById(patchUserInput.userId()))
         .thenReturn(Optional.of(user));
     Mockito.when(emailConfigurationPort.getBlockedRules())
         .thenReturn(
@@ -85,14 +85,14 @@ class PatchUserUseCaseImplTest {
     final PatchUserInput patchUserInput =
         PatchUserInputTestDataBuilder.builder().build().patchUserInput();
 
-    Mockito.when(userRepositoryReadPort.findUserById(patchUserInput.getUserId()))
+    Mockito.when(userRepositoryReadPort.findUserById(patchUserInput.userId()))
         .thenReturn(Optional.empty());
 
     AssertionsForClassTypes.assertThatThrownBy(() -> patchUserUseCaseImpl.execute(patchUserInput))
         .isInstanceOf(ResourceNotFoundException.class)
-        .hasMessage(ExceptionMessage.NOT_FOUND_DATA_MESSAGE + patchUserInput.getUserId());
+        .hasMessage(ExceptionMessage.NOT_FOUND_DATA_MESSAGE + patchUserInput.userId());
 
-    Mockito.verify(userRepositoryReadPort).findUserById(patchUserInput.getUserId());
+    Mockito.verify(userRepositoryReadPort).findUserById(patchUserInput.userId());
     Mockito.verifyNoInteractions(userRepositoryWritePort);
     Mockito.verifyNoInteractions(userSenderPort);
   }

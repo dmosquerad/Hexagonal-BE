@@ -7,7 +7,7 @@ import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.da
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.mapper.user.UserDaoMapper;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.mapper.user.UserFromPostgresqlMapper;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.repository.UserPostgresqlWriteRepository;
-import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.testutils.data.aggregate.UserTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.testutils.data.aggregate.user.UserTestDataBuilder;
 import java.util.Optional;
 import java.util.UUID;
 import org.assertj.core.api.AssertionsForClassTypes;
@@ -64,14 +64,14 @@ class UserPostgresqlWriteAdapterImplTestIT extends PostgresqlIT {
         .build()
         .user();
 
-    final Optional<User> result = userPostgresqlWriteAdapterImpl.deleteUser(user.getUser().getUserId());
+    final Optional<User> result = userPostgresqlWriteAdapterImpl.deleteUser(user.userId());
 
     AssertionsForClassTypes.assertThat(result)
         .usingRecursiveComparison()
         .ignoringFieldsOfTypes(UUID.class)
         .isEqualTo(Optional.of(user));
 
-    Mockito.verify(userPostgresqlWriteRepository).deleteByUserId(user.getUser().getUserId());
+    Mockito.verify(userPostgresqlWriteRepository).deleteByUserId(user.userId());
     Mockito.verify(userFromPostgresqlMapper).toUser(ArgumentMatchers.any(UserDao.class));
   }
 

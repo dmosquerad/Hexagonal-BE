@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.controller;
 
+import com.architecture.hexagonal.domain.model.aggregate.pagination.Pagination;
+import com.architecture.hexagonal.domain.model.aggregate.pagination.PaginationResult;
 import com.architecture.hexagonal.domain.model.aggregate.user.User;
-import com.architecture.hexagonal.domain.model.pagination.Pagination;
-import com.architecture.hexagonal.domain.model.pagination.PaginationResult;
 import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.server.controller.UsersApi;
 import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.server.dto.ResponsePaginationDto;
 import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.server.dto.UserCreateDto;
@@ -115,12 +115,12 @@ public class UserControllerImpl implements UsersApi {
     usersResponseDto.setStatus(HttpStatus.OK.value());
     usersResponseDto.setPagination(
         new ResponsePaginationDto()
-            .page(pageResult.getPage())
-            .size(pageResult.getSize())
-            .totalElements(pageResult.getTotalElements())
-            .totalPages(pageResult.getTotalPages()));
+            .page(pageResult.page())
+            .size(pageResult.size())
+            .totalElements(pageResult.totalElements())
+            .totalPages(pageResult.totalPages()));
     usersResponseDto.setData(
-        pageResult.getData().stream().map(userReadDtoMapper::toUserReadDto).toList());
+        pageResult.data().stream().map(userReadDtoMapper::toUserReadDto).toList());
     return usersResponseDto;
   }
 }

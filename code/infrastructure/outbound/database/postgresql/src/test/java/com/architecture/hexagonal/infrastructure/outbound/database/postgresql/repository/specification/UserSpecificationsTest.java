@@ -89,30 +89,25 @@ class UserSpecificationsTest {
 
     predicates
         .when(
-            () ->
-                UserPredicates.emailMatchesExact(
-                    criteriaBuilder, emailExpression, rules.getEmail()))
+            () -> UserPredicates.emailMatchesExact(criteriaBuilder, emailExpression, rules.email()))
         .thenReturn(List.of());
     predicates
         .when(
             () ->
-                UserPredicates.emailEndsWithDomain(
-                    criteriaBuilder, emailExpression, rules.getDomain()))
+                UserPredicates.emailEndsWithDomain(criteriaBuilder, emailExpression, rules.email()))
         .thenReturn(List.of());
     predicates
         .when(
-            () ->
-                UserPredicates.emailContainsHost(criteriaBuilder, emailExpression, rules.getHost()))
+            () -> UserPredicates.emailContainsHost(criteriaBuilder, emailExpression, rules.host()))
         .thenReturn(List.of());
     predicates
-        .when(
-            () -> UserPredicates.emailEndsWithTld(criteriaBuilder, emailExpression, rules.getTld()))
+        .when(() -> UserPredicates.emailEndsWithTld(criteriaBuilder, emailExpression, rules.tld()))
         .thenReturn(List.of());
     predicates
         .when(
             () ->
                 UserPredicates.emailStartsWithUsername(
-                    criteriaBuilder, emailExpression, rules.getUsername()))
+                    criteriaBuilder, emailExpression, rules.username()))
         .thenReturn(List.of());
 
     final Specification<UserDao> specification = UserSpecifications.blockedEmail(true, rules);
@@ -134,30 +129,26 @@ class UserSpecificationsTest {
 
     predicates
         .when(
-            () ->
-                UserPredicates.emailMatchesExact(
-                    criteriaBuilder, emailExpression, rules.getEmail()))
+            () -> UserPredicates.emailMatchesExact(criteriaBuilder, emailExpression, rules.email()))
         .thenReturn(List.of(blockedPredicate));
     predicates
         .when(
             () ->
                 UserPredicates.emailEndsWithDomain(
-                    criteriaBuilder, emailExpression, rules.getDomain()))
+                    criteriaBuilder, emailExpression, rules.domain()))
         .thenReturn(List.of());
     predicates
         .when(
-            () ->
-                UserPredicates.emailContainsHost(criteriaBuilder, emailExpression, rules.getHost()))
+            () -> UserPredicates.emailContainsHost(criteriaBuilder, emailExpression, rules.host()))
         .thenReturn(List.of());
     predicates
-        .when(
-            () -> UserPredicates.emailEndsWithTld(criteriaBuilder, emailExpression, rules.getTld()))
+        .when(() -> UserPredicates.emailEndsWithTld(criteriaBuilder, emailExpression, rules.tld()))
         .thenReturn(List.of());
     predicates
         .when(
             () ->
                 UserPredicates.emailStartsWithUsername(
-                    criteriaBuilder, emailExpression, rules.getUsername()))
+                    criteriaBuilder, emailExpression, rules.username()))
         .thenReturn(List.of());
 
     final Specification<UserDao> specification = UserSpecifications.blockedEmail(true, rules);
@@ -180,30 +171,26 @@ class UserSpecificationsTest {
 
     predicates
         .when(
-            () ->
-                UserPredicates.emailMatchesExact(
-                    criteriaBuilder, emailExpression, rules.getEmail()))
+            () -> UserPredicates.emailMatchesExact(criteriaBuilder, emailExpression, rules.email()))
         .thenReturn(List.of(blockedPredicate));
     predicates
         .when(
             () ->
                 UserPredicates.emailEndsWithDomain(
-                    criteriaBuilder, emailExpression, rules.getDomain()))
+                    criteriaBuilder, emailExpression, rules.domain()))
         .thenReturn(List.of());
     predicates
         .when(
-            () ->
-                UserPredicates.emailContainsHost(criteriaBuilder, emailExpression, rules.getHost()))
+            () -> UserPredicates.emailContainsHost(criteriaBuilder, emailExpression, rules.host()))
         .thenReturn(List.of());
     predicates
-        .when(
-            () -> UserPredicates.emailEndsWithTld(criteriaBuilder, emailExpression, rules.getTld()))
+        .when(() -> UserPredicates.emailEndsWithTld(criteriaBuilder, emailExpression, rules.tld()))
         .thenReturn(List.of());
     predicates
         .when(
             () ->
                 UserPredicates.emailStartsWithUsername(
-                    criteriaBuilder, emailExpression, rules.getUsername()))
+                    criteriaBuilder, emailExpression, rules.username()))
         .thenReturn(List.of());
 
     final Specification<UserDao> specification = UserSpecifications.blockedEmail(false, rules);

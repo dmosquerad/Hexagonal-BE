@@ -2,7 +2,7 @@ package com.architecture.hexagonal.application.technical.outbox.block.usecase.im
 
 import com.architecture.hexagonal.application.port.database.OutboxRepositoryWritePort;
 import com.architecture.hexagonal.application.technical.outbox.block.usecase.BlockOutboxEventUseCase;
-import com.architecture.hexagonal.domain.model.entity.OutboxDo;
+import com.architecture.hexagonal.domain.model.aggregate.outbox.Outbox;
 import com.architecture.hexagonal.domain.model.vo.OutboxStatusVo;
 import java.time.Clock;
 import java.time.OffsetDateTime;
@@ -16,9 +16,9 @@ public class BlockOutboxEventUseCaseImpl implements BlockOutboxEventUseCase {
   private final Clock clock;
 
   @Override
-  public OutboxDo execute(final @NonNull OutboxDo outboxDo) {
+  public Outbox execute(final @NonNull Outbox outbox) {
     return outboxRepositoryWritePort.save(
-        outboxDo.toBuilder()
+        outbox.toBuilder()
             .status(OutboxStatusVo.BLOCKED)
             .processedAt(OffsetDateTime.now(clock))
             .build());

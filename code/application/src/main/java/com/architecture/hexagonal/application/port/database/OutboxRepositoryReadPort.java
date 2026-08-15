@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.application.port.database;
 
-import com.architecture.hexagonal.domain.model.entity.OutboxDo;
+import com.architecture.hexagonal.domain.model.aggregate.outbox.Outbox;
 import java.util.List;
 
 public interface OutboxRepositoryReadPort {
-  List<OutboxDo> findPendingEvents();
+  List<Outbox> findPendingEvents();
 }

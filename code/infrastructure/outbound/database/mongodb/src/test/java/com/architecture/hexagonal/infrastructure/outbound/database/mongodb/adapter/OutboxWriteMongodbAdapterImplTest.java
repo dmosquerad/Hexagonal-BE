@@ -1,12 +1,12 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.adapter;
 
-import com.architecture.hexagonal.domain.model.entity.OutboxDo;
+import com.architecture.hexagonal.domain.model.aggregate.outbox.Outbox;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.OutboxDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.mapper.outbox.OutboxDaoMapper;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.mapper.outbox.OutboxDoFromMongodbMapper;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.repository.OutboxWriteMongodbRepository;
-import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.data.OutboxEventDaoTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.data.OutboxEventDoTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.dao.OutboxDaoTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.data.aggregate.OutboxTestDataBuilder;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,17 +33,17 @@ class OutboxWriteMongodbAdapterImplTest {
 
   @Test
   void save_shouldPersistOutboxEvent_whenEventIsValid() {
-    final OutboxDo outboxDo = OutboxEventDoTestDataBuilder.builder().build().outboxEventDo();
-    final OutboxDao outboxDao = OutboxEventDaoTestDataBuilder.builder().build().outboxEventDao();
+    final Outbox outbox = OutboxTestDataBuilder.builder().build().outboxEventDo();
+    final OutboxDao outboxDao = OutboxDaoTestDataBuilder.builder().build().outboxEventDao();
 
     Mockito.when(outboxWriteMongodbRepository.save(ArgumentMatchers.any(OutboxDao.class)))
         .thenReturn(outboxDao);
 
-    final OutboxDo result = outboxWriteMongodbAdapterImpl.save(outboxDo);
+    final Outbox result = outboxWriteMongodbAdapterImpl.save(outbox);
 
-    AssertionsForClassTypes.assertThat(result).usingRecursiveComparison().isEqualTo(outboxDo);
+    AssertionsForClassTypes.assertThat(result).usingRecursiveComparison().isEqualTo(outbox);
 
-    Mockito.verify(outboxDaoMapper).toOutboxEventDao(outboxDo);
+    Mockito.verify(outboxDaoMapper).toOutboxEventDao(outbox);
     Mockito.verify(outboxWriteMongodbRepository).save(ArgumentMatchers.any(OutboxDao.class));
     Mockito.verify(outboxDoFromMongodbMapper).toOutboxEvent(outboxDao);
   }

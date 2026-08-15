@@ -17,7 +17,7 @@ public class FindUserByUserIdUseCaseImpl implements FindUserByUserIdUseCase {
 
   @Override
   public User execute(final @NonNull FindUserByUserIdInput findUserByUserIdInput) {
-    final UUID uuid = findUserByUserIdInput.getUserId();
+    final UUID uuid = findUserByUserIdInput.userId();
 
     return userRepositoryReadPort
         .findUserById(uuid)

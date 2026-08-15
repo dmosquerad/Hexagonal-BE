@@ -3,7 +3,7 @@ package com.architecture.hexagonal.application.business.user.delete.usecase.impl
 import com.architecture.hexagonal.application.business.user.delete.input.DeleteUserInput;
 import com.architecture.hexagonal.application.port.database.UserRepositoryWritePort;
 import com.architecture.hexagonal.application.port.message.UserSenderPort;
-import com.architecture.hexagonal.application.testutils.data.aggregate.UserTestDataBuilder;
+import com.architecture.hexagonal.application.testutils.data.aggregate.user.UserTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.user.delete.input.DeleteUserInputTestDataBuilder;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
@@ -32,14 +32,14 @@ class DeleteUserUseCaseImplTest {
     final DeleteUserInput deleteUserInput =
         DeleteUserInputTestDataBuilder.builder().build().deleteUserInput();
 
-    Mockito.when(userRepositoryWritePort.deleteUser(deleteUserInput.getUserId()))
+    Mockito.when(userRepositoryWritePort.deleteUser(deleteUserInput.userId()))
         .thenReturn(Optional.of(user));
 
     final User result = deleteUserUseCaseImpl.execute(deleteUserInput);
 
     AssertionsForClassTypes.assertThat(result).usingRecursiveComparison().isEqualTo(user);
 
-    Mockito.verify(userRepositoryWritePort).deleteUser(deleteUserInput.getUserId());
+    Mockito.verify(userRepositoryWritePort).deleteUser(deleteUserInput.userId());
     Mockito.verify(userSenderPort).userSenderDeleted(user);
   }
 
@@ -48,14 +48,14 @@ class DeleteUserUseCaseImplTest {
     final DeleteUserInput deleteUserInput =
         DeleteUserInputTestDataBuilder.builder().build().deleteUserInput();
 
-    Mockito.when(userRepositoryWritePort.deleteUser(deleteUserInput.getUserId()))
+    Mockito.when(userRepositoryWritePort.deleteUser(deleteUserInput.userId()))
         .thenReturn(Optional.empty());
 
     AssertionsForClassTypes.assertThatThrownBy(() -> deleteUserUseCaseImpl.execute(deleteUserInput))
         .isInstanceOf(ResourceNotFoundException.class)
-        .hasMessage(ExceptionMessage.NOT_FOUND_DATA_MESSAGE + deleteUserInput.getUserId());
+        .hasMessage(ExceptionMessage.NOT_FOUND_DATA_MESSAGE + deleteUserInput.userId());
 
-    Mockito.verify(userRepositoryWritePort).deleteUser(deleteUserInput.getUserId());
+    Mockito.verify(userRepositoryWritePort).deleteUser(deleteUserInput.userId());
     Mockito.verifyNoInteractions(userSenderPort);
   }
 }

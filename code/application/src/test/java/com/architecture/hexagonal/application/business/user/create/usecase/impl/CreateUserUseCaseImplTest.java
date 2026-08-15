@@ -4,7 +4,7 @@ import com.architecture.hexagonal.application.business.user.create.input.CreateU
 import com.architecture.hexagonal.application.port.configuration.EmailConfigurationPort;
 import com.architecture.hexagonal.application.port.database.UserRepositoryWritePort;
 import com.architecture.hexagonal.application.port.message.UserSenderPort;
-import com.architecture.hexagonal.application.testutils.data.aggregate.UserTestDataBuilder;
+import com.architecture.hexagonal.application.testutils.data.aggregate.user.UserTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.data.vo.EmailBlockRulesVoTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.user.create.input.CreateUserInputTestDataBuilder;
 import com.architecture.hexagonal.domain.exception.InvalidValueException;

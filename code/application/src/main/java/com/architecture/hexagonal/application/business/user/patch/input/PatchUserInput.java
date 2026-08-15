@@ -2,13 +2,6 @@ package com.architecture.hexagonal.application.business.user.patch.input;
 
 import java.util.UUID;
 import lombok.Builder;
-import lombok.Value;
 
-@Value
 @Builder
-public class PatchUserInput {
-
-  UUID userId;
-  String name;
-  String email;
-}
+public record PatchUserInput(UUID userId, String name, String email) {}

@@ -1,11 +1,11 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.controller;
 
-import com.architecture.hexagonal.domain.model.pagination.PaginationResult;
+import com.architecture.hexagonal.domain.model.aggregate.pagination.PaginationResult;
 import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.user.*;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.dispatcher.command.CommandBus;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.dispatcher.query.QueryBus;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.user.*;
-import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.pagination.PaginationTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.aggregate.pagination.PaginationTestDataBuilder;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import com.architecture.hexagonal.domain.model.aggregate.user.User;
@@ -21,7 +21,7 @@ import com.architecture.hexagonal.infrastructure.inbound.rest.resources.user.Use
 import com.architecture.hexagonal.infrastructure.inbound.rest.resources.user.UserResponseResource;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.dto.ResponseErrorDtoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.dto.UsersResponseDtoTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.aggregate.UserTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.aggregate.user.UserTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.time.TestClock;
 import java.time.Clock;
 import java.util.Collections;
@@ -235,15 +235,15 @@ class UserControllerImplTestIT {
         .thenReturn(user);
 
     mockMvc.perform(
-            MockMvcRequestBuilders.get("/users/{userUuid}", user.getUser().getUserId())
+            MockMvcRequestBuilders.get("/users/{userUuid}", user.userId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.content()
             .json(userResponseDtoJson.write(getUserByUuidResponse).getJson()));
 
-    Mockito.verify(userControllerImpl).getUserByUuid(user.getUser().getUserId());
-    Mockito.verify(findUserByUserIdQueryDtoMapper).toFindUserByUserIdQuery(user.getUser().getUserId());
+    Mockito.verify(userControllerImpl).getUserByUuid(user.userId());
+    Mockito.verify(findUserByUserIdQueryDtoMapper).toFindUserByUserIdQuery(user.userId());
     Mockito.verify(queryBus)
         .execute(ArgumentMatchers.any(FindUserByUserIdQueryDto.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);

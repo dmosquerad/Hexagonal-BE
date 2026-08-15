@@ -2,7 +2,7 @@ package com.architecture.hexagonal.application.business.user.findbyid.usecase.im
 
 import com.architecture.hexagonal.application.business.user.findbyid.input.FindUserByUserIdInput;
 import com.architecture.hexagonal.application.port.database.UserRepositoryReadPort;
-import com.architecture.hexagonal.application.testutils.data.aggregate.UserTestDataBuilder;
+import com.architecture.hexagonal.application.testutils.data.aggregate.user.UserTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.user.findbyid.input.FindUserByUserIdInputTestDataBuilder;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
@@ -29,14 +29,14 @@ class FindUserByUserIdUseCaseImplTest {
     final FindUserByUserIdInput findUserByUserIdInput =
         FindUserByUserIdInputTestDataBuilder.builder().build().findUserByUserIdInput();
 
-    Mockito.when(userRepositoryReadPort.findUserById(findUserByUserIdInput.getUserId()))
+    Mockito.when(userRepositoryReadPort.findUserById(findUserByUserIdInput.userId()))
         .thenReturn(Optional.of(user));
 
     User result = findUserByUserIdUseCaseImpl.execute(findUserByUserIdInput);
 
     AssertionsForClassTypes.assertThat(result).usingRecursiveComparison().isEqualTo(user);
 
-    Mockito.verify(userRepositoryReadPort).findUserById(findUserByUserIdInput.getUserId());
+    Mockito.verify(userRepositoryReadPort).findUserById(findUserByUserIdInput.userId());
   }
 
   @Test
@@ -44,14 +44,14 @@ class FindUserByUserIdUseCaseImplTest {
     final FindUserByUserIdInput findUserByUserIdInput =
         FindUserByUserIdInputTestDataBuilder.builder().build().findUserByUserIdInput();
 
-    Mockito.when(userRepositoryReadPort.findUserById(findUserByUserIdInput.getUserId()))
+    Mockito.when(userRepositoryReadPort.findUserById(findUserByUserIdInput.userId()))
         .thenReturn(Optional.empty());
 
     AssertionsForClassTypes.assertThatThrownBy(
             () -> findUserByUserIdUseCaseImpl.execute(findUserByUserIdInput))
         .isInstanceOf(ResourceNotFoundException.class)
-        .hasMessage(ExceptionMessage.NOT_FOUND_DATA_MESSAGE + findUserByUserIdInput.getUserId());
+        .hasMessage(ExceptionMessage.NOT_FOUND_DATA_MESSAGE + findUserByUserIdInput.userId());
 
-    Mockito.verify(userRepositoryReadPort).findUserById(findUserByUserIdInput.getUserId());
+    Mockito.verify(userRepositoryReadPort).findUserById(findUserByUserIdInput.userId());
   }
 }

@@ -4,7 +4,7 @@ import com.architecture.hexagonal.domain.model.aggregate.user.User;
 import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.user.DeleteUserCommandDto;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.dispatcher.command.CommandHandler;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.orchestrator.user.delete.DeleteUserCommandHandlerImpl;
-import com.architecture.hexagonal.infrastructure.inbound.orchestration.testutils.data.aggregate.UserTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.inbound.orchestration.testutils.data.aggregate.user.UserTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.testutils.data.command.DeleteUserCommandDtoTestDataBuilder;
 import java.util.ArrayList;
 import java.util.List;

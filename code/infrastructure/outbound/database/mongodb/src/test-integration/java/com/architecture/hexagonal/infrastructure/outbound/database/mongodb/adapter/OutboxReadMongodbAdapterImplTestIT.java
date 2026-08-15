@@ -1,9 +1,9 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.adapter;
 
-import com.architecture.hexagonal.domain.model.entity.OutboxDo;
+import com.architecture.hexagonal.domain.model.aggregate.outbox.Outbox;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.config.MongodbIT;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.config.MongodbTestApplication;
-import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.data.OutboxEventDoTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.data.aggregate.OutboxTestDataBuilder;
 
 import java.util.List;
 import org.assertj.core.api.AssertionsForClassTypes;
@@ -20,12 +20,12 @@ class OutboxReadMongodbAdapterImplTestIT extends MongodbIT {
 
   @Test
   void findPendingEvents_shouldReturnPendingEventsOrderedByCreatedAt() {
-    final OutboxDo outboxDo = OutboxEventDoTestDataBuilder.builder().processedAt(null).build().outboxEventDo();
+    final Outbox outbox = OutboxTestDataBuilder.builder().processedAt(null).build().outboxEventDo();
 
-    final List<OutboxDo> result = outboxReadMongodbAdapterImpl.findPendingEvents();
+    final List<Outbox> result = outboxReadMongodbAdapterImpl.findPendingEvents();
 
     AssertionsForClassTypes.assertThat(result)
         .usingRecursiveComparison()
-        .isEqualTo(List.of(outboxDo));
+        .isEqualTo(List.of(outbox));
   }
 }
