@@ -1,12 +1,12 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.adapter;
 
-import com.architecture.hexagonal.domain.model.entity.OutboxDo;
+import com.architecture.hexagonal.domain.model.aggregate.outbox.Outbox;
 import com.architecture.hexagonal.domain.model.vo.OutboxStatusVo;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.OutboxDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.mapper.outbox.OutboxDoFromMongodbMapper;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.repository.OutboxReadMongodbRepository;
-import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.data.OutboxEventDaoTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.data.OutboxEventDoTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.dao.OutboxDaoTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.data.aggregate.OutboxTestDataBuilder;
 import java.util.List;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
@@ -32,18 +32,18 @@ class OutboxReadMongodbAdapterImplTest {
 
   @Test
   void findPendingEvents_shouldReturnPendingEventsOrderedByCreatedAt_whenPendingEventsExist() {
-    final OutboxDo outboxDo = OutboxEventDoTestDataBuilder.builder().build().outboxEventDo();
-    final OutboxDao outboxDao = OutboxEventDaoTestDataBuilder.builder().build().outboxEventDao();
+    final Outbox outbox = OutboxTestDataBuilder.builder().build().outboxEventDo();
+    final OutboxDao outboxDao = OutboxDaoTestDataBuilder.builder().build().outboxEventDao();
 
     Mockito.when(
             outboxReadMongodbRepository.findByStatusOrderByCreatedAtAsc(OutboxStatusVo.PENDING))
         .thenReturn(List.of(outboxDao));
 
-    final List<OutboxDo> result = outboxReadMongodbAdapterImpl.findPendingEvents();
+    final List<Outbox> result = outboxReadMongodbAdapterImpl.findPendingEvents();
 
     AssertionsForClassTypes.assertThat(result)
         .usingRecursiveComparison()
-        .isEqualTo(List.of(outboxDo));
+        .isEqualTo(List.of(outbox));
 
     Mockito.verify(outboxReadMongodbRepository)
         .findByStatusOrderByCreatedAtAsc(OutboxStatusVo.PENDING);

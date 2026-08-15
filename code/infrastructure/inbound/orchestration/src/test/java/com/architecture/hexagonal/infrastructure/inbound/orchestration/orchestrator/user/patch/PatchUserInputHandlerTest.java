@@ -6,7 +6,7 @@ import com.architecture.hexagonal.domain.model.aggregate.user.User;
 import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.user.PatchUserCommandDto;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.config.transaction.TransactionBoundary;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.mapper.user.PatchUserCommandMapper;
-import com.architecture.hexagonal.infrastructure.inbound.orchestration.testutils.data.aggregate.UserTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.inbound.orchestration.testutils.data.aggregate.user.UserTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.testutils.data.command.PatchUserCommandDtoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.testutils.transaction.TransactionBoundaryTest;
 import org.assertj.core.api.AssertionsForClassTypes;

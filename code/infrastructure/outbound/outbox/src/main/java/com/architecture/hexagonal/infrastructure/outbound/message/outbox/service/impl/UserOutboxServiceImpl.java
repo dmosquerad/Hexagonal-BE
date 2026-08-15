@@ -1,8 +1,9 @@
 package com.architecture.hexagonal.infrastructure.outbound.message.outbox.service.impl;
 
 import com.architecture.hexagonal.application.port.message.UserSenderPort;
-import com.architecture.hexagonal.domain.model.entity.OutboxDo;
+import com.architecture.hexagonal.domain.model.aggregate.outbox.Outbox;
 import com.architecture.hexagonal.infrastructure.outbound.message.outbox.mapper.user.UserFromOutboxMapper;
+import com.architecture.hexagonal.infrastructure.outbound.message.outbox.naming.OutboxNaming;
 import com.architecture.hexagonal.infrastructure.outbound.message.outbox.service.OutboxService;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserCreated;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserDeleted;
@@ -23,33 +24,33 @@ public class UserOutboxServiceImpl implements OutboxService {
   private final UserFromOutboxMapper userFromOutboxMapper;
 
   @Override
-  public void process(final @NonNull OutboxDo outboxDo) {
-    final Consumer<OutboxDo> handler = actionHandlers().get(outboxDo.getAction());
+  public void process(final @NonNull Outbox outbox) {
+    final Consumer<Outbox> handler = actionHandlers().get(outbox.action());
     if (Objects.isNull(handler)) {
-      throw new IllegalArgumentException("Unsupported user action: " + outboxDo.getAction());
+      throw new IllegalArgumentException(OutboxNaming.UNSUPPORTED_USER_ACTION + outbox.action());
     }
-    handler.accept(outboxDo);
+    handler.accept(outbox);
   }
 
-  private Map<String, Consumer<OutboxDo>> actionHandlers() {
+  private Map<String, Consumer<Outbox>> actionHandlers() {
     return Map.of(
         UserMessageNaming.ACTION_USER_CREATED, this::processUserCreated,
         UserMessageNaming.ACTION_USER_UPDATED, this::processUserUpdated,
         UserMessageNaming.ACTION_USER_DELETED, this::processUserDeleted);
   }
 
-  private void processUserCreated(final @NonNull OutboxDo outboxDo) {
-    final UserCreated userCreated = (UserCreated) outboxDo.getPayload();
+  private void processUserCreated(final @NonNull Outbox outbox) {
+    final UserCreated userCreated = (UserCreated) outbox.payload();
     userSenderPort.userSenderCreated(userFromOutboxMapper.toUser(userCreated));
   }
 
-  private void processUserUpdated(final @NonNull OutboxDo outboxDo) {
-    final UserUpdated userUpdated = (UserUpdated) outboxDo.getPayload();
+  private void processUserUpdated(final @NonNull Outbox outbox) {
+    final UserUpdated userUpdated = (UserUpdated) outbox.payload();
     userSenderPort.userSenderUpdated(userFromOutboxMapper.toUser(userUpdated));
   }
 
-  private void processUserDeleted(final @NonNull OutboxDo outboxDo) {
-    final UserDeleted userDeleted = (UserDeleted) outboxDo.getPayload();
+  private void processUserDeleted(final @NonNull Outbox outbox) {
+    final UserDeleted userDeleted = (UserDeleted) outbox.payload();
     userSenderPort.userSenderDeleted(userFromOutboxMapper.toUser(userDeleted));
   }
 }

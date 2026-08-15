@@ -1,16 +1,16 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.postgresql.adapter;
 
-import com.architecture.hexagonal.application.port.database.query.UserQuery;
+import com.architecture.hexagonal.domain.model.aggregate.pagination.Pagination;
+import com.architecture.hexagonal.domain.model.aggregate.pagination.PaginationResult;
 import com.architecture.hexagonal.domain.model.aggregate.user.User;
-import com.architecture.hexagonal.domain.model.pagination.Pagination;
-import com.architecture.hexagonal.domain.model.pagination.PaginationResult;
+import com.architecture.hexagonal.domain.model.projector.user.UserEmailProjector;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.data.UserDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.mapper.user.UserFromPostgresqlMapper;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.repository.UserPostgresqlReadRepository;
-import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.testutils.data.aggregate.UserTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.testutils.data.aggregate.pagination.PaginationResultTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.testutils.data.aggregate.pagination.PaginationTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.testutils.data.aggregate.user.UserTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.testutils.data.dao.UserDaoTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.testutils.data.pagination.PaginationResultTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.testutils.data.pagination.PaginationTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.testutils.data.vo.EmailBlockRulesVoTestDataBuilder;
 import java.util.Collections;
 import java.util.Optional;
@@ -96,7 +96,7 @@ class UserPostgresqlReadAdapterImplTest {
 
     PaginationResult<User> result =
         userPostgresqlReadAdapterImpl.getAllUsers(
-            UserQuery.builder()
+            UserEmailProjector.builder()
                 .host(host)
                 .blockEmail(blockEmail)
                 .blockedRules(
@@ -134,7 +134,7 @@ class UserPostgresqlReadAdapterImplTest {
 
     PaginationResult<User> result =
         userPostgresqlReadAdapterImpl.getAllUsers(
-            UserQuery.builder()
+            UserEmailProjector.builder()
                 .host(host)
                 .blockEmail(false)
                 .blockedRules(

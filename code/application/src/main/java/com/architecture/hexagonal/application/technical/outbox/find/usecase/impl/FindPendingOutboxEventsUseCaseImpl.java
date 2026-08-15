@@ -2,7 +2,7 @@ package com.architecture.hexagonal.application.technical.outbox.find.usecase.imp
 
 import com.architecture.hexagonal.application.port.database.OutboxRepositoryReadPort;
 import com.architecture.hexagonal.application.technical.outbox.find.usecase.FindPendingOutboxEventsUseCase;
-import com.architecture.hexagonal.domain.model.entity.OutboxDo;
+import com.architecture.hexagonal.domain.model.aggregate.outbox.Outbox;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 
@@ -12,7 +12,7 @@ public class FindPendingOutboxEventsUseCaseImpl implements FindPendingOutboxEven
   private final OutboxRepositoryReadPort outboxRepositoryReadPort;
 
   @Override
-  public List<OutboxDo> execute() {
+  public List<Outbox> execute() {
     return outboxRepositoryReadPort.findPendingEvents();
   }
 }

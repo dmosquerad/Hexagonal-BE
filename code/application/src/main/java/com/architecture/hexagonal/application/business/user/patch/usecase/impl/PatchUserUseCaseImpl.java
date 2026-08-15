@@ -10,7 +10,6 @@ import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.InvalidValueException;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import com.architecture.hexagonal.domain.model.aggregate.user.User;
-import com.architecture.hexagonal.domain.model.entity.UserDo;
 import com.architecture.hexagonal.domain.model.vo.EmailVo;
 import com.architecture.hexagonal.domain.model.vo.factory.EmailVoFactory;
 import com.architecture.hexagonal.domain.service.EmailBlockPolicy;
@@ -29,7 +28,7 @@ public class PatchUserUseCaseImpl implements PatchUserUseCase {
 
   @Override
   public User execute(final @NonNull PatchUserInput patchUserInput) {
-    final UUID uuid = patchUserInput.getUserId();
+    final UUID uuid = patchUserInput.userId();
 
     final User currentUser =
         userRepositoryReadPort
@@ -39,25 +38,20 @@ public class PatchUserUseCaseImpl implements PatchUserUseCase {
                     new ResourceNotFoundException(ExceptionMessage.NOT_FOUND_DATA_MESSAGE + uuid));
 
     final EmailVo email =
-        StringUtils.isBlank(patchUserInput.getEmail())
-            ? currentUser.getEmail()
-            : EmailVoFactory.from(patchUserInput.getEmail());
+        StringUtils.isBlank(patchUserInput.email())
+            ? currentUser.email()
+            : EmailVoFactory.from(patchUserInput.email());
 
     if (EmailBlockPolicy.isBlocked(email, emailConfigurationPort.getBlockedRules())) {
       throw new InvalidValueException(ExceptionMessage.EMAIL_NO_ALLOWED_MESSAGE + email.getEmail());
     }
 
     final String name =
-        StringUtils.isBlank(patchUserInput.getName())
-            ? currentUser.getUser().getName()
-            : patchUserInput.getName();
+        StringUtils.isBlank(patchUserInput.name()) ? currentUser.name() : patchUserInput.name();
 
     User updatedUser =
         userRepositoryWritePort.saveUser(
-            User.builder()
-                .user(UserDo.builder().userId(uuid).name(name).build())
-                .email(email)
-                .build());
+            User.builder().userId(uuid).name(name).email(email).build());
 
     userSenderPort.userSenderUpdated(updatedUser);
     return updatedUser;

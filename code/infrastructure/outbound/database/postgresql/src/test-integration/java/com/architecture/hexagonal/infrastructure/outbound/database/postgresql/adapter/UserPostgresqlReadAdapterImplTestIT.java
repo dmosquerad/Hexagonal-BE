@@ -1,16 +1,16 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.postgresql.adapter;
 
-import com.architecture.hexagonal.application.port.database.query.UserQuery;
+import com.architecture.hexagonal.domain.model.projector.user.UserEmailProjector;
 import com.architecture.hexagonal.domain.model.aggregate.user.User;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.config.PostgresqlIT;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.config.PostgresqlTestApplication;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.data.UserDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.mapper.user.UserFromPostgresqlMapper;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.repository.UserPostgresqlReadRepository;
-import com.architecture.hexagonal.domain.model.pagination.Pagination;
-import com.architecture.hexagonal.domain.model.pagination.PaginationResult;
-import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.testutils.data.aggregate.UserTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.testutils.data.pagination.PaginationTestDataBuilder;
+import com.architecture.hexagonal.domain.model.aggregate.pagination.Pagination;
+import com.architecture.hexagonal.domain.model.aggregate.pagination.PaginationResult;
+import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.testutils.data.aggregate.user.UserTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.testutils.data.aggregate.pagination.PaginationTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.testutils.data.vo.EmailBlockRulesVoTestDataBuilder;
 import java.util.Collections;
 import java.util.Optional;
@@ -49,14 +49,14 @@ class UserPostgresqlReadAdapterImplTestIT extends PostgresqlIT {
             .build()
             .user();
 
-    final Optional<User> result = userPostgresqlReadAdapterImpl.findUserById(user.getUser().getUserId());
+    final Optional<User> result = userPostgresqlReadAdapterImpl.findUserById(user.userId());
 
     AssertionsForClassTypes.assertThat(result)
         .usingRecursiveComparison()
         .ignoringFieldsOfTypes(UUID.class)
         .isEqualTo(Optional.of(user));
 
-    Mockito.verify(userPostgresqlReadRepository).findByUserId(user.getUser().getUserId());
+    Mockito.verify(userPostgresqlReadRepository).findByUserId(user.userId());
     Mockito.verify(userFromPostgresqlMapper).toUser(ArgumentMatchers.any(UserDao.class));
   }
 
@@ -65,7 +65,7 @@ class UserPostgresqlReadAdapterImplTestIT extends PostgresqlIT {
     final Pagination pagination = PaginationTestDataBuilder.builder().build().pagination();
 
     final PaginationResult<User> result = userPostgresqlReadAdapterImpl.getAllUsers(
-        UserQuery.builder()
+        UserEmailProjector.builder()
             .host("example")
             .blockEmail(true)
             .blockedRules(EmailBlockRulesVoTestDataBuilder.builder()
@@ -74,14 +74,14 @@ class UserPostgresqlReadAdapterImplTestIT extends PostgresqlIT {
             .build(),
         pagination);
 
-    AssertionsForClassTypes.assertThat(result.getData())
+    AssertionsForClassTypes.assertThat(result.data())
         .usingRecursiveComparison()
         .ignoringFieldsOfTypes(UUID.class)
         .isEqualTo(Collections.singleton(UserTestDataBuilder
             .builder()
             .build()
             .user()));
-    AssertionsForClassTypes.assertThat(result.getTotalElements()).isEqualTo(1);
+    AssertionsForClassTypes.assertThat(result.totalElements()).isEqualTo(1);
   }
 
 }

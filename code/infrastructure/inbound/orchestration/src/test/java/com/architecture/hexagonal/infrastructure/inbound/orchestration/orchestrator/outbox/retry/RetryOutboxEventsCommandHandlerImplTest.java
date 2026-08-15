@@ -3,7 +3,7 @@ package com.architecture.hexagonal.infrastructure.inbound.orchestration.orchestr
 import com.architecture.hexagonal.application.technical.outbox.block.usecase.BlockOutboxEventUseCase;
 import com.architecture.hexagonal.application.technical.outbox.find.usecase.FindPendingOutboxEventsUseCase;
 import com.architecture.hexagonal.application.technical.outbox.process.usecase.ProcessOutboxEventUseCase;
-import com.architecture.hexagonal.domain.model.entity.OutboxDo;
+import com.architecture.hexagonal.domain.model.aggregate.outbox.Outbox;
 import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.retry.RetryOutboxeventCommandDto;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.config.transaction.TransactionBoundary;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.testutils.data.OutboxEventDoTestDataBuilder;
@@ -33,33 +33,32 @@ class RetryOutboxEventsCommandHandlerImplTest {
 
   @Test
   void handleShouldProcessPendingEventsWhenAggregateIdsAreUnique() {
-    final OutboxDo outboxDo = OutboxEventDoTestDataBuilder.builder().build().outboxEventDo();
-    Mockito.when(findPendingOutboxEventsUseCase.execute()).thenReturn(List.of(outboxDo));
+    final Outbox outbox = OutboxEventDoTestDataBuilder.builder().build().outboxEventDo();
+    Mockito.when(findPendingOutboxEventsUseCase.execute()).thenReturn(List.of(outbox));
 
     retryOutboxEventsCommandHandlerImpl.handle(new RetryOutboxeventCommandDto());
 
     Mockito.verify(findPendingOutboxEventsUseCase).execute();
     Mockito.verify(transactionBoundary).read(ArgumentMatchers.any());
     Mockito.verify(transactionBoundary).write(ArgumentMatchers.any());
-    Mockito.verify(processOutboxEventUseCase).execute(outboxDo);
+    Mockito.verify(processOutboxEventUseCase).execute(outbox);
     Mockito.verifyNoInteractions(blockOutboxEventUseCase);
   }
 
   @Test
   void handleShouldBlockDuplicatePendingEventWhenAggregateIdIsRepeated() {
-    final OutboxDo outboxDo = OutboxEventDoTestDataBuilder.builder().build().outboxEventDo();
-    final OutboxDo duplicateOutboxDo =
-        OutboxEventDoTestDataBuilder.builder().build().outboxEventDo();
+    final Outbox outbox = OutboxEventDoTestDataBuilder.builder().build().outboxEventDo();
+    final Outbox duplicateOutbox = OutboxEventDoTestDataBuilder.builder().build().outboxEventDo();
 
     Mockito.when(findPendingOutboxEventsUseCase.execute())
-        .thenReturn(List.of(outboxDo, duplicateOutboxDo));
+        .thenReturn(List.of(outbox, duplicateOutbox));
 
     retryOutboxEventsCommandHandlerImpl.handle(new RetryOutboxeventCommandDto());
 
     Mockito.verify(findPendingOutboxEventsUseCase).execute();
     Mockito.verify(transactionBoundary).read(ArgumentMatchers.any());
     Mockito.verify(transactionBoundary, Mockito.times(2)).write(ArgumentMatchers.any());
-    Mockito.verify(processOutboxEventUseCase).execute(outboxDo);
-    Mockito.verify(blockOutboxEventUseCase).execute(duplicateOutboxDo);
+    Mockito.verify(processOutboxEventUseCase).execute(outbox);
+    Mockito.verify(blockOutboxEventUseCase).execute(duplicateOutbox);
   }
 }

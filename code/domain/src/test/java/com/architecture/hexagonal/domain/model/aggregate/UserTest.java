@@ -11,13 +11,6 @@ class UserTest {
   void getId_shouldReturnUserId() {
     final User user = UserTestDataBuilder.builder().build().user();
 
-    Assertions.assertThat(user.getId()).isEqualTo(user.getUser().getUserId());
-  }
-
-  @Test
-  void getAggregateRootType_shouldReturnUserId() {
-    final User user = UserTestDataBuilder.builder().build().user();
-
-    Assertions.assertThat(user.getAggregateRoot()).isEqualTo(user.getUser());
+    Assertions.assertThat(user.getId()).isEqualTo(user.userId());
   }
 }

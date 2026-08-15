@@ -1,7 +1,8 @@
 package com.architecture.hexagonal.infrastructure.outbound.message.outbox.adapter;
 
 import com.architecture.hexagonal.application.port.outbox.OutboxProcessPort;
-import com.architecture.hexagonal.domain.model.entity.OutboxDo;
+import com.architecture.hexagonal.domain.model.aggregate.outbox.Outbox;
+import com.architecture.hexagonal.infrastructure.outbound.message.outbox.naming.OutboxNaming;
 import com.architecture.hexagonal.infrastructure.outbound.message.outbox.service.OutboxService;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.naming.UserMessageNaming;
 import java.util.Map;
@@ -18,16 +19,16 @@ public class OutboxProcessAdapterImpl implements OutboxProcessPort {
   private final OutboxService outboxService;
 
   @Override
-  public void process(final @NonNull OutboxDo outboxDo) {
-    final Consumer<OutboxDo> handler = aggregateHandlers().get(outboxDo.getAggregateType());
+  public void process(final @NonNull Outbox outbox) {
+    final Consumer<Outbox> handler = aggregateHandlers().get(outbox.aggregateType());
     if (Objects.isNull(handler)) {
       throw new IllegalArgumentException(
-          "Unsupported aggregate type: " + outboxDo.getAggregateType());
+          OutboxNaming.UNSUPPORTED_AGGREGATE_TYPE + outbox.aggregateType());
     }
-    handler.accept(outboxDo);
+    handler.accept(outbox);
   }
 
-  private Map<String, Consumer<OutboxDo>> aggregateHandlers() {
+  private Map<String, Consumer<Outbox>> aggregateHandlers() {
     return Map.of(UserMessageNaming.AGGREGATE_USER_TYPE, outboxService::process);
   }
 }

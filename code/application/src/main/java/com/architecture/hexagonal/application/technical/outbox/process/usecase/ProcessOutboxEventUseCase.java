@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.application.technical.outbox.process.usecase;
 
-import com.architecture.hexagonal.domain.model.entity.OutboxDo;
+import com.architecture.hexagonal.domain.model.aggregate.outbox.Outbox;
 
 public interface ProcessOutboxEventUseCase {
 
-  OutboxDo execute(OutboxDo outboxDo);
+  Outbox execute(Outbox outbox);
 }

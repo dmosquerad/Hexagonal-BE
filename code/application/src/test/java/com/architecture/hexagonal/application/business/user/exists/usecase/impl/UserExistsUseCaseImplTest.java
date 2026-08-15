@@ -2,7 +2,7 @@ package com.architecture.hexagonal.application.business.user.exists.usecase.impl
 
 import com.architecture.hexagonal.application.business.user.exists.input.UserExistsInput;
 import com.architecture.hexagonal.application.port.database.UserRepositoryReadPort;
-import com.architecture.hexagonal.application.testutils.data.aggregate.UserTestDataBuilder;
+import com.architecture.hexagonal.application.testutils.data.aggregate.user.UserTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.user.exists.input.UserExistsInputTestDataBuilder;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
@@ -30,12 +30,12 @@ class UserExistsUseCaseImplTest {
     final UserExistsInput userExistsInput =
         UserExistsInputTestDataBuilder.builder().build().userExistsInput();
 
-    Mockito.when(userRepositoryReadPort.findUserById(userExistsInput.getUserId()))
+    Mockito.when(userRepositoryReadPort.findUserById(userExistsInput.userId()))
         .thenReturn(Optional.of(user));
 
     userExistsUseCaseImpl.execute(userExistsInput);
 
-    Mockito.verify(userRepositoryReadPort).findUserById(userExistsInput.getUserId());
+    Mockito.verify(userRepositoryReadPort).findUserById(userExistsInput.userId());
   }
 
   @Test
@@ -43,13 +43,13 @@ class UserExistsUseCaseImplTest {
     final UserExistsInput userExistsInput =
         UserExistsInputTestDataBuilder.builder().build().userExistsInput();
 
-    Mockito.when(userRepositoryReadPort.findUserById(userExistsInput.getUserId()))
+    Mockito.when(userRepositoryReadPort.findUserById(userExistsInput.userId()))
         .thenReturn(Optional.empty());
 
     AssertionsForClassTypes.assertThatThrownBy(() -> userExistsUseCaseImpl.execute(userExistsInput))
         .isInstanceOf(ResourceNotFoundException.class)
-        .hasMessage(ExceptionMessage.NOT_FOUND_DATA_MESSAGE + userExistsInput.getUserId());
+        .hasMessage(ExceptionMessage.NOT_FOUND_DATA_MESSAGE + userExistsInput.userId());
 
-    Mockito.verify(userRepositoryReadPort).findUserById(userExistsInput.getUserId());
+    Mockito.verify(userRepositoryReadPort).findUserById(userExistsInput.userId());
   }
 }

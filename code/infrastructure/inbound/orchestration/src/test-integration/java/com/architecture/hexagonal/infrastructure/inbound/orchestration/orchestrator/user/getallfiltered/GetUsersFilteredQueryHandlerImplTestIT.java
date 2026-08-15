@@ -4,7 +4,7 @@ import com.architecture.hexagonal.application.business.email.getblockedrules.use
 import com.architecture.hexagonal.application.business.user.getall.input.GetUsersInput;
 import com.architecture.hexagonal.application.business.user.getall.usecase.GetAllUsersUseCase;
 import com.architecture.hexagonal.domain.model.aggregate.user.User;
-import com.architecture.hexagonal.domain.model.pagination.PaginationResult;
+import com.architecture.hexagonal.domain.model.aggregate.pagination.PaginationResult;
 import com.architecture.hexagonal.domain.model.vo.EmailBlockRulesVo;
 import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.common.PaginationDto;
 import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.user.GetUsersFilteredQueryDto;

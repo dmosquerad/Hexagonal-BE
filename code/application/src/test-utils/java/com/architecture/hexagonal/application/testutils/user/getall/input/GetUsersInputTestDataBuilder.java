@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.application.testutils.user.getall.input;
 
 import com.architecture.hexagonal.application.business.user.getall.input.GetUsersInput;
-import com.architecture.hexagonal.domain.model.pagination.Pagination;
-import com.architecture.hexagonal.application.testutils.data.pagination.PaginationTestDataBuilder;
+import com.architecture.hexagonal.domain.model.aggregate.pagination.Pagination;
+import com.architecture.hexagonal.application.testutils.data.aggregate.pagination.PaginationTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.data.vo.EmailBlockRulesVoTestDataBuilder;
 import com.architecture.hexagonal.domain.model.vo.EmailBlockRulesVo;
 import lombok.Builder;

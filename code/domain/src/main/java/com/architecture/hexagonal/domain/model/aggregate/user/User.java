@@ -1,26 +1,15 @@
 package com.architecture.hexagonal.domain.model.aggregate.user;
 
-import com.architecture.hexagonal.domain.model.aggregate.Aggregate;
-import com.architecture.hexagonal.domain.model.entity.UserDo;
+import com.architecture.hexagonal.domain.model.aggregate.AggregateRoot;
 import com.architecture.hexagonal.domain.model.vo.EmailVo;
 import java.util.UUID;
 import lombok.Builder;
-import lombok.Value;
 
-@Value
 @Builder
-public class User implements Aggregate<UserDo> {
+public record User(UUID userId, String name, EmailVo email) implements AggregateRoot<UUID> {
 
   @Override
   public UUID getId() {
-    return user.getUserId();
+    return userId;
   }
-
-  @Override
-  public UserDo getAggregateRoot() {
-    return user;
-  }
-
-  UserDo user;
-  EmailVo email;
 }

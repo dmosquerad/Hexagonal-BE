@@ -19,7 +19,7 @@ public class DeleteUserUseCaseImpl implements DeleteUserUseCase {
 
   @Override
   public User execute(final @NonNull DeleteUserInput deleteUserInput) {
-    final UUID uuid = deleteUserInput.getUserId();
+    final UUID uuid = deleteUserInput.userId();
 
     User deletedUser =
         userRepositoryWritePort

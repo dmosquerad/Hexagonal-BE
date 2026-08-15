@@ -8,7 +8,6 @@ import com.architecture.hexagonal.application.port.message.UserSenderPort;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.InvalidValueException;
 import com.architecture.hexagonal.domain.model.aggregate.user.User;
-import com.architecture.hexagonal.domain.model.entity.UserDo;
 import com.architecture.hexagonal.domain.model.vo.EmailVo;
 import com.architecture.hexagonal.domain.model.vo.factory.EmailVoFactory;
 import com.architecture.hexagonal.domain.service.EmailBlockPolicy;
@@ -24,7 +23,7 @@ public class CreateUserUseCaseImpl implements CreateUserUseCase {
 
   @Override
   public User execute(final @NonNull CreateUserInput createUserInput) {
-    final EmailVo email = EmailVoFactory.from(createUserInput.getEmail());
+    final EmailVo email = EmailVoFactory.from(createUserInput.email());
 
     if (EmailBlockPolicy.isBlocked(email, emailConfigurationPort.getBlockedRules())) {
       throw new InvalidValueException(ExceptionMessage.EMAIL_NO_ALLOWED_MESSAGE + email.getEmail());
@@ -32,10 +31,7 @@ public class CreateUserUseCaseImpl implements CreateUserUseCase {
 
     User createdUser =
         userRepositoryWritePort.saveUser(
-            User.builder()
-                .user(UserDo.builder().name(createUserInput.getName()).build())
-                .email(email)
-                .build());
+            User.builder().name(createUserInput.name()).email(email).build());
 
     userSenderPort.userSenderCreated(createdUser);
     return createdUser;

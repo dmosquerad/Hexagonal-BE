@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.sender;
 
 import com.architecture.hexagonal.application.port.database.OutboxRepositoryWritePort;
-import com.architecture.hexagonal.domain.model.entity.OutboxDo;
+import com.architecture.hexagonal.domain.model.aggregate.outbox.Outbox;
 import com.architecture.hexagonal.domain.model.vo.OutboxStatusVo;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserCreated;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserDeleted;
@@ -29,7 +29,7 @@ public class UserMessageSender {
       streamBridge.send(UserMessageNaming.PUBLISH_USER_CREATED_OUT_BINDING, event);
     } catch (Exception ex) {
       outboxRepositoryWritePort.save(
-          OutboxDo.builder()
+          Outbox.builder()
               .aggregateId(event.getUserId())
               .aggregateType(UserMessageNaming.AGGREGATE_USER_TYPE)
               .action(UserMessageNaming.ACTION_USER_CREATED)
@@ -47,7 +47,7 @@ public class UserMessageSender {
       streamBridge.send(UserMessageNaming.PUBLISH_USER_UPDATED_OUT_BINDING, event);
     } catch (Exception ex) {
       outboxRepositoryWritePort.save(
-          OutboxDo.builder()
+          Outbox.builder()
               .aggregateId(event.getUserId())
               .aggregateType(UserMessageNaming.AGGREGATE_USER_TYPE)
               .action(UserMessageNaming.ACTION_USER_UPDATED)
@@ -65,7 +65,7 @@ public class UserMessageSender {
       streamBridge.send(UserMessageNaming.PUBLISH_USER_DELETED_OUT_BINDING, event);
     } catch (Exception ex) {
       outboxRepositoryWritePort.save(
-          OutboxDo.builder()
+          Outbox.builder()
               .aggregateId(event.getUserId())
               .aggregateType(UserMessageNaming.AGGREGATE_USER_TYPE)
               .action(UserMessageNaming.ACTION_USER_DELETED)

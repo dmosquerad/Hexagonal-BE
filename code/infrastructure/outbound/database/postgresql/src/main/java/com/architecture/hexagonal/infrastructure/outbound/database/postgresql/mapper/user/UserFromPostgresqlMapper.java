@@ -9,8 +9,6 @@ import org.mapstruct.Mapping;
 
 @Mapper(config = MapstructConfig.class, uses = EmailVoConverter.class)
 public interface UserFromPostgresqlMapper {
-  @Mapping(source = "userId", target = "user.userId")
-  @Mapping(source = "name", target = "user.name")
   @Mapping(source = "email", target = "email", qualifiedByName = EmailVoConverter.TO_EMAIL_VO)
   User toUser(UserDao userDao);
 }

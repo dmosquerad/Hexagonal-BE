@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.sender;
 
 import com.architecture.hexagonal.application.port.database.OutboxRepositoryWritePort;
-import com.architecture.hexagonal.domain.model.entity.OutboxDo;
+import com.architecture.hexagonal.domain.model.aggregate.outbox.Outbox;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserCreated;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserDeleted;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserUpdated;
@@ -49,7 +49,7 @@ class UserMessageSenderTest {
 
     userMessageSender.sendUserCreatedMessage(event);
 
-    Mockito.verify(outboxRepositoryWritePort).save(Mockito.any(OutboxDo.class));
+    Mockito.verify(outboxRepositoryWritePort).save(Mockito.any(Outbox.class));
     Mockito.verify(clock).instant();
   }
 
@@ -73,7 +73,7 @@ class UserMessageSenderTest {
 
     userMessageSender.sendUserUpdatedMessage(event);
 
-    Mockito.verify(outboxRepositoryWritePort).save(Mockito.any(OutboxDo.class));
+    Mockito.verify(outboxRepositoryWritePort).save(Mockito.any(Outbox.class));
     Mockito.verify(clock).instant();
   }
 
@@ -97,7 +97,7 @@ class UserMessageSenderTest {
 
     userMessageSender.sendUserDeletedMessage(event);
 
-    Mockito.verify(outboxRepositoryWritePort).save(Mockito.any(OutboxDo.class));
+    Mockito.verify(outboxRepositoryWritePort).save(Mockito.any(Outbox.class));
     Mockito.verify(clock).instant();
   }
 }

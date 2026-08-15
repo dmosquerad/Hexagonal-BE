@@ -23,15 +23,15 @@ public class EmailVoPredicate {
       };
 
   public static final Predicate<EmailVo> CAN_FORM_EMAIL =
-      email -> StringUtils.isNoneBlank(email.getUsername(), email.getHost(), email.getTld());
+      email -> StringUtils.isNoneBlank(email.username(), email.host(), email.tld());
 
   public static final Predicate<EmailVo> CAN_FORM_DOMAIN =
-      email -> StringUtils.isNoneBlank(email.getHost(), email.getTld());
+      email -> StringUtils.isNoneBlank(email.host(), email.tld());
 
   public static Predicate<EmailVo> hostEquals(@NonNull final String host) {
     return email ->
         StringUtils.isNotBlank(host)
-            && StringUtils.isNotBlank(email.getHost())
-            && host.equalsIgnoreCase(email.getHost());
+            && StringUtils.isNotBlank(email.host())
+            && host.equalsIgnoreCase(email.host());
   }
 }

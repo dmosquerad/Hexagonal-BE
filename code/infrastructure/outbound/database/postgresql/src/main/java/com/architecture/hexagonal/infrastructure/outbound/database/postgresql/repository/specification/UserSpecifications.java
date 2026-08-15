@@ -45,11 +45,11 @@ public final class UserSpecifications {
       final Expression<String> email = cb.lower(root.get(UserDao.Fields.email));
       final List<Predicate> blockedPredicates =
           Stream.of(
-                  UserPredicates.emailMatchesExact(cb, email, rules.getEmail()),
-                  UserPredicates.emailEndsWithDomain(cb, email, rules.getDomain()),
-                  UserPredicates.emailContainsHost(cb, email, rules.getHost()),
-                  UserPredicates.emailEndsWithTld(cb, email, rules.getTld()),
-                  UserPredicates.emailStartsWithUsername(cb, email, rules.getUsername()))
+                  UserPredicates.emailMatchesExact(cb, email, rules.email()),
+                  UserPredicates.emailEndsWithDomain(cb, email, rules.domain()),
+                  UserPredicates.emailContainsHost(cb, email, rules.host()),
+                  UserPredicates.emailEndsWithTld(cb, email, rules.tld()),
+                  UserPredicates.emailStartsWithUsername(cb, email, rules.username()))
               .flatMap(List::stream)
               .toList();
 
