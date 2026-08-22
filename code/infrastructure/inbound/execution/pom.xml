@@ -14,5 +14,6 @@
 
     <modules>
         <module>outbox</module>
+        <module>inbox</module>
     </modules>
 </project>

@@ -94,7 +94,8 @@ class UserSpecificationsTest {
     predicates
         .when(
             () ->
-                UserPredicates.emailEndsWithDomain(criteriaBuilder, emailExpression, rules.domain()))
+                UserPredicates.emailEndsWithDomain(
+                    criteriaBuilder, emailExpression, rules.domain()))
         .thenReturn(List.of());
     predicates
         .when(

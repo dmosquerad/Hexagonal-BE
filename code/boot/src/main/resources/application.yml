@@ -7,3 +7,4 @@ spring:
       - classpath:application-mongodb.yml
       - classpath:application-configuration.yml
       - classpath:application-rabbitmq.yml
+      - classpath:application-handler-kafka.yml

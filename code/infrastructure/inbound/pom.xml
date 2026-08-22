@@ -16,6 +16,7 @@
         <module>rest</module>
         <module>orchestration</module>
         <module>execution</module>
+        <module>handler</module>
     </modules>
 
 </project>

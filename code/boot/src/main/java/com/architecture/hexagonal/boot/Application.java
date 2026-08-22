@@ -21,7 +21,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @ConfigurationPropertiesScan(
     basePackages = {"com.architecture.hexagonal.infrastructure.outbound.configuration.config"})
 public class Application {
-  public static void main(final String[] args) {
+  static void main(final String[] args) {
     SpringApplication.run(Application.class, args);
   }
 }
