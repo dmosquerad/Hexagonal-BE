@@ -3,11 +3,13 @@ package com.architecture.hexagonal.infrastructure.outbound.message.outbox.testut
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserDeleted;
 import lombok.Builder;
 
+import java.util.UUID;
+
 @Builder
 public class UserDeletedTestDataBuilder {
 
   @Builder.Default
-  private String userId = "4059510b-ceb3-4d4c-913e-1759acbd62a4";
+  private UUID userId = UUID.fromString("4059510b-ceb3-4d4c-913e-1759acbd62a4");
 
   @Builder.Default
   private String name = "Test User";

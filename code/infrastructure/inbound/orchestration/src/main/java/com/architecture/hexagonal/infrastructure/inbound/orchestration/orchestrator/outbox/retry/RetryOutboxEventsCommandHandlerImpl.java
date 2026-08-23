@@ -30,7 +30,7 @@ public class RetryOutboxEventsCommandHandlerImpl
   public Void handle(final @NonNull RetryOutboxeventCommandDto retryOutboxeventCommandDto) {
     final List<Outbox> pendingEvents =
         transactionBoundary.read(findPendingOutboxEventsUseCase::execute);
-    final Set<String> seenAggregateIds = Collections.synchronizedSet(new HashSet<>());
+    final Set<Object> seenAggregateIds = Collections.synchronizedSet(new HashSet<>());
 
     for (final Outbox outbox : pendingEvents) {
       final Function<Outbox, Outbox> handler =

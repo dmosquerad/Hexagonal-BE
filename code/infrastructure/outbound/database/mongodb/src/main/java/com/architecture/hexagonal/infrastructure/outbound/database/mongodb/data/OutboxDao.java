@@ -23,7 +23,7 @@ public class OutboxDao {
 
   @NotBlank private String aggregateType;
 
-  @Indexed private String aggregateId;
+  @Indexed private Object aggregateId;
 
   @NotBlank private String action;
 

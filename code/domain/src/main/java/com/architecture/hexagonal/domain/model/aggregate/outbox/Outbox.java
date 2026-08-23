@@ -10,7 +10,7 @@ import lombok.Builder;
 public record Outbox(
     UUID outboxId,
     String aggregateType,
-    String aggregateId,
+    Object aggregateId,
     String action,
     Object payload,
     OutboxStatusVo status,
