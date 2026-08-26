@@ -15,6 +15,7 @@ import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testu
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.data.message.UserUpdatedTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.time.TestClock;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -62,13 +63,12 @@ class UserSenderAdapterImplTestIT {
     });
 
     Mockito.verify(userMessageDaoMapper).toUserCreated(user);
-    Mockito.verify(streamBridge).send(UserMessageNaming.PUBLISH_USER_CREATED_OUT_BINDING, userCreated);
+    Mockito.verify(streamBridge).send(Mockito.eq(UserMessageNaming.PUBLISH_USER_CREATED_OUT_BINDING), Mockito.any(UserCreated.class));
   }
 
   @Test
   void userSenderUpdated_shouldPublishAndSendMessage_whenUserIsUpdated() {
     final User user = UserTestDataBuilder.builder().build().user();
-    final UserUpdated userUpdated = UserUpdatedTestDataBuilder.builder().build().userUpdated();
 
     transactionTemplate.execute(status -> {
       userSenderAdapterImpl.userSenderUpdated(user);
@@ -76,7 +76,7 @@ class UserSenderAdapterImplTestIT {
     });
 
     Mockito.verify(userMessageDaoMapper).toUserUpdated(user);
-    Mockito.verify(streamBridge).send(UserMessageNaming.PUBLISH_USER_UPDATED_OUT_BINDING, userUpdated);
+    Mockito.verify(streamBridge).send(Mockito.eq(UserMessageNaming.PUBLISH_USER_UPDATED_OUT_BINDING), Mockito.any(UserUpdated.class));
   }
 
   @Test
@@ -90,6 +90,6 @@ class UserSenderAdapterImplTestIT {
     });
 
     Mockito.verify(userMessageDaoMapper).toUserDeleted(user);
-    Mockito.verify(streamBridge).send(UserMessageNaming.PUBLISH_USER_DELETED_OUT_BINDING, userDeleted);
+        Mockito.verify(streamBridge).send(Mockito.eq(UserMessageNaming.PUBLISH_USER_DELETED_OUT_BINDING), Mockito.any(UserDeleted.class));
   }
 }

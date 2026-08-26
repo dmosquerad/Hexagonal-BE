@@ -12,12 +12,18 @@ import org.mapstruct.Mapping;
 @Mapper(config = MapstructConfig.class, uses = EmailVoConverter.class)
 public interface UserFromOutboxMapper {
 
-  @Mapping(source = "email", target = "email", qualifiedByName = EmailVoConverter.TO_EMAIL_VO)
+  @Mapping(source = "data.userId", target = "userId")
+  @Mapping(source = "data.name", target = "name")
+  @Mapping(source = "data.email", target = "email", qualifiedByName = EmailVoConverter.TO_EMAIL_VO)
   User toUser(UserCreated userCreated);
 
-  @Mapping(source = "email", target = "email", qualifiedByName = EmailVoConverter.TO_EMAIL_VO)
+  @Mapping(source = "data.userId", target = "userId")
+  @Mapping(source = "data.name", target = "name")
+  @Mapping(source = "data.email", target = "email", qualifiedByName = EmailVoConverter.TO_EMAIL_VO)
   User toUser(UserUpdated userUpdated);
 
-  @Mapping(source = "email", target = "email", qualifiedByName = EmailVoConverter.TO_EMAIL_VO)
+  @Mapping(source = "data.userId", target = "userId")
+  @Mapping(source = "data.name", target = "name")
+  @Mapping(source = "data.email", target = "email", qualifiedByName = EmailVoConverter.TO_EMAIL_VO)
   User toUser(UserDeleted userDeleted);
 }

@@ -1,12 +1,14 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.data.aggregate;
 
 import com.architecture.hexagonal.domain.model.aggregate.outbox.Outbox;
+import com.architecture.hexagonal.domain.model.vo.MessageHeaderVo;
 import com.architecture.hexagonal.domain.model.vo.OutboxStatusVo;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.time.TestClock;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.vo.MessageHeaderVoTestDataBuilder;
 import lombok.Builder;
 
 @Builder
@@ -20,6 +22,9 @@ public class OutboxTestDataBuilder {
 
   @Builder.Default
   private String aggregateId = "123";
+
+  @Builder.Default
+  private MessageHeaderVo messageHeaderVo = MessageHeaderVoTestDataBuilder.builder().build().messageHeaderVo();
 
   @Builder.Default
   private String action = "USER_CREATED";
@@ -44,6 +49,7 @@ public class OutboxTestDataBuilder {
         .outboxId(eventId)
         .aggregateType(aggregateType)
         .aggregateId(aggregateId)
+            .messageHeader(messageHeaderVo)
         .action(action)
         .payload(payload)
         .status(status)

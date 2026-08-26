@@ -1,6 +1,7 @@
 package com.architecture.hexagonal.domain.model.aggregate.outbox;
 
 import com.architecture.hexagonal.domain.model.aggregate.AggregateRoot;
+import com.architecture.hexagonal.domain.model.vo.MessageHeaderVo;
 import com.architecture.hexagonal.domain.model.vo.OutboxStatusVo;
 import java.time.OffsetDateTime;
 import java.util.UUID;
@@ -9,6 +10,7 @@ import lombok.Builder;
 @Builder(toBuilder = true)
 public record Outbox(
     UUID outboxId,
+    MessageHeaderVo messageHeader,
     String aggregateType,
     Object aggregateId,
     String action,

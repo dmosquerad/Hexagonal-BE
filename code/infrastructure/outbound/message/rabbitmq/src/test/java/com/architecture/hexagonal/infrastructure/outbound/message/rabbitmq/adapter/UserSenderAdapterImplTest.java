@@ -31,7 +31,8 @@ class UserSenderAdapterImplTest {
   @Test
   void userSenderCreated_shouldPublishUserCreatedEvent_whenUserIsValid() {
     final User user = UserTestDataBuilder.builder().build().user();
-    final UserCreated userCreated = UserCreatedTestDataBuilder.builder().build().userCreated();
+    final UserCreated userCreated =
+        UserCreatedTestDataBuilder.builder().messageHeader(null).build().userCreated();
 
     userSenderAdapterImpl.userSenderCreated(user);
 
@@ -42,7 +43,8 @@ class UserSenderAdapterImplTest {
   @Test
   void userSenderUpdated_shouldPublishUserUpdatedEvent_whenUserIsValid() {
     final User user = UserTestDataBuilder.builder().build().user();
-    final UserUpdated userUpdated = UserUpdatedTestDataBuilder.builder().build().userUpdated();
+    final UserUpdated userUpdated =
+        UserUpdatedTestDataBuilder.builder().messageHeader(null).build().userUpdated();
 
     userSenderAdapterImpl.userSenderUpdated(user);
 
@@ -53,7 +55,8 @@ class UserSenderAdapterImplTest {
   @Test
   void userSenderDeleted_shouldPublishUserDeletedEvent_whenUserIsValid() {
     final User user = UserTestDataBuilder.builder().build().user();
-    final UserDeleted userDeleted = UserDeletedTestDataBuilder.builder().build().userDeleted();
+    final UserDeleted userDeleted =
+        UserDeletedTestDataBuilder.builder().messageHeader(null).build().userDeleted();
 
     userSenderAdapterImpl.userSenderDeleted(user);
 

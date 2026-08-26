@@ -12,12 +12,30 @@ import org.mapstruct.Mapping;
 @Mapper(config = MapstructConfig.class, uses = EmailVoToStringConverter.class)
 public interface UserMessageDaoMapper {
 
-  @Mapping(source = "email", target = "email", qualifiedByName = EmailVoToStringConverter.TO_EMAIL)
+  @Mapping(target = "messageHeader", ignore = true)
+  @Mapping(source = "userId", target = "data.userId")
+  @Mapping(source = "name", target = "data.name")
+  @Mapping(
+      source = "email",
+      target = "data.email",
+      qualifiedByName = EmailVoToStringConverter.TO_EMAIL)
   UserCreated toUserCreated(User user);
 
-  @Mapping(source = "email", target = "email", qualifiedByName = EmailVoToStringConverter.TO_EMAIL)
+  @Mapping(target = "messageHeader", ignore = true)
+  @Mapping(source = "userId", target = "data.userId")
+  @Mapping(source = "name", target = "data.name")
+  @Mapping(
+      source = "email",
+      target = "data.email",
+      qualifiedByName = EmailVoToStringConverter.TO_EMAIL)
   UserUpdated toUserUpdated(User user);
 
-  @Mapping(source = "email", target = "email", qualifiedByName = EmailVoToStringConverter.TO_EMAIL)
+  @Mapping(target = "messageHeader", ignore = true)
+  @Mapping(source = "userId", target = "data.userId")
+  @Mapping(source = "name", target = "data.name")
+  @Mapping(
+      source = "email",
+      target = "data.email",
+      qualifiedByName = EmailVoToStringConverter.TO_EMAIL)
   UserDeleted toUserDeleted(User user);
 }

@@ -1,12 +1,11 @@
 package com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data;
 
-import java.util.UUID;
+import com.architecture.hexagonal.domain.model.vo.MessageHeaderVo;
 import lombok.Data;
 
 @Data
 public class UserCreated {
 
-  UUID userId;
-  String name;
-  String email;
+  MessageHeaderVo messageHeader;
+  User data;
 }

@@ -1,28 +1,25 @@
 package com.architecture.hexagonal.infrastructure.outbound.message.outbox.testutils.data.message;
 
+import com.architecture.hexagonal.domain.model.vo.MessageHeaderVo;
+import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.MessageHeader;
+import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.User;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserDeleted;
 import lombok.Builder;
-
-import java.util.UUID;
 
 @Builder
 public class UserDeletedTestDataBuilder {
 
-  @Builder.Default
-  private UUID userId = UUID.fromString("4059510b-ceb3-4d4c-913e-1759acbd62a4");
+    @Builder.Default
+    private MessageHeaderVo messageHeader = MessageHeaderVoTestDataBuilder.builder().build().messageHeaderVo();
 
-  @Builder.Default
-  private String name = "Test User";
+    @Builder.Default
+    private User user = UserTestDataBuilder.builder().build().user();
 
-  @Builder.Default
-  private String email = "test@example.com";
+    public UserDeleted userDeleted() {
+        final UserDeleted userDeleted = new UserDeleted();
+        userDeleted.setMessageHeader(messageHeader);
+        userDeleted.setData(user);
 
-  public UserDeleted userDeleted() {
-    final UserDeleted userDeleted = new UserDeleted();
-    userDeleted.setUserId(userId);
-    userDeleted.setName(name);
-    userDeleted.setEmail(email);
-
-    return userDeleted;
-  }
+        return userDeleted;
+    }
 }

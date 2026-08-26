@@ -2,6 +2,7 @@ package com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.send
 
 import com.architecture.hexagonal.application.port.database.OutboxRepositoryWritePort;
 import com.architecture.hexagonal.domain.model.aggregate.outbox.Outbox;
+import com.architecture.hexagonal.domain.model.vo.MessageHeaderVo;
 import com.architecture.hexagonal.domain.model.vo.OutboxStatusVo;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserCreated;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserDeleted;
@@ -9,6 +10,7 @@ import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.naming.UserMessageNaming;
 import java.time.Clock;
 import java.time.OffsetDateTime;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Component;
@@ -26,17 +28,24 @@ public class UserMessageSender {
   @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
   public void sendUserCreatedMessage(final UserCreated event) {
     try {
+      final MessageHeaderVo messageHeader =
+          MessageHeaderVo.builder()
+              .messageId(UUID.randomUUID())
+              .messageDate(OffsetDateTime.now(clock))
+              .build();
+      event.setMessageHeader(messageHeader);
       streamBridge.send(UserMessageNaming.PUBLISH_USER_CREATED_OUT_BINDING, event);
     } catch (Exception ex) {
       outboxRepositoryWritePort.save(
           Outbox.builder()
-              .aggregateId(event.getUserId())
+              .aggregateId(event.getData().getUserId())
+              .messageHeader(event.getMessageHeader())
               .aggregateType(UserMessageNaming.AGGREGATE_USER_TYPE)
               .action(UserMessageNaming.ACTION_USER_CREATED)
               .status(OutboxStatusVo.PENDING)
               .payload(event)
               .retryCount(0)
-              .createdAt(OffsetDateTime.now(clock))
+              .createdAt(event.getMessageHeader().messageDate())
               .build());
     }
   }
@@ -44,17 +53,24 @@ public class UserMessageSender {
   @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
   public void sendUserUpdatedMessage(final UserUpdated event) {
     try {
+      final MessageHeaderVo messageHeader =
+          MessageHeaderVo.builder()
+              .messageId(UUID.randomUUID())
+              .messageDate(OffsetDateTime.now(clock))
+              .build();
+      event.setMessageHeader(messageHeader);
       streamBridge.send(UserMessageNaming.PUBLISH_USER_UPDATED_OUT_BINDING, event);
     } catch (Exception ex) {
       outboxRepositoryWritePort.save(
           Outbox.builder()
-              .aggregateId(event.getUserId())
+              .aggregateId(event.getData().getUserId())
+              .messageHeader(event.getMessageHeader())
               .aggregateType(UserMessageNaming.AGGREGATE_USER_TYPE)
               .action(UserMessageNaming.ACTION_USER_UPDATED)
               .status(OutboxStatusVo.PENDING)
               .payload(event)
               .retryCount(0)
-              .createdAt(OffsetDateTime.now(clock))
+              .createdAt(event.getMessageHeader().messageDate())
               .build());
     }
   }
@@ -62,17 +78,24 @@ public class UserMessageSender {
   @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
   public void sendUserDeletedMessage(final UserDeleted event) {
     try {
+      final MessageHeaderVo messageHeader =
+          MessageHeaderVo.builder()
+              .messageId(UUID.randomUUID())
+              .messageDate(OffsetDateTime.now(clock))
+              .build();
+      event.setMessageHeader(messageHeader);
       streamBridge.send(UserMessageNaming.PUBLISH_USER_DELETED_OUT_BINDING, event);
     } catch (Exception ex) {
       outboxRepositoryWritePort.save(
           Outbox.builder()
-              .aggregateId(event.getUserId())
+              .aggregateId(event.getData().getUserId())
+              .messageHeader(event.getMessageHeader())
               .aggregateType(UserMessageNaming.AGGREGATE_USER_TYPE)
               .action(UserMessageNaming.ACTION_USER_DELETED)
               .status(OutboxStatusVo.PENDING)
               .payload(event)
               .retryCount(0)
-              .createdAt(OffsetDateTime.now(clock))
+              .createdAt(event.getMessageHeader().messageDate())
               .build());
     }
   }
