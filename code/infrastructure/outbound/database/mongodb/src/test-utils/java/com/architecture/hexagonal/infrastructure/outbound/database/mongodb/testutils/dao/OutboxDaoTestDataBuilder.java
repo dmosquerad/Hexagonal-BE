@@ -23,9 +23,6 @@ public class OutboxDaoTestDataBuilder {
   private String aggregateId = "123";
 
   @Builder.Default
-  private MessageHeaderVo messageHeaderVo = MessageHeaderVoTestDataBuilder.builder().build().messageHeaderVo();
-
-  @Builder.Default
   private String action = "USER_CREATED";
 
   @Builder.Default
@@ -48,7 +45,6 @@ public class OutboxDaoTestDataBuilder {
     outboxDao.setOutboxId(eventId);
     outboxDao.setAggregateType(aggregateType);
     outboxDao.setAggregateId(aggregateId);
-    outboxDao.setMessageHeader(messageHeaderVo);
     outboxDao.setAction(action);
     outboxDao.setPayload(payload);
     outboxDao.setStatus(status);

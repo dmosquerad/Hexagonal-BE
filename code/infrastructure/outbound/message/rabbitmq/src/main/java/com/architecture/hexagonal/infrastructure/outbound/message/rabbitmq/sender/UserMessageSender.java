@@ -39,12 +39,10 @@ public class UserMessageSender {
       outboxRepositoryWritePort.save(
           Outbox.builder()
               .aggregateId(event.getData().getUserId())
-              .messageHeader(event.getMessageHeader())
               .aggregateType(UserMessageNaming.AGGREGATE_USER_TYPE)
               .action(UserMessageNaming.ACTION_USER_CREATED)
               .status(OutboxStatusVo.PENDING)
               .payload(event)
-              .retryCount(0)
               .createdAt(event.getMessageHeader().messageDate())
               .build());
     }
@@ -64,12 +62,10 @@ public class UserMessageSender {
       outboxRepositoryWritePort.save(
           Outbox.builder()
               .aggregateId(event.getData().getUserId())
-              .messageHeader(event.getMessageHeader())
               .aggregateType(UserMessageNaming.AGGREGATE_USER_TYPE)
               .action(UserMessageNaming.ACTION_USER_UPDATED)
               .status(OutboxStatusVo.PENDING)
               .payload(event)
-              .retryCount(0)
               .createdAt(event.getMessageHeader().messageDate())
               .build());
     }
@@ -89,12 +85,10 @@ public class UserMessageSender {
       outboxRepositoryWritePort.save(
           Outbox.builder()
               .aggregateId(event.getData().getUserId())
-              .messageHeader(event.getMessageHeader())
               .aggregateType(UserMessageNaming.AGGREGATE_USER_TYPE)
               .action(UserMessageNaming.ACTION_USER_DELETED)
               .status(OutboxStatusVo.PENDING)
               .payload(event)
-              .retryCount(0)
               .createdAt(event.getMessageHeader().messageDate())
               .build());
     }

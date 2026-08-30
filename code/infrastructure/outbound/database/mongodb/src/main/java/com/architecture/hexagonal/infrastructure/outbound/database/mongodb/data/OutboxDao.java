@@ -1,6 +1,5 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data;
 
-import com.architecture.hexagonal.domain.model.vo.MessageHeaderVo;
 import com.architecture.hexagonal.domain.model.vo.OutboxStatusVo;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -21,9 +20,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class OutboxDao {
 
   @Id private UUID outboxId;
-
-  @Indexed(unique = true)
-  private MessageHeaderVo messageHeader;
 
   @NotBlank private String aggregateType;
 

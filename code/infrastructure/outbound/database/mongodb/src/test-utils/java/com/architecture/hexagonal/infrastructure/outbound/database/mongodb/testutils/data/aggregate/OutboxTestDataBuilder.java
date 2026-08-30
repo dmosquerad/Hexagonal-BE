@@ -24,9 +24,6 @@ public class OutboxTestDataBuilder {
   private String aggregateId = "123";
 
   @Builder.Default
-  private MessageHeaderVo messageHeaderVo = MessageHeaderVoTestDataBuilder.builder().build().messageHeaderVo();
-
-  @Builder.Default
   private String action = "USER_CREATED";
 
   @Builder.Default
@@ -49,7 +46,6 @@ public class OutboxTestDataBuilder {
         .outboxId(eventId)
         .aggregateType(aggregateType)
         .aggregateId(aggregateId)
-            .messageHeader(messageHeaderVo)
         .action(action)
         .payload(payload)
         .status(status)

@@ -30,11 +30,14 @@ public class RetryOutboxEventsCommandHandlerImpl
   public Void handle(final @NonNull RetryOutboxeventCommandDto retryOutboxeventCommandDto) {
     final List<Outbox> pendingEvents =
         transactionBoundary.read(findPendingOutboxEventsUseCase::execute);
-    final Set<Object> seenAggregateIds = Collections.synchronizedSet(new HashSet<>());
+    final Set<Outbox.OutboxKey> seenOutboxKey = Collections.synchronizedSet(new HashSet<>());
 
     for (final Outbox outbox : pendingEvents) {
+      final Outbox.OutboxKey outboxKeyWithoutActionAndPayload =
+          outbox.getIdWithoutActionAndPayload();
+
       final Function<Outbox, Outbox> handler =
-          seenAggregateIds.add(outbox.aggregateId())
+          seenOutboxKey.add(outboxKeyWithoutActionAndPayload)
               ? processOutboxEventUseCase::execute
               : blockOutboxEventUseCase::execute;
 
