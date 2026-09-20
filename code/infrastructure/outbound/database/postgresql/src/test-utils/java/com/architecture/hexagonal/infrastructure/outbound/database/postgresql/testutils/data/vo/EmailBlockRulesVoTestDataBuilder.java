@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.postgresql.testutils.data.vo;
 
-import com.architecture.hexagonal.domain.model.vo.EmailBlockRulesVo;
+import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;
 import java.util.Set;
 
 import lombok.Builder;

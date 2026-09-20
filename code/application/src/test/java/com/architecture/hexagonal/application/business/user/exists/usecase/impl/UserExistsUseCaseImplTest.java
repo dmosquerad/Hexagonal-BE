@@ -1,12 +1,13 @@
 package com.architecture.hexagonal.application.business.user.exists.usecase.impl;
 
-import com.architecture.hexagonal.application.business.user.exists.input.UserExistsInput;
 import com.architecture.hexagonal.application.port.database.UserRepositoryReadPort;
 import com.architecture.hexagonal.application.testutils.data.aggregate.user.UserTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.user.exists.input.UserExistsInputTestDataBuilder;
+import com.architecture.hexagonal.application.usecase.business.user.exists.input.UserExistsInput;
+import com.architecture.hexagonal.application.usecase.business.user.exists.usecase.impl.UserExistsUseCaseImpl;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
-import com.architecture.hexagonal.domain.model.aggregate.user.User;
+import com.architecture.hexagonal.domain.model.entity.user.User;
 import java.util.Optional;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;

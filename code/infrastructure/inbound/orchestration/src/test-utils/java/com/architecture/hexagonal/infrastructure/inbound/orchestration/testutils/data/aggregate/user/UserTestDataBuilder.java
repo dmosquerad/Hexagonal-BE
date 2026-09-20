@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.inbound.orchestration.testutils.data.aggregate.user;
 
-import com.architecture.hexagonal.domain.model.aggregate.user.User;
-import com.architecture.hexagonal.domain.model.vo.EmailVo;
+import com.architecture.hexagonal.domain.model.entity.user.User;
+import com.architecture.hexagonal.domain.model.vo.email.EmailVo;
 import lombok.Builder;
 
 import java.util.UUID;

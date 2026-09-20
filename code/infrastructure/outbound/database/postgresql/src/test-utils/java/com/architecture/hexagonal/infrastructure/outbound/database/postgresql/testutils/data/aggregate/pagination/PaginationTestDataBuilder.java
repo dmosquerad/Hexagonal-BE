@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.postgresql.testutils.data.aggregate.pagination;
 
-import com.architecture.hexagonal.domain.model.aggregate.pagination.Pagination;
+import com.architecture.hexagonal.domain.model.vo.pagination.Pagination;
 import lombok.Builder;
 
 @Builder

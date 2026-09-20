@@ -1,8 +1,10 @@
 package com.architecture.hexagonal.application.testutils.data.aggregate.outbox;
 
 import com.architecture.hexagonal.application.testutils.time.TestClock;
-import com.architecture.hexagonal.domain.model.aggregate.outbox.Outbox;
-import com.architecture.hexagonal.domain.model.vo.OutboxStatusVo;
+import com.architecture.hexagonal.domain.model.vo.outbox.AggregateTypeVo;
+import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
+import com.architecture.hexagonal.domain.model.vo.outbox.PayloadVo;
+import com.architecture.hexagonal.domain.model.vo.outbox.OutboxStatusVo;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 import lombok.Builder;
@@ -12,13 +14,13 @@ public class OutboxTestDataBuilder {
 
   @Builder.Default private UUID eventId = UUID.fromString("ec9633ff-1137-4f3a-87ef-ea7738ad411f");
 
-  @Builder.Default private String aggregateType = "USER";
+  @Builder.Default private AggregateTypeVo aggregateType = AggregateTypeVo.USER;
 
   @Builder.Default private String aggregateId = "123";
 
   @Builder.Default private String action = "USER_CREATED";
 
-  @Builder.Default private String payload = "{\"id\":\"123\"}";
+  @Builder.Default private PayloadVo payload = PayloadTestDataBuilder.builder().build().payload();
 
   @Builder.Default private OutboxStatusVo status = OutboxStatusVo.PENDING;
 

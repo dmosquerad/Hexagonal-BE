@@ -1,11 +1,10 @@
 package com.architecture.hexagonal.application.port.database;
 
-import com.architecture.hexagonal.domain.model.aggregate.outbox.Outbox;
+import com.architecture.hexagonal.application.usecase.technical.outbox.find.projector.OutboxStatusAndAggregateProjector;
+import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
 import java.util.List;
-import java.util.Optional;
 
 public interface OutboxRepositoryReadPort {
-  List<Outbox> findPendingEvents();
-
-  Optional<Outbox> findByOutboxKey(Outbox.OutboxKey outboxKey);
+  List<Outbox> findByStatusAndAggregateType(
+      OutboxStatusAndAggregateProjector outboxStatusAndAggregateProjector);
 }

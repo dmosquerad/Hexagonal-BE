@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.outbound.configuration.adapter;
 
-import com.architecture.hexagonal.domain.model.vo.SchedulerOutboxConfigurationVo;
+import com.architecture.hexagonal.domain.model.vo.outbox.SchedulerOutboxConfigurationVo;
 import com.architecture.hexagonal.infrastructure.outbound.configuration.config.SchedulerOutboxConfig;
 import com.architecture.hexagonal.infrastructure.outbound.configuration.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.outbound.configuration.testutils.data.vo.SchedulerOutboxConfigurationVoTestDataBuilder;

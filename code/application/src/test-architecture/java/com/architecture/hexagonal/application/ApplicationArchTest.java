@@ -1,6 +1,5 @@
 package com.architecture.hexagonal.application;
 
-import com.tngtech.archunit.base.DescribedPredicate;
 import com.tngtech.archunit.core.domain.JavaClass;
 import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.junit.AnalyzeClasses;
@@ -77,12 +76,12 @@ class ApplicationArchTest {
     static final ArchRule feature_use_cases_should_not_depend_on_other_feature_use_cases =
         ArchRuleDefinition.noClasses()
             .that()
-            .resideInAPackage("..application..usecase..")
+            .resideInAPackage("..application.usecase..usecase..")
             .and()
             .areInterfaces()
             .should()
             .dependOnClassesThat()
-            .resideInAPackage("..application..usecase..")
+            .resideInAPackage("..application.usecase..usecase..")
             .because("Feature use cases must be independent business operations;"
                     + " orchestration must go through ports and the CQRS bus, not direct use case coupling");
 
@@ -90,10 +89,10 @@ class ApplicationArchTest {
     static final ArchRule business_use_cases_should_not_depend_on_technical_use_cases =
         ArchRuleDefinition.noClasses()
             .that()
-            .resideInAPackage("..application.business..")
+            .resideInAPackage("..application.usecase.business..")
             .should()
             .dependOnClassesThat()
-            .resideInAPackage("..application.technical..")
+            .resideInAPackage("..application.usecase.technical..")
             .because("Business use cases must not depend on technical (non-business) use cases;"
                     + " technical use cases (e.g. outbox) support infrastructure concerns");
 }

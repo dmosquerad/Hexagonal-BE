@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.inbound.execution.outbox.executor;
 
 import com.architecture.hexagonal.application.port.configuration.SchedulerConfigurationPort;
-import com.architecture.hexagonal.domain.model.vo.SchedulerOutboxConfigurationVo;
+import com.architecture.hexagonal.domain.model.vo.outbox.SchedulerOutboxConfigurationVo;
 import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.retry.RetryOutboxeventCommandDto;
 import com.architecture.hexagonal.infrastructure.inbound.execution.outbox.data.vo.SchedulerOutboxConfigurationVoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.execution.outbox.config.TestApplication;

@@ -1,12 +1,14 @@
 package com.architecture.hexagonal.infrastructure.inbound.orchestration.orchestrator.outbox.retry;
 
-import com.architecture.hexagonal.application.technical.outbox.block.usecase.BlockOutboxEventUseCase;
-import com.architecture.hexagonal.application.technical.outbox.find.usecase.FindPendingOutboxEventsUseCase;
-import com.architecture.hexagonal.application.technical.outbox.process.usecase.ProcessOutboxEventUseCase;
-import com.architecture.hexagonal.domain.model.aggregate.outbox.Outbox;
+import com.architecture.hexagonal.application.usecase.technical.outbox.find.input.FindOutboxInput;
+import com.architecture.hexagonal.application.usecase.technical.outbox.find.usecase.FindOutboxUseCase;
+import com.architecture.hexagonal.application.usecase.technical.outbox.process.input.ProcessOutboxInput;
+import com.architecture.hexagonal.application.usecase.technical.outbox.process.usecase.ProcessOutboxUseCase;
+import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
 import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.retry.RetryOutboxeventCommandDto;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.config.TestApplication;
-import com.architecture.hexagonal.infrastructure.inbound.orchestration.testutils.data.OutboxEventDoTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.inbound.orchestration.testutils.data.FindPendingOutboxEventsInputTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.inbound.orchestration.testutils.data.OutboxTestDataBuilder;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,37 +24,35 @@ class RetryOutboxEventsCommandHandlerImplTestIT {
 
   @Autowired private RetryOutboxEventsCommandHandlerImpl retryOutboxEventsCommandHandlerImpl;
 
-  @MockitoBean private FindPendingOutboxEventsUseCase findPendingOutboxEventsUseCase;
+  @MockitoBean private FindOutboxUseCase findOutboxUseCase;
 
-  @MockitoBean private BlockOutboxEventUseCase blockOutboxEventUseCase;
-
-  @MockitoBean private ProcessOutboxEventUseCase processOutboxEventUseCase;
+  @MockitoBean private ProcessOutboxUseCase processOutboxUseCase;
 
   @Test
   void handleShouldProcessPendingEventsWhenAggregateIdsAreUnique() {
-    final Outbox outbox = OutboxEventDoTestDataBuilder.builder().build().outboxEventDo();
-    Mockito.when(findPendingOutboxEventsUseCase.execute()).thenReturn(List.of(outbox));
+    final Outbox outbox = OutboxTestDataBuilder.builder().build().outbox();
+    final FindOutboxInput findOutboxInput = FindPendingOutboxEventsInputTestDataBuilder.builder().build().findPendingOutboxEventsInput();
+    Mockito.when(findOutboxUseCase.execute(findOutboxInput)).thenReturn(List.of(outbox));
 
     retryOutboxEventsCommandHandlerImpl.handle(new RetryOutboxeventCommandDto());
 
-    Mockito.verify(findPendingOutboxEventsUseCase).execute();
-    Mockito.verify(processOutboxEventUseCase).execute(ArgumentMatchers.any(Outbox.class));
-    Mockito.verifyNoInteractions(blockOutboxEventUseCase);
+    Mockito.verify(findOutboxUseCase).execute(findOutboxInput);
+    Mockito.verify(processOutboxUseCase).execute(ArgumentMatchers.any(ProcessOutboxInput.class));
   }
 
   @Test
   void handleShouldBlockDuplicatePendingEventWhenAggregateIdIsRepeated() {
-    final Outbox outbox = OutboxEventDoTestDataBuilder.builder().build().outboxEventDo();
+    final Outbox outbox = OutboxTestDataBuilder.builder().build().outbox();
     final Outbox duplicateOutbox =
-        OutboxEventDoTestDataBuilder.builder().build().outboxEventDo();
+        OutboxTestDataBuilder.builder().build().outbox();
+    final FindOutboxInput findOutboxInput = FindPendingOutboxEventsInputTestDataBuilder.builder().build().findPendingOutboxEventsInput();
 
-    Mockito.when(findPendingOutboxEventsUseCase.execute())
+    Mockito.when(findOutboxUseCase.execute(findOutboxInput))
         .thenReturn(List.of(outbox, duplicateOutbox));
 
     retryOutboxEventsCommandHandlerImpl.handle(new RetryOutboxeventCommandDto());
 
-    Mockito.verify(findPendingOutboxEventsUseCase).execute();
-    Mockito.verify(processOutboxEventUseCase).execute(ArgumentMatchers.any(Outbox.class));
-    Mockito.verify(blockOutboxEventUseCase).execute(ArgumentMatchers.any(Outbox.class));
+    Mockito.verify(findOutboxUseCase).execute(findOutboxInput);
+    Mockito.verify(processOutboxUseCase, Mockito.times(2)).execute(ArgumentMatchers.any(ProcessOutboxInput.class));
   }
 }

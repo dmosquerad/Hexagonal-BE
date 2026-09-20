@@ -1,7 +1,8 @@
 package com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.data.message;
 
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.User;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserUpdated;
+import com.architecture.hexagonal.domain.model.entity.user.User;
+import com.architecture.hexagonal.domain.model.vo.email.EmailVo;
+import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.data.vo.EmailVoTestDataBuilder;
 import lombok.Builder;
 
 import java.util.UUID;
@@ -16,14 +17,13 @@ public class UserTestDataBuilder {
     private String name = "Test User";
 
     @Builder.Default
-    private String email = "test@example.com";
+    private EmailVo email = EmailVoTestDataBuilder.builder().build().emailVo();
 
     public User user() {
-        final User user = new User();
-        user.setUserId(userId);
-        user.setName(name);
-        user.setEmail(email);
-
-        return user;
+        return User.builder()
+                .userId(userId)
+                .name(name)
+                .email(email)
+                .build();
     }
 }

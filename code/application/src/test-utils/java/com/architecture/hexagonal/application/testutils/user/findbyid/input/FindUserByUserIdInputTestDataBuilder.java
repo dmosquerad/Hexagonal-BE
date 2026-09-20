@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.application.testutils.user.findbyid.input;
 
-import com.architecture.hexagonal.application.business.user.findbyid.input.FindUserByUserIdInput;
+import com.architecture.hexagonal.application.usecase.business.user.findbyid.input.FindUserByUserIdInput;
 import java.util.UUID;
 import lombok.Builder;
 

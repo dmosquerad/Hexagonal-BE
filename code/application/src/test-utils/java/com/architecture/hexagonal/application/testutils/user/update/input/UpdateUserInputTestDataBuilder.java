@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.application.testutils.user.update.input;
 
-import com.architecture.hexagonal.application.business.user.update.input.UpdateUserInput;
+import com.architecture.hexagonal.application.usecase.business.user.update.input.UpdateUserInput;
 import java.util.UUID;
 import lombok.Builder;
 

@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.inbound.execution.inbox.executor;
 
 import com.architecture.hexagonal.application.port.configuration.SchedulerConfigurationPort;
-import com.architecture.hexagonal.domain.model.vo.SchedulerOutboxConfigurationVo;
+import com.architecture.hexagonal.domain.model.vo.outbox.SchedulerOutboxConfigurationVo;
 import com.architecture.hexagonal.infrastructure.inbound.execution.inbox.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.inbound.execution.inbox.data.vo.SchedulerInboxConfigurationVoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.execution.inbox.executor.impl.InboxSchedulerImpl;

@@ -1,16 +1,15 @@
 package com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.sender;
 
 import com.architecture.hexagonal.application.port.database.OutboxRepositoryWritePort;
-import com.architecture.hexagonal.domain.model.aggregate.outbox.Outbox;
-import com.architecture.hexagonal.domain.model.vo.MessageHeaderVo;
-import com.architecture.hexagonal.domain.model.vo.OutboxStatusVo;
+import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
+import com.architecture.hexagonal.domain.model.vo.outbox.AggregateTypeVo;
+import com.architecture.hexagonal.domain.model.vo.outbox.OutboxStatusVo;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserCreated;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserDeleted;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserUpdated;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.naming.UserMessageNaming;
-import java.time.Clock;
-import java.time.OffsetDateTime;
-import java.util.UUID;
+import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.mapper.user.PayloadMapper;
+import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.naming.UserActionType;
+import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.naming.UserPublishBinding;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Component;
@@ -22,27 +21,21 @@ import org.springframework.transaction.event.TransactionalEventListener;
 public class UserMessageSender {
 
   private final StreamBridge streamBridge;
+  private final PayloadMapper payloadMapper;
   private final OutboxRepositoryWritePort outboxRepositoryWritePort;
-  private final Clock clock;
 
   @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
   public void sendUserCreatedMessage(final UserCreated event) {
     try {
-      final MessageHeaderVo messageHeader =
-          MessageHeaderVo.builder()
-              .messageId(UUID.randomUUID())
-              .messageDate(OffsetDateTime.now(clock))
-              .build();
-      event.setMessageHeader(messageHeader);
-      streamBridge.send(UserMessageNaming.PUBLISH_USER_CREATED_OUT_BINDING, event);
+      streamBridge.send(UserPublishBinding.USER_CREATED.getPublishBinding(), event);
     } catch (Exception ex) {
       outboxRepositoryWritePort.save(
           Outbox.builder()
-              .aggregateId(event.getData().getUserId())
-              .aggregateType(UserMessageNaming.AGGREGATE_USER_TYPE)
-              .action(UserMessageNaming.ACTION_USER_CREATED)
+              .aggregateId(event.getData().getId())
+              .aggregateType(AggregateTypeVo.USER)
+              .action(UserActionType.USER_CREATED.getActionType())
               .status(OutboxStatusVo.PENDING)
-              .payload(event)
+              .payload(payloadMapper.toPayload(event))
               .createdAt(event.getMessageHeader().messageDate())
               .build());
     }
@@ -51,21 +44,15 @@ public class UserMessageSender {
   @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
   public void sendUserUpdatedMessage(final UserUpdated event) {
     try {
-      final MessageHeaderVo messageHeader =
-          MessageHeaderVo.builder()
-              .messageId(UUID.randomUUID())
-              .messageDate(OffsetDateTime.now(clock))
-              .build();
-      event.setMessageHeader(messageHeader);
-      streamBridge.send(UserMessageNaming.PUBLISH_USER_UPDATED_OUT_BINDING, event);
+      streamBridge.send(UserPublishBinding.USER_UPDATED.getPublishBinding(), event);
     } catch (Exception ex) {
       outboxRepositoryWritePort.save(
           Outbox.builder()
-              .aggregateId(event.getData().getUserId())
-              .aggregateType(UserMessageNaming.AGGREGATE_USER_TYPE)
-              .action(UserMessageNaming.ACTION_USER_UPDATED)
+              .aggregateId(event.getData().getId())
+              .aggregateType(AggregateTypeVo.USER)
+              .action(UserActionType.USER_UPDATED.getActionType())
               .status(OutboxStatusVo.PENDING)
-              .payload(event)
+              .payload(payloadMapper.toPayload(event))
               .createdAt(event.getMessageHeader().messageDate())
               .build());
     }
@@ -74,21 +61,15 @@ public class UserMessageSender {
   @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
   public void sendUserDeletedMessage(final UserDeleted event) {
     try {
-      final MessageHeaderVo messageHeader =
-          MessageHeaderVo.builder()
-              .messageId(UUID.randomUUID())
-              .messageDate(OffsetDateTime.now(clock))
-              .build();
-      event.setMessageHeader(messageHeader);
-      streamBridge.send(UserMessageNaming.PUBLISH_USER_DELETED_OUT_BINDING, event);
+      streamBridge.send(UserPublishBinding.USER_DELETED.getPublishBinding(), event);
     } catch (Exception ex) {
       outboxRepositoryWritePort.save(
           Outbox.builder()
-              .aggregateId(event.getData().getUserId())
-              .aggregateType(UserMessageNaming.AGGREGATE_USER_TYPE)
-              .action(UserMessageNaming.ACTION_USER_DELETED)
+              .aggregateId(event.getData().getId())
+              .aggregateType(AggregateTypeVo.USER)
+              .action(UserActionType.USER_DELETED.getActionType())
               .status(OutboxStatusVo.PENDING)
-              .payload(event)
+              .payload(payloadMapper.toPayload(event))
               .createdAt(event.getMessageHeader().messageDate())
               .build());
     }

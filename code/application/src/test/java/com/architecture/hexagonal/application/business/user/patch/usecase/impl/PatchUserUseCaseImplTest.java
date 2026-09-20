@@ -1,6 +1,5 @@
 package com.architecture.hexagonal.application.business.user.patch.usecase.impl;
 
-import com.architecture.hexagonal.application.business.user.patch.input.PatchUserInput;
 import com.architecture.hexagonal.application.port.configuration.EmailConfigurationPort;
 import com.architecture.hexagonal.application.port.database.UserRepositoryReadPort;
 import com.architecture.hexagonal.application.port.database.UserRepositoryWritePort;
@@ -8,10 +7,12 @@ import com.architecture.hexagonal.application.port.message.UserSenderPort;
 import com.architecture.hexagonal.application.testutils.data.aggregate.user.UserTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.data.vo.EmailBlockRulesVoTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.user.patch.input.PatchUserInputTestDataBuilder;
+import com.architecture.hexagonal.application.usecase.business.user.patch.input.PatchUserInput;
+import com.architecture.hexagonal.application.usecase.business.user.patch.usecase.impl.PatchUserUseCaseImpl;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.InvalidValueException;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
-import com.architecture.hexagonal.domain.model.aggregate.user.User;
+import com.architecture.hexagonal.domain.model.entity.user.User;
 import java.util.Optional;
 import java.util.Set;
 import org.assertj.core.api.AssertionsForClassTypes;

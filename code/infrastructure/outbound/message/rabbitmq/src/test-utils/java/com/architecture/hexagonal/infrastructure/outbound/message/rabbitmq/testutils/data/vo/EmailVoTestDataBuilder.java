@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.data.vo;
 
-import com.architecture.hexagonal.domain.model.vo.EmailVo;
+import com.architecture.hexagonal.domain.model.vo.email.EmailVo;
 import lombok.Builder;
 
 @Builder

@@ -1,9 +1,9 @@
 package com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.data.message;
 
-import com.architecture.hexagonal.domain.model.vo.MessageHeaderVo;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.MessageHeader;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.User;
+import com.architecture.hexagonal.domain.model.entity.user.User;
+import com.architecture.hexagonal.domain.model.vo.outbox.MessageHeaderVo;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserDeleted;
+import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.data.aggregate.UserTestDataBuilder;
 import lombok.Builder;
 
 @Builder

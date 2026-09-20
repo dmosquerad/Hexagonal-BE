@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.application.testutils.user.create.input;
 
-import com.architecture.hexagonal.application.business.user.create.input.CreateUserInput;
+import com.architecture.hexagonal.application.usecase.business.user.create.input.CreateUserInput;
 import lombok.Builder;
 
 @Builder

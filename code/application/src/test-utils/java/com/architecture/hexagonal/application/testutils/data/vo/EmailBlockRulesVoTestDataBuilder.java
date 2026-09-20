@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.application.testutils.data.vo;
 
-import com.architecture.hexagonal.domain.model.vo.EmailBlockRulesVo;
+import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;
 import java.util.Set;
 
 import lombok.Builder;

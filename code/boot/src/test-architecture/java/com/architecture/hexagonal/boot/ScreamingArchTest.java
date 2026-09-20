@@ -32,8 +32,8 @@ class ScreamingArchTest {
           .areInterfaces()
           .and()
           .haveNameNotMatching(
-              ".*\\.(Persist|Create|Update|Patch|Delete|Find|Get|Exists|Validate|Process|Retry|Send|Notify|Block)[A-Z].*UseCase"
-                  + "|.*\\.[A-Z][a-zA-Z]+(Exists|Available|Valid)[A-Z]?.*UseCase")
+              ".*\\.(Persist|Create|Update|Patch|Delete|Find|Get|Exist|Validate|Process|Retry|Send|Notify|Block)[A-Z].*UseCase"
+                  + "|.*\\.[A-Z][a-zA-Z]+(Exist|Available|Valid)[A-Z]?.*UseCase")
           .should()
           .resideInAPackage("..application..usecase..")
           .because("Feature use case names must reflect a business intent starting with a verb or status concept")

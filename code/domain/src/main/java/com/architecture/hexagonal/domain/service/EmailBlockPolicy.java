@@ -1,13 +1,12 @@
 package com.architecture.hexagonal.domain.service;
 
-import com.architecture.hexagonal.domain.model.vo.EmailBlockRulesVo;
-import com.architecture.hexagonal.domain.model.vo.EmailVo;
-import com.architecture.hexagonal.domain.model.vo.predicate.EmailVoPredicate;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;
+import com.architecture.hexagonal.domain.model.vo.email.EmailVo;
+import com.architecture.hexagonal.domain.model.vo.email.predicate.EmailVoPredicate;
 import lombok.NonNull;
+import lombok.experimental.UtilityClass;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@UtilityClass
 public class EmailBlockPolicy {
 
   public static boolean isBlocked(

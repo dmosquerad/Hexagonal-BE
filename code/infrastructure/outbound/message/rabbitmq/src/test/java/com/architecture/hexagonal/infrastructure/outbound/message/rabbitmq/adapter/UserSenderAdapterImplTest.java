@@ -1,14 +1,15 @@
 package com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.adapter;
 
-import com.architecture.hexagonal.domain.model.aggregate.user.User;
+import com.architecture.hexagonal.domain.model.entity.user.User;
+import com.architecture.hexagonal.domain.model.vo.outbox.MessageHeaderVo;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserCreated;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserDeleted;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserUpdated;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.mapper.user.UserMessageDaoMapper;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.data.aggregate.UserTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.data.message.UserCreatedTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.data.message.UserDeletedTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.data.message.UserUpdatedTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.time.TestClock;
+import java.time.Clock;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
@@ -28,16 +29,18 @@ class UserSenderAdapterImplTest {
 
   @Spy UserMessageDaoMapper userMessageDaoMapper = Mappers.getMapper(UserMessageDaoMapper.class);
 
+  @Spy private Clock clock = TestClock.FIXED_CLOCK;
+
   @Test
   void userSenderCreated_shouldPublishUserCreatedEvent_whenUserIsValid() {
     final User user = UserTestDataBuilder.builder().build().user();
-    final UserCreated userCreated =
-        UserCreatedTestDataBuilder.builder().messageHeader(null).build().userCreated();
 
     userSenderAdapterImpl.userSenderCreated(user);
 
-    Mockito.verify(userMessageDaoMapper).toUserCreated(user);
-    Mockito.verify(applicationEventPublisher).publishEvent(userCreated);
+    Mockito.verify(userMessageDaoMapper)
+        .toUserCreated(Mockito.eq(user), Mockito.any(MessageHeaderVo.class));
+    Mockito.verify(clock).instant();
+    Mockito.verify(applicationEventPublisher).publishEvent(Mockito.any(UserCreated.class));
   }
 
   @Test
@@ -48,19 +51,21 @@ class UserSenderAdapterImplTest {
 
     userSenderAdapterImpl.userSenderUpdated(user);
 
-    Mockito.verify(userMessageDaoMapper).toUserUpdated(user);
-    Mockito.verify(applicationEventPublisher).publishEvent(userUpdated);
+    Mockito.verify(userMessageDaoMapper)
+        .toUserUpdated(Mockito.eq(user), Mockito.any(MessageHeaderVo.class));
+    Mockito.verify(clock).instant();
+    Mockito.verify(applicationEventPublisher).publishEvent(Mockito.any(UserUpdated.class));
   }
 
   @Test
   void userSenderDeleted_shouldPublishUserDeletedEvent_whenUserIsValid() {
     final User user = UserTestDataBuilder.builder().build().user();
-    final UserDeleted userDeleted =
-        UserDeletedTestDataBuilder.builder().messageHeader(null).build().userDeleted();
 
     userSenderAdapterImpl.userSenderDeleted(user);
 
-    Mockito.verify(userMessageDaoMapper).toUserDeleted(user);
-    Mockito.verify(applicationEventPublisher).publishEvent(userDeleted);
+    Mockito.verify(userMessageDaoMapper)
+        .toUserDeleted(Mockito.eq(user), Mockito.any(MessageHeaderVo.class));
+    Mockito.verify(clock).instant();
+    Mockito.verify(applicationEventPublisher).publishEvent(Mockito.any(UserDeleted.class));
   }
 }

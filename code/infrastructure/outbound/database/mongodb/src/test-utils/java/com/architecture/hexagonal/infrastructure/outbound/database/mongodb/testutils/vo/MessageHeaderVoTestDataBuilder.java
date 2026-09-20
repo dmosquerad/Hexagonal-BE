@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.vo;
 
-import com.architecture.hexagonal.domain.model.vo.MessageHeaderVo;
+import com.architecture.hexagonal.domain.model.vo.outbox.MessageHeaderVo;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.time.TestClock;
 import lombok.Builder;
 
@@ -17,10 +17,9 @@ public class MessageHeaderVoTestDataBuilder {
     private OffsetDateTime messageDate = OffsetDateTime.now(TestClock.FIXED_CLOCK);
 
     public MessageHeaderVo messageHeaderVo() {
-        final MessageHeaderVo messageHeaderVo = MessageHeaderVo.builder()
+        return MessageHeaderVo.builder()
                 .messageId(messageId)
                 .messageDate(messageDate)
                 .build();
-        return messageHeaderVo;
     }
 }

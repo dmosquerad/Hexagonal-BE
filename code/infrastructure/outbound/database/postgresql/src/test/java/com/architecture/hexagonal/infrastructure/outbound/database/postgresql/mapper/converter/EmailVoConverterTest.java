@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.postgresql.mapper.converter;
 
-import com.architecture.hexagonal.domain.model.vo.EmailVo;
+import com.architecture.hexagonal.domain.model.vo.email.EmailVo;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.testutils.data.vo.EmailVoTestDataBuilder;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;

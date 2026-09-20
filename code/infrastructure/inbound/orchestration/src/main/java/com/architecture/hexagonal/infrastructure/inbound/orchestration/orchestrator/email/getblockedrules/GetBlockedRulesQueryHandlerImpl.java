@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.inbound.orchestration.orchestrator.email.getblockedrules;
 
-import com.architecture.hexagonal.application.business.email.getblockedrules.usecase.GetBlockedRulesUseCase;
-import com.architecture.hexagonal.domain.model.vo.EmailBlockRulesVo;
+import com.architecture.hexagonal.application.usecase.business.email.getblockedrules.usecase.GetBlockedRulesUseCase;
+import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;
 import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.email.GetBlockedRulesQueryDto;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.config.transaction.TransactionBoundary;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.dispatcher.query.QueryHandler;

@@ -1,7 +1,6 @@
 package com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.data.message;
 
-import com.architecture.hexagonal.domain.model.vo.MessageHeaderVo;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.MessageHeader;
+import com.architecture.hexagonal.domain.model.vo.outbox.MessageHeaderVo;
 import lombok.Builder;
 
 import java.time.OffsetDateTime;
@@ -17,10 +16,9 @@ public class MessageHeaderVoTestDataBuilder {
     private OffsetDateTime messageDate = null;
 
     public MessageHeaderVo messageHeaderVo() {
-        final MessageHeaderVo messageHeaderVo = MessageHeaderVo.builder()
+        return MessageHeaderVo.builder()
                 .messageId(messageId)
                 .messageDate(messageDate)
                 .build();
-        return messageHeaderVo;
     }
 }

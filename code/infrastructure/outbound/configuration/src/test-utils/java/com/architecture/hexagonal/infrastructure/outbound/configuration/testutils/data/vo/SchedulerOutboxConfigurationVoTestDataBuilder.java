@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.outbound.configuration.testutils.data.vo;
 
-import com.architecture.hexagonal.domain.model.vo.SchedulerOutboxConfigurationVo;
+import com.architecture.hexagonal.domain.model.vo.outbox.SchedulerOutboxConfigurationVo;
 import java.time.Duration;
 import lombok.Builder;
 
