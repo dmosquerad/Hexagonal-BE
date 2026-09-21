@@ -1,17 +1,18 @@
 package com.architecture.hexagonal.application.business.user.update.usecase.impl;
 
-import com.architecture.hexagonal.application.business.user.update.input.UpdateUserInput;
 import com.architecture.hexagonal.application.port.configuration.EmailConfigurationPort;
 import com.architecture.hexagonal.application.port.database.UserRepositoryReadPort;
 import com.architecture.hexagonal.application.port.database.UserRepositoryWritePort;
 import com.architecture.hexagonal.application.port.message.UserSenderPort;
-import com.architecture.hexagonal.application.testutils.data.aggregate.user.UserTestDataBuilder;
-import com.architecture.hexagonal.application.testutils.data.vo.EmailBlockRulesVoTestDataBuilder;
-import com.architecture.hexagonal.application.testutils.user.update.input.UpdateUserInputTestDataBuilder;
+import com.architecture.hexagonal.application.testutils.model.aggregate.user.UserTestDataBuilder;
+import com.architecture.hexagonal.application.testutils.model.vo.email.EmailBlockRulesVoTestDataBuilder;
+import com.architecture.hexagonal.application.testutils.usecase.business.user.update.input.UpdateUserInputTestDataBuilder;
+import com.architecture.hexagonal.application.usecase.business.user.update.input.UpdateUserInput;
+import com.architecture.hexagonal.application.usecase.business.user.update.usecase.impl.UpdateUserUseCaseImpl;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.InvalidValueException;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
-import com.architecture.hexagonal.domain.model.aggregate.user.User;
+import com.architecture.hexagonal.domain.model.entity.user.User;
 import java.util.Optional;
 import java.util.Set;
 import org.assertj.core.api.AssertionsForClassTypes;

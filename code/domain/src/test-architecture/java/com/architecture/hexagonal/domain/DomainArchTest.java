@@ -64,7 +64,7 @@ class DomainArchTest {
           .should()
           .resideInAnyPackage(
       "..domain.model.aggregate..",
-              "..domain.model.projector..",
+              "..domain.model.entity..",
               "..domain.model.vo..")
           .because("Domain model classes must reside in aggregate, projector or VO packages");
 

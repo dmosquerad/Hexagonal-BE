@@ -1,8 +1,9 @@
 package com.architecture.hexagonal.application.business.email.getblockedrules.usecase.impl;
 
 import com.architecture.hexagonal.application.port.configuration.EmailConfigurationPort;
-import com.architecture.hexagonal.application.testutils.data.vo.EmailBlockRulesVoTestDataBuilder;
-import com.architecture.hexagonal.domain.model.vo.EmailBlockRulesVo;
+import com.architecture.hexagonal.application.testutils.model.vo.email.EmailBlockRulesVoTestDataBuilder;
+import com.architecture.hexagonal.application.usecase.business.email.getblockedrules.usecase.impl.GetBlockedRulesUseCaseImpl;
+import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

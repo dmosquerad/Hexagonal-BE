@@ -1,17 +1,17 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.postgresql.adapter;
 
-import com.architecture.hexagonal.domain.model.projector.user.UserEmailProjector;
-import com.architecture.hexagonal.domain.model.aggregate.user.User;
+import com.architecture.hexagonal.application.usecase.business.user.getall.projector.UserEmailProjector;
+import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.config.PostgresqlIT;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.config.PostgresqlTestApplication;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.data.UserDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.mapper.user.UserFromPostgresqlMapper;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.repository.UserPostgresqlReadRepository;
-import com.architecture.hexagonal.domain.model.aggregate.pagination.Pagination;
-import com.architecture.hexagonal.domain.model.aggregate.pagination.PaginationResult;
-import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.testutils.data.aggregate.user.UserTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.testutils.data.aggregate.pagination.PaginationTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.testutils.data.vo.EmailBlockRulesVoTestDataBuilder;
+import com.architecture.hexagonal.domain.model.vo.pagination.Pagination;
+import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResult;
+import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.testutils.model.entity.user.UserTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.testutils.model.entity.pagination.PaginationTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.testutils.model.vo.email.EmailBlockRulesVoTestDataBuilder;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;

@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.infrastructure.inbound.orchestration.orchestrator.user.patch;
 
-import com.architecture.hexagonal.application.business.user.patch.input.PatchUserInput;
-import com.architecture.hexagonal.application.business.user.patch.usecase.PatchUserUseCase;
-import com.architecture.hexagonal.domain.model.aggregate.user.User;
+import com.architecture.hexagonal.application.usecase.business.user.patch.input.PatchUserInput;
+import com.architecture.hexagonal.application.usecase.business.user.patch.usecase.PatchUserUseCase;
+import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.user.PatchUserCommandDto;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.mapper.user.PatchUserCommandMapper;

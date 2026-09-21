@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.inbound.orchestration.orchestrator.user.exists;
 
-import com.architecture.hexagonal.application.business.user.exists.input.UserExistsInput;
-import com.architecture.hexagonal.application.business.user.exists.usecase.UserExistsUseCase;
+import com.architecture.hexagonal.application.usecase.business.user.exists.input.UserExistsInput;
+import com.architecture.hexagonal.application.usecase.business.user.exists.usecase.UserExistsUseCase;
 import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.user.UserExistsQueryDto;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.config.transaction.TransactionBoundary;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.mapper.user.UserExistsQueryMapper;

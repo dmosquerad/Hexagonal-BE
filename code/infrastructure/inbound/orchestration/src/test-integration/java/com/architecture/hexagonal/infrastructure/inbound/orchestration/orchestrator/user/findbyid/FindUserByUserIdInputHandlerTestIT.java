@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.infrastructure.inbound.orchestration.orchestrator.user.findbyid;
 
-import com.architecture.hexagonal.application.business.user.findbyid.input.FindUserByUserIdInput;
-import com.architecture.hexagonal.application.business.user.findbyid.usecase.FindUserByUserIdUseCase;
-import com.architecture.hexagonal.domain.model.aggregate.user.User;
+import com.architecture.hexagonal.application.usecase.business.user.findbyid.input.FindUserByUserIdInput;
+import com.architecture.hexagonal.application.usecase.business.user.findbyid.usecase.FindUserByUserIdUseCase;
+import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.user.FindUserByUserIdQueryDto;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.mapper.user.FindUserByUserIdQueryMapper;

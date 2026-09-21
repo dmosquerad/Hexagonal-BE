@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.infrastructure.outbound.configuration.adapter;
 
-import com.architecture.hexagonal.domain.model.vo.SchedulerOutboxConfigurationVo;
+import com.architecture.hexagonal.domain.model.vo.outbox.SchedulerOutboxConfigurationVo;
 import com.architecture.hexagonal.infrastructure.outbound.configuration.config.SchedulerOutboxConfig;
-import com.architecture.hexagonal.infrastructure.outbound.configuration.testutils.data.vo.SchedulerOutboxConfigurationVoTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.configuration.testutils.model.vo.outbox.SchedulerOutboxConfigurationVoTestDataBuilder;
 import java.time.Duration;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;

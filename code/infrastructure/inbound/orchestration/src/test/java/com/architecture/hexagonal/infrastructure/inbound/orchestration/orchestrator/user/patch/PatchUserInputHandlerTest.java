@@ -1,13 +1,13 @@
 package com.architecture.hexagonal.infrastructure.inbound.orchestration.orchestrator.user.patch;
 
-import com.architecture.hexagonal.application.business.user.patch.input.PatchUserInput;
-import com.architecture.hexagonal.application.business.user.patch.usecase.PatchUserUseCase;
-import com.architecture.hexagonal.domain.model.aggregate.user.User;
+import com.architecture.hexagonal.application.usecase.business.user.patch.input.PatchUserInput;
+import com.architecture.hexagonal.application.usecase.business.user.patch.usecase.PatchUserUseCase;
+import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.user.PatchUserCommandDto;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.config.transaction.TransactionBoundary;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.mapper.user.PatchUserCommandMapper;
-import com.architecture.hexagonal.infrastructure.inbound.orchestration.testutils.data.aggregate.user.UserTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.testutils.data.command.PatchUserCommandDtoTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.inbound.orchestration.testutils.model.entity.user.UserTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.testutils.transaction.TransactionBoundaryTest;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;

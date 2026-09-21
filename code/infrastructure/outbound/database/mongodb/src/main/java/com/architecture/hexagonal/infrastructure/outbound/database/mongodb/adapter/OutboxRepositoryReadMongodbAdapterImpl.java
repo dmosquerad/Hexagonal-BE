@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.adapter;
 
 import com.architecture.hexagonal.application.port.database.OutboxRepositoryReadPort;
-import com.architecture.hexagonal.domain.model.aggregate.outbox.Outbox;
-import com.architecture.hexagonal.domain.model.vo.OutboxStatusVo;
+import com.architecture.hexagonal.application.usecase.technical.outbox.find.projector.OutboxStatusAndAggregateProjector;
+import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.mapper.outbox.OutboxDoFromMongodbMapper;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.repository.OutboxReadMongodbRepository;
 import java.util.List;
@@ -18,9 +18,12 @@ public class OutboxRepositoryReadMongodbAdapterImpl implements OutboxRepositoryR
   private final OutboxDoFromMongodbMapper outboxDoFromMongodbMapper;
 
   @Override
-  public List<Outbox> findPendingEvents() {
+  public List<Outbox> findByStatusAndAggregateType(
+      OutboxStatusAndAggregateProjector outboxStatusAndAggregateProjector) {
     return outboxReadMongodbRepository
-        .findByStatusOrderByCreatedAtAsc(OutboxStatusVo.PENDING)
+        .findByStatusAndAggregateTypeOrderByCreatedAtAsc(
+            outboxStatusAndAggregateProjector.status(),
+            outboxStatusAndAggregateProjector.aggregateType())
         .stream()
         .map(outboxDoFromMongodbMapper::toOutboxEvent)
         .collect(Collectors.toList());

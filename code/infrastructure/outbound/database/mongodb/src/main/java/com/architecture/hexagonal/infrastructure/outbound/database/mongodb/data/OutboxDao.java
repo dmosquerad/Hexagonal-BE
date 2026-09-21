@@ -1,6 +1,7 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data;
 
-import com.architecture.hexagonal.domain.model.vo.OutboxStatusVo;
+import com.architecture.hexagonal.domain.model.vo.outbox.AggregateTypeVo;
+import com.architecture.hexagonal.domain.model.vo.outbox.OutboxStatusVo;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -21,13 +22,13 @@ public class OutboxDao {
 
   @Id private UUID outboxId;
 
-  @NotBlank private String aggregateType;
+  @NotNull private AggregateTypeVo aggregateType;
 
-  @Indexed private String aggregateId;
+  @Indexed private Object aggregateId;
 
   @NotBlank private String action;
 
-  @NotNull private Object payload;
+  @NotNull private PayloadDao payload;
 
   @NotEmpty @Indexed private OutboxStatusVo status;
 
