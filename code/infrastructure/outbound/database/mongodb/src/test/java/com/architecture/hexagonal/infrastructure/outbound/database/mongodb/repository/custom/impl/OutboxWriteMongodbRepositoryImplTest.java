@@ -12,9 +12,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.mongodb.core.ExecutableUpdateOperation.ExecutableUpdate;
-import org.springframework.data.mongodb.core.ExecutableUpdateOperation.UpdateWithQuery;
-import org.springframework.data.mongodb.core.ExecutableUpdateOperation.TerminatingUpdate;
 import org.springframework.data.mongodb.core.ExecutableUpdateOperation.TerminatingFindAndModify;
+import org.springframework.data.mongodb.core.ExecutableUpdateOperation.TerminatingUpdate;
+import org.springframework.data.mongodb.core.ExecutableUpdateOperation.UpdateWithQuery;
 import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
@@ -46,13 +46,13 @@ class OutboxWriteMongodbRepositoryImplTest {
     Mockito.when(executableUpdate.matching(Mockito.any(Query.class))).thenReturn(updateWithQuery);
     Mockito.when(updateWithQuery.apply(Mockito.any(Update.class))).thenReturn(terminatingUpdate);
     Mockito.when(terminatingUpdate.withOptions(Mockito.any(FindAndModifyOptions.class)))
-      .thenReturn(terminatingFindAndModify);
+        .thenReturn(terminatingFindAndModify);
     Mockito.when(terminatingFindAndModify.findAndModifyValue()).thenReturn(outboxDao);
 
     final OutboxDao result = outboxWriteMongodbRepositoryImpl.findAndSaveWithMerge(outboxDao);
 
     AssertionsForClassTypes.assertThat(result).usingRecursiveComparison().isEqualTo(persistedDao);
-    
+
     Mockito.verify(mongoTemplate).update(OutboxDao.class);
     Mockito.verify(executableUpdate).matching(Mockito.any(Query.class));
     Mockito.verify(updateWithQuery).apply(Mockito.any(Update.class));
@@ -69,13 +69,13 @@ class OutboxWriteMongodbRepositoryImplTest {
     Mockito.when(executableUpdate.matching(Mockito.any(Query.class))).thenReturn(updateWithQuery);
     Mockito.when(updateWithQuery.apply(Mockito.any(Update.class))).thenReturn(terminatingUpdate);
     Mockito.when(terminatingUpdate.withOptions(Mockito.any(FindAndModifyOptions.class)))
-      .thenReturn(terminatingFindAndModify);
+        .thenReturn(terminatingFindAndModify);
     Mockito.when(terminatingFindAndModify.findAndModifyValue()).thenReturn(outboxDao);
 
     final OutboxDao result = outboxWriteMongodbRepositoryImpl.findAndSaveWithMerge(outboxDao);
 
     AssertionsForClassTypes.assertThat(result).usingRecursiveComparison().isEqualTo(outboxDao);
-    
+
     Mockito.verify(mongoTemplate).update(OutboxDao.class);
     Mockito.verify(executableUpdate).matching(Mockito.any(Query.class));
     Mockito.verify(updateWithQuery).apply(Mockito.any(Update.class));
@@ -97,13 +97,13 @@ class OutboxWriteMongodbRepositoryImplTest {
     Mockito.when(executableUpdate.matching(Mockito.any(Query.class))).thenReturn(updateWithQuery);
     Mockito.when(updateWithQuery.apply(Mockito.any(Update.class))).thenReturn(terminatingUpdate);
     Mockito.when(terminatingUpdate.withOptions(Mockito.any(FindAndModifyOptions.class)))
-      .thenReturn(terminatingFindAndModify);
+        .thenReturn(terminatingFindAndModify);
     Mockito.when(terminatingFindAndModify.findAndModifyValue()).thenReturn(outboxDao);
 
     final OutboxDao result = outboxWriteMongodbRepositoryImpl.findAndSaveWithMerge(outboxDao);
 
     AssertionsForClassTypes.assertThat(result).usingRecursiveComparison().isEqualTo(outboxDao);
-    
+
     Mockito.verify(mongoTemplate).update(OutboxDao.class);
     Mockito.verify(executableUpdate).matching(Mockito.any(Query.class));
     Mockito.verify(updateWithQuery).apply(Mockito.any(Update.class));

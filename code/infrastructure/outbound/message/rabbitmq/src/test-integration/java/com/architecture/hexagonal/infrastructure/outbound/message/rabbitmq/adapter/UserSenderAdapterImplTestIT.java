@@ -10,7 +10,7 @@ import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.mapper.user.UserMessageDaoMapper;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.naming.UserPublishBinding;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.sender.UserMessageSender;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.data.aggregate.UserTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.model.entity.user.UserTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.time.TestClock;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

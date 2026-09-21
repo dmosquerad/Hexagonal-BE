@@ -5,8 +5,8 @@ import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.da
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.mapper.user.UserDaoMapper;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.mapper.user.UserFromPostgresqlMapper;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.repository.UserPostgresqlWriteRepository;
-import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.testutils.data.aggregate.user.UserTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.testutils.data.dao.UserDaoTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.testutils.dao.UserDaoTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.testutils.model.entity.user.UserTestDataBuilder;
 import java.util.Optional;
 import java.util.UUID;
 import org.assertj.core.api.AssertionsForClassTypes;

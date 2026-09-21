@@ -7,9 +7,9 @@ import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserUpdated;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.mapper.user.PayloadMapper;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.naming.UserPublishBinding;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.data.message.UserCreatedTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.data.message.UserDeletedTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.data.message.UserUpdatedTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.message.UserCreatedTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.message.UserDeletedTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.message.UserUpdatedTestDataBuilder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;

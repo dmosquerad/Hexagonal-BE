@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.application.business.user.findbyid.usecase.impl;
 
 import com.architecture.hexagonal.application.port.database.UserRepositoryReadPort;
-import com.architecture.hexagonal.application.testutils.data.aggregate.user.UserTestDataBuilder;
-import com.architecture.hexagonal.application.testutils.user.findbyid.input.FindUserByUserIdInputTestDataBuilder;
+import com.architecture.hexagonal.application.testutils.model.aggregate.user.UserTestDataBuilder;
+import com.architecture.hexagonal.application.testutils.usecase.business.user.findbyid.input.FindUserByUserIdInputTestDataBuilder;
 import com.architecture.hexagonal.application.usecase.business.user.findbyid.input.FindUserByUserIdInput;
 import com.architecture.hexagonal.application.usecase.business.user.findbyid.usecase.impl.FindUserByUserIdUseCaseImpl;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;

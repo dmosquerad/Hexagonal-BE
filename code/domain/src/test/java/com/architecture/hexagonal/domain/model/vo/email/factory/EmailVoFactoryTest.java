@@ -2,7 +2,7 @@ package com.architecture.hexagonal.domain.model.vo.email.factory;
 
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.model.vo.email.EmailVo;
-import com.architecture.hexagonal.domain.testutils.data.vo.user.EmailVoTestDataBuilder;
+import com.architecture.hexagonal.domain.testutils.data.model.vo.email.EmailVoTestDataBuilder;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 

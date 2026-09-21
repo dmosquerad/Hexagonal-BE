@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.domain.model.entity.user;
 
-import com.architecture.hexagonal.domain.testutils.data.aggregate.user.UserTestDataBuilder;
+import com.architecture.hexagonal.domain.testutils.data.model.entity.user.UserTestDataBuilder;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 

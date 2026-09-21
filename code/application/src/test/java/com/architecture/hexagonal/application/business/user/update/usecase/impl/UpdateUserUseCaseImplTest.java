@@ -4,9 +4,9 @@ import com.architecture.hexagonal.application.port.configuration.EmailConfigurat
 import com.architecture.hexagonal.application.port.database.UserRepositoryReadPort;
 import com.architecture.hexagonal.application.port.database.UserRepositoryWritePort;
 import com.architecture.hexagonal.application.port.message.UserSenderPort;
-import com.architecture.hexagonal.application.testutils.data.aggregate.user.UserTestDataBuilder;
-import com.architecture.hexagonal.application.testutils.data.vo.EmailBlockRulesVoTestDataBuilder;
-import com.architecture.hexagonal.application.testutils.user.update.input.UpdateUserInputTestDataBuilder;
+import com.architecture.hexagonal.application.testutils.model.aggregate.user.UserTestDataBuilder;
+import com.architecture.hexagonal.application.testutils.model.vo.email.EmailBlockRulesVoTestDataBuilder;
+import com.architecture.hexagonal.application.testutils.usecase.business.user.update.input.UpdateUserInputTestDataBuilder;
 import com.architecture.hexagonal.application.usecase.business.user.update.input.UpdateUserInput;
 import com.architecture.hexagonal.application.usecase.business.user.update.usecase.impl.UpdateUserUseCaseImpl;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;

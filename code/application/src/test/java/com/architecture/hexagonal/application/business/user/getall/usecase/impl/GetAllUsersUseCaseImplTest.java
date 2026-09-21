@@ -2,10 +2,10 @@ package com.architecture.hexagonal.application.business.user.getall.usecase.impl
 
 import com.architecture.hexagonal.application.port.configuration.EmailConfigurationPort;
 import com.architecture.hexagonal.application.port.database.UserRepositoryReadPort;
-import com.architecture.hexagonal.application.testutils.data.aggregate.pagination.PaginationResultTestDataBuilder;
-import com.architecture.hexagonal.application.testutils.data.aggregate.pagination.PaginationTestDataBuilder;
-import com.architecture.hexagonal.application.testutils.data.aggregate.user.UserTestDataBuilder;
-import com.architecture.hexagonal.application.testutils.data.vo.EmailBlockRulesVoTestDataBuilder;
+import com.architecture.hexagonal.application.testutils.model.aggregate.pagination.PaginationResultTestDataBuilder;
+import com.architecture.hexagonal.application.testutils.model.aggregate.pagination.PaginationTestDataBuilder;
+import com.architecture.hexagonal.application.testutils.model.aggregate.user.UserTestDataBuilder;
+import com.architecture.hexagonal.application.testutils.model.vo.email.EmailBlockRulesVoTestDataBuilder;
 import com.architecture.hexagonal.application.usecase.business.user.getall.input.GetUsersInput;
 import com.architecture.hexagonal.application.usecase.business.user.getall.projector.UserEmailProjector;
 import com.architecture.hexagonal.application.usecase.business.user.getall.usecase.impl.GetAllUsersUseCaseImpl;

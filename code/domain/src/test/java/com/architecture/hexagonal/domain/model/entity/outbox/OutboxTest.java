@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.domain.model.entity.outbox;
 
-import com.architecture.hexagonal.domain.testutils.data.aggregate.outbox.OutboxTestDataBuilder;
+import com.architecture.hexagonal.domain.testutils.data.model.entity.outbox.OutboxTestDataBuilder;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 

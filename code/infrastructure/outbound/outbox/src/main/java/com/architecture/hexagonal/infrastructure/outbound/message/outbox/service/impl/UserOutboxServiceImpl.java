@@ -1,10 +1,10 @@
 package com.architecture.hexagonal.infrastructure.outbound.message.outbox.service.impl;
 
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
+import com.architecture.hexagonal.domain.model.vo.outbox.ActionType;
 import com.architecture.hexagonal.infrastructure.outbound.message.outbox.mapper.user.UserFromOutboxMapper;
 import com.architecture.hexagonal.infrastructure.outbound.message.outbox.naming.OutboxNaming;
 import com.architecture.hexagonal.infrastructure.outbound.message.outbox.service.OutboxService;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.naming.UserActionType;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -32,9 +32,9 @@ public class UserOutboxServiceImpl implements OutboxService {
 
   private Map<String, Consumer<Outbox>> actionHandlers() {
     return Map.of(
-        UserActionType.USER_CREATED.getActionType(), this::senderUserCreated,
-        UserActionType.USER_UPDATED.getActionType(), this::senderUserUpdated,
-        UserActionType.USER_DELETED.getActionType(), this::senderUserDeleted);
+        ActionType.UserActionType.USER_CREATED.getActionType(), this::senderUserCreated,
+        ActionType.UserActionType.USER_UPDATED.getActionType(), this::senderUserUpdated,
+        ActionType.UserActionType.USER_DELETED.getActionType(), this::senderUserDeleted);
   }
 
   private void senderUserCreated(final @NonNull Outbox outbox) {

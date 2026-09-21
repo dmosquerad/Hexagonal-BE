@@ -7,7 +7,7 @@ import com.architecture.hexagonal.infrastructure.inbound.orchestration.dispatche
 import com.architecture.hexagonal.infrastructure.inbound.rest.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.email.EmailBlockRulesDtoMapper;
 import com.architecture.hexagonal.infrastructure.inbound.rest.resources.email.EmailResponseResource;
-import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.vo.EmailBlockRulesTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.model.vo.email.EmailBlockRulesTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.time.TestClock;
 import java.time.Clock;
 import org.junit.jupiter.api.Test;

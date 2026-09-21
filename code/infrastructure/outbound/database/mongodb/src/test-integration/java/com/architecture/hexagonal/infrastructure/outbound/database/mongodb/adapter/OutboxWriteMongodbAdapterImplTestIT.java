@@ -8,7 +8,7 @@ import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.mappe
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.mapper.outbox.OutboxDoFromMongodbMapper;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.repository.OutboxWriteMongodbRepository;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.dao.OutboxDaoTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.data.aggregate.OutboxTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.model.entity.outbox.OutboxTestDataBuilder;
 
 import java.util.UUID;
 import org.assertj.core.api.AssertionsForClassTypes;

@@ -7,9 +7,9 @@ import com.architecture.hexagonal.infrastructure.inbound.contract.rest.email.ser
 import com.architecture.hexagonal.infrastructure.inbound.contract.rest.email.server.dto.EmailBlockRulesResponseDto;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.dispatcher.query.QueryBus;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.email.EmailBlockRulesDtoMapper;
-import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.dto.EmailBlockRulesDtoTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.dto.EmailBlockRulesResponseDtoTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.vo.EmailBlockRulesTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.dto.EmailBlockRulesDtoTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.dto.EmailBlockRulesResponseDtoTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.model.vo.email.EmailBlockRulesTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.time.TestClock;
 import java.time.Clock;
 import org.assertj.core.api.AssertionsForClassTypes;

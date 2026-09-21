@@ -8,7 +8,7 @@ import com.architecture.hexagonal.domain.model.vo.outbox.OutboxStatusVo;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
-import com.architecture.hexagonal.infrastructure.inbound.orchestration.testutils.data.aggregate.outbox.PayloadTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.inbound.orchestration.testutils.model.vo.outbox.PayloadVoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.testutils.time.TestClock;
 import lombok.Builder;
 
@@ -19,7 +19,7 @@ public class OutboxTestDataBuilder {
   @Builder.Default private AggregateTypeVo aggregateType = AggregateTypeVo.USER;
   @Builder.Default private String aggregateId = "123";
   @Builder.Default private String action = "USER_CREATED";
-  @Builder.Default private PayloadVo payload = PayloadTestDataBuilder.builder().build().payload();
+  @Builder.Default private PayloadVo payload = PayloadVoTestDataBuilder.builder().build().payload();
   @Builder.Default private OutboxStatusVo status = OutboxStatusVo.PENDING;
   @Builder.Default private int retryCount = 0;
   @Builder.Default private OffsetDateTime createdAt = OffsetDateTime.now(TestClock.FIXED_CLOCK);

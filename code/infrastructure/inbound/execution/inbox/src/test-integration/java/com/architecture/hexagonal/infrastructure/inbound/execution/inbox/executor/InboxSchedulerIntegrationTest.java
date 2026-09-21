@@ -3,7 +3,7 @@ package com.architecture.hexagonal.infrastructure.inbound.execution.inbox.execut
 import com.architecture.hexagonal.application.port.configuration.SchedulerConfigurationPort;
 import com.architecture.hexagonal.domain.model.vo.outbox.SchedulerOutboxConfigurationVo;
 import com.architecture.hexagonal.infrastructure.inbound.execution.inbox.config.TestApplication;
-import com.architecture.hexagonal.infrastructure.inbound.execution.inbox.data.vo.SchedulerInboxConfigurationVoTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.inbound.execution.inbox.model.vo.SchedulerInboxConfigurationVoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.execution.inbox.executor.impl.InboxSchedulerImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;

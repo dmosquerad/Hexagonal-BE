@@ -3,8 +3,8 @@ package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.test
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.domain.model.vo.outbox.MessageHeaderVo;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.PayloadDao;
-import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.data.aggregate.UserTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.vo.MessageHeaderVoTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.model.entity.user.UserTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.model.vo.outbox.MessageHeaderVoTestDataBuilder;
 import lombok.Builder;
 
 @Builder

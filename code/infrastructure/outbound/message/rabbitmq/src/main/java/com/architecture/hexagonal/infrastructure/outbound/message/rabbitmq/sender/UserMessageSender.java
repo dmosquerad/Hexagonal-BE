@@ -2,13 +2,13 @@ package com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.send
 
 import com.architecture.hexagonal.application.port.database.OutboxRepositoryWritePort;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
+import com.architecture.hexagonal.domain.model.vo.outbox.ActionType;
 import com.architecture.hexagonal.domain.model.vo.outbox.AggregateTypeVo;
 import com.architecture.hexagonal.domain.model.vo.outbox.OutboxStatusVo;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserCreated;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserDeleted;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserUpdated;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.mapper.user.PayloadMapper;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.naming.UserActionType;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.naming.UserPublishBinding;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.stream.function.StreamBridge;
@@ -33,7 +33,7 @@ public class UserMessageSender {
           Outbox.builder()
               .aggregateId(event.getData().getId())
               .aggregateType(AggregateTypeVo.USER)
-              .action(UserActionType.USER_CREATED.getActionType())
+              .action(ActionType.UserActionType.USER_CREATED.getActionType())
               .status(OutboxStatusVo.PENDING)
               .payload(payloadMapper.toPayload(event))
               .createdAt(event.getMessageHeader().messageDate())
@@ -50,7 +50,7 @@ public class UserMessageSender {
           Outbox.builder()
               .aggregateId(event.getData().getId())
               .aggregateType(AggregateTypeVo.USER)
-              .action(UserActionType.USER_UPDATED.getActionType())
+              .action(ActionType.UserActionType.USER_UPDATED.getActionType())
               .status(OutboxStatusVo.PENDING)
               .payload(payloadMapper.toPayload(event))
               .createdAt(event.getMessageHeader().messageDate())
@@ -67,7 +67,7 @@ public class UserMessageSender {
           Outbox.builder()
               .aggregateId(event.getData().getId())
               .aggregateType(AggregateTypeVo.USER)
-              .action(UserActionType.USER_DELETED.getActionType())
+              .action(ActionType.UserActionType.USER_DELETED.getActionType())
               .status(OutboxStatusVo.PENDING)
               .payload(payloadMapper.toPayload(event))
               .createdAt(event.getMessageHeader().messageDate())

@@ -3,10 +3,10 @@ package com.architecture.hexagonal.application.technical.outbox.process.usecase.
 import com.architecture.hexagonal.application.port.configuration.SchedulerConfigurationPort;
 import com.architecture.hexagonal.application.port.database.OutboxRepositoryWritePort;
 import com.architecture.hexagonal.application.port.outbox.OutboxProcessPort;
-import com.architecture.hexagonal.application.testutils.data.aggregate.outbox.OutboxTestDataBuilder;
-import com.architecture.hexagonal.application.testutils.data.vo.SchedulerOutboxConfigurationVoTestDataBuilder;
-import com.architecture.hexagonal.application.testutils.outbox.process.ProcessOutboxInputTestDataBuilder;
+import com.architecture.hexagonal.application.testutils.model.aggregate.outbox.OutboxTestDataBuilder;
+import com.architecture.hexagonal.application.testutils.model.vo.SchedulerOutboxConfigurationVoTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.time.TestClock;
+import com.architecture.hexagonal.application.testutils.usecase.technical.outbox.process.ProcessOutboxInputTestDataBuilder;
 import com.architecture.hexagonal.application.usecase.technical.outbox.process.input.ProcessOutboxInput;
 import com.architecture.hexagonal.application.usecase.technical.outbox.process.usecase.impl.ProcessOutboxUseCaseImpl;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;

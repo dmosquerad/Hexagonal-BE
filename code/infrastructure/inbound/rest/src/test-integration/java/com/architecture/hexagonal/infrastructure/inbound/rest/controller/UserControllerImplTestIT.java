@@ -5,7 +5,7 @@ import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.dispatcher.command.CommandBus;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.dispatcher.query.QueryBus;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.user.*;
-import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.aggregate.pagination.PaginationTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.model.entity.pagination.PaginationTestDataBuilder;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import com.architecture.hexagonal.domain.model.entity.user.User;
@@ -19,9 +19,9 @@ import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.serv
 import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.server.dto.UsersResponseDto;
 import com.architecture.hexagonal.infrastructure.inbound.rest.resources.user.UserRequestResource;
 import com.architecture.hexagonal.infrastructure.inbound.rest.resources.user.UserResponseResource;
-import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.dto.ResponseErrorDtoTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.dto.UsersResponseDtoTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.data.aggregate.user.UserTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.dto.ResponseErrorDtoTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.dto.UsersResponseDtoTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.model.entity.user.UserTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.time.TestClock;
 import java.time.Clock;
 import java.util.Collections;

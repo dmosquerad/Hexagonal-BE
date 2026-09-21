@@ -2,8 +2,8 @@ package com.architecture.hexagonal.application.business.user.delete.usecase.impl
 
 import com.architecture.hexagonal.application.port.database.UserRepositoryWritePort;
 import com.architecture.hexagonal.application.port.message.UserSenderPort;
-import com.architecture.hexagonal.application.testutils.data.aggregate.user.UserTestDataBuilder;
-import com.architecture.hexagonal.application.testutils.user.delete.input.DeleteUserInputTestDataBuilder;
+import com.architecture.hexagonal.application.testutils.model.aggregate.user.UserTestDataBuilder;
+import com.architecture.hexagonal.application.testutils.usecase.business.user.delete.input.DeleteUserInputTestDataBuilder;
 import com.architecture.hexagonal.application.usecase.business.user.delete.input.DeleteUserInput;
 import com.architecture.hexagonal.application.usecase.business.user.delete.usecase.impl.DeleteUserUseCaseImpl;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;

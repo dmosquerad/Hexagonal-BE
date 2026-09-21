@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.domain.service;
 
-import com.architecture.hexagonal.domain.testutils.data.vo.user.EmailBlockRulesVoTestDataBuilder;
-import com.architecture.hexagonal.domain.testutils.data.vo.user.EmailVoTestDataBuilder;
+import com.architecture.hexagonal.domain.testutils.data.model.vo.email.EmailBlockRulesVoTestDataBuilder;
+import com.architecture.hexagonal.domain.testutils.data.model.vo.email.EmailVoTestDataBuilder;
 import java.util.Set;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;

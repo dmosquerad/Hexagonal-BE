@@ -4,7 +4,7 @@ import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
 import com.architecture.hexagonal.domain.model.vo.outbox.AggregateTypeVo;
 import com.architecture.hexagonal.infrastructure.outbound.message.outbox.naming.OutboxNaming;
 import com.architecture.hexagonal.infrastructure.outbound.message.outbox.service.OutboxService;
-import com.architecture.hexagonal.infrastructure.outbound.message.outbox.testutils.data.aggregate.outbox.OutboxTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.message.outbox.testutils.model.entity.outbox.OutboxTestDataBuilder;
 import java.util.Map;
 import java.util.function.Consumer;
 import org.assertj.core.api.Assertions;

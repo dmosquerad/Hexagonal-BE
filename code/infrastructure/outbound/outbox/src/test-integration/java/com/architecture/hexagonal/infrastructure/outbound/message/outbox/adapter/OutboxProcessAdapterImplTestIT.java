@@ -4,12 +4,12 @@ import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
 import com.architecture.hexagonal.infrastructure.outbound.message.outbox.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.outbound.message.outbox.mapper.user.UserFromOutboxMapper;
 import com.architecture.hexagonal.infrastructure.outbound.message.outbox.service.OutboxService;
-import com.architecture.hexagonal.infrastructure.outbound.message.outbox.testutils.data.aggregate.outbox.OutboxTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.outbound.message.outbox.testutils.data.aggregate.outbox.PayloadTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.message.outbox.testutils.model.entity.outbox.OutboxTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.message.outbox.testutils.model.entity.outbox.PayloadTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserCreated;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserDeleted;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserUpdated;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.naming.UserActionType;
+import com.architecture.hexagonal.domain.model.vo.outbox.ActionType;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ class OutboxProcessAdapterImplTestIT {
   void process_shouldSendCreatedMessage_whenActionIsUserCreated() {
      final Outbox outbox =
         OutboxTestDataBuilder.builder()
-            .action(UserActionType.USER_CREATED.getActionType())
+            .action(ActionType.UserActionType.USER_CREATED.getActionType())
             .payload(PayloadTestDataBuilder.builder().build().payload())
             .build()
             .outbox();
@@ -50,7 +50,7 @@ class OutboxProcessAdapterImplTestIT {
   void process_shouldSendUpdatedMessage_whenActionIsUserUpdated() {
      final Outbox outbox =
         OutboxTestDataBuilder.builder()
-            .action(UserActionType.USER_UPDATED.getActionType())
+            .action(ActionType.UserActionType.USER_UPDATED.getActionType())
             .payload(PayloadTestDataBuilder.builder().build().payload())
             .build()
             .outbox();
@@ -65,7 +65,7 @@ class OutboxProcessAdapterImplTestIT {
   void process_shouldSendDeletedMessage_whenActionIsUserDeleted() {
      final Outbox outbox =
         OutboxTestDataBuilder.builder()
-            .action(UserActionType.USER_DELETED.getActionType())
+            .action(ActionType.UserActionType.USER_DELETED.getActionType())
             .payload(PayloadTestDataBuilder.builder().build().payload())
             .build()
             .outbox();

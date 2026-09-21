@@ -6,8 +6,8 @@ import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserDeleted;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserUpdated;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.mapper.user.UserMessageDaoMapper;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.data.aggregate.UserTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.data.message.UserUpdatedTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.message.UserUpdatedTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.model.entity.user.UserTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.time.TestClock;
 import java.time.Clock;
 import org.junit.jupiter.api.Test;

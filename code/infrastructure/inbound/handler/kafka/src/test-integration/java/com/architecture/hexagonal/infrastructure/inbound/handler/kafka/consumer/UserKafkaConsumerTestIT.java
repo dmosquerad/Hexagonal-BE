@@ -8,9 +8,9 @@ import com.architecture.hexagonal.infrastructure.inbound.handler.kafka.data.User
 import com.architecture.hexagonal.infrastructure.inbound.handler.kafka.data.UserDeletedMessage;
 import com.architecture.hexagonal.infrastructure.inbound.handler.kafka.data.UserUpdatedMessage;
 import com.architecture.hexagonal.infrastructure.inbound.handler.kafka.mapper.UserKafkaMessageMapper;
-import com.architecture.hexagonal.infrastructure.inbound.handler.kafka.testutils.data.message.UserCreatedMessageTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.inbound.handler.kafka.testutils.data.message.UserDeletedMessageTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.inbound.handler.kafka.testutils.data.message.UserUpdatedMessageTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.inbound.handler.kafka.testutils.data.UserCreatedMessageTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.inbound.handler.kafka.testutils.data.UserDeletedMessageTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.inbound.handler.kafka.testutils.data.UserUpdatedMessageTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.dispatcher.command.CommandBus;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;

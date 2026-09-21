@@ -1,9 +1,9 @@
 package com.architecture.hexagonal.application.technical.outbox.find.usecase.impl;
 
 import com.architecture.hexagonal.application.port.database.OutboxRepositoryReadPort;
-import com.architecture.hexagonal.application.testutils.data.aggregate.outbox.OutboxTestDataBuilder;
-import com.architecture.hexagonal.application.testutils.outbox.find.FindOutboxInputTestDataBuilder;
-import com.architecture.hexagonal.application.testutils.outbox.find.OutboxStatusAndAggregateProjectorTestDataBuilder;
+import com.architecture.hexagonal.application.testutils.model.aggregate.outbox.OutboxTestDataBuilder;
+import com.architecture.hexagonal.application.testutils.usecase.technical.outbox.find.FindOutboxInputTestDataBuilder;
+import com.architecture.hexagonal.application.testutils.usecase.technical.outbox.find.projector.OutboxStatusAndAggregateProjectorTestDataBuilder;
 import com.architecture.hexagonal.application.usecase.technical.outbox.find.input.FindOutboxInput;
 import com.architecture.hexagonal.application.usecase.technical.outbox.find.projector.OutboxStatusAndAggregateProjector;
 import com.architecture.hexagonal.application.usecase.technical.outbox.find.usecase.impl.FindOutboxUseCaseImpl;

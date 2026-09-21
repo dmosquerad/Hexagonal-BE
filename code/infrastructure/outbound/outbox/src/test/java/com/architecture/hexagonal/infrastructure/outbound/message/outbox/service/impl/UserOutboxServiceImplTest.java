@@ -1,15 +1,15 @@
 package com.architecture.hexagonal.infrastructure.outbound.message.outbox.service.impl;
 
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
+import com.architecture.hexagonal.domain.model.vo.outbox.ActionType;
 import com.architecture.hexagonal.domain.model.vo.outbox.PayloadVo;
 import com.architecture.hexagonal.infrastructure.outbound.message.outbox.mapper.user.UserFromOutboxMapper;
 import com.architecture.hexagonal.infrastructure.outbound.message.outbox.naming.OutboxNaming;
-import com.architecture.hexagonal.infrastructure.outbound.message.outbox.testutils.data.aggregate.outbox.OutboxTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.outbound.message.outbox.testutils.data.aggregate.outbox.PayloadTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.message.outbox.testutils.model.entity.outbox.OutboxTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.message.outbox.testutils.model.entity.outbox.PayloadTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserCreated;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserDeleted;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserUpdated;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.naming.UserActionType;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,7 +37,7 @@ class UserOutboxServiceImplTest {
     final PayloadVo payload = PayloadTestDataBuilder.builder().build().payload();
     final Outbox outbox =
         OutboxTestDataBuilder.builder()
-            .action(UserActionType.USER_CREATED.getActionType())
+            .action(ActionType.UserActionType.USER_CREATED.getActionType())
             .payload(payload)
             .build()
             .outbox();
@@ -53,7 +53,7 @@ class UserOutboxServiceImplTest {
     final PayloadVo payload = PayloadTestDataBuilder.builder().build().payload();
     final Outbox outbox =
         OutboxTestDataBuilder.builder()
-            .action(UserActionType.USER_UPDATED.getActionType())
+            .action(ActionType.UserActionType.USER_UPDATED.getActionType())
             .payload(payload)
             .build()
             .outbox();
@@ -69,7 +69,7 @@ class UserOutboxServiceImplTest {
     final PayloadVo payload = PayloadTestDataBuilder.builder().build().payload();
     final Outbox outbox =
         OutboxTestDataBuilder.builder()
-            .action(UserActionType.USER_DELETED.getActionType())
+            .action(ActionType.UserActionType.USER_DELETED.getActionType())
             .payload(payload)
             .build()
             .outbox();

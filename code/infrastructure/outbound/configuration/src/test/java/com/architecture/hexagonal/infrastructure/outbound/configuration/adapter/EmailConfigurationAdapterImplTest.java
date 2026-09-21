@@ -2,7 +2,7 @@ package com.architecture.hexagonal.infrastructure.outbound.configuration.adapter
 
 import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;
 import com.architecture.hexagonal.infrastructure.outbound.configuration.config.EmailBlockConfig;
-import com.architecture.hexagonal.infrastructure.outbound.configuration.testutils.data.vo.EmailBlockRulesVoTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.configuration.testutils.model.vo.email.EmailBlockRulesVoTestDataBuilder;
 import java.util.Set;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
