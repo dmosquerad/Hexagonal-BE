@@ -26,9 +26,7 @@ public class UserMessageSender {
 
   @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
   public void sendUserCreatedMessage(final UserCreated event) {
-    try {
-      streamBridge.send(UserPublishBinding.USER_CREATED.getPublishBinding(), event);
-    } catch (Exception ex) {
+    if (!streamBridge.send(UserPublishBinding.USER_CREATED.getPublishBinding(), event)) {
       outboxRepositoryWritePort.save(
           Outbox.builder()
               .aggregateId(event.getData().getId())
@@ -43,9 +41,7 @@ public class UserMessageSender {
 
   @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
   public void sendUserUpdatedMessage(final UserUpdated event) {
-    try {
-      streamBridge.send(UserPublishBinding.USER_UPDATED.getPublishBinding(), event);
-    } catch (Exception ex) {
+    if (!streamBridge.send(UserPublishBinding.USER_UPDATED.getPublishBinding(), event)) {
       outboxRepositoryWritePort.save(
           Outbox.builder()
               .aggregateId(event.getData().getId())
@@ -60,9 +56,7 @@ public class UserMessageSender {
 
   @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
   public void sendUserDeletedMessage(final UserDeleted event) {
-    try {
-      streamBridge.send(UserPublishBinding.USER_DELETED.getPublishBinding(), event);
-    } catch (Exception ex) {
+    if (!streamBridge.send(UserPublishBinding.USER_DELETED.getPublishBinding(), event)) {
       outboxRepositoryWritePort.save(
           Outbox.builder()
               .aggregateId(event.getData().getId())

@@ -33,6 +33,9 @@ class UserMessageSenderProjectorTest {
   void sendUserCreatedMessage_shouldSendToStreamBridge_whenEventIsReceived() {
     final UserCreated event = UserCreatedTestDataBuilder.builder().build().userCreated();
 
+    Mockito.when(streamBridge.send(UserPublishBinding.USER_CREATED.getPublishBinding(), event))
+        .thenReturn(true);
+
     userMessageSender.sendUserCreatedMessage(event);
 
     Mockito.verify(streamBridge).send(UserPublishBinding.USER_CREATED.getPublishBinding(), event);
@@ -43,9 +46,8 @@ class UserMessageSenderProjectorTest {
   void sendUserCreatedMessage_shouldSaveOutboxEvent_whenStreamBridgeFails() {
     final UserCreated event = UserCreatedTestDataBuilder.builder().build().userCreated();
 
-    Mockito.doThrow(new RuntimeException("RabbitMQ unavailable"))
-        .when(streamBridge)
-        .send(UserPublishBinding.USER_CREATED.getPublishBinding(), event);
+    Mockito.when(streamBridge.send(UserPublishBinding.USER_CREATED.getPublishBinding(), event))
+        .thenReturn(false);
 
     userMessageSender.sendUserCreatedMessage(event);
 
@@ -57,6 +59,9 @@ class UserMessageSenderProjectorTest {
   void sendUserUpdatedMessage_shouldSendToStreamBridge_whenEventIsReceived() {
     final UserUpdated event = UserUpdatedTestDataBuilder.builder().build().userUpdated();
 
+    Mockito.when(streamBridge.send(UserPublishBinding.USER_UPDATED.getPublishBinding(), event))
+        .thenReturn(true);
+
     userMessageSender.sendUserUpdatedMessage(event);
 
     Mockito.verify(streamBridge).send(UserPublishBinding.USER_UPDATED.getPublishBinding(), event);
@@ -67,9 +72,8 @@ class UserMessageSenderProjectorTest {
   void sendUserUpdatedMessage_shouldSaveOutboxEvent_whenStreamBridgeFails() {
     final UserUpdated event = UserUpdatedTestDataBuilder.builder().build().userUpdated();
 
-    Mockito.doThrow(new RuntimeException("RabbitMQ unavailable"))
-        .when(streamBridge)
-        .send(UserPublishBinding.USER_UPDATED.getPublishBinding(), event);
+    Mockito.when(streamBridge.send(UserPublishBinding.USER_UPDATED.getPublishBinding(), event))
+        .thenReturn(false);
 
     userMessageSender.sendUserUpdatedMessage(event);
 
@@ -81,6 +85,9 @@ class UserMessageSenderProjectorTest {
   void sendUserDeletedMessage_shouldSendToStreamBridge_whenEventIsReceived() {
     final UserDeleted event = UserDeletedTestDataBuilder.builder().build().userDeleted();
 
+    Mockito.when(streamBridge.send(UserPublishBinding.USER_DELETED.getPublishBinding(), event))
+        .thenReturn(true);
+
     userMessageSender.sendUserDeletedMessage(event);
 
     Mockito.verify(streamBridge).send(UserPublishBinding.USER_DELETED.getPublishBinding(), event);
@@ -91,9 +98,8 @@ class UserMessageSenderProjectorTest {
   void sendUserDeletedMessage_shouldSaveOutboxEvent_whenStreamBridgeFails() {
     final UserDeleted event = UserDeletedTestDataBuilder.builder().build().userDeleted();
 
-    Mockito.doThrow(new RuntimeException("RabbitMQ unavailable"))
-        .when(streamBridge)
-        .send(UserPublishBinding.USER_DELETED.getPublishBinding(), event);
+    Mockito.when(streamBridge.send(UserPublishBinding.USER_DELETED.getPublishBinding(), event))
+        .thenReturn(false);
 
     userMessageSender.sendUserDeletedMessage(event);
 
