@@ -20,7 +20,8 @@ Feature: User Messaging - Spring Cloud Stream events via RabbitMQ
     * def cleanupUserId = createdUserId
 
     * def result = call read('classpath:helpers/rabbitmq/consume-message.feature') { queueName: '#(createdQueue)', rabbitMqManagementUrl: '#(mgmtUrl)', rabbitMqAuth: '#(rabbitMqAuth)' }
-    * match result.payload == { userId: '#(createdUserId)', name: 'Messaging Create User', email: '#(testEmail)' }
+    * match result.payload.data contains { userId: '#(createdUserId)', name: 'Messaging Create User' }
+    * match result.payload.data.email.email == testEmail
 
   Scenario: PUT user publishes UserUpdated event
     * call read('classpath:helpers/rabbitmq/purge-queue.feature') { queueName: '#(updatedQueue)', rabbitMqManagementUrl: '#(mgmtUrl)', rabbitMqAuth: '#(rabbitMqAuth)' }
@@ -41,7 +42,8 @@ Feature: User Messaging - Spring Cloud Stream events via RabbitMQ
     Then status 200
 
     * def result = call read('classpath:helpers/rabbitmq/consume-message.feature') { queueName: '#(updatedQueue)', rabbitMqManagementUrl: '#(mgmtUrl)', rabbitMqAuth: '#(rabbitMqAuth)' }
-    * match result.payload == { userId: '#(createdUserId)', name: 'Messaging Updated Name', email: '#(testEmail)' }
+    * match result.payload.data contains { userId: '#(createdUserId)', name: 'Messaging Updated Name' }
+    * match result.payload.data.email.email == testEmail
 
   Scenario: PATCH user publishes UserUpdated event
     * call read('classpath:helpers/rabbitmq/purge-queue.feature') { queueName: '#(updatedQueue)', rabbitMqManagementUrl: '#(mgmtUrl)', rabbitMqAuth: '#(rabbitMqAuth)' }
@@ -62,7 +64,8 @@ Feature: User Messaging - Spring Cloud Stream events via RabbitMQ
     Then status 200
 
     * def result = call read('classpath:helpers/rabbitmq/consume-message.feature') { queueName: '#(updatedQueue)', rabbitMqManagementUrl: '#(mgmtUrl)', rabbitMqAuth: '#(rabbitMqAuth)' }
-    * match result.payload == { userId: '#(createdUserId)', name: 'Messaging Patched Name', email: '#(testEmail)' }
+    * match result.payload.data contains { userId: '#(createdUserId)', name: 'Messaging Patched Name' }
+    * match result.payload.data.email.email == testEmail
 
   Scenario: DELETE user publishes UserDeleted event
     * call read('classpath:helpers/rabbitmq/purge-queue.feature') { queueName: '#(deletedQueue)', rabbitMqManagementUrl: '#(mgmtUrl)', rabbitMqAuth: '#(rabbitMqAuth)' }
@@ -81,4 +84,5 @@ Feature: User Messaging - Spring Cloud Stream events via RabbitMQ
     Then status 200
 
     * def result = call read('classpath:helpers/rabbitmq/consume-message.feature') { queueName: '#(deletedQueue)', rabbitMqManagementUrl: '#(mgmtUrl)', rabbitMqAuth: '#(rabbitMqAuth)' }
-    * match result.payload == { userId: '#(createdUserId)', name: 'Messaging Delete User', email: '#(testEmail)' }
+    * match result.payload.data contains { userId: '#(createdUserId)', name: 'Messaging Delete User' }
+    * match result.payload.data.email.email == testEmail

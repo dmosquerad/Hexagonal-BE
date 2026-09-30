@@ -1,8 +1,11 @@
 package com.architecture.hexagonal.infrastructure.outbound.configuration.adapter;
 
-import com.architecture.hexagonal.domain.model.vo.SchedulerOutboxConfigurationVo;
+import com.architecture.hexagonal.domain.model.vo.inbox.SchedulerInboxConfigurationVo;
+import com.architecture.hexagonal.domain.model.vo.outbox.SchedulerOutboxConfigurationVo;
+import com.architecture.hexagonal.infrastructure.outbound.configuration.config.SchedulerInboxConfig;
 import com.architecture.hexagonal.infrastructure.outbound.configuration.config.SchedulerOutboxConfig;
-import com.architecture.hexagonal.infrastructure.outbound.configuration.testutils.data.vo.SchedulerOutboxConfigurationVoTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.configuration.testutils.model.vo.inbox.SchedulerInboxConfigurationVoTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.configuration.testutils.model.vo.outbox.SchedulerOutboxConfigurationVoTestDataBuilder;
 import java.time.Duration;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
@@ -19,8 +22,10 @@ class SchedulerConfigurationAdapterImplTest {
 
   @Mock SchedulerOutboxConfig schedulerOutboxConfig;
 
+  @Mock SchedulerInboxConfig schedulerInboxConfig;
+
   @Test
-  void getSchedulerOutbox_shouldReturnConfiguration_whenConfigIsProvided() {
+  void getOutbox_Scheduler_shouldReturnConfiguration_whenConfigIsProvided() {
     final SchedulerOutboxConfigurationVo expected =
         SchedulerOutboxConfigurationVoTestDataBuilder.builder()
             .build()
@@ -30,11 +35,29 @@ class SchedulerConfigurationAdapterImplTest {
     Mockito.when(schedulerOutboxConfig.getMaxRetries()).thenReturn(5);
 
     final SchedulerOutboxConfigurationVo result =
-        schedulerConfigurationAdapterImpl.getSchedulerOutbox();
+        schedulerConfigurationAdapterImpl.getOutboxScheduler();
 
     AssertionsForClassTypes.assertThat(result).usingRecursiveComparison().isEqualTo(expected);
 
     Mockito.verify(schedulerOutboxConfig).getPollingInterval();
     Mockito.verify(schedulerOutboxConfig).getMaxRetries();
+  }
+
+  @Test
+  void getInbox_Scheduler_shouldReturnConfiguration_whenConfigIsProvided() {
+    final SchedulerInboxConfigurationVo expected =
+        SchedulerInboxConfigurationVoTestDataBuilder.builder()
+            .build()
+            .schedulerInboxConfigurationVo();
+    Mockito.when(schedulerInboxConfig.getPollingInterval()).thenReturn(Duration.ofMinutes(1));
+    Mockito.when(schedulerInboxConfig.getMaxRetries()).thenReturn(5);
+
+    final SchedulerInboxConfigurationVo result =
+        schedulerConfigurationAdapterImpl.getInboxScheduler();
+
+    AssertionsForClassTypes.assertThat(result).usingRecursiveComparison().isEqualTo(expected);
+
+    Mockito.verify(schedulerInboxConfig).getPollingInterval();
+    Mockito.verify(schedulerInboxConfig).getMaxRetries();
   }
 }

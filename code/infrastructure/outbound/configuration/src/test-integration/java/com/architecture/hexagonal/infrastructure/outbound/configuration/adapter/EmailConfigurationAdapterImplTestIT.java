@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.outbound.configuration.adapter;
 
-import com.architecture.hexagonal.domain.model.vo.EmailBlockRulesVo;
+import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;
 import com.architecture.hexagonal.infrastructure.outbound.configuration.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.outbound.configuration.config.EmailBlockConfig;
 import org.assertj.core.api.AssertionsForClassTypes;

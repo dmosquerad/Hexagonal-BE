@@ -1,26 +1,24 @@
 package com.architecture.hexagonal.infrastructure.outbound.message.outbox.service.impl;
 
-import com.architecture.hexagonal.application.port.message.UserSenderPort;
-import com.architecture.hexagonal.domain.model.aggregate.outbox.Outbox;
+import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
+import com.architecture.hexagonal.domain.model.vo.outbox.ActionType;
 import com.architecture.hexagonal.infrastructure.outbound.message.outbox.mapper.user.UserFromOutboxMapper;
 import com.architecture.hexagonal.infrastructure.outbound.message.outbox.naming.OutboxNaming;
 import com.architecture.hexagonal.infrastructure.outbound.message.outbox.service.OutboxService;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserCreated;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserDeleted;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserUpdated;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.naming.UserMessageNaming;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class UserOutboxServiceImpl implements OutboxService {
 
-  private final UserSenderPort userSenderPort;
+  private final ApplicationEventPublisher applicationEventPublisher;
+
   private final UserFromOutboxMapper userFromOutboxMapper;
 
   @Override
@@ -34,23 +32,20 @@ public class UserOutboxServiceImpl implements OutboxService {
 
   private Map<String, Consumer<Outbox>> actionHandlers() {
     return Map.of(
-        UserMessageNaming.ACTION_USER_CREATED, this::processUserCreated,
-        UserMessageNaming.ACTION_USER_UPDATED, this::processUserUpdated,
-        UserMessageNaming.ACTION_USER_DELETED, this::processUserDeleted);
+        ActionType.UserActionType.USER_CREATED.getActionType(), this::senderUserCreated,
+        ActionType.UserActionType.USER_UPDATED.getActionType(), this::senderUserUpdated,
+        ActionType.UserActionType.USER_DELETED.getActionType(), this::senderUserDeleted);
   }
 
-  private void processUserCreated(final @NonNull Outbox outbox) {
-    final UserCreated userCreated = (UserCreated) outbox.payload();
-    userSenderPort.userSenderCreated(userFromOutboxMapper.toUser(userCreated));
+  private void senderUserCreated(final @NonNull Outbox outbox) {
+    applicationEventPublisher.publishEvent(userFromOutboxMapper.toUserCreated(outbox.payload()));
   }
 
-  private void processUserUpdated(final @NonNull Outbox outbox) {
-    final UserUpdated userUpdated = (UserUpdated) outbox.payload();
-    userSenderPort.userSenderUpdated(userFromOutboxMapper.toUser(userUpdated));
+  private void senderUserUpdated(final @NonNull Outbox outbox) {
+    applicationEventPublisher.publishEvent(userFromOutboxMapper.toUserUpdated(outbox.payload()));
   }
 
-  private void processUserDeleted(final @NonNull Outbox outbox) {
-    final UserDeleted userDeleted = (UserDeleted) outbox.payload();
-    userSenderPort.userSenderDeleted(userFromOutboxMapper.toUser(userDeleted));
+  private void senderUserDeleted(final @NonNull Outbox outbox) {
+    applicationEventPublisher.publishEvent(userFromOutboxMapper.toUserDeleted(outbox.payload()));
   }
 }

@@ -19,7 +19,7 @@ public class OutboxSchedulerImpl implements OutboxScheduler, SchedulingConfigure
   @Override
   public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
     taskRegistrar.addFixedDelayTask(
-        this::scheduleRetry, schedulerConfigurationPort.getSchedulerOutbox().pollingInterval());
+        this::scheduleRetry, schedulerConfigurationPort.getOutboxScheduler().pollingInterval());
   }
 
   public void scheduleRetry() {

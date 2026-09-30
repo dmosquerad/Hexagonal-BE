@@ -1,9 +1,9 @@
 package com.architecture.hexagonal.application.port.database;
 
-import com.architecture.hexagonal.domain.model.aggregate.pagination.Pagination;
-import com.architecture.hexagonal.domain.model.aggregate.pagination.PaginationResult;
-import com.architecture.hexagonal.domain.model.aggregate.user.User;
-import com.architecture.hexagonal.domain.model.projector.user.UserEmailProjector;
+import com.architecture.hexagonal.application.usecase.business.user.getall.projector.UserEmailProjector;
+import com.architecture.hexagonal.domain.model.entity.user.User;
+import com.architecture.hexagonal.domain.model.vo.pagination.Pagination;
+import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResult;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.NonNull;

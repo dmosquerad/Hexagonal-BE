@@ -1,19 +1,18 @@
 package com.architecture.hexagonal.infrastructure.inbound.orchestration.orchestrator.user.findbyid;
 
-import com.architecture.hexagonal.application.business.user.findbyid.input.FindUserByUserIdInput;
-import com.architecture.hexagonal.application.business.user.findbyid.usecase.FindUserByUserIdUseCase;
-import com.architecture.hexagonal.domain.model.aggregate.user.User;
+import com.architecture.hexagonal.application.usecase.business.user.findbyid.input.FindUserByUserIdInput;
+import com.architecture.hexagonal.application.usecase.business.user.findbyid.usecase.FindUserByUserIdUseCase;
+import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.user.FindUserByUserIdQueryDto;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.config.transaction.TransactionBoundary;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.mapper.user.FindUserByUserIdQueryMapper;
-import com.architecture.hexagonal.infrastructure.inbound.orchestration.testutils.data.aggregate.user.UserTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.testutils.data.query.FindUserByUserIdQueryDtoTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.inbound.orchestration.testutils.model.entity.user.UserTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.testutils.transaction.TransactionBoundaryTest;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -38,7 +37,7 @@ class FindUserByUserIdInputHandlerTest {
     FindUserByUserIdQueryDto queryDto =
         FindUserByUserIdQueryDtoTestDataBuilder.builder().build().findUserByUserIdQueryDto();
     User user = UserTestDataBuilder.builder().build().user();
-    Mockito.when(findUserByUserIdUseCase.execute(ArgumentMatchers.any(FindUserByUserIdInput.class)))
+    Mockito.when(findUserByUserIdUseCase.execute(Mockito.any(FindUserByUserIdInput.class)))
         .thenReturn(user);
 
     User result = queryHandler.handle(queryDto);
@@ -46,8 +45,7 @@ class FindUserByUserIdInputHandlerTest {
     AssertionsForClassTypes.assertThat(result).isSameAs(user);
 
     Mockito.verify(findUserByUserIdQueryMapper).toFindUserByUserIdQuery(queryDto);
-    Mockito.verify(findUserByUserIdUseCase)
-        .execute(ArgumentMatchers.any(FindUserByUserIdInput.class));
+    Mockito.verify(findUserByUserIdUseCase).execute(Mockito.any(FindUserByUserIdInput.class));
     Mockito.verify(transactionBoundary).read(Mockito.any());
   }
 }

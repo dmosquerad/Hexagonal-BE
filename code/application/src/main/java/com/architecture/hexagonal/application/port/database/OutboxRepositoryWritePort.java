@@ -1,8 +1,11 @@
 package com.architecture.hexagonal.application.port.database;
 
-import com.architecture.hexagonal.domain.model.aggregate.outbox.Outbox;
+import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
+import java.util.Optional;
 import lombok.NonNull;
 
 public interface OutboxRepositoryWritePort {
-  Outbox save(@NonNull Outbox outbox);
+  Outbox upsertByEventIdentity(@NonNull Outbox outbox);
+
+  Optional<Outbox> claimPendingForProcessing(@NonNull Outbox outbox);
 }

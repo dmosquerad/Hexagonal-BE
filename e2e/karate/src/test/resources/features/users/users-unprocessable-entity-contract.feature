@@ -41,6 +41,7 @@ Feature: Users Unprocessable Entity Contract - 422 responses
     When method POST
     Then status 200
     * def userId2 = response.data.userId
+    * def cleanupUserIds = [userId1, userId2]
 
     Given url baseUrl + '/users/' + userId2
     And header Content-Type = 'application/json'

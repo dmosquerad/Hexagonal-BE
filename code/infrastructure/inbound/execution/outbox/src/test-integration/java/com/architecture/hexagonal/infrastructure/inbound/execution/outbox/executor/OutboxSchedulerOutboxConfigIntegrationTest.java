@@ -1,9 +1,9 @@
 package com.architecture.hexagonal.infrastructure.inbound.execution.outbox.executor;
 
 import com.architecture.hexagonal.application.port.configuration.SchedulerConfigurationPort;
-import com.architecture.hexagonal.domain.model.vo.SchedulerOutboxConfigurationVo;
+import com.architecture.hexagonal.domain.model.vo.outbox.SchedulerOutboxConfigurationVo;
 import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.retry.RetryOutboxeventCommandDto;
-import com.architecture.hexagonal.infrastructure.inbound.execution.outbox.data.vo.SchedulerOutboxConfigurationVoTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.inbound.execution.outbox.model.vo.SchedulerOutboxConfigurationVoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.execution.outbox.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.inbound.execution.outbox.executor.impl.OutboxSchedulerImpl;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.dispatcher.command.CommandBus;
@@ -38,7 +38,7 @@ class OutboxSchedulerOutboxConfigIntegrationTest {
     void shouldConfigureTasksWithCorrectInterval() {
         SchedulerOutboxConfigurationVo schedulerConfig = SchedulerOutboxConfigurationVoTestDataBuilder.builder().build().schedulerOutboxConfigurationVo();
 
-        Mockito.when(schedulerConfigurationPort.getSchedulerOutbox()).thenReturn(schedulerConfig);
+        Mockito.when(schedulerConfigurationPort.getOutboxScheduler()).thenReturn(schedulerConfig);
 
         outboxSchedulerImpl.configureTasks(scheduledTaskRegistrar);
 
@@ -51,7 +51,7 @@ class OutboxSchedulerOutboxConfigIntegrationTest {
         
         assertEquals(expectedDuration, capturedDuration);
 
-        Mockito.verify(schedulerConfigurationPort).getSchedulerOutbox();
+        Mockito.verify(schedulerConfigurationPort).getOutboxScheduler();
 
         scheduleRetryCaptor.getValue().run();
         Mockito.verify(commandBus).execute(Mockito.any(RetryOutboxeventCommandDto.class));

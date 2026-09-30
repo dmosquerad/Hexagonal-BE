@@ -17,3 +17,6 @@ scheduler:
   outbox:
     polling-interval: PT1M
     max-retries: 5
+  inbox:
+    polling-interval: PT1M
+    max-retries: 5

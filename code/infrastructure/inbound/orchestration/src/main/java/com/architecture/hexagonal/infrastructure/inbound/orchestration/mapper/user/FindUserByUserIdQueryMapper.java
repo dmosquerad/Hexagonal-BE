@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.inbound.orchestration.mapper.user;
 
-import com.architecture.hexagonal.application.business.user.findbyid.input.FindUserByUserIdInput;
+import com.architecture.hexagonal.application.usecase.business.user.findbyid.input.FindUserByUserIdInput;
 import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.user.FindUserByUserIdQueryDto;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.config.mapstruct.MapstructConfig;
 import org.mapstruct.Mapper;

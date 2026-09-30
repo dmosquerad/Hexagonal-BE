@@ -1,19 +1,15 @@
 package com.architecture.hexagonal.infrastructure.outbound.message.outbox.service.impl;
 
-import com.architecture.hexagonal.application.port.message.UserSenderPort;
-import com.architecture.hexagonal.domain.model.aggregate.outbox.Outbox;
-import com.architecture.hexagonal.domain.model.aggregate.user.User;
+import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
+import com.architecture.hexagonal.domain.model.vo.outbox.ActionType;
+import com.architecture.hexagonal.domain.model.vo.outbox.PayloadVo;
 import com.architecture.hexagonal.infrastructure.outbound.message.outbox.mapper.user.UserFromOutboxMapper;
 import com.architecture.hexagonal.infrastructure.outbound.message.outbox.naming.OutboxNaming;
-import com.architecture.hexagonal.infrastructure.outbound.message.outbox.testutils.data.aggregate.outbox.OutboxTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.outbound.message.outbox.testutils.data.aggregate.user.UserTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.outbound.message.outbox.testutils.data.message.UserCreatedTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.outbound.message.outbox.testutils.data.message.UserDeletedTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.outbound.message.outbox.testutils.data.message.UserUpdatedTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.message.outbox.testutils.model.entity.outbox.OutboxTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.message.outbox.testutils.model.entity.outbox.PayloadTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserCreated;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserDeleted;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserUpdated;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.naming.UserMessageNaming;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,77 +19,75 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 @ExtendWith(MockitoExtension.class)
 class UserOutboxServiceImplTest {
 
   @InjectMocks private UserOutboxServiceImpl userOutboxServiceImpl;
 
-  @Mock private UserSenderPort userSenderPort;
+  @Mock private ApplicationEventPublisher applicationEventPublisher;
 
   @Spy
-  private UserFromOutboxMapper userFromOutboxMapper = Mappers.getMapper(UserFromOutboxMapper.class);
+  private final UserFromOutboxMapper userFromOutboxMapper =
+      Mappers.getMapper(UserFromOutboxMapper.class);
 
   @Test
-  void process_shouldSendCreatedMessage_whenActionIsUserCreated() {
-    final User user = UserTestDataBuilder.builder().build().user();
-    final Outbox outboxDo =
+  void process_shouldPublishCreatedEvent_whenActionIsUserCreated() {
+    final PayloadVo payload = PayloadTestDataBuilder.builder().build().payload();
+    final Outbox outbox =
         OutboxTestDataBuilder.builder()
-            .action(UserMessageNaming.ACTION_USER_CREATED)
-            .payload(UserCreatedTestDataBuilder.builder().build().userCreated())
+            .action(ActionType.UserActionType.USER_CREATED.getActionType())
+            .payload(payload)
             .build()
             .outbox();
 
-    userOutboxServiceImpl.process(outboxDo);
+    userOutboxServiceImpl.process(outbox);
 
-    Mockito.verify(userFromOutboxMapper).toUser((UserCreated) outboxDo.payload());
-    Mockito.verify(userSenderPort).userSenderCreated(user);
-    Mockito.verifyNoMoreInteractions(userSenderPort);
+    Mockito.verify(userFromOutboxMapper).toUserCreated(payload);
+    Mockito.verify(applicationEventPublisher).publishEvent(Mockito.any(UserCreated.class));
   }
 
   @Test
-  void process_shouldSendUpdatedMessage_whenActionIsUserUpdated() {
-    final User user = UserTestDataBuilder.builder().build().user();
-    final Outbox outboxDo =
+  void process_shouldPublishUpdatedEvent_whenActionIsUserUpdated() {
+    final PayloadVo payload = PayloadTestDataBuilder.builder().build().payload();
+    final Outbox outbox =
         OutboxTestDataBuilder.builder()
-            .action(UserMessageNaming.ACTION_USER_UPDATED)
-            .payload(UserUpdatedTestDataBuilder.builder().build().userUpdated())
+            .action(ActionType.UserActionType.USER_UPDATED.getActionType())
+            .payload(payload)
             .build()
             .outbox();
 
-    userOutboxServiceImpl.process(outboxDo);
+    userOutboxServiceImpl.process(outbox);
 
-    Mockito.verify(userFromOutboxMapper).toUser((UserUpdated) outboxDo.payload());
-    Mockito.verify(userSenderPort).userSenderUpdated(user);
-    Mockito.verifyNoMoreInteractions(userSenderPort);
+    Mockito.verify(userFromOutboxMapper).toUserUpdated(payload);
+    Mockito.verify(applicationEventPublisher).publishEvent(Mockito.any(UserUpdated.class));
   }
 
   @Test
-  void process_shouldSendDeletedMessage_whenActionIsUserDeleted() {
-    final User user = UserTestDataBuilder.builder().build().user();
-    final Outbox outboxDo =
+  void process_shouldPublishDeletedEvent_whenActionIsUserDeleted() {
+    final PayloadVo payload = PayloadTestDataBuilder.builder().build().payload();
+    final Outbox outbox =
         OutboxTestDataBuilder.builder()
-            .action(UserMessageNaming.ACTION_USER_DELETED)
-            .payload(UserDeletedTestDataBuilder.builder().build().userDeleted())
+            .action(ActionType.UserActionType.USER_DELETED.getActionType())
+            .payload(payload)
             .build()
             .outbox();
 
-    userOutboxServiceImpl.process(outboxDo);
+    userOutboxServiceImpl.process(outbox);
 
-    Mockito.verify(userFromOutboxMapper).toUser((UserDeleted) outboxDo.payload());
-    Mockito.verify(userSenderPort).userSenderDeleted(user);
-    Mockito.verifyNoMoreInteractions(userSenderPort);
+    Mockito.verify(userFromOutboxMapper).toUserDeleted(payload);
+    Mockito.verify(applicationEventPublisher).publishEvent(Mockito.any(UserDeleted.class));
   }
 
   @Test
   void process_shouldThrowIllegalArgumentException_whenActionIsUnsupported() {
-    final Outbox outboxDo =
-        OutboxTestDataBuilder.builder().action("").payload("{}").build().outbox();
+    final Outbox outbox = OutboxTestDataBuilder.builder().action("").payload(null).build().outbox();
 
-    AssertionsForClassTypes.assertThatThrownBy(() -> userOutboxServiceImpl.process(outboxDo))
+    AssertionsForClassTypes.assertThatThrownBy(() -> userOutboxServiceImpl.process(outbox))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining(OutboxNaming.UNSUPPORTED_USER_ACTION);
 
-    Mockito.verifyNoInteractions(userSenderPort);
+    Mockito.verifyNoInteractions(applicationEventPublisher);
   }
 }

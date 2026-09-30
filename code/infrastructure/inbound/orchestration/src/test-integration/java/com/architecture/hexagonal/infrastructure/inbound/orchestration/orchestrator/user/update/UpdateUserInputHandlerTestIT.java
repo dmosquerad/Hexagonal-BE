@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.infrastructure.inbound.orchestration.orchestrator.user.update;
 
-import com.architecture.hexagonal.application.business.user.update.input.UpdateUserInput;
-import com.architecture.hexagonal.application.business.user.update.usecase.UpdateUserUseCase;
-import com.architecture.hexagonal.domain.model.aggregate.user.User;
+import com.architecture.hexagonal.application.usecase.business.user.update.input.UpdateUserInput;
+import com.architecture.hexagonal.application.usecase.business.user.update.usecase.UpdateUserUseCase;
+import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.user.UpdateUserCommandDto;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.inbound.orchestration.mapper.user.UpdateUserCommandMapper;
@@ -39,7 +39,7 @@ class UpdateUserInputHandlerTestIT {
     final UpdateUserCommandDto updateUserCommandDto = UpdateUserCommandDtoTestDataBuilder.builder().build().updateUserCommandDto();
     final User user = Mockito.mock(User.class);
 
-    Mockito.when(updateUserUseCase.execute(ArgumentMatchers.any(UpdateUserInput.class)))
+    Mockito.when(updateUserUseCase.execute(Mockito.any(UpdateUserInput.class)))
         .thenReturn(user);
 
     User result = updateUserCommandHandlerImpl.handle(updateUserCommandDto);
@@ -48,7 +48,7 @@ class UpdateUserInputHandlerTestIT {
         .isSameAs(user);
 
     Mockito.verify(updateUserCommandMapper).toUpdateUserCommand(updateUserCommandDto);
-    Mockito.verify(updateUserUseCase).execute(ArgumentMatchers.any(UpdateUserInput.class));
+    Mockito.verify(updateUserUseCase).execute(Mockito.any(UpdateUserInput.class));
     Mockito.verify(transactionBoundary).write(Mockito.any());
   }
 }

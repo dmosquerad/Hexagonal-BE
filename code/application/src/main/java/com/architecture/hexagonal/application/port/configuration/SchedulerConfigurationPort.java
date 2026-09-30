@@ -1,8 +1,11 @@
 package com.architecture.hexagonal.application.port.configuration;
 
-import com.architecture.hexagonal.domain.model.vo.SchedulerOutboxConfigurationVo;
+import com.architecture.hexagonal.domain.model.vo.inbox.SchedulerInboxConfigurationVo;
+import com.architecture.hexagonal.domain.model.vo.outbox.SchedulerOutboxConfigurationVo;
 
 public interface SchedulerConfigurationPort {
 
-  SchedulerOutboxConfigurationVo getSchedulerOutbox();
+  SchedulerOutboxConfigurationVo getOutboxScheduler();
+
+  SchedulerInboxConfigurationVo getInboxScheduler();
 }

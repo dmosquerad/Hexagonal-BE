@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.application.port.configuration;
 
-import com.architecture.hexagonal.domain.model.vo.EmailBlockRulesVo;
+import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;
 
 public interface EmailConfigurationPort {
 

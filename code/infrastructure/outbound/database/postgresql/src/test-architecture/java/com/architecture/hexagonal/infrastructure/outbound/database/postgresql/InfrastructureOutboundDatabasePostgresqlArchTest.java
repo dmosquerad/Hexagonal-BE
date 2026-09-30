@@ -55,7 +55,7 @@ class InfrastructureOutboundDatabasePostgresqlArchTest {
             .that()
             .haveSimpleNameEndingWith("Specifications")
             .should()
-            .resideInAPackage("..infrastructure.outbound.database.postgresql.repository.specification..")
+            .resideInAPackage("..infrastructure.outbound.database.postgresql.repository.custom.specification..")
             .because("JPA Specification classes must live under repository.specification");
 
     @ArchTest
@@ -64,6 +64,6 @@ class InfrastructureOutboundDatabasePostgresqlArchTest {
             .that()
             .haveSimpleNameEndingWith("Predicates")
             .should()
-            .resideInAPackage("..infrastructure.outbound.database.postgresql.repository.predicate..")
+            .resideInAPackage("..infrastructure.outbound.database.postgresql.repository.custom.predicate..")
             .because("Predicate helper classes must live under repository.predicate");
 }
