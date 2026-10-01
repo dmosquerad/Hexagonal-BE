@@ -64,7 +64,7 @@ jobs:
           args:
             -Dsonar.organization=dmosquerad
             -Dsonar.projectKey=ddmosquerad_Hexagonal-BE
-            -Dsonar.java.source=25 \
+            -Dsonar.java.source=25
             -Dsonar.java.target=25
             # Unique key of your project. You can find it in SonarQube > [my project] > Project Information (top-right menu)
             # mandatory
