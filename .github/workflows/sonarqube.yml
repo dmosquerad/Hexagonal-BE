@@ -29,3 +29,7 @@ jobs:
           args: >
             -Dsonar.organization=dmosquerad
             -Dsonar.projectKey=dmosquerad_j2_Hexagonal-BE
+        with:
+          args: >
+            -Dsonar.organization=dmosquerad
+            -Dsonar.projectKey=dmosquerad_j2_Hexagonal-BE
