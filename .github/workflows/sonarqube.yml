@@ -17,17 +17,6 @@ jobs:
       # This step should build, test and generate coverage reports
       # - name: Build and test
       #   run: <build + test + generate coverage reports>
-      - name: Verificar inyección del Token
-        run: |
-          if [ -z "${{ secrets.SONAR_TOKEN }}" ]; then
-            echo "❌ ERROR: El secreto 'SONAR_TOKEN' está VACÍO o no se encuentra en Repository Secrets."
-            exit 1
-          else
-            echo "✅ El secreto 'SONAR_TOKEN' se ha detectado en GitHub Actions."
-            echo "Longitud del token detectado: ${#TOKEN} caracteres."
-          fi
-        env:
-          TOKEN: ${{ secrets.SONAR_TOKEN }}
       - name: Cache SonarQube packages
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         with:
