@@ -68,10 +68,10 @@ jobs:
           JAVA_HOME: ${{ env.JAVA_HOME }}
         run: |
           sonar-scanner \
-            -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.organization="${{ vars.SONAR_ORGANIZATION }}" \
-            -Dsonar.projectKey="${{ vars.SONAR_PROJECT_KEY }}" \
-            -Dsonar.token="$SONAR_TOKEN"
+            -Dsonar.organization=dmosquerad \
+            -Dsonar.projectKey=ddmosquerad_Hexagonal-BE \
+            -Dsonar.java.source=25 \
+            -Dsonar.java.target=25
             
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@v7
