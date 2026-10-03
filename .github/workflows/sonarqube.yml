@@ -67,7 +67,7 @@ jobs:
           # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}   # Generate a token on SonarQube, add it to the secrets of this repo with the name SONAR_TOKEN (Settings > Secrets > Actions > add new repository secret)
           SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}   # add the URL of your instance to the secrets of this repo with the name SONAR_HOST_URL (Settings > Secrets > Actions > add new repository secret)
-          SONAR_SCANNER_JAVA_EXE: $JAVA_HOME/bin/java
+          SONAR_SCANNER_SKIP_JRE_PROVISIONING: "true"
         with:
           # Additional arguments for the sonarcloud scanner
           args:
