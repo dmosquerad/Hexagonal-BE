@@ -60,7 +60,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
         run: |
-          mvn sonar:sonar \
+          mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
             -Dsonar.organization=dmosquerad
             -Dsonar.projectKey=ddmosquerad_Hexagonal-BE
             -Dsonar.java.source=25
