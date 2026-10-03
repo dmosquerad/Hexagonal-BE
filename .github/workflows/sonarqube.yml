@@ -54,6 +54,17 @@ jobs:
         with:
           distribution: temurin
           java-version: 25.0.2
+
+      - name: SonarCloud analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
+        run: |
+          mvn sonar:sonar \
+            -Dsonar.organization=dmosquerad
+            -Dsonar.projectKey=ddmosquerad_Hexagonal-BE
+            -Dsonar.java.source=25
+            -Dsonar.java.target=25
     
       - name: Cache SonarQube packages
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
