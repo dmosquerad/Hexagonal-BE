@@ -54,40 +54,6 @@ jobs:
         with:
           distribution: temurin
           java-version: 25.0.2
-      - name: Install SonarScanner CLI
-        run: |
-          curl -sSLo sonar-scanner.zip \
-            https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-8.0.1.6346-linux-x64.zip
-      
-          unzip -q sonar-scanner.zip
-          echo "$PWD/sonar-scanner-8.0.1.6346-linux-x64/bin" >> "$GITHUB_PATH"
-      
-      - name: SonarCloud
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          JAVA_HOME: ${{ env.JAVA_HOME }}
-        run: |
-          sonar-scanner \
-            -Dsonar.organization=dmosquerad \
-            -Dsonar.projectKey=ddmosquerad_Hexagonal-BE \
-            -Dsonar.java.source=25 \
-            -Dsonar.java.target=25 \
-            -Dsonar.scanner.skipJreProvisioning=true \
-            -Dsonar.scanner.javaExePath=$JAVA_HOME/bin/java
-            
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarqube-scan-action@v7
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
-          SONAR_SCANNER_SKIP_JRE_PROVISIONING: "true"
-          JAVA_HOME: ${{ env.JAVA_HOME }}
-        with:
-          args:
-            -Dsonar.organization=dmosquerad
-            -Dsonar.projectKey=ddmosquerad_Hexagonal-BE
-            -Dsonar.java.source=25
-            -Dsonar.java.target=25
     
       - name: Cache SonarQube packages
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
@@ -95,6 +61,7 @@ jobs:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
+          
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@7006c4492b2e0ee0f816d36501671557c97f5995 # v8.1.0
         env:
