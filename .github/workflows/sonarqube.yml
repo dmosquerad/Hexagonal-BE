@@ -72,7 +72,7 @@ jobs:
           # Additional arguments for the sonarcloud scanner
           args:
             -Dsonar.organization=dmosquerad
-            -Dsonar.projectKey=ddmosquerad_Hexagonal-BE
+            -Dsonar.projectKey=dmosquerad_Hexagonal-BE
             -Dsonar.java.source=25
             -Dsonar.java.target=25
             -Dsonar.scanner.skipJreProvisioning=true
