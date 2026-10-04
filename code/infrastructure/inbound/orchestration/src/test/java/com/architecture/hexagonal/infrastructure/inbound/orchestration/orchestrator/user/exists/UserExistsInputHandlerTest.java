@@ -31,7 +31,7 @@ class UserExistsInputHandlerTest {
   @Spy private TransactionBoundary transactionBoundary = new TransactionBoundaryTest();
 
   @Test
-  void handle_shouldReturnNull_whenQueryIsExecuted() {
+  void handleShouldReturnNullWhenQueryIsExecuted() {
     UserExistsQueryDto queryDto =
         UserExistsQueryDtoTestDataBuilder.builder().build().userExistsQueryDto();
     Mockito.doNothing().when(userExistsUseCase).execute(Mockito.any(UserExistsInput.class));

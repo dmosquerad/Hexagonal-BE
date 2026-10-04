@@ -1,9 +1,8 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.config;
 
 import java.time.Clock;
-import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +18,15 @@ import org.springframework.util.ReflectionUtils;
 
 @Configuration
 public class MongodbConfig {
+
+  @Bean
+  public MongoCustomConversions mongoCustomConversions(final Clock clock) {
+    return MongoCustomConversions.create(
+        adapter -> {
+          adapter.registerConverter(new ZonedDateTimeToDateConverter());
+          adapter.registerConverter(new DateToZonedDateTimeConverter(clock));
+        });
+  }
 
   @Bean
   public BeforeConvertCallback<Object> uuidGeneratorCallback() {
@@ -40,38 +48,24 @@ public class MongodbConfig {
     };
   }
 
-  @Bean
-  public MongoCustomConversions mongoCustomConversions(Clock clock) {
-    return new MongoCustomConversions(
-        List.of(
-            new OffsetDateTimeToDateConverter(clock), new DateToOffsetDateTimeConverter(clock)));
-  }
-
   @WritingConverter
-  @RequiredArgsConstructor
-  private static class OffsetDateTimeToDateConverter implements Converter<OffsetDateTime, Date> {
-
-    private final Clock clock;
+  private static class ZonedDateTimeToDateConverter implements Converter<ZonedDateTime, Date> {
 
     @Override
-    public Date convert(final OffsetDateTime offsetDateTime) {
-      return Objects.isNull(offsetDateTime)
-          ? null
-          : Date.from(offsetDateTime.atZoneSameInstant(clock.getZone()).toInstant());
+    public Date convert(final ZonedDateTime zonedDateTime) {
+      return Date.from(zonedDateTime.toInstant());
     }
   }
 
   @ReadingConverter
   @RequiredArgsConstructor
-  private static class DateToOffsetDateTimeConverter implements Converter<Date, OffsetDateTime> {
+  private static class DateToZonedDateTimeConverter implements Converter<Date, ZonedDateTime> {
 
     private final Clock clock;
 
     @Override
-    public OffsetDateTime convert(final Date date) {
-      return Objects.isNull(date)
-          ? null
-          : date.toInstant().atZone(clock.getZone()).toOffsetDateTime();
+    public ZonedDateTime convert(final Date date) {
+      return date.toInstant().atZone(clock.getZone());
     }
   }
 }

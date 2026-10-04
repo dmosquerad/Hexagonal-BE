@@ -28,7 +28,7 @@ class RestControllerExceptionHandlerTest {
   @Spy Clock clock = TestClock.FIXED_CLOCK;
 
   @Test
-  void createResponseEntity_shouldReturnResponseEntity_whenProblemDetailProvided() {
+  void createResponseEntityShouldReturnResponseEntityWhenProblemDetailProvided() {
     final ResponseErrorDto responseErrorDto =
         ResponseErrorDtoTestDataBuilder.builder().build().responseErrorDto();
 
@@ -53,7 +53,7 @@ class RestControllerExceptionHandlerTest {
   }
 
   @Test
-  void handleConstraintViolationException_shouldReturn400() {
+  void handleConstraintViolationExceptionShouldReturn400() {
     final ConstraintViolationException ex =
         new ConstraintViolationException("constraint violated", Set.of());
 
@@ -80,7 +80,7 @@ class RestControllerExceptionHandlerTest {
   }
 
   @Test
-  void handleNonControlledException_shouldReturn500() {
+  void handleNonControlledExceptionShouldReturn500() {
     final RuntimeException ex = new RuntimeException("unexpected error");
 
     final ResponseEntity<Object> response =

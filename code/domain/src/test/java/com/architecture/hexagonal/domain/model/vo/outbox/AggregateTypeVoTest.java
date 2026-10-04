@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 public class AggregateTypeVoTest {
 
   @Test
-  void values_shouldContainAllAggregateTypes() {
+  void valuesShouldContainAllAggregateTypes() {
     final AggregateTypeVo[] values = AggregateTypeVo.values();
 
     Assertions.assertThat(values).containsExactly(AggregateTypeVo.USER);

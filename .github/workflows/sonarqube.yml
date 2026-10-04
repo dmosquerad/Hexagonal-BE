@@ -54,7 +54,22 @@ jobs:
         with:
           distribution: temurin
           java-version: 25.0.2
-    
+          cache: maven
+          cache-dependency-path: code/pom.xml
+
+      - name: Run tests and generate coverage
+        working-directory: code      
+        run: mvn clean verify
+
+      - name: Set SonarQube analysis paths
+        shell: bash
+        run: |
+          echo "SONAR_SOURCES=$(find code -type d -path '*/src/main/java' -print | sort | paste -sd, -)" >> "$GITHUB_ENV"
+          echo "SONAR_TESTS=$(find code -type d -path '*/src/test*/java' -print | sort | paste -sd, -)" >> "$GITHUB_ENV"
+          echo "SONAR_JAVA_BINARIES=$(find code -type d -path '*/target/classes' -print | sort | paste -sd, -)" >> "$GITHUB_ENV"
+          echo "SONAR_JAVA_TEST_BINARIES=$(find code -type d -path '*/target/test-classes' -print | sort | paste -sd, -)" >> "$GITHUB_ENV"
+          echo "SONAR_COVERAGE_REPORTS=$(find code -type f -path '*/target/site/jacoco/jacoco.xml' -print | sort | paste -sd, -)" >> "$GITHUB_ENV"
+
       - name: Cache SonarQube packages
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
@@ -65,7 +80,6 @@ jobs:
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@7006c4492b2e0ee0f816d36501671557c97f5995 # v8.1.0
         env:
-          # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}   # Generate a token on SonarQube, add it to the secrets of this repo with the name SONAR_TOKEN (Settings > Secrets > Actions > add new repository secret)
           SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}   # add the URL of your instance to the secrets of this repo with the name SONAR_HOST_URL (Settings > Secrets > Actions > add new repository secret)
         with:
@@ -73,17 +87,13 @@ jobs:
           args:
             -Dsonar.organization=dmosquerad
             -Dsonar.projectKey=dmosquerad_Hexagonal-BE
+            -Dsonar.sources=${{ env.SONAR_SOURCES }}
+            -Dsonar.tests=${{ env.SONAR_TESTS }}
             -Dsonar.java.source=25
             -Dsonar.java.target=25
+            -Dsonar.java.binaries=${{ env.SONAR_JAVA_BINARIES }}
+            -Dsonar.java.test.binaries=${{ env.SONAR_JAVA_TEST_BINARIES }}
+            -Dsonar.coverage.exclusions=**/src/test*/**
+            -Dsonar.coverage.jacoco.xmlReportPaths=${{ env.SONAR_COVERAGE_REPORTS }}
             -Dsonar.scanner.skipJreProvisioning=true
             -Dsonar.scanner.javaExePath=${{ env.JAVA_HOME }}/bin/java
-            # Unique key of your project. You can find it in SonarQube > [my project] > Project Information (top-right menu)
-            # mandatory
-            # Comma-separated paths to directories containing main source files.
-            #-Dsonar.sources= # optional, default is project base directory
-            # When you need the analysis to take place in a directory other than the one from which it was launched
-            #-Dsonar.projectBaseDir= # optional, default is .
-            # Comma-separated paths to directories containing test source files.
-            #-Dsonar.tests= # optional. For more info about Code Coverage, please refer to https://docs.sonarcloud.io/enriching/test-coverage/overview/
-            # Adds more detail to both client and server-side analysis logs, activating DEBUG mode for the scanner, and adding client-side environment variables and system properties to the server-side log of analysis report processing.
-            #-Dsonar.verbose= # optional, default is false

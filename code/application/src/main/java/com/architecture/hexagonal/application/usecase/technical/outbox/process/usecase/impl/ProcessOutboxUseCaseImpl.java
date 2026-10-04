@@ -49,7 +49,7 @@ public class ProcessOutboxUseCaseImpl implements ProcessOutboxUseCase {
       outboxProcessPort.process(claimedOutbox.get());
       return outboxRepositoryWritePort.upsertByEventIdentity(
           claimedOutbox.get().toBuilder().status(OutboxStatusVo.PUBLISHED).build());
-    } catch (Exception ex) {
+    } catch (Exception _) {
       return outboxRepositoryWritePort.upsertByEventIdentity(
           claimedOutbox.get().toBuilder().status(OutboxStatusVo.PENDING).build());
     }

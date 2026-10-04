@@ -35,7 +35,7 @@ class PatchUserInputHandlerTestIT {
   private TransactionBoundary transactionBoundary;
 
   @Test
-  void patchUserCommandHandler_shouldReturnPatchedUser_whenCommandIsExecuted() {
+  void patchUserCommandHandlerShouldReturnPatchedUserWhenCommandIsExecuted() {
     final PatchUserCommandDto patchUserCommandDto = PatchUserCommandDtoTestDataBuilder.builder().build().patchUserCommandDto();
     final User user = Mockito.mock(User.class);
 

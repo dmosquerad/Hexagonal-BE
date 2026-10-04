@@ -50,7 +50,7 @@ class UserSenderAdapterImplTestIT {
   TransactionTemplate transactionTemplate;
 
   @Test
-  void userSenderCreated_shouldPublishAndSendMessage_whenUserIsCreated() {
+  void userSenderCreatedShouldPublishAndSendMessageWhenUserIsCreated() {
     final User user = UserTestDataBuilder.builder().build().user();
 
     transactionTemplate.execute(status -> {
@@ -63,7 +63,7 @@ class UserSenderAdapterImplTestIT {
   }
 
   @Test
-  void userSenderUpdated_shouldPublishAndSendMessage_whenUserIsUpdated() {
+  void userSenderUpdatedShouldPublishAndSendMessageWhenUserIsUpdated() {
     final User user = UserTestDataBuilder.builder().build().user();
 
     transactionTemplate.execute(status -> {
@@ -76,7 +76,7 @@ class UserSenderAdapterImplTestIT {
   }
 
   @Test
-  void userSenderDeleted_shouldPublishAndSendMessage_whenUserIsDeleted() {
+  void userSenderDeletedShouldPublishAndSendMessageWhenUserIsDeleted() {
     final User user = UserTestDataBuilder.builder().build().user();
 
     transactionTemplate.execute(status -> {

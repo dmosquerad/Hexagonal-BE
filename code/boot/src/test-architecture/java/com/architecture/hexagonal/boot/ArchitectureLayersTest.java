@@ -1,5 +1,7 @@
 package com.architecture.hexagonal.boot;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
@@ -9,6 +11,7 @@ import com.tngtech.archunit.library.Architectures;
 import com.tngtech.archunit.library.dependencies.SlicesRuleDefinition;
 
 @AnalyzeClasses(packages = "com.architecture.hexagonal", importOptions = ImportOption.DoNotIncludeTests.class)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 class ArchitectureLayersTest {
 
   @ArchTest

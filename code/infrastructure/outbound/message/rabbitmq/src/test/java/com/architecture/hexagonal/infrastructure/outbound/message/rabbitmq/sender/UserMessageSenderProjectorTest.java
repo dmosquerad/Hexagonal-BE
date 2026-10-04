@@ -30,7 +30,7 @@ class UserMessageSenderProjectorTest {
   @Spy private PayloadMapper payloadMapper = Mappers.getMapper(PayloadMapper.class);
 
   @Test
-  void sendUserCreatedMessage_shouldSendToStreamBridge_whenEventIsReceived() {
+  void sendUserCreatedMessageShouldSendToStreamBridgeWhenEventIsReceived() {
     final UserCreated event = UserCreatedTestDataBuilder.builder().build().userCreated();
 
     Mockito.when(streamBridge.send(UserPublishBinding.USER_CREATED.getPublishBinding(), event))
@@ -43,7 +43,7 @@ class UserMessageSenderProjectorTest {
   }
 
   @Test
-  void sendUserCreatedMessage_shouldSaveOutboxEvent_whenStreamBridgeFails() {
+  void sendUserCreatedMessageShouldSaveOutboxEventWhenStreamBridgeFails() {
     final UserCreated event = UserCreatedTestDataBuilder.builder().build().userCreated();
 
     Mockito.when(streamBridge.send(UserPublishBinding.USER_CREATED.getPublishBinding(), event))
@@ -56,7 +56,7 @@ class UserMessageSenderProjectorTest {
   }
 
   @Test
-  void sendUserCreatedMessage_shouldSaveOutboxEvent_whenStreamBridgeThrows() {
+  void sendUserCreatedMessageShouldSaveOutboxEventWhenStreamBridgeThrows() {
     final UserCreated event = UserCreatedTestDataBuilder.builder().build().userCreated();
 
     Mockito.when(streamBridge.send(UserPublishBinding.USER_CREATED.getPublishBinding(), event))
@@ -69,7 +69,7 @@ class UserMessageSenderProjectorTest {
   }
 
   @Test
-  void sendUserUpdatedMessage_shouldSendToStreamBridge_whenEventIsReceived() {
+  void sendUserUpdatedMessageShouldSendToStreamBridgeWhenEventIsReceived() {
     final UserUpdated event = UserUpdatedTestDataBuilder.builder().build().userUpdated();
 
     Mockito.when(streamBridge.send(UserPublishBinding.USER_UPDATED.getPublishBinding(), event))
@@ -82,7 +82,7 @@ class UserMessageSenderProjectorTest {
   }
 
   @Test
-  void sendUserUpdatedMessage_shouldSaveOutboxEvent_whenStreamBridgeFails() {
+  void sendUserUpdatedMessageShouldSaveOutboxEventWhenStreamBridgeFails() {
     final UserUpdated event = UserUpdatedTestDataBuilder.builder().build().userUpdated();
 
     Mockito.when(streamBridge.send(UserPublishBinding.USER_UPDATED.getPublishBinding(), event))
@@ -95,7 +95,7 @@ class UserMessageSenderProjectorTest {
   }
 
   @Test
-  void sendUserDeletedMessage_shouldSendToStreamBridge_whenEventIsReceived() {
+  void sendUserDeletedMessageShouldSendToStreamBridgeWhenEventIsReceived() {
     final UserDeleted event = UserDeletedTestDataBuilder.builder().build().userDeleted();
 
     Mockito.when(streamBridge.send(UserPublishBinding.USER_DELETED.getPublishBinding(), event))
@@ -108,7 +108,7 @@ class UserMessageSenderProjectorTest {
   }
 
   @Test
-  void sendUserDeletedMessage_shouldSaveOutboxEvent_whenStreamBridgeFails() {
+  void sendUserDeletedMessageShouldSaveOutboxEventWhenStreamBridgeFails() {
     final UserDeleted event = UserDeletedTestDataBuilder.builder().build().userDeleted();
 
     Mockito.when(streamBridge.send(UserPublishBinding.USER_DELETED.getPublishBinding(), event))

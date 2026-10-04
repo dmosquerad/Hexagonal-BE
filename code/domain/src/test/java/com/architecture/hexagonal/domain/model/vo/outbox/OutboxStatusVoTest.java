@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 class OutboxStatusVoTest {
 
   @Test
-  void values_shouldContainAllStatuses() {
+  void valuesShouldContainAllStatuses() {
     final OutboxStatusVo[] values = OutboxStatusVo.values();
 
     Assertions.assertThat(values)

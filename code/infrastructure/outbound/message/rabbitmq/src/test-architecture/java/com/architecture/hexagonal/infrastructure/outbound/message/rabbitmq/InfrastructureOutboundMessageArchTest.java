@@ -1,5 +1,7 @@
 package com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
@@ -7,6 +9,7 @@ import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.lang.syntax.ArchRuleDefinition;
 
 @AnalyzeClasses(packages = "com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq", importOptions = ImportOption.DoNotIncludeTests.class)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 class InfrastructureOutboundMessageArchTest {
 
     @ArchTest

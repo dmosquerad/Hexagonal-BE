@@ -34,7 +34,7 @@ class EmailControllerImplTest {
   @Spy Clock clock = TestClock.FIXED_CLOCK;
 
   @Test
-  void getBlockedRules_shouldReturnOkBlockRulesResponse_whenBlockedRulesExist() {
+  void getBlockedRulesShouldReturnOkBlockRulesResponseWhenBlockedRulesExist() {
     final EmailBlockRulesVo emailBlockRulesVo =
         EmailBlockRulesTestDataBuilder.builder().build().emailBlockRules();
 
@@ -65,7 +65,7 @@ class EmailControllerImplTest {
   }
 
   @Test
-  void getBlockedRules_shouldPropagateDomainException_whenDomainExceptionOccurs() {
+  void getBlockedRulesShouldPropagateDomainExceptionWhenDomainExceptionOccurs() {
     final String errorMessage = "domain exception";
 
     Mockito.when(queryBus.execute(Mockito.any(GetBlockedRulesQueryDto.class)))
@@ -79,7 +79,7 @@ class EmailControllerImplTest {
   }
 
   @Test
-  void getBlockedRules_shouldPropagateRuntimeException_whenUnexpectedExceptionOccurs() {
+  void getBlockedRulesShouldPropagateRuntimeExceptionWhenUnexpectedExceptionOccurs() {
     final String errorMessage = "Unexpected error";
 
     Mockito.when(queryBus.execute(Mockito.any(GetBlockedRulesQueryDto.class)))

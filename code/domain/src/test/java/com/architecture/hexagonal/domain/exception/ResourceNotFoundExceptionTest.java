@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 class ResourceNotFoundExceptionTest {
 
   @Test
-  void constructor_shouldCreateExceptionWithMessage() {
+  void constructorShouldCreateExceptionWithMessage() {
     final ResourceNotFoundException result =
         new ResourceNotFoundException(ExceptionMessage.NOT_FOUND_DATA_MESSAGE);
 

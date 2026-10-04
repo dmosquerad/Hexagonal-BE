@@ -1,5 +1,7 @@
 package com.architecture.hexagonal.infrastructure.inbound.execution.outbox;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
@@ -9,6 +11,7 @@ import com.tngtech.archunit.lang.syntax.ArchRuleDefinition;
 @AnalyzeClasses(
     packages = "com.architecture.hexagonal.infrastructure.inbound.execution",
     importOptions = ImportOption.DoNotIncludeTests.class)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SchedulerOutboxConfigArchTest {
 
   @ArchTest

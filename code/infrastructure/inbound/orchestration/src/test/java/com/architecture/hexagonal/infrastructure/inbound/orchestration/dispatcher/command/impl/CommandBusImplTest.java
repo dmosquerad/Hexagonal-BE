@@ -27,7 +27,7 @@ class CommandBusImplTest {
   @InjectMocks private CommandBusImpl commandBus;
 
   @Test
-  void execute_shouldDelegateCommandToCorrectHandler() {
+  void executeShouldDelegateCommandToCorrectHandler() {
     final DeleteUserCommandDto command =
         DeleteUserCommandDtoTestDataBuilder.builder().build().deleteUserCommandDto();
     final User user = UserTestDataBuilder.builder().build().user();

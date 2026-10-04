@@ -81,7 +81,7 @@ class UserControllerImplTest {
   @Spy Clock clock = TestClock.FIXED_CLOCK;
 
   @Test
-  void getAllUsers_shouldReturnOk_whenUsersExist() {
+  void getAllUsersShouldReturnOkWhenUsersExist() {
     final User user = UserTestDataBuilder.builder().build().user();
 
     final String host = "";
@@ -129,7 +129,7 @@ class UserControllerImplTest {
   }
 
   @Test
-  void createUser_shouldReturnOk_whenRequestIsValid() {
+  void createUserShouldReturnOkWhenRequestIsValid() {
     final User user = UserTestDataBuilder.builder().build().user();
     final UserCreateDto createUserDto =
         UserCreateDtoTestDataBuilder.builder().build().userCreateDto();
@@ -152,7 +152,7 @@ class UserControllerImplTest {
   }
 
   @Test
-  void createUser_shouldPropagateIllegalArgumentException_whenEmailIsInvalid() {
+  void createUserShouldPropagateIllegalArgumentExceptionWhenEmailIsInvalid() {
     final UserCreateDto createUserDto =
         UserCreateDtoTestDataBuilder.builder().build().userCreateDto();
     final String errorMessage = "Invalid email";
@@ -169,7 +169,7 @@ class UserControllerImplTest {
   }
 
   @Test
-  void createUser_shouldPropagateDomainException_whenDomainExceptionOccurs() {
+  void createUserShouldPropagateDomainExceptionWhenDomainExceptionOccurs() {
     final UserCreateDto createUserDto =
         UserCreateDtoTestDataBuilder.builder().build().userCreateDto();
     final String errorMessage = "domain exception";
@@ -186,7 +186,7 @@ class UserControllerImplTest {
   }
 
   @Test
-  void createUser_shouldPropagateRuntimeException_whenUnexpectedExceptionOccurs() {
+  void createUserShouldPropagateRuntimeExceptionWhenUnexpectedExceptionOccurs() {
     final UserCreateDto createUserDto =
         UserCreateDtoTestDataBuilder.builder().build().userCreateDto();
     final String errorMessage = "Unexpected error";
@@ -203,7 +203,7 @@ class UserControllerImplTest {
   }
 
   @Test
-  void getUserByUuid_shouldReturnOk_whenUserExists() {
+  void getUserByUuidShouldReturnOkWhenUserExists() {
     final User user = UserTestDataBuilder.builder().build().user();
 
     Mockito.when(queryBus.execute(Mockito.any(FindUserByUserIdQueryDto.class))).thenReturn(user);
@@ -224,7 +224,7 @@ class UserControllerImplTest {
   }
 
   @Test
-  void getUserByUuid_shouldPropagateDomainException_whenDomainExceptionOccurs() {
+  void getUserByUuidShouldPropagateDomainExceptionWhenDomainExceptionOccurs() {
     final User user = UserTestDataBuilder.builder().build().user();
     final String errorMessage = "domain exception";
 
@@ -240,7 +240,7 @@ class UserControllerImplTest {
   }
 
   @Test
-  void getUserByUuid_shouldPropagateResourceNotFoundException_whenUserNotFound() {
+  void getUserByUuidShouldPropagateResourceNotFoundExceptionWhenUserNotFound() {
     final User user = UserTestDataBuilder.builder().build().user();
     final String errorMessage = HttpStatus.NOT_FOUND.getReasonPhrase();
 
@@ -256,7 +256,7 @@ class UserControllerImplTest {
   }
 
   @Test
-  void getUserByUuid_shouldPropagateRuntimeException_whenUnexpectedExceptionOccurs() {
+  void getUserByUuidShouldPropagateRuntimeExceptionWhenUnexpectedExceptionOccurs() {
     final User user = UserTestDataBuilder.builder().build().user();
     final String errorMessage = "Unexpected error";
 
@@ -272,7 +272,7 @@ class UserControllerImplTest {
   }
 
   @Test
-  void deleteUserByUuid_shouldReturnOk_whenUserExists() {
+  void deleteUserByUuidShouldReturnOkWhenUserExists() {
     final User user = UserTestDataBuilder.builder().build().user();
 
     Mockito.when(commandBus.execute(Mockito.any(DeleteUserCommandDto.class))).thenReturn(user);
@@ -294,7 +294,7 @@ class UserControllerImplTest {
   }
 
   @Test
-  void deleteUserByUuid_shouldPropagateDomainException_whenDomainExceptionOccurs() {
+  void deleteUserByUuidShouldPropagateDomainExceptionWhenDomainExceptionOccurs() {
     final User user = UserTestDataBuilder.builder().build().user();
     final String errorMessage = "domain exception";
 
@@ -311,7 +311,7 @@ class UserControllerImplTest {
   }
 
   @Test
-  void deleteUserByUuid_shouldPropagateRuntimeException_whenUnexpectedExceptionOccurs() {
+  void deleteUserByUuidShouldPropagateRuntimeExceptionWhenUnexpectedExceptionOccurs() {
     final User user = UserTestDataBuilder.builder().build().user();
     final String errorMessage = "Unexpected error";
 
@@ -328,7 +328,7 @@ class UserControllerImplTest {
   }
 
   @Test
-  void updateUserByUuid_shouldReturnOk_whenRequestIsValid() {
+  void updateUserByUuidShouldReturnOkWhenRequestIsValid() {
     final User user = UserTestDataBuilder.builder().build().user();
 
     Mockito.when(commandBus.execute(Mockito.any(UpdateUserCommandDto.class))).thenReturn(user);
@@ -352,7 +352,7 @@ class UserControllerImplTest {
   }
 
   @Test
-  void updateUserByUuid_shouldPropagateIllegalArgumentException_whenInvalidInput() {
+  void updateUserByUuidShouldPropagateIllegalArgumentExceptionWhenInvalidInput() {
     final User user = UserTestDataBuilder.builder().build().user();
     final String errorMessage = "Invalid update";
 
@@ -372,7 +372,7 @@ class UserControllerImplTest {
   }
 
   @Test
-  void updateUserByUuid_shouldPropagateDomainException_whenDomainExceptionOccurs() {
+  void updateUserByUuidShouldPropagateDomainExceptionWhenDomainExceptionOccurs() {
     final User user = UserTestDataBuilder.builder().build().user();
     final String errorMessage = "domain exception";
 
@@ -392,7 +392,7 @@ class UserControllerImplTest {
   }
 
   @Test
-  void updateUserByUuid_shouldPropagateRuntimeException_whenUnexpectedExceptionOccurs() {
+  void updateUserByUuidShouldPropagateRuntimeExceptionWhenUnexpectedExceptionOccurs() {
     final User user = UserTestDataBuilder.builder().build().user();
     final String errorMessage = "Unexpected error";
 
@@ -412,7 +412,7 @@ class UserControllerImplTest {
   }
 
   @Test
-  void updateUserByUuid_shouldPropagateResourceNotFoundException_whenUserNotFound() {
+  void updateUserByUuidShouldPropagateResourceNotFoundExceptionWhenUserNotFound() {
     final User user = UserTestDataBuilder.builder().build().user();
     final String errorMessage = HttpStatus.NOT_FOUND.getReasonPhrase();
 
@@ -432,7 +432,7 @@ class UserControllerImplTest {
   }
 
   @Test
-  void patchUserByUuid_shouldReturnOk_whenRequestIsValid() {
+  void patchUserByUuidShouldReturnOkWhenRequestIsValid() {
     final User user = UserTestDataBuilder.builder().build().user();
 
     Mockito.when(commandBus.execute(Mockito.any(PatchUserCommandDto.class))).thenReturn(user);
@@ -460,7 +460,7 @@ class UserControllerImplTest {
   }
 
   @Test
-  void patchUserByUuid_shouldPropagateResourceNotFoundException_whenUserNotFound() {
+  void patchUserByUuidShouldPropagateResourceNotFoundExceptionWhenUserNotFound() {
     final User user = UserTestDataBuilder.builder().build().user();
     final String errorMessage = HttpStatus.NOT_FOUND.getReasonPhrase();
 
@@ -480,7 +480,7 @@ class UserControllerImplTest {
   }
 
   @Test
-  void patchUserByUuid_shouldPropagateIllegalArgumentException_whenInvalidInput() {
+  void patchUserByUuidShouldPropagateIllegalArgumentExceptionWhenInvalidInput() {
     final User user = UserTestDataBuilder.builder().build().user();
     final String errorMessage = "Invalid patch";
 
@@ -500,7 +500,7 @@ class UserControllerImplTest {
   }
 
   @Test
-  void patchUserByUuid_shouldPropagateDomainException_whenDomainExceptionOccurs() {
+  void patchUserByUuidShouldPropagateDomainExceptionWhenDomainExceptionOccurs() {
     final User user = UserTestDataBuilder.builder().build().user();
     final String errorMessage = "domain exception";
 
@@ -520,7 +520,7 @@ class UserControllerImplTest {
   }
 
   @Test
-  void patchUserByUuid_shouldPropagateRuntimeException_whenUnexpectedExceptionOccurs() {
+  void patchUserByUuidShouldPropagateRuntimeExceptionWhenUnexpectedExceptionOccurs() {
     final User user = UserTestDataBuilder.builder().build().user();
     final String errorMessage = "Unexpected error";
 
@@ -540,7 +540,7 @@ class UserControllerImplTest {
   }
 
   @Test
-  void headUserByUuid_shouldReturnOk_whenUserExists() {
+  void headUserByUuidShouldReturnOkWhenUserExists() {
     final User user = UserTestDataBuilder.builder().build().user();
 
     final ResponseEntity<Void> responseExpected = ResponseEntity.ok().build();
@@ -558,7 +558,7 @@ class UserControllerImplTest {
   }
 
   @Test
-  void headUserByUuid_shouldPropagateResourceNotFoundException_whenUserNotFound() {
+  void headUserByUuidShouldPropagateResourceNotFoundExceptionWhenUserNotFound() {
     final User user = UserTestDataBuilder.builder().build().user();
     final String errorMessage = HttpStatus.NOT_FOUND.getReasonPhrase();
 
@@ -575,7 +575,7 @@ class UserControllerImplTest {
   }
 
   @Test
-  void headUserByUuid_shouldPropagateDomainException_whenDomainExceptionOccurs() {
+  void headUserByUuidShouldPropagateDomainExceptionWhenDomainExceptionOccurs() {
     final User user = UserTestDataBuilder.builder().build().user();
     final String errorMessage = "domain exception";
 
@@ -592,7 +592,7 @@ class UserControllerImplTest {
   }
 
   @Test
-  void headUserByUuid_shouldPropagateRuntimeException_whenUnexpectedExceptionOccurs() {
+  void headUserByUuidShouldPropagateRuntimeExceptionWhenUnexpectedExceptionOccurs() {
     final User user = UserTestDataBuilder.builder().build().user();
     final String errorMessage = "Unexpected error";
 
@@ -609,7 +609,7 @@ class UserControllerImplTest {
   }
 
   @Test
-  void getAllUsers_shouldReturnOk_withCustomPagination() {
+  void getAllUsersShouldReturnOkWithCustomPagination() {
     final User user = UserTestDataBuilder.builder().build().user();
     final Integer page = 1;
     final Integer size = 10;
@@ -654,7 +654,7 @@ class UserControllerImplTest {
   }
 
   @Test
-  void getAllUsers_shouldPropagateInvalidValueException_whenDomainExceptionOccurs() {
+  void getAllUsersShouldPropagateInvalidValueExceptionWhenDomainExceptionOccurs() {
     final String errorMessage = ExceptionMessage.EMAIL_NO_ALLOWED_MESSAGE + "blocked@banned.com";
 
     Mockito.when(queryBus.execute(Mockito.any(GetUsersFilteredQueryDto.class)))
@@ -669,7 +669,7 @@ class UserControllerImplTest {
   }
 
   @Test
-  void getAllUsers_shouldPropagateRuntimeException_whenUnexpectedExceptionOccurs() {
+  void getAllUsersShouldPropagateRuntimeExceptionWhenUnexpectedExceptionOccurs() {
     final String errorMessage = "Unexpected error";
 
     Mockito.when(queryBus.execute(Mockito.any(GetUsersFilteredQueryDto.class)))

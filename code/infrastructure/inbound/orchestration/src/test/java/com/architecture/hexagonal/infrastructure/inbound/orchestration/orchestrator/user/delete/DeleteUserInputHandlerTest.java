@@ -33,7 +33,7 @@ class DeleteUserInputHandlerTest {
   @Spy private TransactionBoundary transactionBoundary = new TransactionBoundaryTest();
 
   @Test
-  void handle_shouldReturnDeletedUser_whenCommandIsExecuted() {
+  void handleShouldReturnDeletedUserWhenCommandIsExecuted() {
     DeleteUserCommandDto deleteUserCommandDto =
         DeleteUserCommandDtoTestDataBuilder.builder().build().deleteUserCommandDto();
     User user = UserTestDataBuilder.builder().build().user();

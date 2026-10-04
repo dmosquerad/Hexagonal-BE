@@ -50,7 +50,7 @@ class UseCaseBeanRegistryTest {
   }
 
   @Test
-  void registerBeanDefinitions_shouldRegisterUseCaseBeans_whenCandidatesAreFound() {
+  void registerBeanDefinitionsShouldRegisterUseCaseBeansWhenCandidatesAreFound() {
     Mockito.when(beanDefinition.getBeanClassName()).thenReturn(CreateUserUseCase.class.getName());
     Mockito.when(registry.containsBeanDefinition(CREATE_USER_USE_CASE)).thenReturn(false);
 
@@ -69,7 +69,7 @@ class UseCaseBeanRegistryTest {
   }
 
   @Test
-  void registerBeanDefinitions_shouldNotRegisterDuplicateBeans_whenBeanAlreadyExists() {
+  void registerBeanDefinitionsShouldNotRegisterDuplicateBeansWhenBeanAlreadyExists() {
     Mockito.when(beanDefinition.getBeanClassName()).thenReturn(CreateUserUseCase.class.getName());
     Mockito.when(registry.containsBeanDefinition(CREATE_USER_USE_CASE)).thenReturn(true);
 
@@ -82,7 +82,7 @@ class UseCaseBeanRegistryTest {
   }
 
   @Test
-  void registerBeanDefinitions_shouldThrowRuntimeException_whenClassCannotBeLoaded() {
+  void registerBeanDefinitionsShouldThrowRuntimeExceptionWhenClassCannotBeLoaded() {
     Mockito.when(beanDefinition.getBeanClassName()).thenReturn("test");
 
     final UseCaseBeanRegistry useCaseBeanRegistry = new UseCaseBeanRegistry();

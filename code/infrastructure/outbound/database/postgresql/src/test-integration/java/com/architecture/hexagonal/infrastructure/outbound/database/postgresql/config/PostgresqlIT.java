@@ -1,5 +1,7 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.postgresql.config;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -8,6 +10,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Testcontainers
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class PostgresqlIT {
 
   @Container

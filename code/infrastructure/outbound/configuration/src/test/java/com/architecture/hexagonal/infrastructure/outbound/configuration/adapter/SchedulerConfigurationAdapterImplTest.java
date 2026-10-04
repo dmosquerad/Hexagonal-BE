@@ -25,7 +25,7 @@ class SchedulerConfigurationAdapterImplTest {
   @Mock SchedulerInboxConfig schedulerInboxConfig;
 
   @Test
-  void getOutbox_Scheduler_shouldReturnConfiguration_whenConfigIsProvided() {
+  void getOutboxSchedulerShouldReturnConfigurationWhenConfigIsProvided() {
     final SchedulerOutboxConfigurationVo expected =
         SchedulerOutboxConfigurationVoTestDataBuilder.builder()
             .build()
@@ -44,7 +44,7 @@ class SchedulerConfigurationAdapterImplTest {
   }
 
   @Test
-  void getInbox_Scheduler_shouldReturnConfiguration_whenConfigIsProvided() {
+  void getInboxSchedulerShouldReturnConfigurationWhenConfigIsProvided() {
     final SchedulerInboxConfigurationVo expected =
         SchedulerInboxConfigurationVoTestDataBuilder.builder()
             .build()

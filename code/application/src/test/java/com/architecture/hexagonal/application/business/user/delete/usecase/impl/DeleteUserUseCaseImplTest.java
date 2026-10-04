@@ -28,7 +28,7 @@ class DeleteUserUseCaseImplTest {
   @Mock UserSenderPort userSenderPort;
 
   @Test
-  void execute_shouldDeleteUser_whenUserExists() throws ResourceNotFoundException {
+  void executeShouldDeleteUserWhenUserExists() throws ResourceNotFoundException {
     final User user = UserTestDataBuilder.builder().build().user();
     final DeleteUserInput deleteUserInput =
         DeleteUserInputTestDataBuilder.builder().build().deleteUserInput();
@@ -45,7 +45,7 @@ class DeleteUserUseCaseImplTest {
   }
 
   @Test
-  void execute_shouldThrowResourceNotFoundException_whenUserNotFound() {
+  void executeShouldThrowResourceNotFoundExceptionWhenUserNotFound() {
     final DeleteUserInput deleteUserInput =
         DeleteUserInputTestDataBuilder.builder().build().deleteUserInput();
 

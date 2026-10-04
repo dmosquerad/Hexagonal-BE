@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 class EmailVoConverterTest {
 
   @Test
-  void toEmailVo_shouldReturnEmailVo_whenEmailIsValid() {
+  void toEmailVoShouldReturnEmailVoWhenEmailIsValid() {
     final EmailVo result = EmailVoConverter.toEmailVo("test@example.com");
     final EmailVo expected = EmailVoTestDataBuilder.builder().build().emailVo();
 
@@ -16,7 +16,7 @@ class EmailVoConverterTest {
   }
 
   @Test
-  void toEmailVo_shouldReturnEmpty_whenInputIsNull() {
+  void toEmailVoShouldReturnEmptyWhenInputIsNull() {
     final EmailVo result = EmailVoConverter.toEmailVo(null);
 
     Assertions.assertThat(result)

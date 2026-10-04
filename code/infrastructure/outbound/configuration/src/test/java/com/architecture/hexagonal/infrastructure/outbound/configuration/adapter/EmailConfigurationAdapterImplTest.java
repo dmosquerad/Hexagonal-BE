@@ -20,7 +20,7 @@ class EmailConfigurationAdapterImplTest {
   @Mock EmailBlockConfig emailBlockConfig;
 
   @Test
-  void getBlockedRules_shouldReturnBlockRulesVo_whenConfigIsProvided() {
+  void getBlockedRulesShouldReturnBlockRulesVoWhenConfigIsProvided() {
     final EmailBlockRulesVo expected =
         EmailBlockRulesVoTestDataBuilder.builder().build().emailBlockRulesVo();
 

@@ -33,7 +33,7 @@ class FindUserByUserIdInputHandlerTest {
   @Spy private TransactionBoundary transactionBoundary = new TransactionBoundaryTest();
 
   @Test
-  void handle_shouldReturnUser_whenQueryIsExecuted() {
+  void handleShouldReturnUserWhenQueryIsExecuted() {
     FindUserByUserIdQueryDto queryDto =
         FindUserByUserIdQueryDtoTestDataBuilder.builder().build().findUserByUserIdQueryDto();
     User user = UserTestDataBuilder.builder().build().user();

@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 class EmailVoTest {
 
   @Test
-  void getEmail_shouldReturnEmail_whenEmailIsValid() {
+  void getEmailShouldReturnEmailWhenEmailIsValid() {
     final EmailVo emailVo = EmailVoTestDataBuilder.builder().build().emailVo();
 
     final String result = emailVo.getEmail();
@@ -16,7 +16,7 @@ class EmailVoTest {
   }
 
   @Test
-  void getEmail_shouldReturnEmpty_whenEmailIsInvalid() {
+  void getEmailShouldReturnEmptyWhenEmailIsInvalid() {
     final EmailVo emailVo =
         EmailVoTestDataBuilder.builder().username(null).host(null).tld(null).build().emailVo();
 
@@ -26,7 +26,7 @@ class EmailVoTest {
   }
 
   @Test
-  void getDomain_shouldReturnDomain_whenEmailIsValid() {
+  void getDomainShouldReturnDomainWhenEmailIsValid() {
     final EmailVo emailVo = EmailVoTestDataBuilder.builder().build().emailVo();
 
     final String result = emailVo.getDomain();
@@ -35,7 +35,7 @@ class EmailVoTest {
   }
 
   @Test
-  void getDomain_shouldReturnEmpty_whenEmailIsInvalid() {
+  void getDomainShouldReturnEmptyWhenEmailIsInvalid() {
     final EmailVo emailVo = EmailVoTestDataBuilder.builder().host(null).tld(null).build().emailVo();
 
     final String result = emailVo.getDomain();

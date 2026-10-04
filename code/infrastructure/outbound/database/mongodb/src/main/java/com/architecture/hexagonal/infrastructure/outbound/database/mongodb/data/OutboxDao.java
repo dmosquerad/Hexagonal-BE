@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
-import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 import lombok.Data;
 import lombok.experimental.FieldNameConstants;
@@ -34,7 +34,7 @@ public class OutboxDao {
 
   @PositiveOrZero private int retryCount;
 
-  @CreatedDate private OffsetDateTime createdAt;
+  @CreatedDate private ZonedDateTime createdAt;
 
-  private OffsetDateTime processedAt;
+  private ZonedDateTime processedAt;
 }

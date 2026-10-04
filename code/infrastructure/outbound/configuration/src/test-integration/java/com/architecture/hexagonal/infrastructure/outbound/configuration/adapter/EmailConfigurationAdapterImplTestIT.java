@@ -21,7 +21,7 @@ class EmailConfigurationAdapterImplTestIT {
   EmailBlockConfig emailBlockConfig;
 
   @Test
-  void getBlockedRules_shouldReturnRulesFromConfig() {
+  void getBlockedRulesShouldReturnRulesFromConfig() {
     final EmailBlockRulesVo result = emailConfigurationAdapterImpl.getBlockedRules();
 
     AssertionsForClassTypes.assertThat(result).isNotNull();

@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 class InvalidValueExceptionTest {
 
   @Test
-  void constructor_shouldCreateExceptionWithMessage() {
+  void constructorShouldCreateExceptionWithMessage() {
     final InvalidValueException result =
         new InvalidValueException(ExceptionMessage.EMAIL_NO_ALLOWED_MESSAGE);
 

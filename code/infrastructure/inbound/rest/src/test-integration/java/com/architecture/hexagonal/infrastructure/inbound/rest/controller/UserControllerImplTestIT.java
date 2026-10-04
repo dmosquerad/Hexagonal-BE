@@ -115,7 +115,7 @@ class UserControllerImplTestIT {
   Clock clock;
 
   @Test
-  void getAllUsers_shouldReturnOk_whenUsersExist() throws Exception {
+  void getAllUsersShouldReturnOkWhenUsersExist() throws Exception {
     final UsersResponseDto getAllUsersResponse = usersResponseDtoJson
         .readObject(userResponseResource.getAllUsers);
 
@@ -151,7 +151,7 @@ class UserControllerImplTestIT {
   }
 
   @Test
-  void createUser_shouldReturnOk_whenRequestIsValid() throws Exception {
+  void createUserShouldReturnOkWhenRequestIsValid() throws Exception {
     final UserCreateDto createUserRequest = userCreateDtoJson
         .readObject(userRequestResource.createUser);
     final UserResponseDto createUserResponse = userResponseDtoJson
@@ -179,7 +179,7 @@ class UserControllerImplTestIT {
   }
 
   @Test
-  void getAllUsers_shouldReturnOk_whenCustomPaginationIsProvided() throws Exception {
+  void getAllUsersShouldReturnOkWhenCustomPaginationIsProvided() throws Exception {
     final Integer page = 1;
     final Integer size = 10;
     final long totalElements = 50L;
@@ -220,7 +220,7 @@ class UserControllerImplTestIT {
   }
 
   @Test
-  void getUserByUuid_shouldReturnOk_whenUserExists() throws Exception {
+  void getUserByUuidShouldReturnOkWhenUserExists() throws Exception {
     final UserResponseDto getUserByUuidResponse = userResponseDtoJson
         .readObject(userResponseResource.getUserByUuid);
 
@@ -251,7 +251,7 @@ class UserControllerImplTestIT {
   }
 
   @Test
-  void deleteUserByUuid_shouldReturnOk_whenUserExists() throws Exception {
+  void deleteUserByUuidShouldReturnOkWhenUserExists() throws Exception {
     final UserResponseDto deleteUserByUuidResponse = userResponseDtoJson
         .readObject(userResponseResource.deleteUserByUuid);
 
@@ -280,7 +280,7 @@ class UserControllerImplTestIT {
   }
 
   @Test
-  void updateUserByUuid_shouldReturnOk_whenRequestIsValid() throws Exception {
+  void updateUserByUuidShouldReturnOkWhenRequestIsValid() throws Exception {
     final UserUpdateDto updateUserByUuidRequest = userUpdateDtoJson
         .readObject(userRequestResource.updateUserByUuid);
     final UserResponseDto updateUserByUuidResponse = userResponseDtoJson
@@ -313,7 +313,7 @@ class UserControllerImplTestIT {
   }
 
   @Test
-  void patchUserByUuid_shouldReturnOk_whenRequestIsValid() throws Exception {
+  void patchUserByUuidShouldReturnOkWhenRequestIsValid() throws Exception {
     final UserPatchDto patchUserByUuidRequest = userPatchDtoJson
         .readObject(userRequestResource.patchUserByUuid);
     final UserResponseDto patchUserByUuidResponse = userResponseDtoJson
@@ -346,7 +346,7 @@ class UserControllerImplTestIT {
   }
 
   @Test
-  void headUserByUuid_shouldReturnOk_whenUserExists() throws Exception {
+  void headUserByUuidShouldReturnOkWhenUserExists() throws Exception {
     final User user = UserTestDataBuilder
         .builder()
         .build()
@@ -367,7 +367,7 @@ class UserControllerImplTestIT {
   }
 
   @Test
-  void getUserByUuid_shouldReturn404_whenUserNotFound() throws Exception {
+  void getUserByUuidShouldReturn404WhenUserNotFound() throws Exception {
     final User user = UserTestDataBuilder.builder().build().user();
     final ResponseErrorDto expected = ResponseErrorDtoTestDataBuilder.builder()
         .status(HttpStatus.NOT_FOUND.value())
@@ -395,7 +395,7 @@ class UserControllerImplTestIT {
   }
 
   @Test
-  void deleteUserByUuid_shouldReturn404_whenUserNotFound() throws Exception {
+  void deleteUserByUuidShouldReturn404WhenUserNotFound() throws Exception {
     final User user = UserTestDataBuilder.builder().build().user();
     final ResponseErrorDto expected = ResponseErrorDtoTestDataBuilder.builder()
         .status(HttpStatus.NOT_FOUND.value())
@@ -423,7 +423,7 @@ class UserControllerImplTestIT {
   }
 
   @Test
-  void createUser_shouldReturn400_whenEmailIsInvalid() throws Exception {
+  void createUserShouldReturn400WhenEmailIsInvalid() throws Exception {
     final UserCreateDto createUserRequest = userCreateDtoJson
         .readObject(userRequestResource.createUser);
     final ResponseErrorDto expected = ResponseErrorDtoTestDataBuilder.builder()

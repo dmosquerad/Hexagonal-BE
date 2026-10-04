@@ -44,7 +44,7 @@ public class UserMessageSender {
   private boolean isSendUserCreatedMessage(final UserCreated userCreated) {
     try {
       return streamBridge.send(UserPublishBinding.USER_CREATED.getPublishBinding(), userCreated);
-    } catch (Exception ex) {
+    } catch (Exception _) {
       return false;
     }
   }
@@ -69,7 +69,7 @@ public class UserMessageSender {
   private boolean isSendUserUpdatedMessage(final UserUpdated userUpdated) {
     try {
       return streamBridge.send(UserPublishBinding.USER_UPDATED.getPublishBinding(), userUpdated);
-    } catch (Exception ex) {
+    } catch (Exception _) {
       return false;
     }
   }
@@ -93,7 +93,7 @@ public class UserMessageSender {
   private boolean isSendUserDeletedMessage(final UserDeleted userDeleted) {
     try {
       return streamBridge.send(UserPublishBinding.USER_DELETED.getPublishBinding(), userDeleted);
-    } catch (Exception ex) {
+    } catch (Exception _) {
       return false;
     }
   }

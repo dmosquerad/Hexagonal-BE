@@ -1,9 +1,11 @@
 package com.architecture.hexagonal.domain.testutils.data.time;
 
+import lombok.experimental.UtilityClass;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneOffset;
 
+@UtilityClass
 public class TestClock {
 
     public static final Instant FIXED_INSTANT = Instant.parse("2026-01-01T00:00:00Z");

@@ -32,7 +32,7 @@ class OutboxReadMongodbAdapterImplTest {
       Mappers.getMapper(OutboxDoFromMongodbMapper.class);
 
   @Test
-  void findPendingEvents_shouldReturnPendingEventsOrderedByCreatedAt_whenPendingEventsExist() {
+  void findPendingEventsShouldReturnPendingEventsOrderedByCreatedAtWhenPendingEventsExist() {
     final Outbox outbox = OutboxTestDataBuilder.builder().build().outboxEventDo();
     final OutboxStatusAndAggregateProjector outboxStatusAndAggregateProjector =
         OutboxStatusAndAggregateProjectorTestDataBuilder.builder()

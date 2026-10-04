@@ -27,7 +27,7 @@ class QueryBusImplTest {
   @InjectMocks private QueryBusImpl queryBus;
 
   @Test
-  void execute_shouldDelegateQueryToCorrectHandler() {
+  void executeShouldDelegateQueryToCorrectHandler() {
     final GetUsersFilteredQueryDto query =
         GetUsersFilteredQueryDtoTestDataBuilder.builder().build().getUsersFilteredQueryDto();
     final PaginationResult<User> users = PaginationResult.<User>builder().build();
@@ -44,7 +44,7 @@ class QueryBusImplTest {
   }
 
   @Test
-  void execute_shouldThrowIllegalStateException_whenNoHandlerIsFound() {
+  void executeShouldThrowIllegalStateExceptionWhenNoHandlerIsFound() {
     final String unknownQuery = "unknown";
 
     AssertionsForClassTypes.assertThatThrownBy(() -> queryBus.execute(unknownQuery))

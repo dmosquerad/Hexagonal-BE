@@ -1,5 +1,7 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.mongodb;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
@@ -9,6 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 @AnalyzeClasses(packages = "com.architecture.hexagonal.infrastructure.outbound.database.mongodb", importOptions = ImportOption.DoNotIncludeTests.class)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 class InfrastructureOutboundOutboxArchTest {
 
     @ArchTest

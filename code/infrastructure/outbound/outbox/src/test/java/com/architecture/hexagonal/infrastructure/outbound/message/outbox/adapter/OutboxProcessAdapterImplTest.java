@@ -6,7 +6,6 @@ import com.architecture.hexagonal.infrastructure.outbound.message.outbox.naming.
 import com.architecture.hexagonal.infrastructure.outbound.message.outbox.service.OutboxService;
 import com.architecture.hexagonal.infrastructure.outbound.message.outbox.testutils.model.entity.outbox.OutboxTestDataBuilder;
 import java.util.Map;
-import java.util.function.Consumer;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +23,7 @@ class OutboxProcessAdapterImplTest {
   @Mock private OutboxService outboxService;
 
   @Test
-  void process_shouldDelegateToOutboxService_whenAggregateTypeIsUser() {
+  void processShouldDelegateToOutboxServiceWhenAggregateTypeIsUser() {
     final Outbox outbox =
         OutboxTestDataBuilder.builder().aggregateType(AggregateTypeVo.USER).build().outbox();
 
@@ -41,9 +40,7 @@ class OutboxProcessAdapterImplTest {
 
   @Test
   void shouldThrowWhenAggregateHandlerIsMissing() {
-    final Map<AggregateTypeVo, Consumer<Outbox>> handlers = Map.of();
-
-    Mockito.doReturn(Map.of()).when(outboxProcessAdapterImpl).aggregateHandlers();
+    Mockito.when(outboxProcessAdapterImpl.aggregateHandlers()).thenReturn(Map.of());
 
     Assertions.assertThatThrownBy(() -> outboxProcessAdapterImpl.validateAggregateHandlers())
         .isInstanceOf(IllegalStateException.class)

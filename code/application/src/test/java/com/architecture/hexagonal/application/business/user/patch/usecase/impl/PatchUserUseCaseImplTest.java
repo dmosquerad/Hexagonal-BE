@@ -37,7 +37,7 @@ class PatchUserUseCaseImplTest {
   @Mock EmailConfigurationPort emailConfigurationPort;
 
   @Test
-  void execute_shouldPatchUserName_whenRequestIsValid()
+  void executeShouldPatchUserNameWhenRequestIsValid()
       throws ResourceNotFoundException, InvalidValueException {
     final User user = UserTestDataBuilder.builder().build().user();
     final PatchUserInput patchUserInput =
@@ -60,7 +60,7 @@ class PatchUserUseCaseImplTest {
   }
 
   @Test
-  void execute_shouldThrowPolicyViolationException_whenEmailIsBlocked() {
+  void executeShouldThrowPolicyViolationExceptionWhenEmailIsBlocked() {
     final User user = UserTestDataBuilder.builder().build().user();
     final PatchUserInput patchUserInput =
         PatchUserInputTestDataBuilder.builder().build().patchUserInput();
@@ -82,7 +82,7 @@ class PatchUserUseCaseImplTest {
   }
 
   @Test
-  void execute_shouldThrowResourceNotFoundException_whenUserNotFound() {
+  void executeShouldThrowResourceNotFoundExceptionWhenUserNotFound() {
     final PatchUserInput patchUserInput =
         PatchUserInputTestDataBuilder.builder().build().patchUserInput();
 

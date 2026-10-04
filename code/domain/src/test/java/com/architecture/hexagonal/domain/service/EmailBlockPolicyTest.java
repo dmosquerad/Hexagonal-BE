@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 class EmailBlockPolicyTest {
 
   @Test
-  void isBlocked_shouldReturnFalse_whenRulesAreEmpty() {
+  void isBlockedShouldReturnFalseWhenRulesAreEmpty() {
     AssertionsForClassTypes.assertThat(
             EmailBlockPolicy.isBlocked(
                 EmailVoTestDataBuilder.builder().build().emailVo(),
@@ -18,7 +18,7 @@ class EmailBlockPolicyTest {
   }
 
   @Test
-  void isBlocked_shouldReturnTrue_whenEmailMatchesBlockedEmail() {
+  void isBlockedShouldReturnTrueWhenEmailMatchesBlockedEmail() {
     AssertionsForClassTypes.assertThat(
             EmailBlockPolicy.isBlocked(
                 EmailVoTestDataBuilder.builder().build().emailVo(),
@@ -30,7 +30,7 @@ class EmailBlockPolicyTest {
   }
 
   @Test
-  void isBlocked_shouldReturnTrue_whenUsernameMatchesBlockedUsername() {
+  void isBlockedShouldReturnTrueWhenUsernameMatchesBlockedUsername() {
     AssertionsForClassTypes.assertThat(
             EmailBlockPolicy.isBlocked(
                 EmailVoTestDataBuilder.builder().build().emailVo(),
@@ -42,7 +42,7 @@ class EmailBlockPolicyTest {
   }
 
   @Test
-  void isBlocked_shouldReturnTrue_whenHostMatchesBlockedHost() {
+  void isBlockedShouldReturnTrueWhenHostMatchesBlockedHost() {
     AssertionsForClassTypes.assertThat(
             EmailBlockPolicy.isBlocked(
                 EmailVoTestDataBuilder.builder().build().emailVo(),
@@ -54,7 +54,7 @@ class EmailBlockPolicyTest {
   }
 
   @Test
-  void isBlocked_shouldReturnTrue_whenTldMatchesBlockedTld() {
+  void isBlockedShouldReturnTrueWhenTldMatchesBlockedTld() {
     AssertionsForClassTypes.assertThat(
             EmailBlockPolicy.isBlocked(
                 EmailVoTestDataBuilder.builder().build().emailVo(),
@@ -66,7 +66,7 @@ class EmailBlockPolicyTest {
   }
 
   @Test
-  void isBlocked_shouldReturnTrue_whenDomainMatchesBlockedDomain() {
+  void isBlockedShouldReturnTrueWhenDomainMatchesBlockedDomain() {
     AssertionsForClassTypes.assertThat(
             EmailBlockPolicy.isBlocked(
                 EmailVoTestDataBuilder.builder().build().emailVo(),
@@ -78,7 +78,7 @@ class EmailBlockPolicyTest {
   }
 
   @Test
-  void isBlocked_shouldReturnFalse_whenUsernameCannotFormEmail() {
+  void isBlockedShouldReturnFalseWhenUsernameCannotFormEmail() {
     AssertionsForClassTypes.assertThat(
             EmailBlockPolicy.isBlocked(
                 EmailVoTestDataBuilder.builder().username("").build().emailVo(),
@@ -90,7 +90,7 @@ class EmailBlockPolicyTest {
   }
 
   @Test
-  void isBlocked_shouldReturnFalse_whenHostCannotFormDomain() {
+  void isBlockedShouldReturnFalseWhenHostCannotFormDomain() {
     AssertionsForClassTypes.assertThat(
             EmailBlockPolicy.isBlocked(
                 EmailVoTestDataBuilder.builder().host("").build().emailVo(),
@@ -102,7 +102,7 @@ class EmailBlockPolicyTest {
   }
 
   @Test
-  void isBlocked_shouldReturnTrue_whenBlockedEmailMatchesCaseInsensitively() {
+  void isBlockedShouldReturnTrueWhenBlockedEmailMatchesCaseInsensitively() {
     AssertionsForClassTypes.assertThat(
             EmailBlockPolicy.isBlocked(
                 EmailVoTestDataBuilder.builder()

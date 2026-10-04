@@ -12,7 +12,7 @@ class InboxSchedulerImplTest {
   @InjectMocks private InboxSchedulerImpl inboxSchedulerImpl;
 
   @Test
-  void scheduleProcess_shouldNotThrowException() {
+  void scheduleProcessShouldNotThrowException() {
     inboxSchedulerImpl.scheduleProcess();
   }
 }
