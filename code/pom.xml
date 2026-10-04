@@ -256,29 +256,6 @@
         </configuration>
       </plugin>
       <!-- ============================================ -->
-      <!-- RESOURCES TEST -->
-      <!-- ============================================ -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-failsafe-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>integration-test</goal>
-              <goal>verify</goal>
-            </goals>
-            <configuration>
-              <testSourceDirectory>
-                ${project.basedir}/src/test-integration/java
-              </testSourceDirectory>
-              <additionalClasspathElements>
-                <additionalClasspathElement>${project.basedir}/src/test-integration/resources</additionalClasspathElement>
-              </additionalClasspathElements>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <!-- ============================================ -->
       <!-- SOURCE TEST -->
       <!-- ============================================ -->
       <plugin>
@@ -294,23 +271,8 @@
             <configuration>
               <sources>
                 <source>src/test-architecture/java</source>
-                <source>src/test-integration/java</source>
                 <source>src/test-utils/java</source>
               </sources>
-            </configuration>
-          </execution>
-          <execution>
-            <id>add-test-resources</id>
-            <phase>generate-test-resources</phase>
-            <goals>
-              <goal>add-test-resource</goal>
-            </goals>
-            <configuration>
-              <resources>
-                <resource>
-                  <directory>src/test-integration/resources</directory>
-                </resource>
-              </resources>
             </configuration>
           </execution>
         </executions>
@@ -362,31 +324,6 @@
               <goal>report</goal>
             </goals>
           </execution>
-          <execution>
-            <id>jacoco-check</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>check</goal>
-            </goals>
-            <configuration>
-              <excludes>
-                <exclude>**/*Application.class</exclude>
-                <exclude>**/*Config.class</exclude>
-              </excludes>
-              <rules>
-                <rule>
-                  <element>BUNDLE</element>
-                  <limits>
-                    <limit>
-                      <counter>LINE</counter>
-                      <value>COVEREDRATIO</value>
-                      <minimum>0.80</minimum>
-                    </limit>
-                  </limits>
-                </rule>
-              </rules>
-            </configuration>
-          </execution>
         </executions>
       </plugin>
       <!-- ============================================ -->
@@ -406,4 +343,108 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>integration-tests</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <skipTests>${skipUnitTests}</skipTests>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>integration-test</goal>
+                  <goal>verify</goal>
+                </goals>
+                <configuration>
+                  <testSourceDirectory>${project.basedir}/src/test-integration/java</testSourceDirectory>
+                  <additionalClasspathElements>
+                    <additionalClasspathElement>${project.basedir}/src/test-integration/resources</additionalClasspathElement>
+                  </additionalClasspathElements>
+                  <includes>
+                    <include>**/IT*.java</include>
+                    <include>**/*IT.java</include>
+                    <include>**/*ITCase.java</include>
+                    <include>**/*IntegrationTest.java</include>
+                  </includes>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>jacoco-check</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>check</goal>
+                </goals>
+                <configuration>
+                  <excludes>
+                    <exclude>**/*Application.class</exclude>
+                    <exclude>**/*Config.class</exclude>
+                  </excludes>
+                  <rules>
+                    <rule>
+                      <element>BUNDLE</element>
+                      <limits>
+                        <limit>
+                          <counter>LINE</counter>
+                          <value>COVEREDRATIO</value>
+                          <minimum>0.80</minimum>
+                        </limit>
+                      </limits>
+                    </rule>
+                  </rules>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>add-integration-test-sources</id>
+                <phase>generate-test-sources</phase>
+                <goals>
+                  <goal>add-test-source</goal>
+                </goals>
+                <configuration>
+                  <sources>
+                    <source>src/test-integration/java</source>
+                  </sources>
+                </configuration>
+              </execution>
+              <execution>
+                <id>add-integration-test-resources</id>
+                <phase>generate-test-resources</phase>
+                <goals>
+                  <goal>add-test-resource</goal>
+                </goals>
+                <configuration>
+                  <resources>
+                    <resource>
+                      <directory>src/test-integration/resources</directory>
+                    </resource>
+                  </resources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

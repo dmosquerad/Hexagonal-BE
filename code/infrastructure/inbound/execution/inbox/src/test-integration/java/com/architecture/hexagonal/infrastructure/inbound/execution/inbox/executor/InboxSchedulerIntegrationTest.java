@@ -2,10 +2,10 @@ package com.architecture.hexagonal.infrastructure.inbound.execution.inbox.execut
 
 import com.architecture.hexagonal.application.port.configuration.SchedulerConfigurationPort;
 import com.architecture.hexagonal.domain.model.vo.inbox.SchedulerInboxConfigurationVo;
-import com.architecture.hexagonal.domain.model.vo.outbox.SchedulerOutboxConfigurationVo;
 import com.architecture.hexagonal.infrastructure.inbound.execution.inbox.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.inbound.execution.inbox.model.vo.SchedulerInboxConfigurationVoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.execution.inbox.executor.impl.InboxSchedulerImpl;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
@@ -15,8 +15,6 @@ import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.time.Duration;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(classes = {TestApplication.class, InboxSchedulerImpl.class})
 class InboxSchedulerIntegrationTest {
@@ -45,7 +43,7 @@ class InboxSchedulerIntegrationTest {
         Duration expectedDuration = schedulerConfig.pollingInterval();
         Duration capturedDuration = durationCaptor.getValue();
         
-        assertEquals(expectedDuration, capturedDuration);
+        Assertions.assertEquals(expectedDuration, capturedDuration);
 
         Mockito.verify(schedulerConfigurationPort).getInboxScheduler();
 
