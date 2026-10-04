@@ -291,17 +291,20 @@ Contracts are defined in `code/infrastructure/inbound/contract/rest/`.
 ### Unit Tests
 ```bash
 cd code
-mvn test
+mvn clean install
 ```
+
+This runs the unit and architecture tests. Integration tests and the 80% JaCoCo coverage gate are compiled and run separately with the `integration-tests` profile:
 
 ### Integration Tests
 ```bash
 cd code
-mvn verify
+mvn clean install -Pintegration-tests
 ```
 
 The project includes:
 - **Unit Tests** (`src/test/java`): Fast, isolated business logic tests
+- **Architecture Tests** (`src/test-architecture/java`): Enforce architectural boundaries and dependencies
 - **Integration Tests** (`src/test-integration/java`): Database and API layer integration tests
 - **Test Utils** (`src/test-utils/java`): Shared builders and reusable test helpers
 
