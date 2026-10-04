@@ -32,7 +32,7 @@ class UserKafkaConsumerTest {
       Mappers.getMapper(UserKafkaMessageMapper.class);
 
   @Test
-  void consumeUserCreated_shouldExecuteCreateCommand_whenMessageIsReceived() {
+  void consumeUserCreatedShouldExecuteCreateCommandWhenMessageIsReceived() {
     final UserCreatedMessage message =
         UserCreatedMessageTestDataBuilder.builder().build().userCreatedMessage();
 
@@ -43,7 +43,7 @@ class UserKafkaConsumerTest {
   }
 
   @Test
-  void consumeUserUpdated_shouldExecuteUpdateCommand_whenMessageIsReceived() {
+  void consumeUserUpdatedShouldExecuteUpdateCommandWhenMessageIsReceived() {
     final UserUpdatedMessage message =
         UserUpdatedMessageTestDataBuilder.builder().build().userUpdatedMessage();
 
@@ -54,7 +54,7 @@ class UserKafkaConsumerTest {
   }
 
   @Test
-  void consumeUserDeleted_shouldExecuteDeleteCommand_whenMessageIsReceived() {
+  void consumeUserDeletedShouldExecuteDeleteCommandWhenMessageIsReceived() {
     final UserDeletedMessage message =
         UserDeletedMessageTestDataBuilder.builder().build().userDeletedMessage();
 

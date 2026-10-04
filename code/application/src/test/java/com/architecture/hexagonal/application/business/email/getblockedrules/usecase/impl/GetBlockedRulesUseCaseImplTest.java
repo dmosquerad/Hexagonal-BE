@@ -20,7 +20,7 @@ class GetBlockedRulesUseCaseTest {
   @Mock EmailConfigurationPort emailConfigurationPort;
 
   @Test
-  void execute_shouldReturnBlockedRules_whenConfigurationIsAvailable() {
+  void executeShouldReturnBlockedRulesWhenConfigurationIsAvailable() {
     final EmailBlockRulesVo emailBlockRulesVo =
         EmailBlockRulesVoTestDataBuilder.builder().build().emailBlockRulesVo();
 

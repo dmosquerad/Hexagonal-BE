@@ -35,7 +35,7 @@ class DeleteUserInputHandlerTestIT {
   private TransactionBoundary transactionBoundary;
 
   @Test
-  void deleteUserCommandHandler_shouldReturnDeletedUser_whenCommandIsExecuted() {
+  void deleteUserCommandHandlerShouldReturnDeletedUserWhenCommandIsExecuted() {
     final DeleteUserCommandDto deleteUserCommandDto = DeleteUserCommandDtoTestDataBuilder.builder().build().deleteUserCommandDto();
     final User user = Mockito.mock(User.class);
 

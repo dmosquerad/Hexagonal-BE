@@ -16,7 +16,7 @@ public class EmailVoPredicate {
         try {
           new InternetAddress(email).validate();
           return true;
-        } catch (AddressException ex) {
+        } catch (AddressException _) {
           return false;
         }
       };

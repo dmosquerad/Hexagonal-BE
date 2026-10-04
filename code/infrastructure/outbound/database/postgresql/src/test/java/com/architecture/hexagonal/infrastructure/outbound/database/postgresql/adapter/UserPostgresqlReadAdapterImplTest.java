@@ -42,7 +42,7 @@ class UserPostgresqlReadAdapterImplTest {
       Mappers.getMapper(UserFromPostgresqlMapper.class);
 
   @Test
-  void findUserById_shouldReturnUser_whenUserExists() {
+  void findUserByIdShouldReturnUserWhenUserExists() {
     final UserDao userDao = UserDaoTestDataBuilder.builder().build().userDao();
 
     Mockito.when(userPostgresqlReadRepository.findByUserId(userDao.getUserId()))
@@ -60,7 +60,7 @@ class UserPostgresqlReadAdapterImplTest {
   }
 
   @Test
-  void findUserById_shouldReturnEmpty_whenUserNotFound() {
+  void findUserByIdShouldReturnEmptyWhenUserNotFound() {
     final UserDao userDao = UserDaoTestDataBuilder.builder().build().userDao();
 
     Mockito.when(userPostgresqlReadRepository.findByUserId(userDao.getUserId()))
@@ -75,7 +75,7 @@ class UserPostgresqlReadAdapterImplTest {
   }
 
   @Test
-  void getAllUsers_shouldReturnPagedUsersByHostAndBlockedHosts() {
+  void getAllUsersShouldReturnPagedUsersByHostAndBlockedHosts() {
     final UserDao userDao = UserDaoTestDataBuilder.builder().build().userDao();
     final Pagination pagination = PaginationTestDataBuilder.builder().build().pagination();
     final Pageable pageable = PageRequest.of(0, 100);
@@ -117,7 +117,7 @@ class UserPostgresqlReadAdapterImplTest {
   }
 
   @Test
-  void getAllUsers_shouldReturnAllUsers_whenPaginationIsNull() {
+  void getAllUsersShouldReturnAllUsersWhenPaginationIsNull() {
     final String host = "example";
     final UserDao userDao = UserDaoTestDataBuilder.builder().build().userDao();
 

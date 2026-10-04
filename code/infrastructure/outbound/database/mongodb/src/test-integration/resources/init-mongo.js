@@ -8,7 +8,7 @@ db.outbox.insertOne({
     action: "USER_CREATED",
     payload: {
         messageHeader: {
-            messageId: UUID("4059510b-ceb3-4d4c-913e-1759acbd63b1"),
+            _id: UUID("4059510b-ceb3-4d4c-913e-1759acbd63b1"),
             messageDate: ISODate("2026-01-01T00:00:00Z")
         },
         data: {

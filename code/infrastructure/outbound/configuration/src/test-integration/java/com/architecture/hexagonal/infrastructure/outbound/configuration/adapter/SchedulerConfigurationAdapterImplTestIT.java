@@ -27,7 +27,7 @@ class SchedulerConfigurationAdapterImplTestIT {
   SchedulerOutboxConfig schedulerInboxConfig;
 
   @Test
-  void getOutbox_Scheduler_shouldReturnConfigurationFromConfig() {
+  void getOutboxSchedulerShouldReturnConfigurationFromConfig() {
       final SchedulerOutboxConfigurationVo expected = SchedulerOutboxConfigurationVoTestDataBuilder
               .builder()
               .build()
@@ -38,7 +38,7 @@ class SchedulerConfigurationAdapterImplTestIT {
   }
 
   @Test
-  void getInbox_Scheduler_shouldReturnConfigurationFromConfig() {
+  void getInboxSchedulerShouldReturnConfigurationFromConfig() {
       final SchedulerInboxConfigurationVo expected = SchedulerInboxConfigurationVoTestDataBuilder
                 .builder()
                 .build()

@@ -5,7 +5,8 @@ import com.architecture.hexagonal.domain.model.vo.outbox.OutboxStatusVo;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.OutboxDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.PayloadDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.time.TestClock;
-import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 import lombok.Builder;
@@ -35,10 +36,10 @@ public class OutboxDaoTestDataBuilder {
   private int retryCount = 0;
 
   @Builder.Default
-  private OffsetDateTime createdAt = OffsetDateTime.now(TestClock.FIXED_CLOCK);
+  private ZonedDateTime createdAt = TestClock.FIXED_INSTANT.atZone(ZoneOffset.UTC);
 
   @Builder.Default
-  private OffsetDateTime processedAt = OffsetDateTime.now(TestClock.FIXED_CLOCK);
+  private ZonedDateTime processedAt = TestClock.FIXED_INSTANT.atZone(ZoneOffset.UTC);
 
   public OutboxDao outboxEventDao() {
     final OutboxDao outboxDao = new OutboxDao();

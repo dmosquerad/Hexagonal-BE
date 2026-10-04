@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 class EmailVoFactoryTest {
 
   @Test
-  void from_shouldReturnEmailVo_whenEmailIsValid() {
+  void fromShouldReturnEmailVoWhenEmailIsValid() {
     final EmailVo expected = EmailVoTestDataBuilder.builder().build().emailVo();
 
     final EmailVo result = EmailVoFactory.from("test@example.com");
@@ -18,7 +18,7 @@ class EmailVoFactoryTest {
   }
 
   @Test
-  void from_shouldThrowIllegalArgumentException_whenEmailIsInvalid() {
+  void fromShouldThrowIllegalArgumentExceptionWhenEmailIsInvalid() {
     Assertions.assertThatThrownBy(() -> EmailVoFactory.from("not-an-email"))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage(ExceptionMessage.INVALID_EMAIL_FORMAT + "not-an-email");

@@ -31,7 +31,7 @@ class CreateUserUseCaseImplTest {
   @Mock EmailConfigurationPort emailConfigurationPort;
 
   @Test
-  void execute_shouldCreateUser_whenEmailIsAllowed() throws InvalidValueException {
+  void executeShouldCreateUserWhenEmailIsAllowed() throws InvalidValueException {
     final User user = UserTestDataBuilder.builder().build().user();
     final CreateUserInput createUserInput =
         CreateUserInputTestDataBuilder.builder().build().createUserInput();
@@ -50,7 +50,7 @@ class CreateUserUseCaseImplTest {
   }
 
   @Test
-  void execute_shouldThrowInvalidValueException_whenEmailIsBlocked() {
+  void executeShouldThrowInvalidValueExceptionWhenEmailIsBlocked() {
     final CreateUserInput createUserInput =
         CreateUserInputTestDataBuilder.builder().build().createUserInput();
 

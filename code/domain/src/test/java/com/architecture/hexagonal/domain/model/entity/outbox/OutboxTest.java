@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 class OutboxTest {
 
   @Test
-  void getId_shouldReturnOutboxId() {
+  void getIdShouldReturnOutboxId() {
     final Outbox outbox = OutboxTestDataBuilder.builder().build().outbox();
 
     Assertions.assertThat(outbox.getId())

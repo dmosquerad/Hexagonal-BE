@@ -27,7 +27,7 @@ class OutboxReadMongodbAdapterImplTestIT extends MongodbIT {
   @MockitoSpyBean private OutboxDoFromMongodbMapper outboxDoFromMongodbMapper;
 
   @Test
-  void findPendingEvents_shouldReturnPendingEventsOrderedByCreatedAt() {
+  void findPendingEventsShouldReturnPendingEventsOrderedByCreatedAt() {
     final Outbox outbox = OutboxTestDataBuilder.builder().processedAt(null).build().outboxEventDo();
     final OutboxStatusAndAggregateProjector outboxStatusAndAggregateProjector = OutboxStatusAndAggregateProjectorTestDataBuilder.builder().build().outboxStatusAndAggregateProjector();
 

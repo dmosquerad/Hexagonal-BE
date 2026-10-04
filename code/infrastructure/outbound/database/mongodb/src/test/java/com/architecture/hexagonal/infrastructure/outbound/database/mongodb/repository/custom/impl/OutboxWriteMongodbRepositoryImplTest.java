@@ -3,7 +3,6 @@ package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.repo
 import com.architecture.hexagonal.domain.model.vo.outbox.OutboxStatusVo;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.OutboxDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.dao.OutboxDaoTestDataBuilder;
-import java.time.OffsetDateTime;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,7 +35,7 @@ class OutboxWriteMongodbRepositoryImplTest {
   @Mock private TerminatingFindAndModify terminatingFindAndModify;
 
   @Test
-  void upsertByEventIdentity_shouldUpdateStatusAndUpsert_whenDocumentExists() {
+  void upsertByEventIdentityShouldUpdateStatusAndUpsertWhenDocumentExists() {
     final OutboxDao outboxDao =
         OutboxDaoTestDataBuilder.builder().processedAt(null).build().outboxEventDao();
     final OutboxDao persistedDao =
@@ -61,7 +60,7 @@ class OutboxWriteMongodbRepositoryImplTest {
   }
 
   @Test
-  void upsertByEventIdentity_shouldSetRetryCount_whenRetryCountGreaterThanZero() {
+  void upsertByEventIdentityShouldSetRetryCountWhenRetryCountGreaterThanZero() {
     final OutboxDao outboxDao =
         OutboxDaoTestDataBuilder.builder().processedAt(null).retryCount(3).build().outboxEventDao();
 
@@ -84,12 +83,10 @@ class OutboxWriteMongodbRepositoryImplTest {
   }
 
   @Test
-  void upsertByEventIdentity_shouldSetProcessedAt_whenProcessedAtIsNotNull() {
-    final OffsetDateTime processedAt = OffsetDateTime.now();
+  void upsertByEventIdentityShouldSetProcessedAtWhenProcessedAtIsNotNull() {
     final OutboxDao outboxDao =
         OutboxDaoTestDataBuilder.builder()
             .status(OutboxStatusVo.PUBLISHED)
-            .processedAt(processedAt)
             .build()
             .outboxEventDao();
 
@@ -112,7 +109,7 @@ class OutboxWriteMongodbRepositoryImplTest {
   }
 
   @Test
-  void claimPendingForProcessing_shouldReturnClaimedOutbox_whenPendingEventExists() {
+  void claimPendingForProcessingShouldReturnClaimedOutboxWhenPendingEventExists() {
     final OutboxDao outboxDao =
         OutboxDaoTestDataBuilder.builder()
             .status(OutboxStatusVo.PENDING)
@@ -145,7 +142,7 @@ class OutboxWriteMongodbRepositoryImplTest {
   }
 
   @Test
-  void claimPendingForProcessing_shouldReturnNull_whenEventWasAlreadyClaimed() {
+  void claimPendingForProcessingShouldReturnNullWhenEventWasAlreadyClaimed() {
     final OutboxDao outboxDao =
         OutboxDaoTestDataBuilder.builder().status(OutboxStatusVo.PENDING).build().outboxEventDao();
 

@@ -56,7 +56,7 @@ class EmailControllerImplTestIT {
   Clock clock;
 
   @Test
-  void getBlockedRules_shouldReturnBlockedRulesResponse_whenBlockedRulesExist() throws Exception {
+  void getBlockedRulesShouldReturnBlockedRulesResponseWhenBlockedRulesExist() throws Exception {
 
     final EmailBlockRulesVo emailBlockRulesVo = EmailBlockRulesTestDataBuilder.builder()
         .build()

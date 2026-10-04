@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 class UserTest {
 
   @Test
-  void getId_shouldReturnUserId() {
+  void getIdShouldReturnUserId() {
     final User user = UserTestDataBuilder.builder().build().user();
 
     Assertions.assertThat(user.getId()).isEqualTo(user.userId());

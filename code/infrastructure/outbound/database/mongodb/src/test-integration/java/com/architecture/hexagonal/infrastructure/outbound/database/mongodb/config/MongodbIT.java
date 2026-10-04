@@ -1,5 +1,7 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.config;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.junit.jupiter.api.BeforeAll;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -12,6 +14,7 @@ import org.testcontainers.utility.MountableFile;
 import java.io.IOException;
 
 @Testcontainers
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class MongodbIT {
 
   @Container

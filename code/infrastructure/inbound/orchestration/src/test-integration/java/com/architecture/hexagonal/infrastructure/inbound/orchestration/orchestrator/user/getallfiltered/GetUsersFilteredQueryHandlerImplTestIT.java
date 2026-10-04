@@ -45,7 +45,7 @@ class GetUsersFilteredQueryHandlerImplTestIT {
   private TransactionBoundary transactionBoundary;
 
   @Test
-  void getUsersFilteredQueryHandler_shouldReturnPaginationResult_whenBlockEmailIsProvided() {
+  void getUsersFilteredQueryHandlerShouldReturnPaginationResultWhenBlockEmailIsProvided() {
     final GetUsersFilteredQueryDto queryDto = GetUsersFilteredQueryDtoTestDataBuilder.builder()
         .host("example")
         .blockEmail(true)

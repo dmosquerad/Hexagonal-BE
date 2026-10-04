@@ -33,7 +33,7 @@ class UserOutboxServiceImplTest {
       Mappers.getMapper(UserFromOutboxMapper.class);
 
   @Test
-  void process_shouldPublishCreatedEvent_whenActionIsUserCreated() {
+  void processShouldPublishCreatedEventWhenActionIsUserCreated() {
     final PayloadVo payload = PayloadTestDataBuilder.builder().build().payload();
     final Outbox outbox =
         OutboxTestDataBuilder.builder()
@@ -49,7 +49,7 @@ class UserOutboxServiceImplTest {
   }
 
   @Test
-  void process_shouldPublishUpdatedEvent_whenActionIsUserUpdated() {
+  void processShouldPublishUpdatedEventWhenActionIsUserUpdated() {
     final PayloadVo payload = PayloadTestDataBuilder.builder().build().payload();
     final Outbox outbox =
         OutboxTestDataBuilder.builder()
@@ -65,7 +65,7 @@ class UserOutboxServiceImplTest {
   }
 
   @Test
-  void process_shouldPublishDeletedEvent_whenActionIsUserDeleted() {
+  void processShouldPublishDeletedEventWhenActionIsUserDeleted() {
     final PayloadVo payload = PayloadTestDataBuilder.builder().build().payload();
     final Outbox outbox =
         OutboxTestDataBuilder.builder()
@@ -81,7 +81,7 @@ class UserOutboxServiceImplTest {
   }
 
   @Test
-  void process_shouldThrowIllegalArgumentException_whenActionIsUnsupported() {
+  void processShouldThrowIllegalArgumentExceptionWhenActionIsUnsupported() {
     final Outbox outbox = OutboxTestDataBuilder.builder().action("").payload(null).build().outbox();
 
     AssertionsForClassTypes.assertThatThrownBy(() -> userOutboxServiceImpl.process(outbox))

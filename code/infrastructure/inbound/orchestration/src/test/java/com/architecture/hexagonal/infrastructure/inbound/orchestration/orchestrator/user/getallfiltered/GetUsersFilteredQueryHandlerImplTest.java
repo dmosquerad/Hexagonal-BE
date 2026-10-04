@@ -38,7 +38,7 @@ class GetUsersFilteredQueryHandlerImplTest {
   @Spy private TransactionBoundary transactionBoundary = new TransactionBoundaryTest();
 
   @Test
-  void handle_shouldReturnPaginationResult_whenBlockEmailIsNull() {
+  void handleShouldReturnPaginationResultWhenBlockEmailIsNull() {
     final PaginationResult<User> expectedResult =
         PaginationResult.<User>builder()
             .data(Collections.emptyList())
@@ -69,7 +69,7 @@ class GetUsersFilteredQueryHandlerImplTest {
   }
 
   @Test
-  void handle_shouldReturnPaginationResult_whenBlockEmailIsProvided() {
+  void handleShouldReturnPaginationResultWhenBlockEmailIsProvided() {
     final EmailBlockRulesVo blockedRules = EmailBlockRulesVo.builder().build();
     final PaginationResult<User> expectedResult =
         PaginationResult.<User>builder()

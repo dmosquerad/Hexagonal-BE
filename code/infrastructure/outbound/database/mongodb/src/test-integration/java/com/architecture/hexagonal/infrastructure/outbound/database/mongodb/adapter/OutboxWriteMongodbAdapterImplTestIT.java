@@ -33,7 +33,7 @@ class OutboxWriteMongodbAdapterImplTestIT extends MongodbIT {
   @MockitoBean private OutboxWriteMongodbRepository outboxWriteMongodbRepository;
 
   @Test
-  void save_shouldPersistOutboxEventAndReturnOutboxDo() {
+  void saveShouldPersistOutboxEventAndReturnOutboxDo() {
     final Outbox outbox =
         OutboxTestDataBuilder.builder().processedAt(null).build().outboxEventDo();
 

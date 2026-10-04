@@ -35,7 +35,7 @@ class GetAllUsersUseCaseImplTest {
 
   @Test
   void
-      execute_shouldCallRepositoryGetAllUsersWithFilters_whenPaginationIsNullButBlockedRulesAreProvided() {
+      executeShouldCallRepositoryGetAllUsersWithFiltersWhenPaginationIsNullButBlockedRulesAreProvided() {
     final String host = "example";
     final Boolean blockEmail = false;
     final List<User> users =
@@ -72,7 +72,7 @@ class GetAllUsersUseCaseImplTest {
   }
 
   @Test
-  void execute_shouldReturnBlockedEmailUsers_whenBlockEmailIsTrue() {
+  void executeShouldReturnBlockedEmailUsersWhenBlockEmailIsTrue() {
     final User user = UserTestDataBuilder.builder().build().user();
     final List<User> users = Collections.singletonList(user);
 
@@ -112,7 +112,7 @@ class GetAllUsersUseCaseImplTest {
   }
 
   @Test
-  void execute_shouldReturnAllowedEmailUsers_whenBlockEmailIsFalse() {
+  void executeShouldReturnAllowedEmailUsersWhenBlockEmailIsFalse() {
     final User user = UserTestDataBuilder.builder().build().user();
     final List<User> users = Collections.singletonList(user);
 

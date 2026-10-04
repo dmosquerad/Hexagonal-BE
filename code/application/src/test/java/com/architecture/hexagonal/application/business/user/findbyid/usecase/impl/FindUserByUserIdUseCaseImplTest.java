@@ -25,7 +25,7 @@ class FindUserByUserIdUseCaseImplTest {
   @Mock UserRepositoryReadPort userRepositoryReadPort;
 
   @Test
-  void execute_shouldReturnUser_whenUserExists() throws ResourceNotFoundException {
+  void executeShouldReturnUserWhenUserExists() throws ResourceNotFoundException {
     final User user = UserTestDataBuilder.builder().build().user();
     final FindUserByUserIdInput findUserByUserIdInput =
         FindUserByUserIdInputTestDataBuilder.builder().build().findUserByUserIdInput();
@@ -41,7 +41,7 @@ class FindUserByUserIdUseCaseImplTest {
   }
 
   @Test
-  void execute_shouldThrowResourceNotFoundException_whenUserNotFound() {
+  void executeShouldThrowResourceNotFoundExceptionWhenUserNotFound() {
     final FindUserByUserIdInput findUserByUserIdInput =
         FindUserByUserIdInputTestDataBuilder.builder().build().findUserByUserIdInput();
 

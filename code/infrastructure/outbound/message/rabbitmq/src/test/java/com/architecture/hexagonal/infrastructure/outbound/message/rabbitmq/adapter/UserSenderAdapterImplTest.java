@@ -6,7 +6,6 @@ import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserDeleted;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserUpdated;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.mapper.user.UserMessageDaoMapper;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.message.UserUpdatedTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.model.entity.user.UserTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.time.TestClock;
 import java.time.Clock;
@@ -32,7 +31,7 @@ class UserSenderAdapterImplTest {
   @Spy private Clock clock = TestClock.FIXED_CLOCK;
 
   @Test
-  void userSenderCreated_shouldPublishUserCreatedEvent_whenUserIsValid() {
+  void userSenderCreatedShouldPublishUserCreatedEventWhenUserIsValid() {
     final User user = UserTestDataBuilder.builder().build().user();
 
     userSenderAdapterImpl.userSenderCreated(user);
@@ -44,11 +43,8 @@ class UserSenderAdapterImplTest {
   }
 
   @Test
-  void userSenderUpdated_shouldPublishUserUpdatedEvent_whenUserIsValid() {
+  void userSenderUpdatedShouldPublishUserUpdatedEventWhenUserIsValid() {
     final User user = UserTestDataBuilder.builder().build().user();
-    final UserUpdated userUpdated =
-        UserUpdatedTestDataBuilder.builder().messageHeader(null).build().userUpdated();
-
     userSenderAdapterImpl.userSenderUpdated(user);
 
     Mockito.verify(userMessageDaoMapper)
@@ -58,7 +54,7 @@ class UserSenderAdapterImplTest {
   }
 
   @Test
-  void userSenderDeleted_shouldPublishUserDeletedEvent_whenUserIsValid() {
+  void userSenderDeletedShouldPublishUserDeletedEventWhenUserIsValid() {
     final User user = UserTestDataBuilder.builder().build().user();
 
     userSenderAdapterImpl.userSenderDeleted(user);

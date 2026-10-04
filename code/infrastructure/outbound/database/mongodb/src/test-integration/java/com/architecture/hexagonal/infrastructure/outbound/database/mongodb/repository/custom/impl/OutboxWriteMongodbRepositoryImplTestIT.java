@@ -26,7 +26,7 @@ class OutboxWriteMongodbRepositoryImplTestIT extends MongodbIT {
   @MockitoSpyBean private MongoTemplate mongoTemplate;
 
   @Test
-    void upsertByEventIdentity_shouldInsertNewDocument_whenDocumentDoesNotExist() {
+    void upsertByEventIdentityShouldInsertNewDocumentWhenDocumentDoesNotExist() {
     final OutboxDao outboxDao =
         OutboxDaoTestDataBuilder.builder().retryCount(1).build().outboxEventDao();
 
@@ -43,7 +43,7 @@ class OutboxWriteMongodbRepositoryImplTestIT extends MongodbIT {
   }
 
   @Test
-    void upsertByEventIdentity_shouldUpdateStatus_whenDocumentExists() {
+    void upsertByEventIdentityShouldUpdateStatusWhenDocumentExists() {
     final OutboxDao outboxDao =
         OutboxDaoTestDataBuilder.builder().processedAt(null).build().outboxEventDao();
     final OutboxDao savedOutbox = outboxWriteMongodbRepository.upsertByEventIdentity(outboxDao);
@@ -69,7 +69,7 @@ class OutboxWriteMongodbRepositoryImplTestIT extends MongodbIT {
   }
 
   @Test
-    void upsertByEventIdentity_shouldSetRetryCount_whenRetryCountGreaterThanZero() {
+    void upsertByEventIdentityShouldSetRetryCountWhenRetryCountGreaterThanZero() {
     final OutboxDao outboxDao =
         OutboxDaoTestDataBuilder.builder().processedAt(null).build().outboxEventDao();
     final OutboxDao savedOutbox = outboxWriteMongodbRepository.upsertByEventIdentity(outboxDao);
@@ -95,7 +95,7 @@ class OutboxWriteMongodbRepositoryImplTestIT extends MongodbIT {
   }
 
   @Test
-    void upsertByEventIdentity_shouldUpdateAllFields_whenMultipleFieldsAreModified() {
+    void upsertByEventIdentityShouldUpdateAllFieldsWhenMultipleFieldsAreModified() {
     final OutboxDao outboxDao =
         OutboxDaoTestDataBuilder.builder()
             .processedAt(null)
@@ -126,7 +126,7 @@ class OutboxWriteMongodbRepositoryImplTestIT extends MongodbIT {
   }
 
   @Test
-    void claimPendingForProcessing_shouldChangeStatusToProcessing_whenPendingEventExists() {
+    void claimPendingForProcessingShouldChangeStatusToProcessingWhenPendingEventExists() {
     final OutboxDao outboxDao =
         OutboxDaoTestDataBuilder.builder()
             .status(OutboxStatusVo.PENDING)
@@ -154,7 +154,7 @@ class OutboxWriteMongodbRepositoryImplTestIT extends MongodbIT {
   }
 
   @Test
-  void claimPendingForProcessing_shouldReturnNull_whenEventIsNotPending() {
+  void claimPendingForProcessingShouldReturnNullWhenEventIsNotPending() {
     final OutboxDao outboxDao = OutboxDaoTestDataBuilder.builder()
             .status(OutboxStatusVo.PROCESSING)
             .build()

@@ -35,7 +35,7 @@ class UpdateUserInputHandlerTestIT {
   private TransactionBoundary transactionBoundary;
 
   @Test
-  void updateUserCommandHandler_shouldReturnUpdatedUser_whenCommandIsExecuted() {
+  void updateUserCommandHandlerShouldReturnUpdatedUserWhenCommandIsExecuted() {
     final UpdateUserCommandDto updateUserCommandDto = UpdateUserCommandDtoTestDataBuilder.builder().build().updateUserCommandDto();
     final User user = Mockito.mock(User.class);
 

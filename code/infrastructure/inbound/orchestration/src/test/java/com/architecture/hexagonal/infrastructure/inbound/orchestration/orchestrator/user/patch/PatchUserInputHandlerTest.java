@@ -33,7 +33,7 @@ class PatchUserInputHandlerTest {
   @Spy private TransactionBoundary transactionBoundary = new TransactionBoundaryTest();
 
   @Test
-  void handle_shouldReturnPatchedUser_whenCommandIsExecuted() {
+  void handleShouldReturnPatchedUserWhenCommandIsExecuted() {
     PatchUserCommandDto patchUserCommandDto =
         PatchUserCommandDtoTestDataBuilder.builder().build().patchUserCommandDto();
     User user = UserTestDataBuilder.builder().build().user();

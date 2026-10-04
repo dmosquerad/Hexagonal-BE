@@ -18,7 +18,7 @@ class OutboxSchedulerOutboxConfigImplTest {
   @InjectMocks private OutboxSchedulerImpl outboxRetrySchedulerImpl;
 
   @Test
-  void scheduleRetry_shouldSendRetryOutboxCommand() {
+  void scheduleRetryShouldSendRetryOutboxCommand() {
     outboxRetrySchedulerImpl.scheduleRetry();
 
     Mockito.verify(commandBus).execute(Mockito.any(RetryOutboxeventCommandDto.class));

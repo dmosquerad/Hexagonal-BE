@@ -40,7 +40,7 @@ class UserPostgresqlWriteAdapterImplTestIT extends PostgresqlIT {
   UserDaoMapper userDaoMapper;
 
   @Test
-  void saveUser_shouldPersistUser_whenUserIsValid() {
+  void saveUserShouldPersistUserWhenUserIsValid() {
     final User user = UserTestDataBuilder.builder()
         .build()
         .user();
@@ -58,7 +58,7 @@ class UserPostgresqlWriteAdapterImplTestIT extends PostgresqlIT {
   }
 
   @Test
-  void deleteUser_shouldReturnUser_whenUserExists() {
+  void deleteUserShouldReturnUserWhenUserExists() {
     final User user = UserTestDataBuilder
         .builder()
         .build()

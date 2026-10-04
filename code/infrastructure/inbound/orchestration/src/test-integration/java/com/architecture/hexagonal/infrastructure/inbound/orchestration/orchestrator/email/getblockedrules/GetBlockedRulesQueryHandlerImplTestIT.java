@@ -29,7 +29,7 @@ class GetBlockedRulesQueryHandlerImplTestIT {
   private TransactionBoundary transactionBoundary;
 
   @Test
-  void getBlockedRulesQueryHandler_shouldReturnBlockedRules_whenQueryIsExecuted() {
+  void getBlockedRulesQueryHandlerShouldReturnBlockedRulesWhenQueryIsExecuted() {
     final GetBlockedRulesQueryDto queryDto = GetBlockedRulesQueryDtoTestDataBuilder.builder().build().getBlockedRulesQueryDto();
     final EmailBlockRulesVo blockedRules = EmailBlockRulesVo.builder().build();
 

@@ -31,7 +31,7 @@ class OutboxWriteMongodbAdapterImplTest {
   @Spy OutboxDaoMapper outboxDaoMapper = Mappers.getMapper(OutboxDaoMapper.class);
 
   @Test
-  void save_shouldPersistOutboxEvent_whenEventIsValid() {
+  void saveShouldPersistOutboxEventWhenEventIsValid() {
     final Outbox outbox = OutboxTestDataBuilder.builder().processedAt(null).build().outboxEventDo();
     final OutboxDao outboxDao =
         OutboxDaoTestDataBuilder.builder().processedAt(null).build().outboxEventDao();

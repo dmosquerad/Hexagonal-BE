@@ -25,7 +25,7 @@ class UserExistsUseCaseImplTest {
   @Mock UserRepositoryReadPort userRepositoryReadPort;
 
   @Test
-  void execute_shouldNotThrow_whenUserExists() throws ResourceNotFoundException {
+  void executeShouldNotThrowWhenUserExists() throws ResourceNotFoundException {
     final User user = UserTestDataBuilder.builder().build().user();
 
     final UserExistsInput userExistsInput =
@@ -40,7 +40,7 @@ class UserExistsUseCaseImplTest {
   }
 
   @Test
-  void execute_shouldThrowResourceNotFoundException_whenUserNotFound() {
+  void executeShouldThrowResourceNotFoundExceptionWhenUserNotFound() {
     final UserExistsInput userExistsInput =
         UserExistsInputTestDataBuilder.builder().build().userExistsInput();
 

@@ -35,7 +35,7 @@ class FindUserByUserIdInputHandlerTestIT {
   private TransactionBoundary transactionBoundary;
 
   @Test
-  void findUserByUserIdQueryHandler_shouldReturnUser_whenQueryIsExecuted() {
+  void findUserByUserIdQueryHandlerShouldReturnUserWhenQueryIsExecuted() {
     final FindUserByUserIdQueryDto queryDto = FindUserByUserIdQueryDtoTestDataBuilder.builder().build().findUserByUserIdQueryDto();
     final User user = Mockito.mock(User.class);
 

@@ -43,7 +43,7 @@ class UserPostgresqlReadAdapterImplTestIT extends PostgresqlIT {
   UserFromPostgresqlMapper userFromPostgresqlMapper;
 
   @Test
-  void findUserById_shouldReturnUser_whenUserExists() {
+  void findUserByIdShouldReturnUserWhenUserExists() {
     final User user = UserTestDataBuilder
             .builder()
             .build()
@@ -61,7 +61,7 @@ class UserPostgresqlReadAdapterImplTestIT extends PostgresqlIT {
   }
 
   @Test
-  void getAllUsers_shouldReturnOnlyBlockedHostUsers_whenBlockHostFilterIsApplied() {
+  void getAllUsersShouldReturnOnlyBlockedHostUsersWhenBlockHostFilterIsApplied() {
     final Pagination pagination = PaginationTestDataBuilder.builder().build().pagination();
 
     final PaginationResult<User> result = userPostgresqlReadAdapterImpl.getAllUsers(

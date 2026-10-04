@@ -33,7 +33,7 @@ class UserPostgresqlWriteAdapterImplTest {
   @Spy UserDaoMapper userDaoMapper = Mappers.getMapper(UserDaoMapper.class);
 
   @Test
-  void saveUser_shouldPersistUser_whenUserIsValid() {
+  void saveUserShouldPersistUserWhenUserIsValid() {
     final User user = UserTestDataBuilder.builder().build().user();
     final UserDao userDao = UserDaoTestDataBuilder.builder().build().userDao();
 
@@ -52,7 +52,7 @@ class UserPostgresqlWriteAdapterImplTest {
   }
 
   @Test
-  void deleteUser_shouldReturnUser_whenUserExists() {
+  void deleteUserShouldReturnUserWhenUserExists() {
     final User user = UserTestDataBuilder.builder().build().user();
     final UserDao userDao = UserDaoTestDataBuilder.builder().build().userDao();
 
@@ -71,7 +71,7 @@ class UserPostgresqlWriteAdapterImplTest {
   }
 
   @Test
-  void deleteUser_shouldReturnEmpty_whenUserNotFound() {
+  void deleteUserShouldReturnEmptyWhenUserNotFound() {
     final UserDao userDao = UserDaoTestDataBuilder.builder().build().userDao();
 
     Mockito.when(userPostgresqlWriteRepository.deleteByUserId(userDao.getUserId()))

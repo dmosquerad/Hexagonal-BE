@@ -32,7 +32,7 @@ class OutboxProcessAdapterImplTestIT {
   @MockitoSpyBean private UserFromOutboxMapper userFromOutboxMapper;
 
   @Test
-  void process_shouldSendCreatedMessage_whenActionIsUserCreated() {
+  void processShouldSendCreatedMessageWhenActionIsUserCreated() {
      final Outbox outbox =
         OutboxTestDataBuilder.builder()
             .action(ActionType.UserActionType.USER_CREATED.getActionType())
@@ -47,7 +47,7 @@ class OutboxProcessAdapterImplTestIT {
   }
 
   @Test
-  void process_shouldSendUpdatedMessage_whenActionIsUserUpdated() {
+  void processShouldSendUpdatedMessageWhenActionIsUserUpdated() {
      final Outbox outbox =
         OutboxTestDataBuilder.builder()
             .action(ActionType.UserActionType.USER_UPDATED.getActionType())
@@ -62,7 +62,7 @@ class OutboxProcessAdapterImplTestIT {
   }
 
   @Test
-  void process_shouldSendDeletedMessage_whenActionIsUserDeleted() {
+  void processShouldSendDeletedMessageWhenActionIsUserDeleted() {
      final Outbox outbox =
         OutboxTestDataBuilder.builder()
             .action(ActionType.UserActionType.USER_DELETED.getActionType())

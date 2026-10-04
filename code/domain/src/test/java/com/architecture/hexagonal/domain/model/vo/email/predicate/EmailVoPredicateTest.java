@@ -8,21 +8,21 @@ import org.junit.jupiter.api.Test;
 class EmailVoPredicateTest {
 
   @Test
-  void isValidMail_shouldReturnTrue_whenEmailIsValid() {
+  void isValidMailShouldReturnTrueWhenEmailIsValid() {
     boolean result = EmailVoPredicate.IS_VALID_MAIL.test("user@example.com");
 
     Assertions.assertThat(result).isTrue();
   }
 
   @Test
-  void isValidMail_shouldReturnFalse_whenEmailIsInvalid() {
+  void isValidMailShouldReturnFalseWhenEmailIsInvalid() {
     boolean result = EmailVoPredicate.IS_VALID_MAIL.test("invalid-email");
 
     Assertions.assertThat(result).isFalse();
   }
 
   @Test
-  void canFormEmail_shouldReturnTrue_whenAllFieldsPresent() {
+  void canFormEmailShouldReturnTrueWhenAllFieldsPresent() {
     EmailVo emailVo = EmailVoTestDataBuilder.builder().build().emailVo();
 
     boolean result = EmailVoPredicate.CAN_FORM_EMAIL.test(emailVo);
@@ -31,7 +31,7 @@ class EmailVoPredicateTest {
   }
 
   @Test
-  void canFormEmail_shouldReturnFalse_whenFieldsMissing() {
+  void canFormEmailShouldReturnFalseWhenFieldsMissing() {
     EmailVo emailVo = EmailVoTestDataBuilder.builder().username(null).build().emailVo();
 
     boolean result = EmailVoPredicate.CAN_FORM_EMAIL.test(emailVo);
@@ -40,7 +40,7 @@ class EmailVoPredicateTest {
   }
 
   @Test
-  void hostEquals_shouldReturnTrue_whenHostMatches() {
+  void hostEqualsShouldReturnTrueWhenHostMatches() {
     EmailVo emailVo = EmailVoTestDataBuilder.builder().build().emailVo();
 
     boolean result = EmailVoPredicate.hostEquals("example").test(emailVo);
@@ -49,7 +49,7 @@ class EmailVoPredicateTest {
   }
 
   @Test
-  void hostEquals_shouldReturnFalse_whenHostDoesNotMatch() {
+  void hostEqualsShouldReturnFalseWhenHostDoesNotMatch() {
     EmailVo emailVo = EmailVoTestDataBuilder.builder().build().emailVo();
 
     boolean result = EmailVoPredicate.hostEquals("host").test(emailVo);
@@ -58,7 +58,7 @@ class EmailVoPredicateTest {
   }
 
   @Test
-  void canFormDomain_shouldReturnTrue_whenHostAndTldPresent() {
+  void canFormDomainShouldReturnTrueWhenHostAndTldPresent() {
     EmailVo emailVo = EmailVoTestDataBuilder.builder().build().emailVo();
 
     boolean result = EmailVoPredicate.CAN_FORM_DOMAIN.test(emailVo);
@@ -67,7 +67,7 @@ class EmailVoPredicateTest {
   }
 
   @Test
-  void canFormDomain_shouldReturnFalse_whenHostIsBlank() {
+  void canFormDomainShouldReturnFalseWhenHostIsBlank() {
     EmailVo emailVo = EmailVoTestDataBuilder.builder().host(null).build().emailVo();
 
     boolean result = EmailVoPredicate.CAN_FORM_DOMAIN.test(emailVo);

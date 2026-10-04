@@ -1,5 +1,7 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.postgresql;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
@@ -9,6 +11,7 @@ import jakarta.persistence.Entity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 @AnalyzeClasses(packages = "com.architecture.hexagonal.infrastructure.outbound.database.postgresql", importOptions = ImportOption.DoNotIncludeTests.class)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 class InfrastructureOutboundDatabasePostgresqlArchTest {
 
     @ArchTest

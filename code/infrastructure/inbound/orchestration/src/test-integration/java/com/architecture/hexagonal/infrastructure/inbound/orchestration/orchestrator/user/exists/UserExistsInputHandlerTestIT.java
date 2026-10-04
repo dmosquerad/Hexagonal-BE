@@ -34,7 +34,7 @@ class UserExistsInputHandlerTestIT {
   private TransactionBoundary transactionBoundary;
 
   @Test
-  void userExistsQueryHandler_shouldExecuteQuery_whenQueryIsExecuted() {
+  void userExistsQueryHandlerShouldExecuteQueryWhenQueryIsExecuted() {
     final UserExistsQueryDto queryDto = UserExistsQueryDtoTestDataBuilder.builder().build().userExistsQueryDto();
 
     Mockito.doNothing()

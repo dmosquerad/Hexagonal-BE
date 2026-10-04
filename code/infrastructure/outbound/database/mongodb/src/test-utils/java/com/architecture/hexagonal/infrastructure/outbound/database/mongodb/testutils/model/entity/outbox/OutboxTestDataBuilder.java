@@ -1,10 +1,10 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.model.entity.outbox;
 
-import com.architecture.hexagonal.domain.model.vo.outbox.PayloadVo;
 import com.architecture.hexagonal.domain.model.vo.outbox.AggregateTypeVo;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
 import com.architecture.hexagonal.domain.model.vo.outbox.OutboxStatusVo;
-import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.model.vo.outbox.PayloadTestDataBuilder;
+import com.architecture.hexagonal.domain.model.vo.outbox.PayloadVo;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.model.vo.outbox.PayloadVoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.time.TestClock;
 
 import java.time.OffsetDateTime;
@@ -28,7 +28,7 @@ public class OutboxTestDataBuilder {
   private String action = "USER_CREATED";
 
   @Builder.Default
-  private PayloadVo payload = PayloadTestDataBuilder.builder().build().payload();
+  private PayloadVo payload = PayloadVoTestDataBuilder.builder().build().payloadDao();
 
   @Builder.Default
   private OutboxStatusVo status = OutboxStatusVo.PENDING;

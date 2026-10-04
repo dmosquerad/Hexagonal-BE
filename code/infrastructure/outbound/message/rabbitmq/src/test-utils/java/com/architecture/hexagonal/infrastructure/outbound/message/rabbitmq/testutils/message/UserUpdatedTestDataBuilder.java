@@ -14,7 +14,7 @@ public class UserUpdatedTestDataBuilder {
     private MessageHeaderVo messageHeader = MessageHeaderVoTestDataBuilder.builder().build().messageHeaderVo();
 
     @Builder.Default
-    private User user = UserTestDataBuilder.builder().build().user();;
+    private User user = UserTestDataBuilder.builder().build().user();
 
     public UserUpdated userUpdated() {
         final UserUpdated userUpdated = new UserUpdated();

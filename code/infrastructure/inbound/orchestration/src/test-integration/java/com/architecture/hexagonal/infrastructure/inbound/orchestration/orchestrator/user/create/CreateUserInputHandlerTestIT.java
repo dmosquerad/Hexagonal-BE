@@ -35,7 +35,7 @@ class CreateUserInputHandlerTestIT {
   private TransactionBoundary transactionBoundary;
 
   @Test
-  void createUserCommandHandler_shouldReturnCreatedUser_whenCommandIsExecuted() {
+  void createUserCommandHandlerShouldReturnCreatedUserWhenCommandIsExecuted() {
     final CreateUserCommandDto createUserCommandDto = CreateUserCommandDtoTestDataBuilder.builder().build().createUserCommandDto();
     final User user = Mockito.mock(User.class);
 

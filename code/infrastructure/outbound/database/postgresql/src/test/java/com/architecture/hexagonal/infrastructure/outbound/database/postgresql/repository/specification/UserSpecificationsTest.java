@@ -53,7 +53,7 @@ class UserSpecificationsTest {
   }
 
   @Test
-  void hostEquals_shouldReturnNull_whenHostIsBlank() {
+  void hostEqualsShouldReturnNullWhenHostIsBlank() {
     final Specification<UserDao> specification = UserSpecifications.hostEquals("");
 
     AssertionsForClassTypes.assertThat(
@@ -62,7 +62,7 @@ class UserSpecificationsTest {
   }
 
   @Test
-  void hostEquals_shouldBuildPredicate_whenHostIsNotBlank() {
+  void hostEqualsShouldBuildPredicateWhenHostIsNotBlank() {
     final String host = "example";
 
     Mockito.when(root.get(UserDao.Fields.email)).thenReturn((Path) emailExpression);
@@ -81,7 +81,7 @@ class UserSpecificationsTest {
   }
 
   @Test
-  void blockedEmail_shouldReturnNull_whenNoRulesArePresent() {
+  void blockedEmailShouldReturnNullWhenNoRulesArePresent() {
     final EmailBlockRulesVo rules =
         EmailBlockRulesVoTestDataBuilder.builder().build().emailBlockRulesVo();
 
@@ -119,7 +119,7 @@ class UserSpecificationsTest {
   }
 
   @Test
-  void blockedEmail_shouldReturnPredicate_whenBlockEmailIsTrue() {
+  void blockedEmailShouldReturnPredicateWhenBlockEmailIsTrue() {
     final EmailBlockRulesVo rules =
         EmailBlockRulesVoTestDataBuilder.builder()
             .email(Set.of("blocked@example.com"))
@@ -160,7 +160,7 @@ class UserSpecificationsTest {
   }
 
   @Test
-  void blockedEmail_shouldReturnNegatedPredicate_whenBlockEmailIsFalse() {
+  void blockedEmailShouldReturnNegatedPredicateWhenBlockEmailIsFalse() {
     final EmailBlockRulesVo rules =
         EmailBlockRulesVoTestDataBuilder.builder()
             .email(Set.of("blocked@example.com"))
