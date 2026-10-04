@@ -65,7 +65,6 @@ class GetUsersFilteredQueryHandlerImplTestIT {
     Mockito.when(getAllUsersUseCase.execute(Mockito.any(GetUsersInput.class)))
         .thenReturn(expectedResult);
 
-
     PaginationResult<User> result = getUsersFilteredQueryHandlerImpl.handle(queryDto);
 
     AssertionsForClassTypes.assertThat(result)
@@ -75,5 +74,35 @@ class GetUsersFilteredQueryHandlerImplTestIT {
     Mockito.verify(getBlockedRulesUseCase).execute();
     Mockito.verify(getAllUsersUseCase).execute(Mockito.any(GetUsersInput.class));
     Mockito.verify(transactionBoundary, Mockito.times(2)).read(Mockito.any());
+  }
+
+  @Test
+  void getUsersFilteredQueryHandlerShouldSkipBlockedRulesWhenBlockEmailIsNotProvided() {
+    final GetUsersFilteredQueryDto queryDto =
+        GetUsersFilteredQueryDtoTestDataBuilder.builder()
+            .host("example")
+            .blockEmail(null)
+            .pagination(
+                PaginationDtoTestDataBuilder.builder().page(1).size(20).build().paginationDto())
+            .build()
+            .getUsersFilteredQueryDto();
+    final PaginationResult<User> expectedResult =
+        PaginationResult.<User>builder()
+            .data(Collections.emptyList())
+            .page(1)
+            .size(20)
+            .totalElements(0L)
+            .totalPages(0)
+            .build();
+
+    Mockito.when(getAllUsersUseCase.execute(Mockito.any(GetUsersInput.class)))
+        .thenReturn(expectedResult);
+
+    PaginationResult<User> result = getUsersFilteredQueryHandlerImpl.handle(queryDto);
+
+    AssertionsForClassTypes.assertThat(result).isSameAs(expectedResult);
+    Mockito.verify(getBlockedRulesUseCase, Mockito.never()).execute();
+    Mockito.verify(getAllUsersUseCase).execute(Mockito.any(GetUsersInput.class));
+    Mockito.verify(transactionBoundary).read(Mockito.any());
   }
 }
