@@ -6,7 +6,6 @@ import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.mapper.outbox.OutboxDoFromMongodbMapper;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.repository.OutboxReadMongodbRepository;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -26,6 +25,6 @@ public class OutboxRepositoryReadMongodbAdapterImpl implements OutboxRepositoryR
             outboxStatusAndAggregateProjector.aggregateType())
         .stream()
         .map(outboxDoFromMongodbMapper::toOutboxEvent)
-        .collect(Collectors.toList());
+        .toList();
   }
 }
