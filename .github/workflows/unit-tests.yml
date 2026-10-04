@@ -1,0 +1,35 @@
+name: Unit Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - '**'
+
+permissions:
+  contents: read
+
+jobs:
+  unit-tests:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: code
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 25.0.2
+          cache: maven
+          cache-dependency-path: code/pom.xml
+
+      - name: Run unit tests
+        run: mvn -B -ntp clean verify
