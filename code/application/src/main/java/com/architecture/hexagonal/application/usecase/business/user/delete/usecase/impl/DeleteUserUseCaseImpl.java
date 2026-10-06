@@ -1,5 +1,6 @@
 package com.architecture.hexagonal.application.usecase.business.user.delete.usecase.impl;
 
+import com.architecture.hexagonal.application.annotation.UseCase;
 import com.architecture.hexagonal.application.port.database.UserRepositoryWritePort;
 import com.architecture.hexagonal.application.port.message.UserSenderPort;
 import com.architecture.hexagonal.application.usecase.business.user.delete.input.DeleteUserInput;
@@ -12,6 +13,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@UseCase
 public class DeleteUserUseCaseImpl implements DeleteUserUseCase {
 
   private final UserRepositoryWritePort userRepositoryWritePort;

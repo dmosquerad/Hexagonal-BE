@@ -1,5 +1,6 @@
 package com.architecture.hexagonal.application.usecase.technical.outbox.find.usecase.impl;
 
+import com.architecture.hexagonal.application.annotation.UseCase;
 import com.architecture.hexagonal.application.port.database.OutboxRepositoryReadPort;
 import com.architecture.hexagonal.application.usecase.technical.outbox.find.input.FindOutboxInput;
 import com.architecture.hexagonal.application.usecase.technical.outbox.find.projector.OutboxStatusAndAggregateProjector;
@@ -10,6 +11,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@UseCase
 public class FindOutboxUseCaseImpl implements FindOutboxUseCase {
 
   private final OutboxRepositoryReadPort outboxRepositoryReadPort;

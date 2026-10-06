@@ -1,5 +1,6 @@
 package com.architecture.hexagonal.application.usecase.business.user.exists.usecase.impl;
 
+import com.architecture.hexagonal.application.annotation.UseCase;
 import com.architecture.hexagonal.application.port.database.UserRepositoryReadPort;
 import com.architecture.hexagonal.application.usecase.business.user.exists.input.UserExistsInput;
 import com.architecture.hexagonal.application.usecase.business.user.exists.usecase.UserExistsUseCase;
@@ -10,6 +11,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@UseCase
 public class UserExistsUseCaseImpl implements UserExistsUseCase {
 
   private final UserRepositoryReadPort userRepositoryReadPort;

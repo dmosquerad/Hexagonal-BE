@@ -1,5 +1,6 @@
 package com.architecture.hexagonal.application.usecase.business.user.findbyid.usecase.impl;
 
+import com.architecture.hexagonal.application.annotation.UseCase;
 import com.architecture.hexagonal.application.port.database.UserRepositoryReadPort;
 import com.architecture.hexagonal.application.usecase.business.user.findbyid.input.FindUserByUserIdInput;
 import com.architecture.hexagonal.application.usecase.business.user.findbyid.usecase.FindUserByUserIdUseCase;
@@ -11,6 +12,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@UseCase
 public class FindUserByUserIdUseCaseImpl implements FindUserByUserIdUseCase {
 
   private final UserRepositoryReadPort userRepositoryReadPort;
