@@ -1,0 +1,50 @@
+name: E2E Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - '**'
+
+permissions:
+  contents: read
+
+jobs:
+  e2e-tests:
+    name: E2E tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 25.0.2
+          cache: maven
+          cache-dependency-path: |
+            code/pom.xml
+            e2e/karate/pom.xml
+
+      - name: Start E2E infrastructure
+        run: docker compose -f deployment/docker/docker-compose.yml up -d --wait
+
+      - name: Build application
+        run: mvn -B -ntp -f code/pom.xml clean install -DskipTests
+
+      - name: Start application
+        run: |
+          mvn -B -ntp \
+            -f code/boot/pom.xml \
+            spring-boot:run \
+            -Dspring-boot.run.main-class=com.architecture.hexagonal.boot.Application &
+
+      - name: Wait for application
+        run: timeout 60s curl -fsS --retry 30 --retry-delay 2 --retry-connrefused http://localhost:8080/api/actuator/health
+
+      - name: Run Karate tests
+        run: mvn -B -ntp -f e2e/karate/pom.xml clean test

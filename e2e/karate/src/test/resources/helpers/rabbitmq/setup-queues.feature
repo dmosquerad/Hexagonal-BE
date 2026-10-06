@@ -7,13 +7,13 @@ Feature: Declare RabbitMQ test queues and bind to exchanges
     # ── user.created ───────────────────────────────────────────────────────────
     Given url mgmtUrl + '/api/exchanges/%2F/user.created'
     And header Authorization = auth
-    And request { type: 'topic', auto_delete: false, durable: false }
+    And request { type: 'topic', auto_delete: false, durable: true }
     When method PUT
     Then assert responseStatus == 201 || responseStatus == 204
 
     Given url mgmtUrl + '/api/queues/%2F/e2e-user-created-queue'
     And header Authorization = auth
-    And request { auto_delete: false, durable: false }
+    And request { auto_delete: false, durable: true }
     When method PUT
     Then assert responseStatus == 201 || responseStatus == 204
 
@@ -25,7 +25,7 @@ Feature: Declare RabbitMQ test queues and bind to exchanges
 
     Given url mgmtUrl + '/api/queues/%2F/e2e-outbox-created-queue'
     And header Authorization = auth
-    And request { auto_delete: false, durable: false }
+    And request { auto_delete: false, durable: true }
     When method PUT
     Then assert responseStatus == 201 || responseStatus == 204
 
@@ -38,13 +38,13 @@ Feature: Declare RabbitMQ test queues and bind to exchanges
     # ── user.updated ───────────────────────────────────────────────────────────
     Given url mgmtUrl + '/api/exchanges/%2F/user.updated'
     And header Authorization = auth
-    And request { type: 'topic', auto_delete: false, durable: false }
+    And request { type: 'topic', auto_delete: false, durable: true }
     When method PUT
     Then assert responseStatus == 201 || responseStatus == 204
 
     Given url mgmtUrl + '/api/queues/%2F/e2e-user-updated-queue'
     And header Authorization = auth
-    And request { auto_delete: false, durable: false }
+    And request { auto_delete: false, durable: true }
     When method PUT
     Then assert responseStatus == 201 || responseStatus == 204
 
@@ -57,13 +57,13 @@ Feature: Declare RabbitMQ test queues and bind to exchanges
     # ── user.deleted ───────────────────────────────────────────────────────────
     Given url mgmtUrl + '/api/exchanges/%2F/user.deleted'
     And header Authorization = auth
-    And request { type: 'topic', auto_delete: false, durable: false }
+    And request { type: 'topic', auto_delete: false, durable: true }
     When method PUT
     Then assert responseStatus == 201 || responseStatus == 204
 
     Given url mgmtUrl + '/api/queues/%2F/e2e-user-deleted-queue'
     And header Authorization = auth
-    And request { auto_delete: false, durable: false }
+    And request { auto_delete: false, durable: true }
     When method PUT
     Then assert responseStatus == 201 || responseStatus == 204
 
