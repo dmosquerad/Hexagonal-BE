@@ -1,5 +1,6 @@
 package com.architecture.hexagonal.application.usecase.technical.outbox.process.usecase.impl;
 
+import com.architecture.hexagonal.application.annotation.UseCase;
 import com.architecture.hexagonal.application.port.configuration.SchedulerConfigurationPort;
 import com.architecture.hexagonal.application.port.database.OutboxRepositoryWritePort;
 import com.architecture.hexagonal.application.port.outbox.OutboxProcessPort;
@@ -14,6 +15,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@UseCase
 public class ProcessOutboxUseCaseImpl implements ProcessOutboxUseCase {
 
   private final OutboxRepositoryWritePort outboxRepositoryWritePort;

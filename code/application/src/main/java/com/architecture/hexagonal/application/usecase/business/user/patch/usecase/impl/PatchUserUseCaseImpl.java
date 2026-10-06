@@ -1,5 +1,6 @@
 package com.architecture.hexagonal.application.usecase.business.user.patch.usecase.impl;
 
+import com.architecture.hexagonal.application.annotation.UseCase;
 import com.architecture.hexagonal.application.port.configuration.EmailConfigurationPort;
 import com.architecture.hexagonal.application.port.database.UserRepositoryReadPort;
 import com.architecture.hexagonal.application.port.database.UserRepositoryWritePort;
@@ -19,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
 @RequiredArgsConstructor
+@UseCase
 public class PatchUserUseCaseImpl implements PatchUserUseCase {
 
   private final UserRepositoryReadPort userRepositoryReadPort;

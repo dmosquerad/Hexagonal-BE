@@ -1,5 +1,6 @@
 package com.architecture.hexagonal.application.usecase.business.user.getall.usecase.impl;
 
+import com.architecture.hexagonal.application.annotation.UseCase;
 import com.architecture.hexagonal.application.port.database.UserRepositoryReadPort;
 import com.architecture.hexagonal.application.usecase.business.user.getall.input.GetUsersInput;
 import com.architecture.hexagonal.application.usecase.business.user.getall.projector.UserEmailProjector;
@@ -12,6 +13,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@UseCase
 public class GetAllUsersUseCaseImpl implements GetAllUsersUseCase {
 
   private final UserRepositoryReadPort userRepositoryReadPort;

@@ -1,5 +1,6 @@
 package com.architecture.hexagonal.application.usecase.business.user.create.usecase.impl;
 
+import com.architecture.hexagonal.application.annotation.UseCase;
 import com.architecture.hexagonal.application.port.configuration.EmailConfigurationPort;
 import com.architecture.hexagonal.application.port.database.UserRepositoryWritePort;
 import com.architecture.hexagonal.application.port.message.UserSenderPort;
@@ -15,6 +16,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@UseCase
 public class CreateUserUseCaseImpl implements CreateUserUseCase {
 
   private final UserRepositoryWritePort userRepositoryWritePort;
