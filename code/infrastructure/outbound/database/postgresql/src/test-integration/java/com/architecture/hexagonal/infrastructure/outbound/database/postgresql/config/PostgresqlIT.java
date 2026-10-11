@@ -18,7 +18,7 @@ public abstract class PostgresqlIT {
   static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16");
 
   @DynamicPropertySource
-  static void configure(DynamicPropertyRegistry registry) {
+  static void configure(final DynamicPropertyRegistry registry) {
       registry.add("spring.jpa.hibernate.ddl-auto", () -> "create");
       registry.add("spring.jpa.show-sql", () -> "true");
       registry.add("spring.jpa.properties.hibernate.format_sql", () -> "true");

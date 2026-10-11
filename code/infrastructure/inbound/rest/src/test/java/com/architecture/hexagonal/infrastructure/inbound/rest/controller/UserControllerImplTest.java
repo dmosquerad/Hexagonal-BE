@@ -1,18 +1,24 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.controller;
 
+import com.architecture.hexagonal.application.port.in.bus.command.CommandBus;
+import com.architecture.hexagonal.application.port.in.bus.query.QueryBus;
+import com.architecture.hexagonal.contract.application.generated.user.CreateUserCommand;
+import com.architecture.hexagonal.contract.application.generated.user.DeleteUserCommand;
+import com.architecture.hexagonal.contract.application.generated.user.FindUserByUserIdQuery;
+import com.architecture.hexagonal.contract.application.generated.user.GetUsersFilteredQuery;
+import com.architecture.hexagonal.contract.application.generated.user.PatchUserCommand;
+import com.architecture.hexagonal.contract.application.generated.user.UpdateUserCommand;
+import com.architecture.hexagonal.contract.application.generated.user.UserExistsQuery;
+import com.architecture.hexagonal.contract.inbound.rest.user.server.dto.ResponsePaginationDto;
+import com.architecture.hexagonal.contract.inbound.rest.user.server.dto.UserCreateDto;
+import com.architecture.hexagonal.contract.inbound.rest.user.server.dto.UserResponseDto;
+import com.architecture.hexagonal.contract.inbound.rest.user.server.dto.UsersResponseDto;
 import com.architecture.hexagonal.domain.exception.DomainException;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.InvalidValueException;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import com.architecture.hexagonal.domain.model.entity.user.User;
-import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResult;
-import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.user.*;
-import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.server.dto.ResponsePaginationDto;
-import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.server.dto.UserCreateDto;
-import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.server.dto.UserResponseDto;
-import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.server.dto.UsersResponseDto;
-import com.architecture.hexagonal.infrastructure.inbound.orchestration.dispatcher.command.CommandBus;
-import com.architecture.hexagonal.infrastructure.inbound.orchestration.dispatcher.query.QueryBus;
+import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResultVo;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.user.*;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.user.FindUserByUserIdQueryDtoMapper;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.dto.UserCreateDtoTestDataBuilder;
@@ -91,9 +97,9 @@ class UserControllerImplTest {
     final int totalPages = 1;
     final long totalElements = 1L;
 
-    Mockito.when(queryBus.execute(Mockito.any(GetUsersFilteredQueryDto.class)))
+    Mockito.when(queryBus.execute(Mockito.any(GetUsersFilteredQuery.class)))
         .thenReturn(
-            PaginationResult.<User>builder()
+            PaginationResultVo.<User>builder()
                 .data(Collections.singletonList(user))
                 .page(page)
                 .size(size)
@@ -123,7 +129,7 @@ class UserControllerImplTest {
             host,
             blockEmail,
             PaginationTestDataBuilder.builder().page(page).size(size).build().pagination());
-    Mockito.verify(queryBus).execute(Mockito.any(GetUsersFilteredQueryDto.class));
+    Mockito.verify(queryBus).execute(Mockito.any(GetUsersFilteredQuery.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
   }
@@ -134,7 +140,7 @@ class UserControllerImplTest {
     final UserCreateDto createUserDto =
         UserCreateDtoTestDataBuilder.builder().build().userCreateDto();
 
-    Mockito.when(commandBus.execute(Mockito.any(CreateUserCommandDto.class))).thenReturn(user);
+    Mockito.when(commandBus.execute(Mockito.any(CreateUserCommand.class))).thenReturn(user);
 
     final ResponseEntity<UserResponseDto> responseExpected =
         ResponseEntity.ok(UserResponseDtoTestDataBuilder.builder().build().userResponseDto());
@@ -146,7 +152,7 @@ class UserControllerImplTest {
         .isEqualTo(responseExpected);
 
     Mockito.verify(createUserCommandDtoMapper).toCreateUserCommand(createUserDto);
-    Mockito.verify(commandBus).execute(Mockito.any(CreateUserCommandDto.class));
+    Mockito.verify(commandBus).execute(Mockito.any(CreateUserCommand.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
   }
@@ -157,7 +163,7 @@ class UserControllerImplTest {
         UserCreateDtoTestDataBuilder.builder().build().userCreateDto();
     final String errorMessage = "Invalid email";
 
-    Mockito.when(commandBus.execute(Mockito.any(CreateUserCommandDto.class)))
+    Mockito.when(commandBus.execute(Mockito.any(CreateUserCommand.class)))
         .thenThrow(new IllegalArgumentException(errorMessage));
 
     AssertionsForClassTypes.assertThatThrownBy(() -> userControllerImpl.createUser(createUserDto))
@@ -165,7 +171,7 @@ class UserControllerImplTest {
         .hasMessage(errorMessage);
 
     Mockito.verify(createUserCommandDtoMapper).toCreateUserCommand(createUserDto);
-    Mockito.verify(commandBus).execute(Mockito.any(CreateUserCommandDto.class));
+    Mockito.verify(commandBus).execute(Mockito.any(CreateUserCommand.class));
   }
 
   @Test
@@ -174,7 +180,7 @@ class UserControllerImplTest {
         UserCreateDtoTestDataBuilder.builder().build().userCreateDto();
     final String errorMessage = "domain exception";
 
-    Mockito.when(commandBus.execute(Mockito.any(CreateUserCommandDto.class)))
+    Mockito.when(commandBus.execute(Mockito.any(CreateUserCommand.class)))
         .thenThrow(new DomainException(errorMessage));
 
     AssertionsForClassTypes.assertThatThrownBy(() -> userControllerImpl.createUser(createUserDto))
@@ -182,7 +188,7 @@ class UserControllerImplTest {
         .hasMessage(errorMessage);
 
     Mockito.verify(createUserCommandDtoMapper).toCreateUserCommand(createUserDto);
-    Mockito.verify(commandBus).execute(Mockito.any(CreateUserCommandDto.class));
+    Mockito.verify(commandBus).execute(Mockito.any(CreateUserCommand.class));
   }
 
   @Test
@@ -191,7 +197,7 @@ class UserControllerImplTest {
         UserCreateDtoTestDataBuilder.builder().build().userCreateDto();
     final String errorMessage = "Unexpected error";
 
-    Mockito.when(commandBus.execute(Mockito.any(CreateUserCommandDto.class)))
+    Mockito.when(commandBus.execute(Mockito.any(CreateUserCommand.class)))
         .thenThrow(new RuntimeException(errorMessage));
 
     AssertionsForClassTypes.assertThatThrownBy(() -> userControllerImpl.createUser(createUserDto))
@@ -199,14 +205,14 @@ class UserControllerImplTest {
         .hasMessage(errorMessage);
 
     Mockito.verify(createUserCommandDtoMapper).toCreateUserCommand(createUserDto);
-    Mockito.verify(commandBus).execute(Mockito.any(CreateUserCommandDto.class));
+    Mockito.verify(commandBus).execute(Mockito.any(CreateUserCommand.class));
   }
 
   @Test
   void getUserByUuidShouldReturnOkWhenUserExists() {
     final User user = UserTestDataBuilder.builder().build().user();
 
-    Mockito.when(queryBus.execute(Mockito.any(FindUserByUserIdQueryDto.class))).thenReturn(user);
+    Mockito.when(queryBus.execute(Mockito.any(FindUserByUserIdQuery.class))).thenReturn(user);
 
     final ResponseEntity<UserResponseDto> responseExpected =
         ResponseEntity.ok(UserResponseDtoTestDataBuilder.builder().build().userResponseDto());
@@ -218,7 +224,7 @@ class UserControllerImplTest {
         .isEqualTo(responseExpected);
 
     Mockito.verify(findUserByUserIdQueryDtoMapper).toFindUserByUserIdQuery(user.getId());
-    Mockito.verify(queryBus).execute(Mockito.any(FindUserByUserIdQueryDto.class));
+    Mockito.verify(queryBus).execute(Mockito.any(FindUserByUserIdQuery.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
   }
@@ -228,7 +234,7 @@ class UserControllerImplTest {
     final User user = UserTestDataBuilder.builder().build().user();
     final String errorMessage = "domain exception";
 
-    Mockito.when(queryBus.execute(Mockito.any(FindUserByUserIdQueryDto.class)))
+    Mockito.when(queryBus.execute(Mockito.any(FindUserByUserIdQuery.class)))
         .thenThrow(new DomainException(errorMessage));
 
     AssertionsForClassTypes.assertThatThrownBy(() -> userControllerImpl.getUserByUuid(user.getId()))
@@ -236,7 +242,7 @@ class UserControllerImplTest {
         .hasMessage(errorMessage);
 
     Mockito.verify(findUserByUserIdQueryDtoMapper).toFindUserByUserIdQuery(user.getId());
-    Mockito.verify(queryBus).execute(Mockito.any(FindUserByUserIdQueryDto.class));
+    Mockito.verify(queryBus).execute(Mockito.any(FindUserByUserIdQuery.class));
   }
 
   @Test
@@ -244,7 +250,7 @@ class UserControllerImplTest {
     final User user = UserTestDataBuilder.builder().build().user();
     final String errorMessage = HttpStatus.NOT_FOUND.getReasonPhrase();
 
-    Mockito.when(queryBus.execute(Mockito.any(FindUserByUserIdQueryDto.class)))
+    Mockito.when(queryBus.execute(Mockito.any(FindUserByUserIdQuery.class)))
         .thenThrow(new ResourceNotFoundException(errorMessage));
 
     AssertionsForClassTypes.assertThatThrownBy(() -> userControllerImpl.getUserByUuid(user.getId()))
@@ -252,7 +258,7 @@ class UserControllerImplTest {
         .hasMessage(errorMessage);
 
     Mockito.verify(findUserByUserIdQueryDtoMapper).toFindUserByUserIdQuery(user.getId());
-    Mockito.verify(queryBus).execute(Mockito.any(FindUserByUserIdQueryDto.class));
+    Mockito.verify(queryBus).execute(Mockito.any(FindUserByUserIdQuery.class));
   }
 
   @Test
@@ -260,7 +266,7 @@ class UserControllerImplTest {
     final User user = UserTestDataBuilder.builder().build().user();
     final String errorMessage = "Unexpected error";
 
-    Mockito.when(queryBus.execute(Mockito.any(FindUserByUserIdQueryDto.class)))
+    Mockito.when(queryBus.execute(Mockito.any(FindUserByUserIdQuery.class)))
         .thenThrow(new RuntimeException(errorMessage));
 
     AssertionsForClassTypes.assertThatThrownBy(() -> userControllerImpl.getUserByUuid(user.getId()))
@@ -268,14 +274,14 @@ class UserControllerImplTest {
         .hasMessage(errorMessage);
 
     Mockito.verify(findUserByUserIdQueryDtoMapper).toFindUserByUserIdQuery(user.getId());
-    Mockito.verify(queryBus).execute(Mockito.any(FindUserByUserIdQueryDto.class));
+    Mockito.verify(queryBus).execute(Mockito.any(FindUserByUserIdQuery.class));
   }
 
   @Test
   void deleteUserByUuidShouldReturnOkWhenUserExists() {
     final User user = UserTestDataBuilder.builder().build().user();
 
-    Mockito.when(commandBus.execute(Mockito.any(DeleteUserCommandDto.class))).thenReturn(user);
+    Mockito.when(commandBus.execute(Mockito.any(DeleteUserCommand.class))).thenReturn(user);
 
     final ResponseEntity<UserResponseDto> responseExpected =
         ResponseEntity.ok(UserResponseDtoTestDataBuilder.builder().build().userResponseDto());
@@ -288,7 +294,7 @@ class UserControllerImplTest {
         .isEqualTo(responseExpected);
 
     Mockito.verify(deleteUserCommandDtoMapper).toDeleteUserCommand(user.getId());
-    Mockito.verify(commandBus).execute(Mockito.any(DeleteUserCommandDto.class));
+    Mockito.verify(commandBus).execute(Mockito.any(DeleteUserCommand.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
   }
@@ -298,7 +304,7 @@ class UserControllerImplTest {
     final User user = UserTestDataBuilder.builder().build().user();
     final String errorMessage = "domain exception";
 
-    Mockito.when(commandBus.execute(Mockito.any(DeleteUserCommandDto.class)))
+    Mockito.when(commandBus.execute(Mockito.any(DeleteUserCommand.class)))
         .thenThrow(new DomainException(errorMessage));
 
     AssertionsForClassTypes.assertThatThrownBy(
@@ -307,7 +313,7 @@ class UserControllerImplTest {
         .hasMessage(errorMessage);
 
     Mockito.verify(deleteUserCommandDtoMapper).toDeleteUserCommand(user.getId());
-    Mockito.verify(commandBus).execute(Mockito.any(DeleteUserCommandDto.class));
+    Mockito.verify(commandBus).execute(Mockito.any(DeleteUserCommand.class));
   }
 
   @Test
@@ -315,7 +321,7 @@ class UserControllerImplTest {
     final User user = UserTestDataBuilder.builder().build().user();
     final String errorMessage = "Unexpected error";
 
-    Mockito.when(commandBus.execute(Mockito.any(DeleteUserCommandDto.class)))
+    Mockito.when(commandBus.execute(Mockito.any(DeleteUserCommand.class)))
         .thenThrow(new RuntimeException(errorMessage));
 
     AssertionsForClassTypes.assertThatThrownBy(
@@ -324,14 +330,14 @@ class UserControllerImplTest {
         .hasMessage(errorMessage);
 
     Mockito.verify(deleteUserCommandDtoMapper).toDeleteUserCommand(user.getId());
-    Mockito.verify(commandBus).execute(Mockito.any(DeleteUserCommandDto.class));
+    Mockito.verify(commandBus).execute(Mockito.any(DeleteUserCommand.class));
   }
 
   @Test
   void updateUserByUuidShouldReturnOkWhenRequestIsValid() {
     final User user = UserTestDataBuilder.builder().build().user();
 
-    Mockito.when(commandBus.execute(Mockito.any(UpdateUserCommandDto.class))).thenReturn(user);
+    Mockito.when(commandBus.execute(Mockito.any(UpdateUserCommand.class))).thenReturn(user);
 
     final ResponseEntity<UserResponseDto> responseExpected =
         ResponseEntity.ok(UserResponseDtoTestDataBuilder.builder().build().userResponseDto());
@@ -346,7 +352,7 @@ class UserControllerImplTest {
 
     Mockito.verify(updateUserCommandDtoMapper)
         .toUpdateUserCommand(ArgumentMatchers.eq(user.getId()), Mockito.any());
-    Mockito.verify(commandBus).execute(Mockito.any(UpdateUserCommandDto.class));
+    Mockito.verify(commandBus).execute(Mockito.any(UpdateUserCommand.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
   }
@@ -356,7 +362,7 @@ class UserControllerImplTest {
     final User user = UserTestDataBuilder.builder().build().user();
     final String errorMessage = "Invalid update";
 
-    Mockito.when(commandBus.execute(Mockito.any(UpdateUserCommandDto.class)))
+    Mockito.when(commandBus.execute(Mockito.any(UpdateUserCommand.class)))
         .thenThrow(new IllegalArgumentException(errorMessage));
 
     AssertionsForClassTypes.assertThatThrownBy(
@@ -368,7 +374,7 @@ class UserControllerImplTest {
 
     Mockito.verify(updateUserCommandDtoMapper)
         .toUpdateUserCommand(ArgumentMatchers.eq(user.getId()), Mockito.any());
-    Mockito.verify(commandBus).execute(Mockito.any(UpdateUserCommandDto.class));
+    Mockito.verify(commandBus).execute(Mockito.any(UpdateUserCommand.class));
   }
 
   @Test
@@ -376,7 +382,7 @@ class UserControllerImplTest {
     final User user = UserTestDataBuilder.builder().build().user();
     final String errorMessage = "domain exception";
 
-    Mockito.when(commandBus.execute(Mockito.any(UpdateUserCommandDto.class)))
+    Mockito.when(commandBus.execute(Mockito.any(UpdateUserCommand.class)))
         .thenThrow(new DomainException(errorMessage));
 
     AssertionsForClassTypes.assertThatThrownBy(
@@ -388,7 +394,7 @@ class UserControllerImplTest {
 
     Mockito.verify(updateUserCommandDtoMapper)
         .toUpdateUserCommand(ArgumentMatchers.eq(user.getId()), Mockito.any());
-    Mockito.verify(commandBus).execute(Mockito.any(UpdateUserCommandDto.class));
+    Mockito.verify(commandBus).execute(Mockito.any(UpdateUserCommand.class));
   }
 
   @Test
@@ -396,7 +402,7 @@ class UserControllerImplTest {
     final User user = UserTestDataBuilder.builder().build().user();
     final String errorMessage = "Unexpected error";
 
-    Mockito.when(commandBus.execute(Mockito.any(UpdateUserCommandDto.class)))
+    Mockito.when(commandBus.execute(Mockito.any(UpdateUserCommand.class)))
         .thenThrow(new RuntimeException(errorMessage));
 
     AssertionsForClassTypes.assertThatThrownBy(
@@ -408,7 +414,7 @@ class UserControllerImplTest {
 
     Mockito.verify(updateUserCommandDtoMapper)
         .toUpdateUserCommand(ArgumentMatchers.eq(user.getId()), Mockito.any());
-    Mockito.verify(commandBus).execute(Mockito.any(UpdateUserCommandDto.class));
+    Mockito.verify(commandBus).execute(Mockito.any(UpdateUserCommand.class));
   }
 
   @Test
@@ -416,7 +422,7 @@ class UserControllerImplTest {
     final User user = UserTestDataBuilder.builder().build().user();
     final String errorMessage = HttpStatus.NOT_FOUND.getReasonPhrase();
 
-    Mockito.when(commandBus.execute(Mockito.any(UpdateUserCommandDto.class)))
+    Mockito.when(commandBus.execute(Mockito.any(UpdateUserCommand.class)))
         .thenThrow(new ResourceNotFoundException(errorMessage));
 
     AssertionsForClassTypes.assertThatThrownBy(
@@ -428,14 +434,14 @@ class UserControllerImplTest {
 
     Mockito.verify(updateUserCommandDtoMapper)
         .toUpdateUserCommand(ArgumentMatchers.eq(user.getId()), Mockito.any());
-    Mockito.verify(commandBus).execute(Mockito.any(UpdateUserCommandDto.class));
+    Mockito.verify(commandBus).execute(Mockito.any(UpdateUserCommand.class));
   }
 
   @Test
   void patchUserByUuidShouldReturnOkWhenRequestIsValid() {
     final User user = UserTestDataBuilder.builder().build().user();
 
-    Mockito.when(commandBus.execute(Mockito.any(PatchUserCommandDto.class))).thenReturn(user);
+    Mockito.when(commandBus.execute(Mockito.any(PatchUserCommand.class))).thenReturn(user);
 
     final ResponseEntity<UserResponseDto> responseExpected =
         ResponseEntity.ok(
@@ -454,7 +460,7 @@ class UserControllerImplTest {
 
     Mockito.verify(patchUserCommandDtoMapper)
         .toPatchUserCommand(ArgumentMatchers.eq(user.getId()), Mockito.any());
-    Mockito.verify(commandBus).execute(Mockito.any(PatchUserCommandDto.class));
+    Mockito.verify(commandBus).execute(Mockito.any(PatchUserCommand.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
   }
@@ -464,7 +470,7 @@ class UserControllerImplTest {
     final User user = UserTestDataBuilder.builder().build().user();
     final String errorMessage = HttpStatus.NOT_FOUND.getReasonPhrase();
 
-    Mockito.when(commandBus.execute(Mockito.any(PatchUserCommandDto.class)))
+    Mockito.when(commandBus.execute(Mockito.any(PatchUserCommand.class)))
         .thenThrow(new ResourceNotFoundException(errorMessage));
 
     AssertionsForClassTypes.assertThatThrownBy(
@@ -476,7 +482,7 @@ class UserControllerImplTest {
 
     Mockito.verify(patchUserCommandDtoMapper)
         .toPatchUserCommand(ArgumentMatchers.eq(user.getId()), Mockito.any());
-    Mockito.verify(commandBus).execute(Mockito.any(PatchUserCommandDto.class));
+    Mockito.verify(commandBus).execute(Mockito.any(PatchUserCommand.class));
   }
 
   @Test
@@ -484,7 +490,7 @@ class UserControllerImplTest {
     final User user = UserTestDataBuilder.builder().build().user();
     final String errorMessage = "Invalid patch";
 
-    Mockito.when(commandBus.execute(Mockito.any(PatchUserCommandDto.class)))
+    Mockito.when(commandBus.execute(Mockito.any(PatchUserCommand.class)))
         .thenThrow(new IllegalArgumentException(errorMessage));
 
     AssertionsForClassTypes.assertThatThrownBy(
@@ -496,7 +502,7 @@ class UserControllerImplTest {
 
     Mockito.verify(patchUserCommandDtoMapper)
         .toPatchUserCommand(ArgumentMatchers.eq(user.getId()), Mockito.any());
-    Mockito.verify(commandBus).execute(Mockito.any(PatchUserCommandDto.class));
+    Mockito.verify(commandBus).execute(Mockito.any(PatchUserCommand.class));
   }
 
   @Test
@@ -504,7 +510,7 @@ class UserControllerImplTest {
     final User user = UserTestDataBuilder.builder().build().user();
     final String errorMessage = "domain exception";
 
-    Mockito.when(commandBus.execute(Mockito.any(PatchUserCommandDto.class)))
+    Mockito.when(commandBus.execute(Mockito.any(PatchUserCommand.class)))
         .thenThrow(new DomainException(errorMessage));
 
     AssertionsForClassTypes.assertThatThrownBy(
@@ -516,7 +522,7 @@ class UserControllerImplTest {
 
     Mockito.verify(patchUserCommandDtoMapper)
         .toPatchUserCommand(ArgumentMatchers.eq(user.getId()), Mockito.any());
-    Mockito.verify(commandBus).execute(Mockito.any(PatchUserCommandDto.class));
+    Mockito.verify(commandBus).execute(Mockito.any(PatchUserCommand.class));
   }
 
   @Test
@@ -524,7 +530,7 @@ class UserControllerImplTest {
     final User user = UserTestDataBuilder.builder().build().user();
     final String errorMessage = "Unexpected error";
 
-    Mockito.when(commandBus.execute(Mockito.any(PatchUserCommandDto.class)))
+    Mockito.when(commandBus.execute(Mockito.any(PatchUserCommand.class)))
         .thenThrow(new RuntimeException(errorMessage));
 
     AssertionsForClassTypes.assertThatThrownBy(
@@ -536,7 +542,7 @@ class UserControllerImplTest {
 
     Mockito.verify(patchUserCommandDtoMapper)
         .toPatchUserCommand(ArgumentMatchers.eq(user.getId()), Mockito.any());
-    Mockito.verify(commandBus).execute(Mockito.any(PatchUserCommandDto.class));
+    Mockito.verify(commandBus).execute(Mockito.any(PatchUserCommand.class));
   }
 
   @Test
@@ -545,7 +551,7 @@ class UserControllerImplTest {
 
     final ResponseEntity<Void> responseExpected = ResponseEntity.ok().build();
 
-    Mockito.when(queryBus.execute(Mockito.any(UserExistsQueryDto.class))).thenReturn(null);
+    Mockito.when(queryBus.execute(Mockito.any(UserExistsQuery.class))).thenReturn(null);
 
     final ResponseEntity<Void> response = userControllerImpl.headUserByUuid(user.getId());
 
@@ -554,7 +560,7 @@ class UserControllerImplTest {
         .isEqualTo(responseExpected);
 
     Mockito.verify(userExistsQueryDtoMapper).toUserExistsQuery(user.getId());
-    Mockito.verify(queryBus).execute(Mockito.any(UserExistsQueryDto.class));
+    Mockito.verify(queryBus).execute(Mockito.any(UserExistsQuery.class));
   }
 
   @Test
@@ -562,7 +568,7 @@ class UserControllerImplTest {
     final User user = UserTestDataBuilder.builder().build().user();
     final String errorMessage = HttpStatus.NOT_FOUND.getReasonPhrase();
 
-    Mockito.when(queryBus.execute(Mockito.any(UserExistsQueryDto.class)))
+    Mockito.when(queryBus.execute(Mockito.any(UserExistsQuery.class)))
         .thenThrow(new ResourceNotFoundException(errorMessage));
 
     AssertionsForClassTypes.assertThatThrownBy(
@@ -571,7 +577,7 @@ class UserControllerImplTest {
         .hasMessage(errorMessage);
 
     Mockito.verify(userExistsQueryDtoMapper).toUserExistsQuery(user.getId());
-    Mockito.verify(queryBus).execute(Mockito.any(UserExistsQueryDto.class));
+    Mockito.verify(queryBus).execute(Mockito.any(UserExistsQuery.class));
   }
 
   @Test
@@ -579,7 +585,7 @@ class UserControllerImplTest {
     final User user = UserTestDataBuilder.builder().build().user();
     final String errorMessage = "domain exception";
 
-    Mockito.when(queryBus.execute(Mockito.any(UserExistsQueryDto.class)))
+    Mockito.when(queryBus.execute(Mockito.any(UserExistsQuery.class)))
         .thenThrow(new DomainException(errorMessage));
 
     AssertionsForClassTypes.assertThatThrownBy(
@@ -588,7 +594,7 @@ class UserControllerImplTest {
         .hasMessage(errorMessage);
 
     Mockito.verify(userExistsQueryDtoMapper).toUserExistsQuery(user.getId());
-    Mockito.verify(queryBus).execute(Mockito.any(UserExistsQueryDto.class));
+    Mockito.verify(queryBus).execute(Mockito.any(UserExistsQuery.class));
   }
 
   @Test
@@ -596,7 +602,7 @@ class UserControllerImplTest {
     final User user = UserTestDataBuilder.builder().build().user();
     final String errorMessage = "Unexpected error";
 
-    Mockito.when(queryBus.execute(Mockito.any(UserExistsQueryDto.class)))
+    Mockito.when(queryBus.execute(Mockito.any(UserExistsQuery.class)))
         .thenThrow(new RuntimeException(errorMessage));
 
     AssertionsForClassTypes.assertThatThrownBy(
@@ -605,7 +611,7 @@ class UserControllerImplTest {
         .hasMessage(errorMessage);
 
     Mockito.verify(userExistsQueryDtoMapper).toUserExistsQuery(user.getId());
-    Mockito.verify(queryBus).execute(Mockito.any(UserExistsQueryDto.class));
+    Mockito.verify(queryBus).execute(Mockito.any(UserExistsQuery.class));
   }
 
   @Test
@@ -616,9 +622,9 @@ class UserControllerImplTest {
     final int totalPages = 5;
     final long totalElements = 50L;
 
-    Mockito.when(queryBus.execute(Mockito.any(GetUsersFilteredQueryDto.class)))
+    Mockito.when(queryBus.execute(Mockito.any(GetUsersFilteredQuery.class)))
         .thenReturn(
-            PaginationResult.<User>builder()
+            PaginationResultVo.<User>builder()
                 .data(Collections.singletonList(user))
                 .page(page)
                 .size(size)
@@ -648,7 +654,7 @@ class UserControllerImplTest {
             null,
             null,
             PaginationTestDataBuilder.builder().page(page).size(size).build().pagination());
-    Mockito.verify(queryBus).execute(Mockito.any(GetUsersFilteredQueryDto.class));
+    Mockito.verify(queryBus).execute(Mockito.any(GetUsersFilteredQuery.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
     Mockito.verify(clock).instant();
   }
@@ -657,7 +663,7 @@ class UserControllerImplTest {
   void getAllUsersShouldPropagateInvalidValueExceptionWhenDomainExceptionOccurs() {
     final String errorMessage = ExceptionMessage.EMAIL_NO_ALLOWED_MESSAGE + "blocked@banned.com";
 
-    Mockito.when(queryBus.execute(Mockito.any(GetUsersFilteredQueryDto.class)))
+    Mockito.when(queryBus.execute(Mockito.any(GetUsersFilteredQuery.class)))
         .thenThrow(new InvalidValueException(errorMessage));
 
     AssertionsForClassTypes.assertThatThrownBy(
@@ -665,14 +671,14 @@ class UserControllerImplTest {
         .isInstanceOf(InvalidValueException.class)
         .hasMessage(errorMessage);
 
-    Mockito.verify(queryBus).execute(Mockito.any(GetUsersFilteredQueryDto.class));
+    Mockito.verify(queryBus).execute(Mockito.any(GetUsersFilteredQuery.class));
   }
 
   @Test
   void getAllUsersShouldPropagateRuntimeExceptionWhenUnexpectedExceptionOccurs() {
     final String errorMessage = "Unexpected error";
 
-    Mockito.when(queryBus.execute(Mockito.any(GetUsersFilteredQueryDto.class)))
+    Mockito.when(queryBus.execute(Mockito.any(GetUsersFilteredQuery.class)))
         .thenThrow(new RuntimeException(errorMessage));
 
     AssertionsForClassTypes.assertThatThrownBy(
@@ -680,6 +686,6 @@ class UserControllerImplTest {
         .isInstanceOf(RuntimeException.class)
         .hasMessage(errorMessage);
 
-    Mockito.verify(queryBus).execute(Mockito.any(GetUsersFilteredQueryDto.class));
+    Mockito.verify(queryBus).execute(Mockito.any(GetUsersFilteredQuery.class));
   }
 }

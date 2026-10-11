@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.adapter;
 
-import com.architecture.hexagonal.application.port.database.OutboxRepositoryReadPort;
-import com.architecture.hexagonal.application.usecase.technical.outbox.find.projector.OutboxStatusAndAggregateProjector;
+import com.architecture.hexagonal.application.port.out.outbox.OutboxRepositoryReadPort;
+import com.architecture.hexagonal.application.projector.technical.outbox.OutboxStatusAndAggregateProjector;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.mapper.outbox.OutboxDoFromMongodbMapper;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.repository.OutboxReadMongodbRepository;
@@ -18,7 +18,7 @@ public class OutboxRepositoryReadMongodbAdapterImpl implements OutboxRepositoryR
 
   @Override
   public List<Outbox> findByStatusAndAggregateType(
-      OutboxStatusAndAggregateProjector outboxStatusAndAggregateProjector) {
+      final OutboxStatusAndAggregateProjector outboxStatusAndAggregateProjector) {
     return outboxReadMongodbRepository
         .findByStatusAndAggregateTypeOrderByCreatedAtAsc(
             outboxStatusAndAggregateProjector.status(),

@@ -1,9 +1,9 @@
 package com.architecture.hexagonal.infrastructure.inbound.execution.outbox.executor.impl;
 
-import com.architecture.hexagonal.application.port.configuration.SchedulerConfigurationPort;
-import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.retry.RetryOutboxeventCommandDto;
+import com.architecture.hexagonal.application.port.in.bus.command.CommandBus;
+import com.architecture.hexagonal.application.port.out.scheduler.SchedulerConfigurationPort;
+import com.architecture.hexagonal.contract.application.generated.retry.RetryOutboxeventCommand;
 import com.architecture.hexagonal.infrastructure.inbound.execution.outbox.executor.OutboxScheduler;
-import com.architecture.hexagonal.infrastructure.inbound.orchestration.dispatcher.command.CommandBus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
@@ -17,12 +17,12 @@ public class OutboxSchedulerImpl implements OutboxScheduler, SchedulingConfigure
   private final CommandBus commandBus;
 
   @Override
-  public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
+  public void configureTasks(final ScheduledTaskRegistrar taskRegistrar) {
     taskRegistrar.addFixedDelayTask(
         this::scheduleRetry, schedulerConfigurationPort.getOutboxScheduler().pollingInterval());
   }
 
   public void scheduleRetry() {
-    commandBus.execute(new RetryOutboxeventCommandDto());
+    commandBus.execute(new RetryOutboxeventCommand());
   }
 }

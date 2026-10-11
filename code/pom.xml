@@ -42,6 +42,7 @@
     <!-- ============================================ -->
     <maven-enforcer-plugin.version>3.6.2</maven-enforcer-plugin.version>
     <openapi-generator-maven-plugin.version>7.21.0</openapi-generator-maven-plugin.version>
+    <zenwave.version>1.7.1</zenwave.version>
     <jacoco-maven-plugin.version>0.8.15</jacoco-maven-plugin.version>
     <spotless-maven-plugin.version>3.6.0</spotless-maven-plugin.version>
     <!-- ============================================ -->
@@ -51,6 +52,7 @@
   </properties>
 
   <modules>
+    <module>contract</module>
     <module>boot</module>
     <module>domain</module>
     <module>infrastructure</module>
@@ -87,6 +89,24 @@
         <version>${project.version}</version>
       </dependency>
       <!-- ============================================ -->
+      <!-- CONTRACT -->
+      <!-- ============================================ -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>contract-application</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>inbound-contract-rest</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>outbound-contract-rabbitmq</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <!-- ============================================ -->
       <!-- INFRASTRUCTURE INBOUND -->
       <!-- ============================================ -->
       <dependency>
@@ -97,11 +117,6 @@
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>handler-kafka</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>orchestration</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -122,16 +137,6 @@
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>inbound-email-rest-server</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>inbound-contract-orchestration</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>inbound-contract-rabbitmq</artifactId>
         <version>${project.version}</version>
       </dependency>
       <!-- ============================================ -->
@@ -157,11 +162,33 @@
         <artifactId>mesage-rabbitmq</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <!-- ============================================ -->
+      <!-- INFRASTRUCTURE BUS -->
+      <!-- ============================================ -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>bus</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <!-- ============================================ -->
+      <!-- INFRASTRUCTURE TRANSACTION -->
+      <!-- ============================================ -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>transaction</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <!-- ============================================ -->
+      <!-- INFRASTRUCTURE OUTBOX -->
+      <!-- ============================================ -->
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>outbox</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <!-- ============================================ -->
+      <!-- INFRASTRUCTURE INBOX -->
+      <!-- ============================================ -->
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>inbox</artifactId>

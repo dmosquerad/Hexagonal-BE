@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.mapper.user;
 
-import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.user.FindUserByUserIdQueryDto;
+import com.architecture.hexagonal.contract.application.generated.user.FindUserByUserIdQuery;
 import com.architecture.hexagonal.infrastructure.inbound.rest.config.mapstruct.MapstructConfig;
 import java.util.UUID;
 import org.mapstruct.Mapper;
@@ -10,5 +10,5 @@ import org.mapstruct.Mapping;
 public interface FindUserByUserIdQueryDtoMapper {
 
   @Mapping(source = "userUuid", target = "userId")
-  FindUserByUserIdQueryDto toFindUserByUserIdQuery(UUID userUuid);
+  FindUserByUserIdQuery toFindUserByUserIdQuery(UUID userUuid);
 }

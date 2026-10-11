@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>outbound-contract-rabbitmq</artifactId>
+    <packaging>jar</packaging>
+
+    <parent>
+        <groupId>com.architecture.hexagonal</groupId>
+        <artifactId>contract-outbound</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-stream</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>io.github.zenwave360.zenwave-sdk</groupId>
+                <artifactId>zenwave-sdk-maven-plugin</artifactId>
+                <version>${zenwave.version}</version>
+                <configuration>
+                    <targetFolder>${project.build.directory}/generated-sources</targetFolder>
+                    <addCompileSourceRoot>true</addCompileSourceRoot>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>generate-rabbitmq-stream-publisher</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <generatorName>spring-cloud-streams3</generatorName>
+                            <inputSpec>${project.basedir}/src/main/resources/contract/asyncapi.yml</inputSpec>
+                            <configOptions>
+                                <role>provider</role>
+                                <style>imperative</style>
+                                <apiPackage>com.architecture.hexagonal.contract.outbound.rabbitmq</apiPackage>
+                                <modelPackage>com.architecture.hexagonal.contract.outbound.rabbitmq</modelPackage>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generate-rabbitmq-contract-models</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <generatorName>jsonschema2pojo</generatorName>
+                            <inputSpec>${project.basedir}/src/main/resources/contract/asyncapi.yml</inputSpec>
+                            <configOptions>
+                                <modelPackage>com.architecture.hexagonal.contract.outbound.rabbitmq</modelPackage>
+                                <jsonschema2pojo.generateBuilders>false</jsonschema2pojo.generateBuilders>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>io.github.zenwave360.zenwave-sdk.plugins</groupId>
+                        <artifactId>asyncapi-spring-cloud-streams3</artifactId>
+                        <version>${zenwave.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>io.github.zenwave360.zenwave-sdk.plugins</groupId>
+                        <artifactId>asyncapi-jsonschema2pojo</artifactId>
+                        <version>${zenwave.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
+</project>

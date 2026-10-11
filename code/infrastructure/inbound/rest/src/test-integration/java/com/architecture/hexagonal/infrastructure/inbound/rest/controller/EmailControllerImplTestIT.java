@@ -1,9 +1,9 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.controller;
 
 import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;
-import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.email.GetBlockedRulesQueryDto;
-import com.architecture.hexagonal.infrastructure.inbound.contract.rest.email.server.dto.EmailBlockRulesResponseDto;
-import com.architecture.hexagonal.infrastructure.inbound.orchestration.dispatcher.query.QueryBus;
+import com.architecture.hexagonal.contract.application.generated.email.GetBlockedRulesQuery;
+import com.architecture.hexagonal.contract.inbound.rest.email.server.dto.EmailBlockRulesResponseDto;
+import com.architecture.hexagonal.application.port.in.bus.query.QueryBus;
 import com.architecture.hexagonal.infrastructure.inbound.rest.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.email.EmailBlockRulesDtoMapper;
 import com.architecture.hexagonal.infrastructure.inbound.rest.resources.email.EmailResponseResource;
@@ -11,7 +11,6 @@ import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.model.vo
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.time.TestClock;
 import java.time.Clock;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -66,7 +65,7 @@ class EmailControllerImplTestIT {
         .readObject(emailResponseResource.getBlockedRules);
 
     Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
-    Mockito.when(queryBus.execute(Mockito.any(GetBlockedRulesQueryDto.class)))
+    Mockito.when(queryBus.execute(Mockito.any(GetBlockedRulesQuery.class)))
         .thenReturn(emailBlockRulesVo);
 
     mockMvc.perform(
@@ -78,7 +77,7 @@ class EmailControllerImplTestIT {
                 .json(emailBlockRulesResponseDtoJson.write(expectedResponse).getJson()));
 
     Mockito.verify(emailControllerImpl).getBlockedRules();
-    Mockito.verify(queryBus).execute(Mockito.any(GetBlockedRulesQueryDto.class));
+    Mockito.verify(queryBus).execute(Mockito.any(GetBlockedRulesQuery.class));
     Mockito.verify(emailBlockRulesDtoMapper).toEmailBlockRulesDto(emailBlockRulesVo);
     Mockito.verify(clock).instant();
   }

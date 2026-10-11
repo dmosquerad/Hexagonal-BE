@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.adapter;
 
-import com.architecture.hexagonal.application.usecase.technical.outbox.find.projector.OutboxStatusAndAggregateProjector;
+import com.architecture.hexagonal.application.projector.technical.outbox.OutboxStatusAndAggregateProjector;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
 import com.architecture.hexagonal.domain.model.vo.outbox.OutboxStatusVo;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.OutboxDao;
@@ -8,7 +8,7 @@ import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.mappe
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.repository.OutboxReadMongodbRepository;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.dao.OutboxDaoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.model.entity.outbox.OutboxTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.usecase.technical.outbox.find.projector.OutboxStatusAndAggregateProjectorTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.projector.outbox.OutboxStatusAndAggregateProjectorTestDataBuilder;
 import java.util.List;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;

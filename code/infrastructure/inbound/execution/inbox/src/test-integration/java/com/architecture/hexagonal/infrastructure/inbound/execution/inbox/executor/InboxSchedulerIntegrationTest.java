@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.inbound.execution.inbox.executor;
 
-import com.architecture.hexagonal.application.port.configuration.SchedulerConfigurationPort;
+import com.architecture.hexagonal.application.port.out.scheduler.SchedulerConfigurationPort;
 import com.architecture.hexagonal.domain.model.vo.inbox.SchedulerInboxConfigurationVo;
 import com.architecture.hexagonal.infrastructure.inbound.execution.inbox.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.inbound.execution.inbox.model.vo.SchedulerInboxConfigurationVoTestDataBuilder;
@@ -30,18 +30,18 @@ class InboxSchedulerIntegrationTest {
 
     @Test
     void shouldConfigureTasksWithCorrectInterval() {
-        SchedulerInboxConfigurationVo schedulerConfig = SchedulerInboxConfigurationVoTestDataBuilder.builder().build().schedulerInboxConfigurationVo();
+        final SchedulerInboxConfigurationVo schedulerConfig = SchedulerInboxConfigurationVoTestDataBuilder.builder().build().schedulerInboxConfigurationVo();
 
         Mockito.when(schedulerConfigurationPort.getInboxScheduler()).thenReturn(schedulerConfig);
 
         inboxSchedulerImpl.configureTasks(scheduledTaskRegistrar);
 
-        ArgumentCaptor<Runnable> scheduleProcessCaptor = ArgumentCaptor.forClass(Runnable.class);
-        ArgumentCaptor<Duration> durationCaptor = ArgumentCaptor.forClass(Duration.class);
+        final ArgumentCaptor<Runnable> scheduleProcessCaptor = ArgumentCaptor.forClass(Runnable.class);
+        final ArgumentCaptor<Duration> durationCaptor = ArgumentCaptor.forClass(Duration.class);
 
         Mockito.verify(scheduledTaskRegistrar).addFixedDelayTask(scheduleProcessCaptor.capture(), durationCaptor.capture());
-        Duration expectedDuration = schedulerConfig.pollingInterval();
-        Duration capturedDuration = durationCaptor.getValue();
+        final Duration expectedDuration = schedulerConfig.pollingInterval();
+        final Duration capturedDuration = durationCaptor.getValue();
         
         Assertions.assertEquals(expectedDuration, capturedDuration);
 

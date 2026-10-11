@@ -39,7 +39,7 @@ class UserPostgresqlWriteAdapterImplTest {
 
     Mockito.when(userPostgresqlWriteRepository.save(userDao)).thenReturn(userDao);
 
-    User result = userPostgresqlWriteAdapterImpl.saveUser(user);
+    final User result = userPostgresqlWriteAdapterImpl.saveUser(user);
 
     AssertionsForClassTypes.assertThat(result)
         .usingRecursiveComparison()

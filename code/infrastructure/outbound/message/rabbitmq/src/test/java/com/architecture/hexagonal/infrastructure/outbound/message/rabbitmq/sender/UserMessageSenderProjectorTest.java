@@ -1,12 +1,12 @@
 package com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.sender;
 
-import com.architecture.hexagonal.application.port.database.OutboxRepositoryWritePort;
+import com.architecture.hexagonal.application.port.out.outbox.OutboxRepositoryWritePort;
+import com.architecture.hexagonal.contract.outbound.rabbitmq.IUserEventsProducer;
+import com.architecture.hexagonal.contract.outbound.rabbitmq.UserCreated;
+import com.architecture.hexagonal.contract.outbound.rabbitmq.UserDeleted;
+import com.architecture.hexagonal.contract.outbound.rabbitmq.UserUpdated;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserCreated;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserDeleted;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserUpdated;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.mapper.user.PayloadMapper;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.naming.UserPublishBinding;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.message.UserCreatedTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.message.UserDeletedTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.message.UserUpdatedTestDataBuilder;
@@ -18,14 +18,13 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.cloud.stream.function.StreamBridge;
 
 @ExtendWith(MockitoExtension.class)
 class UserMessageSenderProjectorTest {
 
   @InjectMocks UserMessageSender userMessageSender;
 
-  @Mock StreamBridge streamBridge;
+  @Mock IUserEventsProducer userEventStreamPublisher;
   @Mock OutboxRepositoryWritePort outboxRepositoryWritePort;
   @Spy private PayloadMapper payloadMapper = Mappers.getMapper(PayloadMapper.class);
 
@@ -33,12 +32,11 @@ class UserMessageSenderProjectorTest {
   void sendUserCreatedMessageShouldSendToStreamBridgeWhenEventIsReceived() {
     final UserCreated event = UserCreatedTestDataBuilder.builder().build().userCreated();
 
-    Mockito.when(streamBridge.send(UserPublishBinding.USER_CREATED.getPublishBinding(), event))
-        .thenReturn(true);
+    Mockito.when(userEventStreamPublisher.publishUserCreated(event)).thenReturn(true);
 
     userMessageSender.sendUserCreatedMessage(event);
 
-    Mockito.verify(streamBridge).send(UserPublishBinding.USER_CREATED.getPublishBinding(), event);
+    Mockito.verify(userEventStreamPublisher).publishUserCreated(event);
     Mockito.verifyNoInteractions(outboxRepositoryWritePort);
   }
 
@@ -46,8 +44,7 @@ class UserMessageSenderProjectorTest {
   void sendUserCreatedMessageShouldSaveOutboxEventWhenStreamBridgeFails() {
     final UserCreated event = UserCreatedTestDataBuilder.builder().build().userCreated();
 
-    Mockito.when(streamBridge.send(UserPublishBinding.USER_CREATED.getPublishBinding(), event))
-        .thenReturn(false);
+    Mockito.when(userEventStreamPublisher.publishUserCreated(event)).thenReturn(false);
 
     userMessageSender.sendUserCreatedMessage(event);
 
@@ -59,7 +56,7 @@ class UserMessageSenderProjectorTest {
   void sendUserCreatedMessageShouldSaveOutboxEventWhenStreamBridgeThrows() {
     final UserCreated event = UserCreatedTestDataBuilder.builder().build().userCreated();
 
-    Mockito.when(streamBridge.send(UserPublishBinding.USER_CREATED.getPublishBinding(), event))
+    Mockito.when(userEventStreamPublisher.publishUserCreated(event))
         .thenThrow(new IllegalStateException("broker unavailable"));
 
     userMessageSender.sendUserCreatedMessage(event);
@@ -72,12 +69,11 @@ class UserMessageSenderProjectorTest {
   void sendUserUpdatedMessageShouldSendToStreamBridgeWhenEventIsReceived() {
     final UserUpdated event = UserUpdatedTestDataBuilder.builder().build().userUpdated();
 
-    Mockito.when(streamBridge.send(UserPublishBinding.USER_UPDATED.getPublishBinding(), event))
-        .thenReturn(true);
+    Mockito.when(userEventStreamPublisher.publishUserUpdated(event)).thenReturn(true);
 
     userMessageSender.sendUserUpdatedMessage(event);
 
-    Mockito.verify(streamBridge).send(UserPublishBinding.USER_UPDATED.getPublishBinding(), event);
+    Mockito.verify(userEventStreamPublisher).publishUserUpdated(event);
     Mockito.verifyNoInteractions(outboxRepositoryWritePort);
   }
 
@@ -85,8 +81,7 @@ class UserMessageSenderProjectorTest {
   void sendUserUpdatedMessageShouldSaveOutboxEventWhenStreamBridgeFails() {
     final UserUpdated event = UserUpdatedTestDataBuilder.builder().build().userUpdated();
 
-    Mockito.when(streamBridge.send(UserPublishBinding.USER_UPDATED.getPublishBinding(), event))
-        .thenReturn(false);
+    Mockito.when(userEventStreamPublisher.publishUserUpdated(event)).thenReturn(false);
 
     userMessageSender.sendUserUpdatedMessage(event);
 
@@ -98,12 +93,11 @@ class UserMessageSenderProjectorTest {
   void sendUserDeletedMessageShouldSendToStreamBridgeWhenEventIsReceived() {
     final UserDeleted event = UserDeletedTestDataBuilder.builder().build().userDeleted();
 
-    Mockito.when(streamBridge.send(UserPublishBinding.USER_DELETED.getPublishBinding(), event))
-        .thenReturn(true);
+    Mockito.when(userEventStreamPublisher.publishUserDeleted(event)).thenReturn(true);
 
     userMessageSender.sendUserDeletedMessage(event);
 
-    Mockito.verify(streamBridge).send(UserPublishBinding.USER_DELETED.getPublishBinding(), event);
+    Mockito.verify(userEventStreamPublisher).publishUserDeleted(event);
     Mockito.verifyNoInteractions(outboxRepositoryWritePort);
   }
 
@@ -111,8 +105,7 @@ class UserMessageSenderProjectorTest {
   void sendUserDeletedMessageShouldSaveOutboxEventWhenStreamBridgeFails() {
     final UserDeleted event = UserDeletedTestDataBuilder.builder().build().userDeleted();
 
-    Mockito.when(streamBridge.send(UserPublishBinding.USER_DELETED.getPublishBinding(), event))
-        .thenReturn(false);
+    Mockito.when(userEventStreamPublisher.publishUserDeleted(event)).thenReturn(false);
 
     userMessageSender.sendUserDeletedMessage(event);
 

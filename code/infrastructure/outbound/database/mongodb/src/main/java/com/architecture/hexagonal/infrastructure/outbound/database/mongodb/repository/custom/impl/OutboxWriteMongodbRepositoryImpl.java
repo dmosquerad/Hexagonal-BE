@@ -18,9 +18,9 @@ public class OutboxWriteMongodbRepositoryImpl implements OutboxWriteMongodbRepos
   private final MongoTemplate mongoTemplate;
 
   @Override
-  public OutboxDao upsertByEventIdentity(OutboxDao outboxDao) {
+  public OutboxDao upsertByEventIdentity(final OutboxDao outboxDao) {
 
-    Query query =
+    final Query query =
         new Query(
             Criteria.where(OutboxDao.Fields.aggregateType)
                 .is(outboxDao.getAggregateType())
@@ -31,7 +31,7 @@ public class OutboxWriteMongodbRepositoryImpl implements OutboxWriteMongodbRepos
                 .and(OutboxDao.Fields.payload)
                 .is(outboxDao.getPayload()));
 
-    Update update = new Update();
+    final Update update = new Update();
     update.setOnInsert(OutboxDao.Fields.outboxId, UUID.randomUUID());
     update.setOnInsert(OutboxDao.Fields.createdAt, outboxDao.getCreatedAt());
     update.set(OutboxDao.Fields.status, outboxDao.getStatus());
@@ -53,9 +53,9 @@ public class OutboxWriteMongodbRepositoryImpl implements OutboxWriteMongodbRepos
   }
 
   @Override
-  public OutboxDao claimPendingForProcessing(OutboxDao outboxDao) {
+  public OutboxDao claimPendingForProcessing(final OutboxDao outboxDao) {
 
-    Query query =
+    final Query query =
         new Query(
             Criteria.where(OutboxDao.Fields.aggregateType)
                 .is(outboxDao.getAggregateType())
@@ -68,7 +68,7 @@ public class OutboxWriteMongodbRepositoryImpl implements OutboxWriteMongodbRepos
                 .and(OutboxDao.Fields.status)
                 .is(OutboxStatusVo.PENDING));
 
-    Update update = new Update();
+    final Update update = new Update();
     update.set(OutboxDao.Fields.status, OutboxStatusVo.PROCESSING);
     update.set(OutboxDao.Fields.retryCount, outboxDao.getRetryCount());
     update.set(OutboxDao.Fields.processedAt, outboxDao.getProcessedAt());

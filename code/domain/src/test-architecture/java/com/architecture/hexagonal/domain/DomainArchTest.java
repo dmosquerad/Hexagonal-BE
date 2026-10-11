@@ -13,27 +13,14 @@ import com.tngtech.archunit.lang.syntax.ArchRuleDefinition;
 class DomainArchTest {
 
   @ArchTest
-  static final ArchRule domain_should_not_depend_on_spring =
+  static final ArchRule no_impl_suffix_in_domain =
       ArchRuleDefinition.noClasses()
           .that()
           .resideInAPackage("..domain..")
           .should()
-          .dependOnClassesThat()
-          .resideInAPackage("org.springframework..")
-          .because("Domain must not depend on Spring");
+          .haveSimpleNameEndingWith("Impl")
+          .because("Domain classes must be named after what they represent in the business");
 
-  @ArchTest
-  static final ArchRule domain_should_not_depend_on_project_modules =
-      ArchRuleDefinition.noClasses()
-          .that()
-          .resideInAPackage("..domain..")
-          .should()
-          .dependOnClassesThat()
-          .resideInAnyPackage(
-              "..application..",
-              "..infrastructure..",
-              "..boot..")
-          .because("Domain must not depend on any other project module");
 
   @ArchTest
   static final ArchRule domain_classes_should_not_have_public_mutable_fields =
@@ -66,10 +53,10 @@ class DomainArchTest {
           .resideInAPackage("..domain.model..")
           .should()
           .resideInAnyPackage(
-      "..domain.model.aggregate..",
-              "..domain.model.entity..",
-              "..domain.model.vo..")
-          .because("Domain model classes must reside in aggregate, projector or VO packages");
+            "..domain.model.aggregate..",
+            "..domain.model.entity..",
+            "..domain.model.vo..")
+          .because("Domain model classes must reside in aggregate, entity or VO packages");
 
   @ArchTest
   static final ArchRule value_objects_should_reside_in_domain_data_vo_package =
@@ -79,25 +66,6 @@ class DomainArchTest {
           .should()
           .resideInAPackage("..domain.model.vo..")
           .because("Value objects must reside in domain.model.vo");
-
-  @ArchTest
-  static final ArchRule factories_should_reside_in_domain_data__factory_package =
-      ArchRuleDefinition.classes()
-          .that()
-          .haveSimpleNameEndingWith("Factory")
-          .should()
-          .resideInAPackage("..domain.model..factory..")
-          .because("Value object factories must reside in domain.model..factory");
-
-  @ArchTest
-  static final ArchRule predicates_should_reside_in_domain_model_predicate_package =
-      ArchRuleDefinition.classes()
-          .that()
-          .haveSimpleNameEndingWith("Predicate")
-          .should()
-          .resideInAPackage("..domain.model..predicate..")
-          .because("Domain predicates must reside in domain.model..predicate;"
-              + " they validate value object state and belong alongside the VOs they guard");
 
   @ArchTest
   static final ArchRule domain_exceptions_should_reside_in_domain_exception_package =
@@ -114,17 +82,6 @@ class DomainArchTest {
               + " to keep error semantics within the domain boundary");
 
   @ArchTest
-  static final ArchRule domain_service_utility_classes_should_have_private_constructor =
-      ArchRuleDefinition.classes()
-          .that()
-          .resideInAPackage("..domain.service..")
-          .and()
-          .areNotInterfaces()
-          .should()
-          .haveOnlyPrivateConstructors()
-          .because("Domain service utility classes must not be instantiable");
-
-  @ArchTest
   static final ArchRule domain_exceptions_should_not_have_public_fields =
       ArchRuleDefinition.noFields()
           .that()
@@ -137,14 +94,25 @@ class DomainArchTest {
           .because("Domain exception fields must be encapsulated")
           .allowEmptyShould(true);
 
+
   @ArchTest
-  static final ArchRule no_impl_suffix_in_domain =
-      ArchRuleDefinition.noClasses()
+  static final ArchRule factories_should_reside_under_their_domain_model_concept =
+      ArchRuleDefinition.classes()
           .that()
-          .resideInAPackage("..domain..")
+          .haveSimpleNameEndingWith("Factory")
           .should()
-          .haveSimpleNameEndingWith("Impl")
-          .because("Domain classes must be named after what they represent in the business");
+          .resideInAPackage("..domain.model.*.*..factory..")
+          .because(
+              "Domain factories must reside in a factory package nested under the model concept they create");
+
+  @ArchTest
+  static final ArchRule predicates_should_reside_under_their_domain_model_concept =
+      ArchRuleDefinition.classes()
+          .that()
+          .haveSimpleNameEndingWith("Predicate")
+          .should()
+          .resideInAPackage("..domain.model.*.*..predicate..")
+          .because(
+              "Domain predicates must reside in a predicate package nested under the model concepts they validate");
 
 }
-

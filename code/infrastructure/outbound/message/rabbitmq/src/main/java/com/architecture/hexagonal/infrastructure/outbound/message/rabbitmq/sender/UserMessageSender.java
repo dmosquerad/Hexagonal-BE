@@ -1,17 +1,16 @@
 package com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.sender;
 
-import com.architecture.hexagonal.application.port.database.OutboxRepositoryWritePort;
+import com.architecture.hexagonal.application.port.out.outbox.OutboxRepositoryWritePort;
+import com.architecture.hexagonal.contract.outbound.rabbitmq.IUserEventsProducer;
+import com.architecture.hexagonal.contract.outbound.rabbitmq.UserCreated;
+import com.architecture.hexagonal.contract.outbound.rabbitmq.UserDeleted;
+import com.architecture.hexagonal.contract.outbound.rabbitmq.UserUpdated;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
 import com.architecture.hexagonal.domain.model.vo.outbox.ActionType;
 import com.architecture.hexagonal.domain.model.vo.outbox.AggregateTypeVo;
 import com.architecture.hexagonal.domain.model.vo.outbox.OutboxStatusVo;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserCreated;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserDeleted;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserUpdated;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.mapper.user.PayloadMapper;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.naming.UserPublishBinding;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
@@ -20,7 +19,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @RequiredArgsConstructor
 public class UserMessageSender {
 
-  private final StreamBridge streamBridge;
+  private final IUserEventsProducer userEventStreamPublisher;
   private final PayloadMapper payloadMapper;
   private final OutboxRepositoryWritePort outboxRepositoryWritePort;
 
@@ -32,18 +31,18 @@ public class UserMessageSender {
 
     outboxRepositoryWritePort.upsertByEventIdentity(
         Outbox.builder()
-            .aggregateId(userCreated.getData().getId())
+            .aggregateId(userCreated.getData().getUserId())
             .aggregateType(AggregateTypeVo.USER)
             .action(ActionType.UserActionType.USER_CREATED.getActionType())
             .status(OutboxStatusVo.PENDING)
             .payload(payloadMapper.toPayload(userCreated))
-            .createdAt(userCreated.getMessageHeader().messageDate())
+            .createdAt(userCreated.getMessageHeader().getMessageDate())
             .build());
   }
 
   private boolean isSendUserCreatedMessage(final UserCreated userCreated) {
     try {
-      return streamBridge.send(UserPublishBinding.USER_CREATED.getPublishBinding(), userCreated);
+      return userEventStreamPublisher.publishUserCreated(userCreated);
     } catch (Exception _) {
       return false;
     }
@@ -57,18 +56,18 @@ public class UserMessageSender {
 
     outboxRepositoryWritePort.upsertByEventIdentity(
         Outbox.builder()
-            .aggregateId(userUpdated.getData().getId())
+            .aggregateId(userUpdated.getData().getUserId())
             .aggregateType(AggregateTypeVo.USER)
             .action(ActionType.UserActionType.USER_UPDATED.getActionType())
             .status(OutboxStatusVo.PENDING)
             .payload(payloadMapper.toPayload(userUpdated))
-            .createdAt(userUpdated.getMessageHeader().messageDate())
+            .createdAt(userUpdated.getMessageHeader().getMessageDate())
             .build());
   }
 
   private boolean isSendUserUpdatedMessage(final UserUpdated userUpdated) {
     try {
-      return streamBridge.send(UserPublishBinding.USER_UPDATED.getPublishBinding(), userUpdated);
+      return userEventStreamPublisher.publishUserUpdated(userUpdated);
     } catch (Exception _) {
       return false;
     }
@@ -81,18 +80,18 @@ public class UserMessageSender {
     }
     outboxRepositoryWritePort.upsertByEventIdentity(
         Outbox.builder()
-            .aggregateId(userDeleted.getData().getId())
+            .aggregateId(userDeleted.getData().getUserId())
             .aggregateType(AggregateTypeVo.USER)
             .action(ActionType.UserActionType.USER_DELETED.getActionType())
             .status(OutboxStatusVo.PENDING)
             .payload(payloadMapper.toPayload(userDeleted))
-            .createdAt(userDeleted.getMessageHeader().messageDate())
+            .createdAt(userDeleted.getMessageHeader().getMessageDate())
             .build());
   }
 
   private boolean isSendUserDeletedMessage(final UserDeleted userDeleted) {
     try {
-      return streamBridge.send(UserPublishBinding.USER_DELETED.getPublishBinding(), userDeleted);
+      return userEventStreamPublisher.publishUserDeleted(userDeleted);
     } catch (Exception _) {
       return false;
     }

@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.testutils.dto;
 
-import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.server.dto.ResponseErrorDto;
+import com.architecture.hexagonal.contract.inbound.rest.user.server.dto.ResponseErrorDto;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.time.TestClock;
 import java.time.OffsetDateTime;
 import lombok.Builder;
@@ -21,7 +21,7 @@ public class ResponseErrorDtoTestDataBuilder {
   private String detail = "Error detail";
 
   public ResponseErrorDto responseErrorDto() {
-    ResponseErrorDto responseErrorDto = new ResponseErrorDto();
+    final ResponseErrorDto responseErrorDto = new ResponseErrorDto();
     responseErrorDto.setDate(date);
     responseErrorDto.setStatus(status);
     responseErrorDto.setTitle(title);

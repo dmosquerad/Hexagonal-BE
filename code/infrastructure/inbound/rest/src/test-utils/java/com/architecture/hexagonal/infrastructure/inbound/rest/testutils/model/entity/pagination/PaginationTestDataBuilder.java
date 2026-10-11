@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.testutils.model.entity.pagination;
 
-import com.architecture.hexagonal.domain.model.vo.pagination.Pagination;
+import com.architecture.hexagonal.domain.model.vo.pagination.PaginationVo;
 import lombok.Builder;
 
 @Builder
@@ -12,8 +12,8 @@ public class PaginationTestDataBuilder {
   @Builder.Default
   private Integer size = 100;
 
-  public Pagination pagination() {
-    return Pagination.builder()
+  public PaginationVo pagination() {
+    return PaginationVo.builder()
         .page(page)
         .size(size)
         .build();

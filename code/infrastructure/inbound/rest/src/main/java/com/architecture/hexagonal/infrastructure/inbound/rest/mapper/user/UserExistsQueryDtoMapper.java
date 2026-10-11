@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.mapper.user;
 
-import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.user.UserExistsQueryDto;
+import com.architecture.hexagonal.contract.application.generated.user.UserExistsQuery;
 import com.architecture.hexagonal.infrastructure.inbound.rest.config.mapstruct.MapstructConfig;
 import java.util.UUID;
 import org.mapstruct.Mapper;
@@ -10,5 +10,5 @@ import org.mapstruct.Mapping;
 public interface UserExistsQueryDtoMapper {
 
   @Mapping(source = "userUuid", target = "userId")
-  UserExistsQueryDto toUserExistsQuery(UUID userUuid);
+  UserExistsQuery toUserExistsQuery(UUID userUuid);
 }

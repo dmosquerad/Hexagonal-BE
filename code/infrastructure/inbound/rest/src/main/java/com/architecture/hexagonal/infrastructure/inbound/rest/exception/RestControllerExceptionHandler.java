@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.exception;
 
+import com.architecture.hexagonal.contract.inbound.rest.user.server.dto.ResponseErrorDto;
 import com.architecture.hexagonal.domain.exception.DomainException;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
-import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.server.dto.ResponseErrorDto;
 import jakarta.validation.ConstraintViolationException;
 import java.time.Clock;
 import java.time.OffsetDateTime;
@@ -48,7 +48,7 @@ public class RestControllerExceptionHandler extends ResponseEntityExceptionHandl
 
   @ExceptionHandler(IllegalArgumentException.class)
   public ResponseEntity<Object> handleIllegalArgumentException(
-      IllegalArgumentException ex, WebRequest request) {
+      final IllegalArgumentException ex, final WebRequest request) {
     final ProblemDetail problemDetail =
         ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
     return this.handleExceptionInternal(
@@ -57,7 +57,7 @@ public class RestControllerExceptionHandler extends ResponseEntityExceptionHandl
 
   @ExceptionHandler(ResourceNotFoundException.class)
   public ResponseEntity<Object> handleResourceNotFoundException(
-      ResourceNotFoundException ex, WebRequest request) {
+      final ResourceNotFoundException ex, final WebRequest request) {
     final ProblemDetail problemDetail =
         ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
     return this.handleExceptionInternal(
@@ -74,7 +74,8 @@ public class RestControllerExceptionHandler extends ResponseEntityExceptionHandl
   }
 
   @ExceptionHandler(DomainException.class)
-  public ResponseEntity<Object> handleDomainException(DomainException ex, WebRequest request) {
+  public ResponseEntity<Object> handleDomainException(
+      final DomainException ex, final WebRequest request) {
     final ProblemDetail problemDetail =
         ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage());
     return this.handleExceptionInternal(

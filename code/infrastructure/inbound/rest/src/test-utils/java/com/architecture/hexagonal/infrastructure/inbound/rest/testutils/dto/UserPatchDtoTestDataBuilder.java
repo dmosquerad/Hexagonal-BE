@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.testutils.dto;
 
-import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.server.dto.UserPatchDto;
+import com.architecture.hexagonal.contract.inbound.rest.user.server.dto.UserPatchDto;
 import lombok.Builder;
 
 @Builder
@@ -13,7 +13,7 @@ public class UserPatchDtoTestDataBuilder {
   private String name = "Test User";
 
   public UserPatchDto userPatchDto() {
-    UserPatchDto userPatchDto = new UserPatchDto();
+    final UserPatchDto userPatchDto = new UserPatchDto();
     userPatchDto.setEmail(email);
     userPatchDto.setName(name);
 

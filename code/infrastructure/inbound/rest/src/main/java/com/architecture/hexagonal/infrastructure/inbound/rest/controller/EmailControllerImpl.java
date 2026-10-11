@@ -1,10 +1,10 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.controller;
 
+import com.architecture.hexagonal.application.port.in.bus.query.QueryBus;
+import com.architecture.hexagonal.contract.application.generated.email.GetBlockedRulesQuery;
+import com.architecture.hexagonal.contract.inbound.rest.email.server.controller.EmailsApi;
+import com.architecture.hexagonal.contract.inbound.rest.email.server.dto.EmailBlockRulesResponseDto;
 import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;
-import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.email.GetBlockedRulesQueryDto;
-import com.architecture.hexagonal.infrastructure.inbound.contract.rest.email.server.controller.EmailsApi;
-import com.architecture.hexagonal.infrastructure.inbound.contract.rest.email.server.dto.EmailBlockRulesResponseDto;
-import com.architecture.hexagonal.infrastructure.inbound.orchestration.dispatcher.query.QueryBus;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.email.EmailBlockRulesDtoMapper;
 import java.time.Clock;
 import java.time.OffsetDateTime;
@@ -24,7 +24,7 @@ public class EmailControllerImpl implements EmailsApi {
   @Override
   public ResponseEntity<EmailBlockRulesResponseDto> getBlockedRules() {
     return ResponseEntity.ok(
-        buildEmailBlockRulesResponse(queryBus.execute(new GetBlockedRulesQueryDto())));
+        buildEmailBlockRulesResponse(queryBus.execute(new GetBlockedRulesQuery())));
   }
 
   private EmailBlockRulesResponseDto buildEmailBlockRulesResponse(

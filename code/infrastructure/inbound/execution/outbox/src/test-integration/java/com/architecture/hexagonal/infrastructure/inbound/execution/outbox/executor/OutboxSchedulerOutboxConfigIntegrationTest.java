@@ -1,12 +1,12 @@
 package com.architecture.hexagonal.infrastructure.inbound.execution.outbox.executor;
 
-import com.architecture.hexagonal.application.port.configuration.SchedulerConfigurationPort;
+import com.architecture.hexagonal.application.port.out.scheduler.SchedulerConfigurationPort;
 import com.architecture.hexagonal.domain.model.vo.outbox.SchedulerOutboxConfigurationVo;
-import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.retry.RetryOutboxeventCommandDto;
+import com.architecture.hexagonal.contract.application.generated.retry.RetryOutboxeventCommand;
 import com.architecture.hexagonal.infrastructure.inbound.execution.outbox.model.vo.SchedulerOutboxConfigurationVoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.execution.outbox.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.inbound.execution.outbox.executor.impl.OutboxSchedulerImpl;
-import com.architecture.hexagonal.infrastructure.inbound.orchestration.dispatcher.command.CommandBus;
+import com.architecture.hexagonal.application.port.in.bus.command.CommandBus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -35,24 +35,24 @@ class OutboxSchedulerOutboxConfigIntegrationTest {
 
     @Test
     void shouldConfigureTasksWithCorrectInterval() {
-        SchedulerOutboxConfigurationVo schedulerConfig = SchedulerOutboxConfigurationVoTestDataBuilder.builder().build().schedulerOutboxConfigurationVo();
+        final SchedulerOutboxConfigurationVo schedulerConfig = SchedulerOutboxConfigurationVoTestDataBuilder.builder().build().schedulerOutboxConfigurationVo();
 
         Mockito.when(schedulerConfigurationPort.getOutboxScheduler()).thenReturn(schedulerConfig);
 
         outboxSchedulerImpl.configureTasks(scheduledTaskRegistrar);
 
-        ArgumentCaptor<Runnable> scheduleRetryCaptor = ArgumentCaptor.forClass(Runnable.class);
-        ArgumentCaptor<Duration> durationCaptor = ArgumentCaptor.forClass(Duration.class);
+        final ArgumentCaptor<Runnable> scheduleRetryCaptor = ArgumentCaptor.forClass(Runnable.class);
+        final ArgumentCaptor<Duration> durationCaptor = ArgumentCaptor.forClass(Duration.class);
 
         Mockito.verify(scheduledTaskRegistrar).addFixedDelayTask(scheduleRetryCaptor.capture(), durationCaptor.capture());
-        Duration expectedDuration = schedulerConfig.pollingInterval();
-        Duration capturedDuration = durationCaptor.getValue();
+        final Duration expectedDuration = schedulerConfig.pollingInterval();
+        final Duration capturedDuration = durationCaptor.getValue();
         
         Assertions.assertEquals(expectedDuration, capturedDuration);
 
         Mockito.verify(schedulerConfigurationPort).getOutboxScheduler();
 
         scheduleRetryCaptor.getValue().run();
-        Mockito.verify(commandBus).execute(Mockito.any(RetryOutboxeventCommandDto.class));
+        Mockito.verify(commandBus).execute(Mockito.any(RetryOutboxeventCommand.class));
     }
 }

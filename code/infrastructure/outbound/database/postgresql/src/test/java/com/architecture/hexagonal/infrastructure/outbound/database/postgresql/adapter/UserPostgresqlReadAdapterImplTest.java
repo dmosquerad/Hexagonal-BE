@@ -1,9 +1,9 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.postgresql.adapter;
 
-import com.architecture.hexagonal.application.usecase.business.user.getall.projector.UserEmailProjector;
+import com.architecture.hexagonal.application.projector.business.user.UserEmailProjector;
 import com.architecture.hexagonal.domain.model.entity.user.User;
-import com.architecture.hexagonal.domain.model.vo.pagination.Pagination;
-import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResult;
+import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResultVo;
+import com.architecture.hexagonal.domain.model.vo.pagination.PaginationVo;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.data.UserDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.mapper.user.UserFromPostgresqlMapper;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.repository.UserPostgresqlReadRepository;
@@ -77,7 +77,7 @@ class UserPostgresqlReadAdapterImplTest {
   @Test
   void getAllUsersShouldReturnPagedUsersByHostAndBlockedHosts() {
     final UserDao userDao = UserDaoTestDataBuilder.builder().build().userDao();
-    final Pagination pagination = PaginationTestDataBuilder.builder().build().pagination();
+    final PaginationVo paginationVo = PaginationTestDataBuilder.builder().build().pagination();
     final Pageable pageable = PageRequest.of(0, 100);
 
     Mockito.when(
@@ -88,13 +88,13 @@ class UserPostgresqlReadAdapterImplTest {
     final String host = "example";
     final Boolean blockEmail = true;
     final User expectedUser = UserTestDataBuilder.builder().build().user();
-    final PaginationResult<User> expectedResult =
+    final PaginationResultVo<User> expectedResult =
         PaginationResultTestDataBuilder.<User>builder()
             .data(Collections.singletonList(expectedUser))
             .build()
             .paginationResult();
 
-    PaginationResult<User> result =
+    final PaginationResultVo<User> result =
         userPostgresqlReadAdapterImpl.getAllUsers(
             UserEmailProjector.builder()
                 .host(host)
@@ -105,7 +105,7 @@ class UserPostgresqlReadAdapterImplTest {
                         .build()
                         .emailBlockRulesVo())
                 .build(),
-            pagination);
+            paginationVo);
 
     AssertionsForClassTypes.assertThat(result)
         .usingRecursiveComparison()
@@ -125,14 +125,14 @@ class UserPostgresqlReadAdapterImplTest {
         .thenReturn(Collections.singletonList(userDao));
 
     final User expectedUser = UserTestDataBuilder.builder().build().user();
-    final PaginationResult<User> expectedResult =
+    final PaginationResultVo<User> expectedResult =
         PaginationResultTestDataBuilder.<User>builder()
             .data(Collections.singletonList(expectedUser))
             .size(1)
             .build()
             .paginationResult();
 
-    PaginationResult<User> result =
+    final PaginationResultVo<User> result =
         userPostgresqlReadAdapterImpl.getAllUsers(
             UserEmailProjector.builder()
                 .host(host)

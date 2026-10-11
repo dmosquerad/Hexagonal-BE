@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.testutils.dto;
 
-import com.architecture.hexagonal.infrastructure.inbound.contract.rest.email.server.dto.EmailBlockRulesDto;
+import com.architecture.hexagonal.contract.inbound.rest.email.server.dto.EmailBlockRulesDto;
 import java.util.List;
 import lombok.Builder;
 
@@ -23,12 +23,12 @@ public class EmailBlockRulesDtoTestDataBuilder {
   private List<String> username = List.of("test");
 
   public EmailBlockRulesDto emailBlockRulesDto() {
-    EmailBlockRulesDto emailBlockRulesDto = new EmailBlockRulesDto();
-    emailBlockRulesDto.setEmail(this.email);
-    emailBlockRulesDto.setHost(this.host);
-    emailBlockRulesDto.setTld(this.tld);
-    emailBlockRulesDto.setDomain(this.domain);
-    emailBlockRulesDto.setUsername(this.username);
+    final EmailBlockRulesDto emailBlockRulesDto = new EmailBlockRulesDto();
+    emailBlockRulesDto.setEmail(email);
+    emailBlockRulesDto.setHost(host);
+    emailBlockRulesDto.setTld(tld);
+    emailBlockRulesDto.setDomain(domain);
+    emailBlockRulesDto.setUsername(username);
 
     return emailBlockRulesDto;
   }

@@ -1,10 +1,10 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.postgresql.adapter;
 
-import com.architecture.hexagonal.application.port.database.UserRepositoryReadPort;
-import com.architecture.hexagonal.application.usecase.business.user.getall.projector.UserEmailProjector;
+import com.architecture.hexagonal.application.port.out.user.UserRepositoryReadPort;
+import com.architecture.hexagonal.application.projector.business.user.UserEmailProjector;
 import com.architecture.hexagonal.domain.model.entity.user.User;
-import com.architecture.hexagonal.domain.model.vo.pagination.Pagination;
-import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResult;
+import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResultVo;
+import com.architecture.hexagonal.domain.model.vo.pagination.PaginationVo;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.data.UserDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.mapper.user.UserFromPostgresqlMapper;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.repository.UserPostgresqlReadRepository;
@@ -28,8 +28,9 @@ public class UserPostgresqlReadAdapterImpl implements UserRepositoryReadPort {
   private final UserFromPostgresqlMapper userFromPostgresqlMapper;
 
   @Override
-  public PaginationResult<User> getAllUsers(
-      final @NonNull UserEmailProjector userEmailProjector, final @NonNull Pagination pagination) {
+  public PaginationResultVo<User> getAllUsers(
+      final @NonNull UserEmailProjector userEmailProjector,
+      final @NonNull PaginationVo paginationVo) {
 
     final Specification<UserDao> specification =
         Specification.where(UserSpecifications.hostEquals(userEmailProjector.host()))
@@ -37,10 +38,10 @@ public class UserPostgresqlReadAdapterImpl implements UserRepositoryReadPort {
                 UserSpecifications.blockedEmail(
                     userEmailProjector.blockEmail(), userEmailProjector.blockedRules()));
 
-    final Pageable pageable = PageRequest.of(pagination.page(), pagination.size());
+    final Pageable pageable = PageRequest.of(paginationVo.page(), paginationVo.size());
     final Page<UserDao> page = userPostgresqlReadRepository.findAll(specification, pageable);
 
-    return PaginationResult.<User>builder()
+    return PaginationResultVo.<User>builder()
         .data(page.stream().map(userFromPostgresqlMapper::toUser).toList())
         .totalElements(page.getTotalElements())
         .totalPages(page.getTotalPages())
@@ -50,7 +51,8 @@ public class UserPostgresqlReadAdapterImpl implements UserRepositoryReadPort {
   }
 
   @Override
-  public PaginationResult<User> getAllUsers(final @NonNull UserEmailProjector userEmailProjector) {
+  public PaginationResultVo<User> getAllUsers(
+      final @NonNull UserEmailProjector userEmailProjector) {
 
     final Specification<UserDao> specification =
         Specification.where(UserSpecifications.hostEquals(userEmailProjector.host()))
@@ -60,7 +62,7 @@ public class UserPostgresqlReadAdapterImpl implements UserRepositoryReadPort {
 
     final List<UserDao> results = userPostgresqlReadRepository.findAll(specification);
     final List<User> users = results.stream().map(userFromPostgresqlMapper::toUser).toList();
-    return PaginationResult.<User>builder()
+    return PaginationResultVo.<User>builder()
         .data(users)
         .totalElements(users.size())
         .totalPages(1)

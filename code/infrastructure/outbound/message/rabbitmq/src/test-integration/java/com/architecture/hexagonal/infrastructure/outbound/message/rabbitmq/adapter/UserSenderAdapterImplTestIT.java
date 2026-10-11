@@ -1,28 +1,33 @@
 package com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.adapter;
 
-import com.architecture.hexagonal.application.port.database.OutboxRepositoryWritePort;
+import com.architecture.hexagonal.application.port.out.outbox.OutboxRepositoryWritePort;
+import com.architecture.hexagonal.contract.outbound.rabbitmq.MessageHeader;
+import com.architecture.hexagonal.contract.outbound.rabbitmq.UserData;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.domain.model.vo.outbox.MessageHeaderVo;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.config.TestApplication;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserCreated;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserDeleted;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserUpdated;
+import com.architecture.hexagonal.contract.outbound.rabbitmq.UserCreated;
+import com.architecture.hexagonal.contract.outbound.rabbitmq.UserDeleted;
+import com.architecture.hexagonal.contract.outbound.rabbitmq.IUserEventsProducer;
+import com.architecture.hexagonal.contract.outbound.rabbitmq.UserUpdated;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.mapper.user.UserMessageDaoMapper;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.naming.UserPublishBinding;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.sender.UserMessageSender;
+import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.message.UserCreatedTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.message.UserDeletedTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.message.UserUpdatedTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.model.entity.user.UserDataTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.model.entity.user.UserTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.time.TestClock;
+import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.model.vo.outbox.MessageHeaderTestDataBuilder;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.transaction.support.TransactionTemplate;
-
-import java.time.Clock;
 
 @SpringBootTest(classes = {UserSenderAdapterImpl.class})
 @ContextConfiguration(classes = TestApplication.class)
@@ -41,10 +46,7 @@ class UserSenderAdapterImplTestIT {
   OutboxRepositoryWritePort outboxRepositoryWritePort;
 
   @MockitoSpyBean
-  StreamBridge streamBridge;
-
-  @MockitoSpyBean
-  Clock clock = TestClock.FIXED_CLOCK;
+  IUserEventsProducer userEventStreamPublisher;
 
   @Autowired
   TransactionTemplate transactionTemplate;
@@ -58,8 +60,37 @@ class UserSenderAdapterImplTestIT {
       return null;
     });
 
-    Mockito.verify(userMessageDaoMapper).toUserCreated(Mockito.eq(user), Mockito.any(MessageHeaderVo.class));
-    Mockito.verify(streamBridge).send(Mockito.eq(UserPublishBinding.USER_CREATED.getPublishBinding()), Mockito.any(UserCreated.class));
+    final ArgumentCaptor<MessageHeaderVo> headerCaptor =
+        ArgumentCaptor.forClass(MessageHeaderVo.class);
+    Mockito.verify(userMessageDaoMapper).toUserCreated(Mockito.eq(user), headerCaptor.capture());
+    Assertions.assertThat(headerCaptor.getValue().messageId()).isNotNull();
+    Assertions.assertThat(headerCaptor.getValue().messageDate()).isNotNull();
+
+    final ArgumentCaptor<UserCreated> eventCaptor = ArgumentCaptor.forClass(UserCreated.class);
+    Mockito.verify(userEventStreamPublisher).publishUserCreated(eventCaptor.capture());
+    final UserData expectedUserData =
+        UserDataTestDataBuilder.builder()
+            .userId(user.userId())
+            .name(user.name())
+            .email(user.email())
+            .build()
+            .userData();
+    final MessageHeaderVo messageHeader = headerCaptor.getValue();
+    final MessageHeader expectedMessageHeader =
+        MessageHeaderTestDataBuilder.builder()
+            .messageId(messageHeader.messageId())
+            .messageDate(messageHeader.messageDate())
+            .build()
+            .messageHeader();
+    final UserCreated expectedEvent =
+        UserCreatedTestDataBuilder.builder()
+            .userData(expectedUserData)
+            .messageHeader(expectedMessageHeader)
+            .build()
+            .userCreated();
+    Assertions.assertThat(eventCaptor.getValue())
+        .usingRecursiveComparison()
+        .isEqualTo(expectedEvent);
   }
 
   @Test
@@ -71,8 +102,37 @@ class UserSenderAdapterImplTestIT {
       return null;
     });
 
-    Mockito.verify(userMessageDaoMapper).toUserUpdated(Mockito.eq(user), Mockito.any(MessageHeaderVo.class));
-    Mockito.verify(streamBridge).send(Mockito.eq(UserPublishBinding.USER_UPDATED.getPublishBinding()), Mockito.any(UserUpdated.class));
+    final ArgumentCaptor<MessageHeaderVo> headerCaptor =
+        ArgumentCaptor.forClass(MessageHeaderVo.class);
+    Mockito.verify(userMessageDaoMapper).toUserUpdated(Mockito.eq(user), headerCaptor.capture());
+    Assertions.assertThat(headerCaptor.getValue().messageId()).isNotNull();
+    Assertions.assertThat(headerCaptor.getValue().messageDate()).isNotNull();
+
+    final ArgumentCaptor<UserUpdated> eventCaptor = ArgumentCaptor.forClass(UserUpdated.class);
+    Mockito.verify(userEventStreamPublisher).publishUserUpdated(eventCaptor.capture());
+    final UserData expectedUserData =
+        UserDataTestDataBuilder.builder()
+            .userId(user.userId())
+            .name(user.name())
+            .email(user.email())
+            .build()
+            .userData();
+    final MessageHeaderVo messageHeader = headerCaptor.getValue();
+    final MessageHeader expectedMessageHeader =
+        MessageHeaderTestDataBuilder.builder()
+            .messageId(messageHeader.messageId())
+            .messageDate(messageHeader.messageDate())
+            .build()
+            .messageHeader();
+    final UserUpdated expectedEvent =
+        UserUpdatedTestDataBuilder.builder()
+            .userData(expectedUserData)
+            .messageHeader(expectedMessageHeader)
+            .build()
+            .userUpdated();
+    Assertions.assertThat(eventCaptor.getValue())
+        .usingRecursiveComparison()
+        .isEqualTo(expectedEvent);
   }
 
   @Test
@@ -84,7 +144,36 @@ class UserSenderAdapterImplTestIT {
       return null;
     });
 
-    Mockito.verify(userMessageDaoMapper).toUserDeleted(Mockito.eq(user), Mockito.any(MessageHeaderVo.class));
-    Mockito.verify(streamBridge).send(Mockito.eq(UserPublishBinding.USER_DELETED.getPublishBinding()), Mockito.any(UserDeleted.class));
+    final ArgumentCaptor<MessageHeaderVo> headerCaptor =
+        ArgumentCaptor.forClass(MessageHeaderVo.class);
+    Mockito.verify(userMessageDaoMapper).toUserDeleted(Mockito.eq(user), headerCaptor.capture());
+    Assertions.assertThat(headerCaptor.getValue().messageId()).isNotNull();
+    Assertions.assertThat(headerCaptor.getValue().messageDate()).isNotNull();
+
+    final ArgumentCaptor<UserDeleted> eventCaptor = ArgumentCaptor.forClass(UserDeleted.class);
+    Mockito.verify(userEventStreamPublisher).publishUserDeleted(eventCaptor.capture());
+    final UserData expectedUserData =
+        UserDataTestDataBuilder.builder()
+            .userId(user.userId())
+            .name(user.name())
+            .email(user.email())
+            .build()
+            .userData();
+    final MessageHeaderVo messageHeader = headerCaptor.getValue();
+    final MessageHeader expectedMessageHeader =
+        MessageHeaderTestDataBuilder.builder()
+            .messageId(messageHeader.messageId())
+            .messageDate(messageHeader.messageDate())
+            .build()
+            .messageHeader();
+    final UserDeleted expectedEvent =
+        UserDeletedTestDataBuilder.builder()
+            .userData(expectedUserData)
+            .messageHeader(expectedMessageHeader)
+            .build()
+            .userDeleted();
+    Assertions.assertThat(eventCaptor.getValue())
+        .usingRecursiveComparison()
+        .isEqualTo(expectedEvent);
   }
 }

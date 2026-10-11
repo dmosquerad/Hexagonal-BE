@@ -1,0 +1,40 @@
+asyncapi: 2.6.0
+info:
+  title: User events
+  version: 0.0.1
+  description: RabbitMQ events published.
+id: urn:com:architecture:hexagonal:user-events
+defaultContentType: application/json
+tags:
+  - name: user
+servers:
+  rabbitmq:
+    url: localhost:5672
+    protocol: amqp
+    protocolVersion: 0.9.1
+channels:
+  user.created:
+    $ref: './users/users-channels.yml#/channels/user.created'
+  user.updated:
+    $ref: './users/users-channels.yml#/channels/user.updated'
+  user.deleted:
+    $ref: './users/users-channels.yml#/channels/user.deleted'
+components:
+  messages:
+    UserCreated:
+      $ref: './users/users-messages.yml#/messages/UserCreated'
+    UserUpdated:
+      $ref: './users/users-messages.yml#/messages/UserUpdated'
+    UserDeleted:
+      $ref: './users/users-messages.yml#/messages/UserDeleted'
+  schemas:
+    MessageHeader:
+      $ref: './users/users-schema.yml#/schemas/MessageHeader'
+    UserData:
+      $ref: './users/users-schema.yml#/schemas/UserData'
+    UserCreated:
+      $ref: './users/users-schema.yml#/schemas/UserCreated'
+    UserUpdated:
+      $ref: './users/users-schema.yml#/schemas/UserUpdated'
+    UserDeleted:
+      $ref: './users/users-schema.yml#/schemas/UserDeleted'

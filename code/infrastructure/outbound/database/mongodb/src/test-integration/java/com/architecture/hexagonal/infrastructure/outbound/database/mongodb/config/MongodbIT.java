@@ -35,7 +35,7 @@ public abstract class MongodbIT {
     }
 
   @DynamicPropertySource
-  static void configure(DynamicPropertyRegistry registry) {
+  static void configure(final DynamicPropertyRegistry registry) {
     registry.add("spring.data.mongodb.uri", mongo::getReplicaSetUrl);
   }
 

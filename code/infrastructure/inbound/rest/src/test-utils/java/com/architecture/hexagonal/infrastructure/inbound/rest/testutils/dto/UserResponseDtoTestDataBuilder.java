@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.testutils.dto;
 
-import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.server.dto.UserReadDto;
-import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.server.dto.UserResponseDto;
+import com.architecture.hexagonal.contract.inbound.rest.user.server.dto.UserReadDto;
+import com.architecture.hexagonal.contract.inbound.rest.user.server.dto.UserResponseDto;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.time.TestClock;
 import java.time.OffsetDateTime;
 import lombok.Builder;
@@ -19,10 +19,10 @@ public class UserResponseDtoTestDataBuilder {
   private UserReadDto userReadDto = UserReadDtoTestDataBuilder.builder().build().userReadDto();
 
   public UserResponseDto userResponseDto() {
-    UserResponseDto userResponseDto = new UserResponseDto();
+    final UserResponseDto userResponseDto = new UserResponseDto();
     userResponseDto.setStatus(status);
-    userResponseDto.setDate(this.date);
-    userResponseDto.setData(this.userReadDto);
+    userResponseDto.setDate(date);
+    userResponseDto.setData(userReadDto);
 
     return userResponseDto;
   }

@@ -1,13 +1,15 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.mapper.user;
 
-import com.architecture.hexagonal.domain.model.vo.pagination.Pagination;
-import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.user.GetUsersFilteredQueryDto;
+import com.architecture.hexagonal.contract.application.generated.user.GetUsersFilteredQuery;
+import com.architecture.hexagonal.domain.model.vo.pagination.PaginationVo;
 import com.architecture.hexagonal.infrastructure.inbound.rest.config.mapstruct.MapstructConfig;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(config = MapstructConfig.class)
 public interface GetAllUserQueryDtoMapper {
 
-  GetUsersFilteredQueryDto toGetAllUserQuery(
-      String host, Boolean blockEmail, Pagination pagination);
+  @Mapping(source = "paginationVo", target = "pagination")
+  GetUsersFilteredQuery toGetAllUserQuery(
+      final String host, final Boolean blockEmail, final PaginationVo paginationVo);
 }

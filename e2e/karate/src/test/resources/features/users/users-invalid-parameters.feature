@@ -43,7 +43,7 @@ Feature: User Endpoints With Invalid Parameters - Parameter validation
     And match response.status == 400
     And match response.title == '#string'
 
-  Scenario: GET /users with pagination page negative returns 400
+  Scenario: GET /users with paginationVo page negative returns 400
     Given url baseUrl + '/users'
     And param page = -1
     And param size = 100
@@ -52,7 +52,7 @@ Feature: User Endpoints With Invalid Parameters - Parameter validation
     And match response.status == 400
     And match response.title == '#string'
 
-  Scenario: GET /users with pagination size zero returns 400
+  Scenario: GET /users with paginationVo size zero returns 400
     Given url baseUrl + '/users'
     And param page = 0
     And param size = 0
@@ -61,7 +61,7 @@ Feature: User Endpoints With Invalid Parameters - Parameter validation
     And match response.status == 400
     And match response.title == '#string'
 
-  Scenario: GET /users with pagination size negative returns 400
+  Scenario: GET /users with paginationVo size negative returns 400
     Given url baseUrl + '/users'
     And param page = 0
     And param size = -1

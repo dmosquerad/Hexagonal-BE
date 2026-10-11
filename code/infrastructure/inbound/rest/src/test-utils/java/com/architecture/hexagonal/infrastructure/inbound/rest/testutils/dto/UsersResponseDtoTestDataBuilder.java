@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.testutils.dto;
 
-import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.server.dto.UserReadDto;
-import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.server.dto.UsersResponseDto;
+import com.architecture.hexagonal.contract.inbound.rest.user.server.dto.UserReadDto;
+import com.architecture.hexagonal.contract.inbound.rest.user.server.dto.UsersResponseDto;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.time.TestClock;
 import java.time.OffsetDateTime;
 import java.util.Collections;
@@ -24,7 +24,7 @@ public class UsersResponseDtoTestDataBuilder {
       .userReadDto());
 
   public UsersResponseDto usersResponseDto() {
-    UsersResponseDto usersResponseDto = new UsersResponseDto();
+    final UsersResponseDto usersResponseDto = new UsersResponseDto();
     usersResponseDto.setStatus(status);
     usersResponseDto.setDate(this.date);
     usersResponseDto.setData(this.userReadDto);

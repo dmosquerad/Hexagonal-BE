@@ -45,7 +45,7 @@ class UserPostgresqlWriteAdapterImplTestIT extends PostgresqlIT {
         .build()
         .user();
 
-    User result = userPostgresqlWriteAdapterImpl.saveUser(user);
+    final User result = userPostgresqlWriteAdapterImpl.saveUser(user);
 
     AssertionsForClassTypes.assertThat(result)
         .usingRecursiveComparison()
