@@ -18,7 +18,7 @@ public class MessageHeaderDaoTestDataBuilder {
     private ZonedDateTime messageDate = TestClock.FIXED_INSTANT.atZone(ZoneOffset.UTC);
 
     public MessageHeaderDao messageHeaderDao() {
-        MessageHeaderDao messageHeaderDao = new MessageHeaderDao();
+        final MessageHeaderDao messageHeaderDao = new MessageHeaderDao();
 
         messageHeaderDao.setMessageId(messageId);
         messageHeaderDao.setMessageDate(messageDate);

@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.testutils.dto;
 
-import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.server.dto.UserReadDto;
+import com.architecture.hexagonal.contract.inbound.rest.user.server.dto.UserReadDto;
 import java.util.UUID;
 import lombok.Builder;
 
@@ -17,7 +17,7 @@ public class UserReadDtoTestDataBuilder {
   private String name = "Test User";
 
   public UserReadDto userReadDto() {
-    UserReadDto userReadDto = new UserReadDto();
+    final UserReadDto userReadDto = new UserReadDto();
     userReadDto.setUserId(userId);
     userReadDto.setEmail(email);
     userReadDto.setName(name);

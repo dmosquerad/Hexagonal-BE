@@ -3,7 +3,6 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>rest-server</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <parent>
@@ -18,7 +17,11 @@
         <!-- ============================================ -->
         <dependency>
             <groupId>com.architecture.hexagonal</groupId>
-            <artifactId>orchestration</artifactId>
+            <artifactId>bus</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.architecture.hexagonal</groupId>
+            <artifactId>contract-application</artifactId>
         </dependency>
         <dependency>
             <groupId>com.architecture.hexagonal</groupId>

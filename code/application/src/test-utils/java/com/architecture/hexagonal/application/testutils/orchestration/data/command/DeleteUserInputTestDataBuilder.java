@@ -1,0 +1,19 @@
+package com.architecture.hexagonal.application.testutils.orchestration.data.command;
+
+import com.architecture.hexagonal.contract.application.generated.user.DeleteUserCommand;
+import lombok.Builder;
+
+import java.util.UUID;
+
+@Builder
+public class DeleteUserInputTestDataBuilder {
+
+  @Builder.Default
+  private UUID userId = UUID.fromString("4059510b-ceb3-4d4c-913e-1759acbd62a4");
+
+  public DeleteUserCommand deleteUserInput() {
+    final DeleteUserCommand command = new DeleteUserCommand();
+    command.setUserId(userId);
+    return command;
+  }
+}

@@ -1,101 +1,82 @@
 package com.architecture.hexagonal.application;
 
+import static com.tngtech.archunit.core.domain.JavaClass.Predicates.assignableTo;
+import static com.tngtech.archunit.core.domain.JavaClass.Predicates.resideInAPackage;
+
+import com.architecture.hexagonal.application.annotation.ApplicationService;
+import com.architecture.hexagonal.application.annotation.ApplicationUseCase;
+import com.architecture.hexagonal.application.port.in.bus.command.CommandHandler;
+import com.architecture.hexagonal.application.port.in.bus.query.QueryHandler;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import com.tngtech.archunit.core.domain.JavaClass;
+import com.tngtech.archunit.base.DescribedPredicate;
 import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.lang.syntax.ArchRuleDefinition;
+import java.time.Clock;
 
 @AnalyzeClasses(packages = "com.architecture.hexagonal.application", importOptions = ImportOption.DoNotIncludeTests.class)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 class ApplicationArchTest {
 
-  @ArchTest
-  static final ArchRule application_should_not_depend_on_spring =
-      ArchRuleDefinition.noClasses()
-          .that()
-          .resideInAPackage("..application..")
-          .should()
-          .dependOnClassesThat()
-          .resideInAPackage("org.springframework..")
-          .because("Application must not depend on Spring");
-
-  @ArchTest
-  static final ArchRule application_should_not_depend_on_boot_or_infrastructure =
-      ArchRuleDefinition.noClasses()
-          .that()
-          .resideInAPackage("..application..")
-          .should()
-          .dependOnClassesThat()
-          .resideInAnyPackage("..boot..", "..infrastructure..")
-          .because("Application must not depend on boot or infrastructure");
-
-  @ArchTest
-  static final ArchRule input_types_should_reside_in_application_input_package =
+    @ArchTest
+    static final ArchRule application_use_case_should_be_annotated =
       ArchRuleDefinition.classes()
           .that()
-          .haveSimpleNameEndingWith("Input")
+          .resideInAPackage("..application.usecase..impl..")
           .should()
-          .resideInAPackage("..application..input..")
-          .because("Inputs must be in application.{domain}.{feature}.input");
+          .beAnnotatedWith(ApplicationUseCase.class)
+          .because("Use case implementations must carry @ApplicationUseCase for component scanning");
 
     @ArchTest
-    static final ArchRule use_cases_should_get_interfaces =
-        ArchRuleDefinition.classes()
-            .that()
-            .haveSimpleNameEndingWith("UseCase")
-            .and()
-            .resideInAPackage("..application..usecase..")
-            .should()
-            .beInterfaces()
-            .because("Use cases interfaces should be defined");
+    static final ArchRule application_services_should_be_annotated =
+      ArchRuleDefinition.classes()
+          .that()
+          .resideInAPackage("..application.service..impl..")
+          .should()
+          .beAnnotatedWith(ApplicationService.class)
+          .because("Application service implementations must carry @ApplicationService for component scanning");
 
     @ArchTest
-    static final ArchRule use_case_impl_should_implement_use_case_interface =
-        ArchRuleDefinition.classes()
-            .that()
-            .resideInAPackage("..application..usecase.impl..")
-            .and()
-            .haveSimpleNameEndingWith("UseCaseImpl")
-            .should()
-            .implement(JavaClass.Predicates.resideInAPackage("..application..usecase.."))
-            .because("Use case implementations must implement an use case interface");
+    static final ArchRule use_case_implementations_should_handle_bus =
+      ArchRuleDefinition.classes()
+          .that()
+          .areAnnotatedWith(ApplicationUseCase.class)
+          .should()
+          .implement(assignableTo(CommandHandler.class).or(assignableTo(QueryHandler.class)))
+          .because("Classes marked with @ApplicationUseCase must handle a command or query from the application bus");
 
     @ArchTest
-    static final ArchRule ports_should_be_on_port_directory =
-        ArchRuleDefinition.classes()
-            .that()
-            .haveSimpleNameEndingWith("Port")
-            .and()
-            .resideInAPackage("..application.port..")
-            .should()
-            .beInterfaces()
-            .because("Ports should be in application.port package");
+    static final ArchRule use_case_implementations_should_not_depend_on_outbound_ports =
+      ArchRuleDefinition.noClasses()
+          .that()
+          .resideInAPackage("..application.usecase..impl..")
+          .should()
+          .dependOnClassesThat(resideInAPackage("..application.port.out..")
+            .and(DescribedPredicate.not(resideInAPackage("..application.port.out.transaction.."))))
+          .because("Use cases must access outbound ports through application services, except for transaction boundaries");
 
-    @ArchTest
-    static final ArchRule feature_use_cases_should_not_depend_on_other_feature_use_cases =
-        ArchRuleDefinition.noClasses()
-            .that()
-            .resideInAPackage("..application.usecase..usecase..")
-            .and()
-            .areInterfaces()
+  @ArchTest
+  static final ArchRule use_case_dependencies_should_be_services_or_transaction_ports =
+      ArchRuleDefinition.fields()
+          .that()
+            .areDeclaredInClassesThat()
+            .areAnnotatedWith(ApplicationUseCase.class)
             .should()
-            .dependOnClassesThat()
-            .resideInAPackage("..application.usecase..usecase..")
-            .because("Feature use cases must be independent business operations;"
-                    + " orchestration must go through ports and the CQRS bus, not direct use case coupling");
+            .haveRawType(resideInAPackage("..application.service..")
+                .or(resideInAPackage("..application.port.out.transaction..")))
+            .because("Use case fields may reference application services or outbound transaction boundaries");
 
-    @ArchTest
-    static final ArchRule business_use_cases_should_not_depend_on_technical_use_cases =
-        ArchRuleDefinition.noClasses()
+  @ArchTest
+  static final ArchRule application_service_dependencies_should_be_ports =
+      ArchRuleDefinition.fields()
             .that()
-            .resideInAPackage("..application.usecase.business..")
+            .areDeclaredInClassesThat()
+            .areAnnotatedWith(ApplicationService.class)
             .should()
-            .dependOnClassesThat()
-            .resideInAPackage("..application.usecase.technical..")
-            .because("Business use cases must not depend on technical (non-business) use cases;"
-                    + " technical use cases (e.g. outbox) support infrastructure concerns");
+            .haveRawType(resideInAPackage("..application.port.out..").or(assignableTo(Clock.class)))
+            .because("Application service fields may reference outbound ports or java.time.Clock");
+
 }

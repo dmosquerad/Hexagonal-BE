@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.mapper.user;
 
-import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.user.PatchUserCommandDto;
-import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.server.dto.UserPatchDto;
+import com.architecture.hexagonal.contract.application.generated.user.PatchUserCommand;
+import com.architecture.hexagonal.contract.inbound.rest.user.server.dto.UserPatchDto;
 import com.architecture.hexagonal.infrastructure.inbound.rest.config.mapstruct.MapstructConfig;
 import java.util.UUID;
 import org.mapstruct.Mapper;
@@ -13,5 +13,5 @@ public interface PatchUserCommandDtoMapper {
   @Mapping(source = "userUuid", target = "userId")
   @Mapping(source = "userPatchDto.name", target = "name")
   @Mapping(source = "userPatchDto.email", target = "email")
-  PatchUserCommandDto toPatchUserCommand(UUID userUuid, UserPatchDto userPatchDto);
+  PatchUserCommand toPatchUserCommand(UUID userUuid, UserPatchDto userPatchDto);
 }

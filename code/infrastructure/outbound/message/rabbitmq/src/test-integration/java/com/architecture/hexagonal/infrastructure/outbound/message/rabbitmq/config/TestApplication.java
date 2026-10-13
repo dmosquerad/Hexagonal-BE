@@ -13,7 +13,8 @@ import java.time.Clock;
     "com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.config",
     "com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.mapper",
     "com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.adapter",
-    "com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.sender"
+    "com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.sender",
+    "com.architecture.hexagonal.contract.outbound.rabbitmq"
 })
 public class TestApplication {
     @Bean

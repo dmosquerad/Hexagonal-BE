@@ -1,13 +1,13 @@
 package com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.sender;
 
-import com.architecture.hexagonal.application.port.database.OutboxRepositoryWritePort;
+import com.architecture.hexagonal.application.port.out.outbox.OutboxRepositoryWritePort;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.config.TestApplication;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserCreated;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserDeleted;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.data.UserUpdated;
+import com.architecture.hexagonal.contract.outbound.rabbitmq.UserCreated;
+import com.architecture.hexagonal.contract.outbound.rabbitmq.UserDeleted;
+import com.architecture.hexagonal.contract.outbound.rabbitmq.IUserEventsProducer;
+import com.architecture.hexagonal.contract.outbound.rabbitmq.UserUpdated;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.mapper.user.PayloadMapper;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.naming.UserPublishBinding;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.message.UserCreatedTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.message.UserDeletedTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.message.UserUpdatedTestDataBuilder;
@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -30,7 +29,7 @@ class UserMessageSenderTestIT {
 
   @Autowired private TransactionTemplate transactionTemplate;
 
-  @MockitoBean private StreamBridge streamBridge;
+  @MockitoBean private IUserEventsProducer userEventStreamPublisher;
 
   @MockitoBean private OutboxRepositoryWritePort outboxRepositoryWritePort;
 
@@ -40,7 +39,7 @@ class UserMessageSenderTestIT {
   void sendUserCreatedMessageShouldSaveOutboxEventWhenStreamBridgeThrows() {
     final UserCreated event = UserCreatedTestDataBuilder.builder().build().userCreated();
 
-    Mockito.when(streamBridge.send(UserPublishBinding.USER_CREATED.getPublishBinding(), event))
+    Mockito.when(userEventStreamPublisher.publishUserCreated(event))
         .thenThrow(new IllegalStateException("broker unavailable"));
 
     transactionTemplate.execute(
@@ -57,7 +56,7 @@ class UserMessageSenderTestIT {
   void sendUserUpdatedMessageShouldSaveOutboxEventWhenStreamBridgeThrows() {
     final UserUpdated event = UserUpdatedTestDataBuilder.builder().build().userUpdated();
 
-    Mockito.when(streamBridge.send(UserPublishBinding.USER_UPDATED.getPublishBinding(), event))
+    Mockito.when(userEventStreamPublisher.publishUserUpdated(event))
         .thenThrow(new IllegalStateException("broker unavailable"));
 
     transactionTemplate.execute(
@@ -74,7 +73,7 @@ class UserMessageSenderTestIT {
   void sendUserDeletedMessageShouldSaveOutboxEventWhenStreamBridgeThrows() {
     final UserDeleted event = UserDeletedTestDataBuilder.builder().build().userDeleted();
 
-    Mockito.when(streamBridge.send(UserPublishBinding.USER_DELETED.getPublishBinding(), event))
+    Mockito.when(userEventStreamPublisher.publishUserDeleted(event))
         .thenThrow(new IllegalStateException("broker unavailable"));
 
     transactionTemplate.execute(

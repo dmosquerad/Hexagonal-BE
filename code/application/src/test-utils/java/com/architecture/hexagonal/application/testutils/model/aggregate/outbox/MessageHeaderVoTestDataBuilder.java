@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.application.testutils.model.aggregate.outbox;
 
-import com.architecture.hexagonal.application.testutils.time.TestClock;
+import com.architecture.hexagonal.application.testutils.orchestration.time.TestClock;
 import com.architecture.hexagonal.domain.model.vo.outbox.MessageHeaderVo;
 import lombok.Builder;
 

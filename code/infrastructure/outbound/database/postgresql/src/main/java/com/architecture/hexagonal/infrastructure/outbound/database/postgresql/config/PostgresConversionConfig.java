@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 public class PostgresConversionConfig {
 
   @Bean
-  public HibernatePropertiesCustomizer hibernateTimeZoneCustomizer(Clock clock) {
+  public HibernatePropertiesCustomizer hibernateTimeZoneCustomizer(final Clock clock) {
     return hibernateProperties ->
         hibernateProperties.put(JdbcSettings.JDBC_TIME_ZONE, TimeZone.getTimeZone(clock.getZone()));
   }

@@ -17,4 +17,4 @@ Feature: Outbox publishes each user event once
 
     * def result = call read('classpath:helpers/rabbitmq/consume-user-message.feature') { queueName: '#(queueName)', rabbitMqManagementUrl: '#(rabbitMqManagementUrl)', rabbitMqAuth: '#(rabbitMqAuth)', userId: '#(createdUserId)' }
     * match result.payload.data contains { userId: '#(createdUserId)', name: 'Outbox Publishes Once' }
-    * match result.payload.data.email.email == testEmail
+    * match result.payload.data.email == testEmail

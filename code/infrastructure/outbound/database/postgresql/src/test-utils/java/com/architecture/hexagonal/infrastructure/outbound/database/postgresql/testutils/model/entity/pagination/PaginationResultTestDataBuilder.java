@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.postgresql.testutils.model.entity.pagination;
 
-import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResult;
+import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResultVo;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,8 +24,8 @@ public class PaginationResultTestDataBuilder<T> {
   @Builder.Default
   private int size = 100;
 
-  public PaginationResult<T> paginationResult() {
-    return PaginationResult.<T>builder()
+  public PaginationResultVo<T> paginationResult() {
+    return PaginationResultVo.<T>builder()
         .data(data)
         .totalElements(totalElements)
         .totalPages(totalPages)

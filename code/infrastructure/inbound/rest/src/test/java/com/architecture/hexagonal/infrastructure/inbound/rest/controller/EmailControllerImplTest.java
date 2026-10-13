@@ -1,11 +1,11 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.controller;
 
+import com.architecture.hexagonal.application.port.in.bus.query.QueryBus;
+import com.architecture.hexagonal.contract.application.generated.email.GetBlockedRulesQuery;
+import com.architecture.hexagonal.contract.inbound.rest.email.server.dto.EmailBlockRulesDto;
+import com.architecture.hexagonal.contract.inbound.rest.email.server.dto.EmailBlockRulesResponseDto;
 import com.architecture.hexagonal.domain.exception.DomainException;
 import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;
-import com.architecture.hexagonal.infrastructure.inbound.contract.orchestration.generated.email.GetBlockedRulesQueryDto;
-import com.architecture.hexagonal.infrastructure.inbound.contract.rest.email.server.dto.EmailBlockRulesDto;
-import com.architecture.hexagonal.infrastructure.inbound.contract.rest.email.server.dto.EmailBlockRulesResponseDto;
-import com.architecture.hexagonal.infrastructure.inbound.orchestration.dispatcher.query.QueryBus;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.email.EmailBlockRulesDtoMapper;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.dto.EmailBlockRulesDtoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.dto.EmailBlockRulesResponseDtoTestDataBuilder;
@@ -47,7 +47,7 @@ class EmailControllerImplTest {
                 .build()
                 .emailBlockRulesResponseDto());
 
-    Mockito.when(queryBus.execute(Mockito.any(GetBlockedRulesQueryDto.class)))
+    Mockito.when(queryBus.execute(Mockito.any(GetBlockedRulesQuery.class)))
         .thenReturn(emailBlockRulesVo);
     Mockito.when(emailBlockRulesDtoMapper.toEmailBlockRulesDto(emailBlockRulesVo))
         .thenReturn(expectedData);
@@ -59,7 +59,7 @@ class EmailControllerImplTest {
         .usingRecursiveComparison()
         .isEqualTo(expectedResponse);
 
-    Mockito.verify(queryBus).execute(Mockito.any(GetBlockedRulesQueryDto.class));
+    Mockito.verify(queryBus).execute(Mockito.any(GetBlockedRulesQuery.class));
     Mockito.verify(emailBlockRulesDtoMapper).toEmailBlockRulesDto(emailBlockRulesVo);
     Mockito.verify(clock).instant();
   }
@@ -68,27 +68,27 @@ class EmailControllerImplTest {
   void getBlockedRulesShouldPropagateDomainExceptionWhenDomainExceptionOccurs() {
     final String errorMessage = "domain exception";
 
-    Mockito.when(queryBus.execute(Mockito.any(GetBlockedRulesQueryDto.class)))
+    Mockito.when(queryBus.execute(Mockito.any(GetBlockedRulesQuery.class)))
         .thenThrow(new DomainException(errorMessage));
 
     AssertionsForClassTypes.assertThatThrownBy(() -> emailControllerImpl.getBlockedRules())
         .isInstanceOf(DomainException.class)
         .hasMessage(errorMessage);
 
-    Mockito.verify(queryBus).execute(Mockito.any(GetBlockedRulesQueryDto.class));
+    Mockito.verify(queryBus).execute(Mockito.any(GetBlockedRulesQuery.class));
   }
 
   @Test
   void getBlockedRulesShouldPropagateRuntimeExceptionWhenUnexpectedExceptionOccurs() {
     final String errorMessage = "Unexpected error";
 
-    Mockito.when(queryBus.execute(Mockito.any(GetBlockedRulesQueryDto.class)))
+    Mockito.when(queryBus.execute(Mockito.any(GetBlockedRulesQuery.class)))
         .thenThrow(new RuntimeException(errorMessage));
 
     AssertionsForClassTypes.assertThatThrownBy(() -> emailControllerImpl.getBlockedRules())
         .isInstanceOf(RuntimeException.class)
         .hasMessage(errorMessage);
 
-    Mockito.verify(queryBus).execute(Mockito.any(GetBlockedRulesQueryDto.class));
+    Mockito.verify(queryBus).execute(Mockito.any(GetBlockedRulesQuery.class));
   }
 }

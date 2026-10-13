@@ -20,7 +20,18 @@ class ArchitectureLayersTest {
           .matching("com.architecture.hexagonal.(*)..")
           .should()
           .beFreeOfCycles()
-          .because("Layers must be free of package cycles");
+          .because("Package slices must not form dependency cycles");
+
+  @ArchTest
+  static final ArchRule application_ports_should_be_grouped_by_direction =
+      ArchRuleDefinition.classes()
+          .that()
+          .resideInAPackage("..application.port..")
+          .should()
+          .resideInAnyPackage(
+              "..application.port.in..",
+              "..application.port.out..")
+          .because("Application ports must be classified by direction: inbound or outbound");
 
   @ArchTest
   static final ArchRule only_declared_adapters_should_exist =
@@ -28,43 +39,45 @@ class ArchitectureLayersTest {
           .that()
           .resideInAPackage("..infrastructure..")
           .should()
-          .resideInAnyPackage("..infrastructure.inbound.contract..",
-              "..infrastructure.outbound.database..",
-              "..infrastructure.outbound.configuration..",
-              "..infrastructure.outbound.message..",
-              "..infrastructure.inbound.rest..",
-              "..infrastructure.inbound.orchestration..",
-              "..infrastructure.inbound.execution..",
-              "..infrastructure.inbound.handler..")
-          .because("Infrastructure may contain only declared adapters;"
-              + " undeclared adapter packages break the explicit port-adapter mapping");
+          .resideInAnyPackage(
+              "..infrastructure.outbound..",
+              "..infrastructure.inbound..")
+          .because("Infrastructure classes must be grouped under inbound or outbound adapters;"
+              + " the bus belongs to inbound and outbox-related adapters belong to outbound");
 
   @ArchTest
   static final ArchRule layers_should_follow_hexagonal_architecture =
       Architectures.layeredArchitecture()
           .consideringAllDependencies()
-          .layer("Domain").definedBy("..domain..")
-          .layer("Application").definedBy("..application..")
-          .layer("Infrastructure").definedBy("..infrastructure..")
-          .layer("Boot").definedBy("..boot..")
+          .layer("Domain").definedBy("com.architecture.hexagonal.domain..")
+          .layer("Application").definedBy("com.architecture.hexagonal.application..")
+          .layer("Infrastructure").definedBy("com.architecture.hexagonal.infrastructure..")
+          .layer("Boot").definedBy("com.architecture.hexagonal.boot..")
+          .layer("Contract").definedBy("com.architecture.hexagonal.contract..")
           .whereLayer("Domain").mayOnlyBeAccessedByLayers("Application", "Infrastructure")
-          .whereLayer("Application").mayOnlyBeAccessedByLayers( "Infrastructure", "Boot")
+          .whereLayer("Application").mayOnlyBeAccessedByLayers("Infrastructure", "Boot")
+          .whereLayer("Contract").mayOnlyBeAccessedByLayers("Application", "Infrastructure")
           .whereLayer("Infrastructure").mayOnlyBeAccessedByLayers("Boot")
           .whereLayer("Boot").mayNotBeAccessedByAnyLayer()
-          .because("Dependencies must always point inward:"
-              + " Boot -> Infrastructure -> Application -> Domain;"
-              + " no outer layer may be accessed from a layer inside it");
+          .because("Dependencies point inward from Boot to Infrastructure, Application, and Domain;"
+              + " Application and Infrastructure may also depend on Contract");
 
   @ArchTest
   static final ArchRule onion_architecture_layers_check =
       Architectures.onionArchitecture()
-          .domainModels("..domain..")
-          .domainServices("..domain.service..")
-          .applicationServices("..application..")
-          .adapter("inbound", "..infrastructure.inbound..", "..infrastructure.inbound.contract..")
-          .adapter("outbound", "..infrastructure.outbound..")
-          .adapter("boot", "..boot..")
-          .because("Domain model and domain services must not depend on application or adapters;"
-              + " application services must not depend on adapters;"
-              + " adapters may only depend inward toward the application core");
+          .domainModels("com.architecture.hexagonal.domain..")
+          .domainServices("com.architecture.hexagonal.domain.service..")
+          .applicationServices("com.architecture.hexagonal.application..")
+          .adapter(
+              "inbound",
+              "com.architecture.hexagonal.infrastructure.inbound..",
+              "com.architecture.hexagonal.contract.inbound..")
+          .adapter(
+              "outbound",
+              "com.architecture.hexagonal.infrastructure.outbound..",
+              "com.architecture.hexagonal.contract.outbound..")
+          .adapter("boot", "com.architecture.hexagonal.boot..")
+          .because("Domain code must remain independent of application services and adapters;"
+              + " application services may consume generated orchestration contracts;"
+              + " inbound, outbound, and boot adapters must depend toward the application core");
 }

@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.adapter;
 
-import com.architecture.hexagonal.application.port.message.UserSenderPort;
+import com.architecture.hexagonal.application.port.out.user.UserSenderPort;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.domain.model.vo.outbox.MessageHeaderVo;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.mapper.user.UserMessageDaoMapper;

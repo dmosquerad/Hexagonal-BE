@@ -25,6 +25,14 @@ The project is organized as a multi-module Maven workspace with deployment resou
 Hexagonal-BE/
 ├── code/
 │   ├── pom.xml                      # Parent module
+│   ├── contract/                    # Contracts grouped by application, inbound and outbound
+│   │   ├── application/
+│   │   │   └── orchestration/       # JSON schemas and generated orchestration DTOs
+│   │   ├── inbound/
+│   │   │   ├── handler/             # Inbound handler contract module
+│   │   │   └── rest/                # OpenAPI server stubs (user / email)
+│   │   └── outbound/
+│   │       └── rabbitmq/            # Published event DTOs and generated publisher
 │   ├── domain/                      # Domain model (entities, VOs, services)
 │   ├── application/                 # Use cases, business slices, ports
 │   │   └── src/
@@ -43,19 +51,22 @@ Hexagonal-BE/
 │   │           │       └── process/         # Process and publish events
 │   │           └── port/                    # Shared ports (e.g. configuration, database)
 │   ├── infrastructure/
-│   │   ├── contract/
-│   │   │   └── rest/                # OpenAPI server stubs (user / email)
 │   │   ├── inbound/
-│   │   │   ├── orchestration/       # CQRS buses (CommandBus, QueryBus)
+│   │   │   ├── bus/                 # CQRS bus implementations
 │   │   │   ├── execution/           # Schedulers (Outbox polling)
+│   │   │   ├── handler/             # Inbound message handlers
 │   │   │   └── rest/                # REST controllers implementation
-│   │   └── outbound/
-│   │       ├── database/
-│   │       │   ├── postgresql/      # DB adapters (JPA/PostgreSQL)
-│   │       │   └── mongodb/         # DB adapters (MongoDB/Outbox events)
-│   │       ├── message/
-│   │       │   └── rabbitmq/        # Messaging adapters (RabbitMQ)
-│   │       └── configuration/       # Config adapters (application.yml rules)
+│   │   ├── outbound/
+│   │   │   ├── database/
+│   │   │   │   ├── postgresql/      # DB adapters (JPA/PostgreSQL)
+│   │   │   │   └── mongodb/         # DB adapters (MongoDB/Outbox events)
+│   │   │   ├── message/
+│   │   │   │   └── rabbitmq/        # Messaging adapters (RabbitMQ)
+│   │   │   └── configuration/       # Config adapters (application.yml rules)
+│   │   └── outbox/
+│   │       ├── adapter/             # Outbox message processing adapter
+│   │       ├── inbox/               # Inbox message adapters
+│   │       └── transaction/         # Spring transaction adapters
 │   └── boot/                        # Spring Boot composition root
 ├── e2e/
 │   └── karate/                      # End-to-end API tests (Karate)
@@ -73,20 +84,22 @@ flowchart LR
     RABBIT[(RabbitMQ)]
     Config[(Configuration)]
 
-    subgraph CONTRACT["Infrastructure · Contract"]
+    subgraph CONTRACT["Contract"]
         direction TB
         OAS[OpenAPI Stubs\nuser / email]
+        DTO[Orchestration and RabbitMQ DTOs]
     end
 
     subgraph INBOUND["Infrastructure · Inbound"]
         direction TB
         REST[REST Controllers]
-        ORCH[Orchestration\nCommandBus / QueryBus]
+        BUS[CommandBus / QueryBus]
         EXEC[Execution\nOutbox Scheduler]
     end
 
     subgraph APP["Application"]
         direction TB
+        HANDLERS[Command / Query Handlers]
         UC[Use Cases]
         POUT[Ports Out]
     end
@@ -110,8 +123,8 @@ flowchart LR
 
     OAS -.implements.-> REST
     Client --> REST
-    REST --> ORCH
-    ORCH --> HANDLERS
+    REST --> BUS
+    BUS --> HANDLERS
     HANDLERS --> UC
     UC --> MODEL
     UC --> POUT
@@ -122,11 +135,11 @@ flowchart LR
     DB --> POSTGRES
     DB --> MONGO
     MSG --> RABBIT
-    EXEC -.triggers.-> ORCH
+    EXEC -.triggers.-> BUS
     CFG --> Config
 
     COMP -.wires.-> REST
-    COMP -.wires.-> ORCH
+    COMP -.wires.-> BUS
     COMP -.wires.-> EXEC
     COMP -.wires.-> DB
     COMP -.wires.-> MSG
@@ -174,12 +187,21 @@ Orchestrates the domain through use cases and defines the port contracts consume
 - Business slices organized by domain features
 - Technical use cases for infrastructure patterns (Outbox event processing)
 - Ports In — one input contract per use case
-- Ports Out — contracts for persistence and configuration access
-- `CommandBus` / `QueryBus` dispatchers and their handler implementations
+- Ports Out — contracts for persistence, configuration, and separate read/write transaction boundaries
+- CQRS bus contracts (`CommandBus`, `QueryBus`, `CommandHandler`, `QueryHandler`)
+- Use cases that handle dispatcher commands and queries, apply transaction boundaries, and delegate to application services
+- Generated orchestration command/query DTOs from the inbound orchestration contract
 
 ### Infrastructure
 
-#### Contract — REST (`code/infrastructure/inbound/contract/rest`)
+### Contract
+
+Contracts are grouped by their consumer/direction under `code/contract`, independently of adapter implementations.
+
+#### Application — Orchestration (`code/contract/application/orchestration`)
+Contains the JSON Schemas that generate the command/query DTOs handled by application use cases.
+
+#### Inbound — REST (`code/contract/inbound/rest`)
 Holds the OpenAPI 3.0 specifications and generates server-side stubs consumed by the inbound controllers.
 
 **Content:**
@@ -187,11 +209,16 @@ Holds the OpenAPI 3.0 specifications and generates server-side stubs consumed by
 - `inbound-email-rest-server`: OpenAPI spec for the Email rules API
 - Generated Java interfaces implemented by REST controllers
 
-#### Inbound — Orchestration (`code/infrastructure/inbound/orchestration`)
-Implements CQRS buses for command and query orchestration.
+#### Outbound — RabbitMQ (`code/contract/outbound/rabbitmq`)
+The AsyncAPI 2.6 specification defines user event payloads and publication operations. ZenWave's Maven plugin generates the Java event models and typed Spring Cloud Stream producer from the contract during `generate-sources`; the RabbitMQ adapter consumes that generated API. The broker bindings remain configured in `application-rabbitmq.yml`.
+
+Contract generation runs in the JVM through Maven and does not require Node.js, npm, or npx.
+
+#### Inbound — Bus (`code/infrastructure/inbound/bus`)
+Implements the inbound CQRS buses that dispatch commands and queries to application handlers.
 
 **Content:**
-- `CommandBus` and `QueryBus` implementations
+- Spring `CommandBus` and `QueryBus` implementations
 - Command/Query handler registration and dispatching
 
 #### Inbound — Execution (`code/infrastructure/inbound/execution`)
@@ -227,19 +254,22 @@ Implements persistence with PostgreSQL and MongoDB through modular adapters.
 - Data access abstractions for domain persistence
 - Database-specific adapters and configurations
 
-#### Outbound — Message (`code/infrastructure/outbound/message`)
-Publishes domain events to external messaging systems.
+#### Outbox (`code/infrastructure/outbox`)
+Publishes persisted outbox events to external messaging systems.
 
 **Modules:**
-- **RabbitMQ** (`rabbitmq/`): Publishes domain events via Spring Cloud Stream
+- **Adapter** (`adapter/`): outbox processing and message serialization/routing
+- **Inbox** (`inbox/`): inbox message adapters
+- **Transaction** (`transaction/`): Spring read/write transaction boundaries
+- The adapter uses the RabbitMQ message adapter to publish outbox events
   - `UserSenderAdapter` implementing the message Port Out
   - Domain event DTOs: `UserCreated`, `UserUpdated`, `UserDeleted`
   - MapStruct mapper: `UserToRabbitmqMapper`
   - RabbitMQ configuration and bindings
 
 **Content:**
-- Messaging adapters implementing Ports Out
-- Event serialization and routing
+- Outbox processing adapter and message serialization/routing
+- Inbox message processing and Spring transaction boundary adapters
 
 #### Outbound — Configuration (`code/infrastructure/outbound/configuration`)
 Implements configuration-driven business rules loaded from `application.yml`.
@@ -284,7 +314,7 @@ Once the application is running, you can access the interactive API documentatio
 - **Redoc**: http://localhost:8080/api/redoc.html
 
 The API follows an **OpenAPI 3.0 contract-first** approach.
-Contracts are defined in `code/infrastructure/inbound/contract/rest/`.
+Contracts are defined in `code/contract/inbound/rest/`.
 
 ## 🧪 Testing
 

@@ -1,14 +1,14 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.postgresql.adapter;
 
-import com.architecture.hexagonal.application.usecase.business.user.getall.projector.UserEmailProjector;
+import com.architecture.hexagonal.application.projector.business.user.UserEmailProjector;
 import com.architecture.hexagonal.domain.model.entity.user.User;
+import com.architecture.hexagonal.domain.model.vo.pagination.PaginationVo;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.config.PostgresqlIT;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.config.PostgresqlTestApplication;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.data.UserDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.mapper.user.UserFromPostgresqlMapper;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.repository.UserPostgresqlReadRepository;
-import com.architecture.hexagonal.domain.model.vo.pagination.Pagination;
-import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResult;
+import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResultVo;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.testutils.model.entity.user.UserTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.testutils.model.entity.pagination.PaginationTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.testutils.model.vo.email.EmailBlockRulesVoTestDataBuilder;
@@ -18,7 +18,6 @@ import java.util.Set;
 import java.util.UUID;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -62,9 +61,9 @@ class UserPostgresqlReadAdapterImplTestIT extends PostgresqlIT {
 
   @Test
   void getAllUsersShouldReturnOnlyBlockedHostUsersWhenBlockHostFilterIsApplied() {
-    final Pagination pagination = PaginationTestDataBuilder.builder().build().pagination();
+    final PaginationVo paginationVo = PaginationTestDataBuilder.builder().build().pagination();
 
-    final PaginationResult<User> result = userPostgresqlReadAdapterImpl.getAllUsers(
+    final PaginationResultVo<User> result = userPostgresqlReadAdapterImpl.getAllUsers(
         UserEmailProjector.builder()
             .host("example")
             .blockEmail(true)
@@ -72,7 +71,7 @@ class UserPostgresqlReadAdapterImplTestIT extends PostgresqlIT {
                 .host(Set.of("example"))
                 .build().emailBlockRulesVo())
             .build(),
-        pagination);
+            paginationVo);
 
     AssertionsForClassTypes.assertThat(result.data())
         .usingRecursiveComparison()

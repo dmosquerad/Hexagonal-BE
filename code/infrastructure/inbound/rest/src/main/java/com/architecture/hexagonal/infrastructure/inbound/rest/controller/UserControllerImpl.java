@@ -1,17 +1,17 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.controller;
 
+import com.architecture.hexagonal.application.port.in.bus.command.CommandBus;
+import com.architecture.hexagonal.application.port.in.bus.query.QueryBus;
+import com.architecture.hexagonal.contract.inbound.rest.user.server.controller.UsersApi;
+import com.architecture.hexagonal.contract.inbound.rest.user.server.dto.ResponsePaginationDto;
+import com.architecture.hexagonal.contract.inbound.rest.user.server.dto.UserCreateDto;
+import com.architecture.hexagonal.contract.inbound.rest.user.server.dto.UserPatchDto;
+import com.architecture.hexagonal.contract.inbound.rest.user.server.dto.UserResponseDto;
+import com.architecture.hexagonal.contract.inbound.rest.user.server.dto.UserUpdateDto;
+import com.architecture.hexagonal.contract.inbound.rest.user.server.dto.UsersResponseDto;
 import com.architecture.hexagonal.domain.model.entity.user.User;
-import com.architecture.hexagonal.domain.model.vo.pagination.Pagination;
-import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResult;
-import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.server.controller.UsersApi;
-import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.server.dto.ResponsePaginationDto;
-import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.server.dto.UserCreateDto;
-import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.server.dto.UserPatchDto;
-import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.server.dto.UserResponseDto;
-import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.server.dto.UserUpdateDto;
-import com.architecture.hexagonal.infrastructure.inbound.contract.rest.user.server.dto.UsersResponseDto;
-import com.architecture.hexagonal.infrastructure.inbound.orchestration.dispatcher.command.CommandBus;
-import com.architecture.hexagonal.infrastructure.inbound.orchestration.dispatcher.query.QueryBus;
+import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResultVo;
+import com.architecture.hexagonal.domain.model.vo.pagination.PaginationVo;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.user.*;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.user.FindUserByUserIdQueryDtoMapper;
 import java.time.Clock;
@@ -53,7 +53,7 @@ public class UserControllerImpl implements UsersApi {
         buildUsersResponse(
             queryBus.execute(
                 getAllUserQueryDtoMapper.toGetAllUserQuery(
-                    host, blockEmail, Pagination.builder().page(page).size(size).build()))));
+                    host, blockEmail, PaginationVo.builder().page(page).size(size).build()))));
   }
 
   @Override
@@ -109,7 +109,7 @@ public class UserControllerImpl implements UsersApi {
     return userResponseDto;
   }
 
-  private UsersResponseDto buildUsersResponse(final PaginationResult<User> pageResult) {
+  private UsersResponseDto buildUsersResponse(final PaginationResultVo<User> pageResult) {
     final UsersResponseDto usersResponseDto = new UsersResponseDto();
     usersResponseDto.setDate(OffsetDateTime.now(clock));
     usersResponseDto.setStatus(HttpStatus.OK.value());

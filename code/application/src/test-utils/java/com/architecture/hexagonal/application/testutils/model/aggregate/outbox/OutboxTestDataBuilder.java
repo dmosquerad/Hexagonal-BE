@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.application.testutils.model.aggregate.outbox;
 
-import com.architecture.hexagonal.application.testutils.time.TestClock;
+import com.architecture.hexagonal.application.testutils.orchestration.time.TestClock;
 import com.architecture.hexagonal.domain.model.vo.outbox.AggregateTypeVo;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
 import com.architecture.hexagonal.domain.model.vo.outbox.PayloadVo;

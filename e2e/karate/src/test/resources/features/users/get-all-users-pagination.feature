@@ -3,15 +3,15 @@ Feature: Get All Users with Pagination - GET /users?page=&size=
   Background:
     * url baseUrl
 
-  Scenario: Default pagination returns page 0 with size 100
+  Scenario: Default paginationVo returns page 0 with size 100
     Given url baseUrl + '/users'
     When method GET
     Then status 200
     And match response.pagination.page == 0
     And match response.pagination.size == 100
 
-  Scenario: Custom page and size are reflected in pagination response
-    * def testEmail = 'pagination-custom@test.com'
+  Scenario: Custom page and size are reflected in paginationVo response
+    * def testEmail = 'paginationVo-custom@test.com'
     Given url baseUrl + '/users'
     And header Content-Type = 'application/json'
     And request { name: 'Pagination Test', email: '#(testEmail)' }
