@@ -1,15 +1,16 @@
 package com.architecture.hexagonal.infrastructure.outbound.outbox.service.impl;
 
 import com.architecture.hexagonal.contract.outbound.rabbitmq.UserCreated;
+import com.architecture.hexagonal.contract.outbound.rabbitmq.UserData;
 import com.architecture.hexagonal.contract.outbound.rabbitmq.UserDeleted;
 import com.architecture.hexagonal.contract.outbound.rabbitmq.UserUpdated;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
 import com.architecture.hexagonal.domain.model.vo.outbox.ActionType;
 import com.architecture.hexagonal.domain.model.vo.outbox.PayloadVo;
+import com.architecture.hexagonal.domain.testutils.data.model.entity.outbox.OutboxTestDataBuilder;
+import com.architecture.hexagonal.domain.testutils.data.model.vo.outbox.PayloadVoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.outbox.mapper.user.UserFromOutboxMapper;
 import com.architecture.hexagonal.infrastructure.outbound.outbox.naming.OutboxNaming;
-import com.architecture.hexagonal.infrastructure.outbound.outbox.testutils.model.entity.outbox.OutboxTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.outbound.outbox.testutils.model.entity.outbox.PayloadTestDataBuilder;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,7 +35,7 @@ class UserOutboxServiceImplTest {
 
   @Test
   void processShouldPublishCreatedEventWhenActionIsUserCreated() {
-    final PayloadVo payload = PayloadTestDataBuilder.builder().build().payload();
+    final PayloadVo payload = PayloadVoTestDataBuilder.<UserData>builder().build().payloadVo();
     final Outbox outbox =
         OutboxTestDataBuilder.builder()
             .action(ActionType.UserActionType.USER_CREATED.getActionType())
@@ -50,7 +51,7 @@ class UserOutboxServiceImplTest {
 
   @Test
   void processShouldPublishUpdatedEventWhenActionIsUserUpdated() {
-    final PayloadVo payload = PayloadTestDataBuilder.builder().build().payload();
+    final PayloadVo payload = PayloadVoTestDataBuilder.<UserData>builder().build().payloadVo();
     final Outbox outbox =
         OutboxTestDataBuilder.builder()
             .action(ActionType.UserActionType.USER_UPDATED.getActionType())
@@ -66,7 +67,7 @@ class UserOutboxServiceImplTest {
 
   @Test
   void processShouldPublishDeletedEventWhenActionIsUserDeleted() {
-    final PayloadVo payload = PayloadTestDataBuilder.builder().build().payload();
+    final PayloadVo payload = PayloadVoTestDataBuilder.<UserData>builder().build().payloadVo();
     final Outbox outbox =
         OutboxTestDataBuilder.builder()
             .action(ActionType.UserActionType.USER_DELETED.getActionType())

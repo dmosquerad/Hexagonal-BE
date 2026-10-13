@@ -3,18 +3,19 @@ package com.architecture.hexagonal.application.service.business.user;
 import com.architecture.hexagonal.application.port.out.user.UserRepositoryReadPort;
 import com.architecture.hexagonal.application.port.out.user.UserRepositoryWritePort;
 import com.architecture.hexagonal.application.port.out.user.UserSenderPort;
-import com.architecture.hexagonal.application.projector.business.user.UserEmailProjector;
+import com.architecture.hexagonal.application.projector.user.UserEmailProjector;
+import com.architecture.hexagonal.application.testutils.projector.user.UserEmailProjectorTestDataBuilder;
 import com.architecture.hexagonal.application.service.business.user.impl.UserServiceImpl;
-import com.architecture.hexagonal.application.testutils.model.aggregate.pagination.PaginationResultVoTestDataBuilder;
-import com.architecture.hexagonal.application.testutils.model.aggregate.pagination.PaginationVoTestDataBuilder;
-import com.architecture.hexagonal.application.testutils.model.aggregate.user.UserTestDataBuilder;
-import com.architecture.hexagonal.application.testutils.model.vo.email.EmailBlockRulesVoTestDataBuilder;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResultVo;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationVo;
+import com.architecture.hexagonal.domain.testutils.data.model.entity.user.UserTestDataBuilder;
+import com.architecture.hexagonal.domain.testutils.data.model.vo.email.EmailBlockRulesVoTestDataBuilder;
+import com.architecture.hexagonal.domain.testutils.data.model.vo.pagination.PaginationResultVoTestDataBuilder;
+import com.architecture.hexagonal.domain.testutils.data.model.vo.pagination.PaginationVoTestDataBuilder;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -138,18 +139,10 @@ class UserServiceImplTest {
 
   @Test
   void getAllUsersShouldCallUnpaginatedRepositoryWhenPaginationIsNotProvided() {
-    final String host = "example";
-    final Boolean blockEmail = false;
     final List<User> users =
         Collections.singletonList(UserTestDataBuilder.builder().build().user());
-    final EmailBlockRulesVo blockedRules =
-        EmailBlockRulesVoTestDataBuilder.builder().build().emailBlockRulesVo();
     final UserEmailProjector projector =
-        UserEmailProjector.builder()
-            .host(host)
-            .blockEmail(blockEmail)
-            .blockedRules(blockedRules)
-            .build();
+        UserEmailProjectorTestDataBuilder.builder().build().userEmailProjector();
     final PaginationResultVo<User> expectedResult =
         PaginationResultVoTestDataBuilder.<User>builder().data(users).build().paginationResult();
 
@@ -164,7 +157,8 @@ class UserServiceImplTest {
 
   @Test
   void getAllUsersShouldRejectNullPaginationInPaginatedOverload() {
-    final UserEmailProjector projector = UserEmailProjector.builder().build();
+    final UserEmailProjector projector =
+        UserEmailProjectorTestDataBuilder.builder().build().userEmailProjector();
 
     AssertionsForClassTypes.assertThatThrownBy(() -> userService.getAllUsers(projector, null))
         .isInstanceOf(NullPointerException.class);
@@ -176,14 +170,19 @@ class UserServiceImplTest {
   void getAllUsersShouldReturnBlockedEmailUsersWhenBlockEmailIsTrue() {
     final User user = UserTestDataBuilder.builder().build().user();
     final List<User> users = Collections.singletonList(user);
-    final PaginationVo paginationVo = PaginationVoTestDataBuilder.builder().build().pagination();
+    final PaginationVo paginationVo = PaginationVoTestDataBuilder.builder().build().paginationVo();
     final EmailBlockRulesVo blockedRules =
         EmailBlockRulesVoTestDataBuilder.builder()
             .host(Set.of("example"))
             .build()
             .emailBlockRulesVo();
     final UserEmailProjector projector =
-        UserEmailProjector.builder().host("").blockEmail(true).blockedRules(blockedRules).build();
+        UserEmailProjectorTestDataBuilder.builder()
+            .host("")
+            .blockEmail(true)
+            .blockedRules(blockedRules)
+            .build()
+            .userEmailProjector();
     final PaginationResultVo<User> expectedResult =
         PaginationResultVoTestDataBuilder.<User>builder().data(users).build().paginationResult();
 
@@ -201,11 +200,12 @@ class UserServiceImplTest {
   void getAllUsersShouldReturnAllowedEmailUsersWhenBlockEmailIsFalse() {
     final User user = UserTestDataBuilder.builder().build().user();
     final List<User> users = Collections.singletonList(user);
-    final PaginationVo paginationVo = PaginationVoTestDataBuilder.builder().build().pagination();
-    final EmailBlockRulesVo blockedRules =
-        EmailBlockRulesVoTestDataBuilder.builder().build().emailBlockRulesVo();
+    final PaginationVo paginationVo = PaginationVoTestDataBuilder.builder().build().paginationVo();
     final UserEmailProjector projector =
-        UserEmailProjector.builder().host("").blockEmail(false).blockedRules(blockedRules).build();
+        UserEmailProjectorTestDataBuilder.builder()
+            .host("")
+            .build()
+            .userEmailProjector();
     final PaginationResultVo<User> expectedResult =
         PaginationResultVoTestDataBuilder.<User>builder().data(users).build().paginationResult();
 

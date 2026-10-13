@@ -4,8 +4,8 @@ import com.architecture.hexagonal.domain.model.vo.inbox.SchedulerInboxConfigurat
 import com.architecture.hexagonal.domain.model.vo.outbox.SchedulerOutboxConfigurationVo;
 import com.architecture.hexagonal.infrastructure.outbound.configuration.config.SchedulerOutboxConfig;
 import com.architecture.hexagonal.infrastructure.outbound.configuration.config.TestApplication;
-import com.architecture.hexagonal.infrastructure.outbound.configuration.testutils.model.vo.inbox.SchedulerInboxConfigurationVoTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.outbound.configuration.testutils.model.vo.outbox.SchedulerOutboxConfigurationVoTestDataBuilder;
+import com.architecture.hexagonal.domain.testutils.data.model.vo.inbox.SchedulerInboxConfigurationVoTestDataBuilder;
+import com.architecture.hexagonal.domain.testutils.data.model.vo.outbox.SchedulerOutboxConfigurationVoTestDataBuilder;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

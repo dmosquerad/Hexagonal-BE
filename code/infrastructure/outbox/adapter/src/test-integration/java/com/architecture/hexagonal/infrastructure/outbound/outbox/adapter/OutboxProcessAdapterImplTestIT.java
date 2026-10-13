@@ -1,11 +1,11 @@
 package com.architecture.hexagonal.infrastructure.outbound.outbox.adapter;
 
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
+import com.architecture.hexagonal.domain.testutils.data.model.entity.outbox.OutboxTestDataBuilder;
+import com.architecture.hexagonal.domain.testutils.data.model.vo.outbox.PayloadVoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.outbox.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.outbound.outbox.mapper.user.UserFromOutboxMapper;
 import com.architecture.hexagonal.infrastructure.outbound.outbox.service.OutboxService;
-import com.architecture.hexagonal.infrastructure.outbound.outbox.testutils.model.entity.outbox.OutboxTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.outbound.outbox.testutils.model.entity.outbox.PayloadTestDataBuilder;
 import com.architecture.hexagonal.contract.outbound.rabbitmq.UserCreated;
 import com.architecture.hexagonal.contract.outbound.rabbitmq.UserDeleted;
 import com.architecture.hexagonal.contract.outbound.rabbitmq.UserUpdated;
@@ -36,7 +36,7 @@ class OutboxProcessAdapterImplTestIT {
      final Outbox outbox =
         OutboxTestDataBuilder.builder()
             .action(ActionType.UserActionType.USER_CREATED.getActionType())
-            .payload(PayloadTestDataBuilder.builder().build().payload())
+            .payload(PayloadVoTestDataBuilder.<Object>builder().build().payloadVo())
             .build()
             .outbox();
 
@@ -51,7 +51,7 @@ class OutboxProcessAdapterImplTestIT {
      final Outbox outbox =
         OutboxTestDataBuilder.builder()
             .action(ActionType.UserActionType.USER_UPDATED.getActionType())
-            .payload(PayloadTestDataBuilder.builder().build().payload())
+            .payload(PayloadVoTestDataBuilder.<Object>builder().build().payloadVo())
             .build()
             .outbox();
 
@@ -66,7 +66,7 @@ class OutboxProcessAdapterImplTestIT {
      final Outbox outbox =
         OutboxTestDataBuilder.builder()
             .action(ActionType.UserActionType.USER_DELETED.getActionType())
-            .payload(PayloadTestDataBuilder.builder().build().payload())
+            .payload(PayloadVoTestDataBuilder.<Object>builder().build().payloadVo())
             .build()
             .outbox();
 

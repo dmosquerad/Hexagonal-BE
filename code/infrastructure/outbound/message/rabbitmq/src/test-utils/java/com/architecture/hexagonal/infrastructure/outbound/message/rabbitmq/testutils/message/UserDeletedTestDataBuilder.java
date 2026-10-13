@@ -3,8 +3,6 @@ package com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.test
 import com.architecture.hexagonal.contract.outbound.rabbitmq.MessageHeader;
 import com.architecture.hexagonal.contract.outbound.rabbitmq.UserData;
 import com.architecture.hexagonal.contract.outbound.rabbitmq.UserDeleted;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.model.entity.user.UserDataTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.model.vo.outbox.MessageHeaderTestDataBuilder;
 import lombok.Builder;
 
 @Builder

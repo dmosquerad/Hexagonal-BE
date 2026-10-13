@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.application.service.business.user;
 
-import com.architecture.hexagonal.application.projector.business.user.UserEmailProjector;
+import com.architecture.hexagonal.application.projector.user.UserEmailProjector;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResultVo;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationVo;

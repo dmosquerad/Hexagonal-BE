@@ -4,7 +4,7 @@ import com.architecture.hexagonal.application.annotation.ApplicationService;
 import com.architecture.hexagonal.application.port.out.user.UserRepositoryReadPort;
 import com.architecture.hexagonal.application.port.out.user.UserRepositoryWritePort;
 import com.architecture.hexagonal.application.port.out.user.UserSenderPort;
-import com.architecture.hexagonal.application.projector.business.user.UserEmailProjector;
+import com.architecture.hexagonal.application.projector.user.UserEmailProjector;
 import com.architecture.hexagonal.application.service.business.user.UserService;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;

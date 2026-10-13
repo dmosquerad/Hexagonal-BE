@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.infrastructure.inbound.bus.command.impl;
 
 import com.architecture.hexagonal.application.port.in.bus.command.CommandHandler;
-import com.architecture.hexagonal.application.usecase.business.user.delete.impl.DeleteUserUseCaseImpl;
-import com.architecture.hexagonal.contract.application.generated.user.DeleteUserCommand;
+import com.architecture.hexagonal.application.usecase.user.delete.impl.DeleteUserUseCaseImpl;
+import com.architecture.hexagonal.contract.application.usecase.generated.user.DeleteUserCommand;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import java.util.ArrayList;
 import java.util.List;

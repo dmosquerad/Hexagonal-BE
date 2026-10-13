@@ -12,7 +12,8 @@ import org.springframework.context.annotation.FilterType;
 @ComponentScan(
     basePackages = ApplicationUseCaseComponentScanConfiguration.APPLICATION_BASE_PACKAGE,
     useDefaultFilters = false,
-    includeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = ApplicationUseCase.class))
+    includeFilters =
+        @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = ApplicationUseCase.class))
 public class ApplicationUseCaseComponentScanConfiguration {
   public static final String APPLICATION_BASE_PACKAGE =
       "com.architecture.hexagonal.application.usecase";

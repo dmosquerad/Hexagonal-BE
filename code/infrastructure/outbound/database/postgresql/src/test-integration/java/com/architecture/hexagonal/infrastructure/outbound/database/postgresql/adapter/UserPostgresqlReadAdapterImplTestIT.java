@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.postgresql.adapter;
 
-import com.architecture.hexagonal.application.projector.business.user.UserEmailProjector;
+import com.architecture.hexagonal.application.testutils.projector.user.UserEmailProjectorTestDataBuilder;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationVo;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.config.PostgresqlIT;
@@ -9,9 +9,9 @@ import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.da
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.mapper.user.UserFromPostgresqlMapper;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.repository.UserPostgresqlReadRepository;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResultVo;
-import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.testutils.model.entity.user.UserTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.testutils.model.entity.pagination.PaginationTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.testutils.model.vo.email.EmailBlockRulesVoTestDataBuilder;
+import com.architecture.hexagonal.domain.testutils.data.model.entity.user.UserTestDataBuilder;
+import com.architecture.hexagonal.domain.testutils.data.model.vo.pagination.PaginationVoTestDataBuilder;
+import com.architecture.hexagonal.domain.testutils.data.model.vo.email.EmailBlockRulesVoTestDataBuilder;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
@@ -61,16 +61,16 @@ class UserPostgresqlReadAdapterImplTestIT extends PostgresqlIT {
 
   @Test
   void getAllUsersShouldReturnOnlyBlockedHostUsersWhenBlockHostFilterIsApplied() {
-    final PaginationVo paginationVo = PaginationTestDataBuilder.builder().build().pagination();
+    final PaginationVo paginationVo = PaginationVoTestDataBuilder.builder().build().paginationVo();
 
     final PaginationResultVo<User> result = userPostgresqlReadAdapterImpl.getAllUsers(
-        UserEmailProjector.builder()
-            .host("example")
+        UserEmailProjectorTestDataBuilder.builder()
             .blockEmail(true)
             .blockedRules(EmailBlockRulesVoTestDataBuilder.builder()
                 .host(Set.of("example"))
                 .build().emailBlockRulesVo())
-            .build(),
+            .build()
+            .userEmailProjector(),
             paginationVo);
 
     AssertionsForClassTypes.assertThat(result.data())

@@ -36,7 +36,7 @@
                         <phase>generate-sources</phase>
                         <configuration>
                             <sourceDirectory>${project.basedir}/src/main/resources/json-schemas</sourceDirectory>
-                            <targetPackage>com.architecture.hexagonal.contract.application.generated</targetPackage>
+                            <targetPackage>com.architecture.hexagonal.contract.application.usecase.generated</targetPackage>
                             <outputDirectory>${project.build.directory}/generated-sources/jsonschema2pojo</outputDirectory>
                             <removeOldOutput>true</removeOldOutput>
                             <includeJsr303Annotations>true</includeJsr303Annotations>

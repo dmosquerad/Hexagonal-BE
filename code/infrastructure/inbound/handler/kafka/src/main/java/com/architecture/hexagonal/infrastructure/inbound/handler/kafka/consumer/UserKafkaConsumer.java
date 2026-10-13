@@ -1,9 +1,9 @@
 package com.architecture.hexagonal.infrastructure.inbound.handler.kafka.consumer;
 
 import com.architecture.hexagonal.application.port.in.bus.command.CommandBus;
-import com.architecture.hexagonal.contract.application.generated.user.CreateUserCommand;
-import com.architecture.hexagonal.contract.application.generated.user.DeleteUserCommand;
-import com.architecture.hexagonal.contract.application.generated.user.UpdateUserCommand;
+import com.architecture.hexagonal.contract.application.usecase.generated.user.CreateUserCommand;
+import com.architecture.hexagonal.contract.application.usecase.generated.user.DeleteUserCommand;
+import com.architecture.hexagonal.contract.application.usecase.generated.user.UpdateUserCommand;
 import com.architecture.hexagonal.infrastructure.inbound.handler.kafka.data.UserCreatedMessage;
 import com.architecture.hexagonal.infrastructure.inbound.handler.kafka.data.UserDeletedMessage;
 import com.architecture.hexagonal.infrastructure.inbound.handler.kafka.data.UserUpdatedMessage;
