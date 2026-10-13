@@ -14,7 +14,10 @@
     <modules>
         <module>inbound</module>
         <module>outbound</module>
+        <module>bus</module>
+        <module>inbox</module>
         <module>outbox</module>
+        <module>transaction</module>
     </modules>
 
     <dependencies>

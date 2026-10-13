@@ -41,9 +41,14 @@ class ArchitectureLayersTest {
           .should()
           .resideInAnyPackage(
               "..infrastructure.outbound..",
-              "..infrastructure.inbound..")
+              "..infrastructure.inbound..",
+              "..infrastructure.bus..",
+              "..infrastructure.inbox..",
+              "..infrastructure.outbox..",
+              "..infrastructure.transaction..")
           .because("Infrastructure classes must be grouped under inbound or outbound adapters;"
-              + " the bus belongs to inbound and outbox-related adapters belong to outbound");
+              + " direct modules retain their adapter direction: bus is inbound; inbox, outbox,"
+              + " and transaction are outbound");
 
   @ArchTest
   static final ArchRule layers_should_follow_hexagonal_architecture =
@@ -71,10 +76,14 @@ class ArchitectureLayersTest {
           .adapter(
               "inbound",
               "com.architecture.hexagonal.infrastructure.inbound..",
+              "com.architecture.hexagonal.infrastructure.bus..",
               "com.architecture.hexagonal.contract.inbound..")
           .adapter(
               "outbound",
               "com.architecture.hexagonal.infrastructure.outbound..",
+              "com.architecture.hexagonal.infrastructure.inbox..",
+              "com.architecture.hexagonal.infrastructure.outbox..",
+              "com.architecture.hexagonal.infrastructure.transaction..",
               "com.architecture.hexagonal.contract.outbound..")
           .adapter("boot", "com.architecture.hexagonal.boot..")
           .because("Domain code must remain independent of application services and adapters;"
