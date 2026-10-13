@@ -30,7 +30,7 @@ class InfrastructureOutboundOutboxArchTest {
             .areAnnotatedWith(Document.class)
             .should()
             .resideInAPackage("..infrastructure.outbound.database.mongodb..")
-            .because("MongoDB documents must be in infrastructure.outbound.outbox");
+            .because("MongoDB documents must remain in the MongoDB infrastructure package");
 
     @ArchTest
     static final ArchRule spring_data_repositories_should_extend_mongo_repository =

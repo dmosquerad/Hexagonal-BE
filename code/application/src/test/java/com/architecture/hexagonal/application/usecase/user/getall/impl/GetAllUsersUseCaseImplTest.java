@@ -2,9 +2,9 @@ package com.architecture.hexagonal.application.usecase.user.getall.impl;
 
 import com.architecture.hexagonal.application.port.out.transaction.TransactionReadBoundary;
 import com.architecture.hexagonal.application.projector.user.UserEmailProjector;
-import com.architecture.hexagonal.application.testutils.projector.user.UserEmailProjectorTestDataBuilder;
 import com.architecture.hexagonal.application.service.business.email.EmailService;
 import com.architecture.hexagonal.application.service.business.user.UserService;
+import com.architecture.hexagonal.application.testutils.projector.user.UserEmailProjectorTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.transaction.SpyTransactionReadBoundary;
 import com.architecture.hexagonal.application.testutils.usecase.query.GetUsersInputTestDataBuilder;
 import com.architecture.hexagonal.contract.application.usecase.generated.user.GetUsersFilteredQuery;

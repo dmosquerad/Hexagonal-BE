@@ -4,8 +4,8 @@ import com.architecture.hexagonal.application.port.out.user.UserRepositoryReadPo
 import com.architecture.hexagonal.application.port.out.user.UserRepositoryWritePort;
 import com.architecture.hexagonal.application.port.out.user.UserSenderPort;
 import com.architecture.hexagonal.application.projector.user.UserEmailProjector;
-import com.architecture.hexagonal.application.testutils.projector.user.UserEmailProjectorTestDataBuilder;
 import com.architecture.hexagonal.application.service.business.user.impl.UserServiceImpl;
+import com.architecture.hexagonal.application.testutils.projector.user.UserEmailProjectorTestDataBuilder;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import com.architecture.hexagonal.domain.model.entity.user.User;
@@ -202,10 +202,7 @@ class UserServiceImplTest {
     final List<User> users = Collections.singletonList(user);
     final PaginationVo paginationVo = PaginationVoTestDataBuilder.builder().build().paginationVo();
     final UserEmailProjector projector =
-        UserEmailProjectorTestDataBuilder.builder()
-            .host("")
-            .build()
-            .userEmailProjector();
+        UserEmailProjectorTestDataBuilder.builder().host("").build().userEmailProjector();
     final PaginationResultVo<User> expectedResult =
         PaginationResultVoTestDataBuilder.<User>builder().data(users).build().paginationResult();
 

@@ -1,7 +1,5 @@
 package com.architecture.hexagonal.boot.config;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.architecture.hexagonal.application.port.out.email.EmailConfigurationPort;
 import com.architecture.hexagonal.application.port.out.scheduler.SchedulerConfigurationPort;
 import com.architecture.hexagonal.application.port.out.outbox.OutboxRepositoryReadPort;
@@ -25,6 +23,7 @@ import com.architecture.hexagonal.application.usecase.user.patch.impl.PatchUserU
 import com.architecture.hexagonal.application.usecase.user.update.impl.UpdateUserUseCaseImpl;
 import com.architecture.hexagonal.application.usecase.outbox.retry.impl.RetryOutboxUseCaseImpl;
 import java.time.Clock;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -86,18 +85,18 @@ class ApplicationComponentScanConfigurationTestIT {
 
   @Test
   void shouldRegisterApplicationServicesUseCasesAndUtcClock() {
-    assertThat(clock.getZone()).isEqualTo(Clock.systemUTC().getZone());
-    assertThat(emailService).isNotNull();
-    assertThat(userService).isNotNull();
-    assertThat(outboxService).isNotNull();
-    assertThat(getBlockedRulesUseCase).isNotNull();
-    assertThat(createUserUseCase).isNotNull();
-    assertThat(deleteUserUseCase).isNotNull();
-    assertThat(userExistsUseCase).isNotNull();
-    assertThat(findUserByUserIdUseCase).isNotNull();
-    assertThat(getAllUsersUseCase).isNotNull();
-    assertThat(patchUserUseCase).isNotNull();
-    assertThat(updateUserUseCase).isNotNull();
-    assertThat(retryOutboxUseCase).isNotNull();
+    Assertions.assertThat(clock.getZone()).isEqualTo(Clock.systemUTC().getZone());
+    Assertions.assertThat(emailService).isNotNull();
+    Assertions.assertThat(userService).isNotNull();
+    Assertions.assertThat(outboxService).isNotNull();
+    Assertions.assertThat(getBlockedRulesUseCase).isNotNull();
+    Assertions.assertThat(createUserUseCase).isNotNull();
+    Assertions.assertThat(deleteUserUseCase).isNotNull();
+    Assertions.assertThat(userExistsUseCase).isNotNull();
+    Assertions.assertThat(findUserByUserIdUseCase).isNotNull();
+    Assertions.assertThat(getAllUsersUseCase).isNotNull();
+    Assertions.assertThat(patchUserUseCase).isNotNull();
+    Assertions.assertThat(updateUserUseCase).isNotNull();
+    Assertions.assertThat(retryOutboxUseCase).isNotNull();
   }
 }

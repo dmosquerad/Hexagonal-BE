@@ -53,10 +53,10 @@
 
   <modules>
     <module>contract</module>
-    <module>boot</module>
     <module>domain</module>
-    <module>infrastructure</module>
     <module>application</module>
+    <module>infrastructure</module>
+    <module>boot</module>
   </modules>
 
   <dependencyManagement>
