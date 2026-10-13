@@ -19,5 +19,15 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-validation</artifactId>
         </dependency>
+        <!-- ============================================ -->
+        <!-- TEST -->
+        <!-- ============================================ -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>application</artifactId>
+            <type>test-jar</type>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>

@@ -1,13 +1,13 @@
 package com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.adapter;
 
+import com.architecture.hexagonal.application.testutils.time.TestClock;
 import com.architecture.hexagonal.contract.outbound.rabbitmq.UserCreated;
 import com.architecture.hexagonal.contract.outbound.rabbitmq.UserDeleted;
 import com.architecture.hexagonal.contract.outbound.rabbitmq.UserUpdated;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.domain.model.vo.outbox.MessageHeaderVo;
+import com.architecture.hexagonal.domain.testutils.data.model.entity.user.UserTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.mapper.user.UserMessageDaoMapper;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.model.entity.user.UserTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.time.TestClock;
 import java.time.Clock;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

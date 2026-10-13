@@ -6,7 +6,7 @@ import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.confi
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.config.MongodbTestApplication;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.OutboxDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.repository.OutboxWriteMongodbRepository;
-import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.dao.OutboxDaoTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.data.OutboxDaoTestDataBuilder;
 import java.util.UUID;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;

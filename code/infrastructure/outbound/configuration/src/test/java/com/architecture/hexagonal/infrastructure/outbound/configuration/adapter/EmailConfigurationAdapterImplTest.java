@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.infrastructure.outbound.configuration.adapter;
 
 import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;
+import com.architecture.hexagonal.domain.testutils.data.model.vo.email.EmailBlockRulesVoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.configuration.config.EmailBlockConfig;
-import com.architecture.hexagonal.infrastructure.outbound.configuration.testutils.model.vo.email.EmailBlockRulesVoTestDataBuilder;
 import java.util.Set;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,14 @@ class EmailConfigurationAdapterImplTest {
   @Test
   void getBlockedRulesShouldReturnBlockRulesVoWhenConfigIsProvided() {
     final EmailBlockRulesVo expected =
-        EmailBlockRulesVoTestDataBuilder.builder().build().emailBlockRulesVo();
+        EmailBlockRulesVoTestDataBuilder.builder()
+            .email(Set.of("blocked@example.com"))
+            .host(Set.of("blocked"))
+            .tld(Set.of("xyz"))
+            .domain(Set.of("blocked.xyz"))
+            .username(Set.of("spammer"))
+            .build()
+            .emailBlockRulesVo();
 
     Mockito.when(emailBlockConfig.getEmail()).thenReturn(Set.of("blocked@example.com"));
     Mockito.when(emailBlockConfig.getHost()).thenReturn(Set.of("blocked"));

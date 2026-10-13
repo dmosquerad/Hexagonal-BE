@@ -2,9 +2,9 @@ package com.architecture.hexagonal.infrastructure.outbound.outbox.adapter;
 
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
 import com.architecture.hexagonal.domain.model.vo.outbox.AggregateTypeVo;
+import com.architecture.hexagonal.domain.testutils.data.model.entity.outbox.OutboxTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.outbox.naming.OutboxNaming;
 import com.architecture.hexagonal.infrastructure.outbound.outbox.service.OutboxService;
-import com.architecture.hexagonal.infrastructure.outbound.outbox.testutils.model.entity.outbox.OutboxTestDataBuilder;
 import java.util.Map;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;

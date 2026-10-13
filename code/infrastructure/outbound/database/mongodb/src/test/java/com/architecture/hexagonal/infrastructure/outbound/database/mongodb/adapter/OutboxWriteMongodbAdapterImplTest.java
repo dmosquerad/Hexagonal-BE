@@ -1,12 +1,15 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.adapter;
 
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
+import com.architecture.hexagonal.domain.model.entity.user.User;
+import com.architecture.hexagonal.domain.testutils.data.model.entity.outbox.OutboxTestDataBuilder;
+import com.architecture.hexagonal.domain.testutils.data.model.entity.user.UserTestDataBuilder;
+import com.architecture.hexagonal.domain.testutils.data.model.vo.outbox.PayloadVoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.OutboxDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.mapper.outbox.OutboxDaoMapper;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.mapper.outbox.OutboxDoFromMongodbMapper;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.repository.OutboxWriteMongodbRepository;
-import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.dao.OutboxDaoTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.model.entity.outbox.OutboxTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.data.OutboxDaoTestDataBuilder;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,7 +35,16 @@ class OutboxWriteMongodbAdapterImplTest {
 
   @Test
   void saveShouldPersistOutboxEventWhenEventIsValid() {
-    final Outbox outbox = OutboxTestDataBuilder.builder().processedAt(null).build().outboxEventDo();
+    final Outbox outbox =
+        OutboxTestDataBuilder.<User>builder()
+            .payload(
+                PayloadVoTestDataBuilder.<User>builder()
+                    .data(UserTestDataBuilder.builder().build().user())
+                    .build()
+                    .payloadVo())
+            .processedAt(null)
+            .build()
+            .outbox();
     final OutboxDao outboxDao =
         OutboxDaoTestDataBuilder.builder().processedAt(null).build().outboxEventDao();
 

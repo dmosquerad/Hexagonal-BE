@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.infrastructure.inbound.bus.query.impl;
 
 import com.architecture.hexagonal.application.port.in.bus.query.QueryHandler;
-import com.architecture.hexagonal.application.usecase.business.user.getall.impl.GetAllUsersUseCaseImpl;
-import com.architecture.hexagonal.contract.application.generated.user.GetUsersFilteredQuery;
+import com.architecture.hexagonal.application.usecase.user.getall.impl.GetAllUsersUseCaseImpl;
+import com.architecture.hexagonal.contract.application.usecase.generated.user.GetUsersFilteredQuery;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResultVo;
 import java.util.ArrayList;

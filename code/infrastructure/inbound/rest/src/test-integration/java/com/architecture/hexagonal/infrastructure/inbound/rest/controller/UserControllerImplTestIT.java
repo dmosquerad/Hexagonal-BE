@@ -1,17 +1,18 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.controller;
 
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResultVo;
-import com.architecture.hexagonal.contract.application.generated.user.CreateUserCommand;
-import com.architecture.hexagonal.contract.application.generated.user.DeleteUserCommand;
-import com.architecture.hexagonal.contract.application.generated.user.FindUserByUserIdQuery;
-import com.architecture.hexagonal.contract.application.generated.user.GetUsersFilteredQuery;
-import com.architecture.hexagonal.contract.application.generated.user.PatchUserCommand;
-import com.architecture.hexagonal.contract.application.generated.user.UpdateUserCommand;
-import com.architecture.hexagonal.contract.application.generated.user.UserExistsQuery;
+import com.architecture.hexagonal.contract.application.usecase.generated.user.CreateUserCommand;
+import com.architecture.hexagonal.contract.application.usecase.generated.user.DeleteUserCommand;
+import com.architecture.hexagonal.contract.application.usecase.generated.user.FindUserByUserIdQuery;
+import com.architecture.hexagonal.contract.application.usecase.generated.user.GetUsersFilteredQuery;
+import com.architecture.hexagonal.contract.application.usecase.generated.user.PatchUserCommand;
+import com.architecture.hexagonal.contract.application.usecase.generated.user.UpdateUserCommand;
+import com.architecture.hexagonal.contract.application.usecase.generated.user.UserExistsQuery;
 import com.architecture.hexagonal.application.port.in.bus.command.CommandBus;
 import com.architecture.hexagonal.application.port.in.bus.query.QueryBus;
+import com.architecture.hexagonal.application.testutils.time.TestClock;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.user.*;
-import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.model.entity.pagination.PaginationTestDataBuilder;
+import com.architecture.hexagonal.domain.testutils.data.model.vo.pagination.PaginationVoTestDataBuilder;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import com.architecture.hexagonal.domain.model.entity.user.User;
@@ -27,8 +28,7 @@ import com.architecture.hexagonal.infrastructure.inbound.rest.resources.user.Use
 import com.architecture.hexagonal.infrastructure.inbound.rest.resources.user.UserResponseResource;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.dto.ResponseErrorDtoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.dto.UsersResponseDtoTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.model.entity.user.UserTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.time.TestClock;
+import com.architecture.hexagonal.domain.testutils.data.model.entity.user.UserTestDataBuilder;
 import java.time.Clock;
 import java.util.Collections;
 
@@ -151,7 +151,7 @@ class UserControllerImplTestIT {
             .json(usersResponseDtoJson.write(getAllUsersResponse).getJson()));
 
     Mockito.verify(userControllerImpl).getAllUsers(host, blockEmail, 0, 100);
-    Mockito.verify(getAllUserQueryDtoMapper).toGetAllUserQuery(host, blockEmail, PaginationTestDataBuilder.builder().build().pagination());
+    Mockito.verify(getAllUserQueryDtoMapper).toGetAllUserQuery(host, blockEmail, PaginationVoTestDataBuilder.builder().build().paginationVo());
     Mockito.verify(queryBus).execute(Mockito.any(GetUsersFilteredQuery.class));
     Mockito.verify(userReadDtoMapper).toUserReadDto(user);
   }
@@ -221,7 +221,7 @@ class UserControllerImplTestIT {
             .json(usersResponseDtoJson.write(expectedBody).getJson()));
     Mockito.verify(userControllerImpl).getAllUsers(null, null, page, size);
     Mockito.verify(getAllUserQueryDtoMapper).toGetAllUserQuery(
-        null, null, PaginationTestDataBuilder.builder().page(page).size(size).build().pagination());
+        null, null, PaginationVoTestDataBuilder.builder().page(page).size(size).build().paginationVo());
     Mockito.verify(queryBus).execute(Mockito.any(GetUsersFilteredQuery.class));
   }
 

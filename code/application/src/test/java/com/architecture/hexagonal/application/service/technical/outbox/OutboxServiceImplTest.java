@@ -4,15 +4,15 @@ import com.architecture.hexagonal.application.port.out.outbox.OutboxProcess;
 import com.architecture.hexagonal.application.port.out.outbox.OutboxRepositoryReadPort;
 import com.architecture.hexagonal.application.port.out.outbox.OutboxRepositoryWritePort;
 import com.architecture.hexagonal.application.port.out.scheduler.SchedulerConfigurationPort;
-import com.architecture.hexagonal.application.projector.technical.outbox.OutboxStatusAndAggregateProjector;
+import com.architecture.hexagonal.application.projector.outbox.OutboxStatusAndAggregateProjector;
 import com.architecture.hexagonal.application.service.technical.outbox.impl.OutboxServiceImpl;
-import com.architecture.hexagonal.application.testutils.model.aggregate.outbox.OutboxTestDataBuilder;
-import com.architecture.hexagonal.application.testutils.model.vo.SchedulerOutboxConfigurationVoTestDataBuilder;
-import com.architecture.hexagonal.application.testutils.orchestration.time.TestClock;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
 import com.architecture.hexagonal.domain.model.vo.outbox.AggregateTypeVo;
 import com.architecture.hexagonal.domain.model.vo.outbox.OutboxStatusVo;
 import com.architecture.hexagonal.domain.model.vo.outbox.SchedulerOutboxConfigurationVo;
+import com.architecture.hexagonal.domain.testutils.data.model.entity.outbox.OutboxTestDataBuilder;
+import com.architecture.hexagonal.domain.testutils.data.model.vo.outbox.SchedulerOutboxConfigurationVoTestDataBuilder;
+import com.architecture.hexagonal.domain.testutils.data.time.TestClock;
 import java.time.Clock;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -45,7 +45,7 @@ class OutboxServiceImplTest {
 
   @Test
   void findShouldReturnPendingEvents() {
-    final Outbox outbox = OutboxTestDataBuilder.builder().build().outboxDo();
+    final Outbox outbox = OutboxTestDataBuilder.builder().build().outbox();
     final OutboxStatusAndAggregateProjector projector =
         OutboxStatusAndAggregateProjector.builder()
             .aggregateType(AggregateTypeVo.USER)
@@ -63,7 +63,7 @@ class OutboxServiceImplTest {
 
   @Test
   void processShouldPublishEventWhenRetrySucceeds() {
-    final Outbox outbox = OutboxTestDataBuilder.builder().build().outboxDo();
+    final Outbox outbox = OutboxTestDataBuilder.builder().build().outbox();
     final Outbox processing =
         outbox.toBuilder()
             .status(OutboxStatusVo.PROCESSING)
@@ -93,7 +93,7 @@ class OutboxServiceImplTest {
 
   @Test
   void processShouldNotPublishEventWhenClaimWasLost() {
-    final Outbox outbox = OutboxTestDataBuilder.builder().build().outboxDo();
+    final Outbox outbox = OutboxTestDataBuilder.builder().build().outbox();
     Mockito.when(outboxRepositoryWritePort.claimPendingForProcessing(Mockito.any(Outbox.class)))
         .thenReturn(Optional.empty());
 
@@ -108,7 +108,7 @@ class OutboxServiceImplTest {
 
   @Test
   void processShouldKeepEventPendingWhenPublishingFails() {
-    final Outbox outbox = OutboxTestDataBuilder.builder().build().outboxDo();
+    final Outbox outbox = OutboxTestDataBuilder.builder().build().outbox();
     final Outbox processing =
         outbox.toBuilder()
             .status(OutboxStatusVo.PROCESSING)
@@ -141,7 +141,7 @@ class OutboxServiceImplTest {
 
   @Test
   void processShouldPublishEventOnNextRetryAfterInitialFailure() {
-    final Outbox outbox = OutboxTestDataBuilder.builder().build().outboxDo();
+    final Outbox outbox = OutboxTestDataBuilder.builder().build().outbox();
     final Outbox firstProcessing =
         outbox.toBuilder()
             .status(OutboxStatusVo.PROCESSING)
@@ -191,7 +191,7 @@ class OutboxServiceImplTest {
 
   @Test
   void processShouldMarkEventFailedWhenMaxRetriesReached() {
-    final Outbox outbox = OutboxTestDataBuilder.builder().retryCount(5).build().outboxDo();
+    final Outbox outbox = OutboxTestDataBuilder.builder().retryCount(5).build().outbox();
     final Outbox processing =
         outbox.toBuilder()
             .status(OutboxStatusVo.PROCESSING)

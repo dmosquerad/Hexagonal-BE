@@ -1,8 +1,9 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.testutils.dto;
 
 import com.architecture.hexagonal.contract.inbound.rest.email.server.dto.EmailBlockRulesResponseDto;
-import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.time.TestClock;
 import java.time.OffsetDateTime;
+
+import com.architecture.hexagonal.application.testutils.time.TestClock;
 import lombok.Builder;
 
 @Builder

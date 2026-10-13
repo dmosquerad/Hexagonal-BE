@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.inbound.execution.outbox.executor.impl;
 
 import com.architecture.hexagonal.application.port.in.bus.command.CommandBus;
-import com.architecture.hexagonal.contract.application.generated.retry.RetryOutboxeventCommand;
+import com.architecture.hexagonal.contract.application.usecase.generated.retry.RetryOutboxeventCommand;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

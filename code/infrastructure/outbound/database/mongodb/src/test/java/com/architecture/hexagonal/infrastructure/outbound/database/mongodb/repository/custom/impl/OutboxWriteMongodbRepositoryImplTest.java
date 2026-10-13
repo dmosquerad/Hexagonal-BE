@@ -2,7 +2,7 @@ package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.repo
 
 import com.architecture.hexagonal.domain.model.vo.outbox.OutboxStatusVo;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.OutboxDao;
-import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.dao.OutboxDaoTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.data.OutboxDaoTestDataBuilder;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

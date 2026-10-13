@@ -1,16 +1,19 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.adapter;
 
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
-import com.architecture.hexagonal.application.projector.technical.outbox.OutboxStatusAndAggregateProjector;
+import com.architecture.hexagonal.domain.model.entity.user.User;
+import com.architecture.hexagonal.application.projector.outbox.OutboxStatusAndAggregateProjector;
+import com.architecture.hexagonal.application.testutils.projector.outbox.OutboxStatusAndAggregateProjectorTestDataBuilder;
+import com.architecture.hexagonal.domain.testutils.data.model.entity.outbox.OutboxTestDataBuilder;
+import com.architecture.hexagonal.domain.testutils.data.model.entity.user.UserTestDataBuilder;
+import com.architecture.hexagonal.domain.testutils.data.model.vo.outbox.PayloadVoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.config.MongodbIT;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.config.MongodbTestApplication;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.OutboxDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.mapper.outbox.OutboxDoFromMongodbMapper;
-import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.model.entity.outbox.OutboxTestDataBuilder;
 
 import java.util.List;
 
-import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.projector.outbox.OutboxStatusAndAggregateProjectorTestDataBuilder;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -29,7 +32,16 @@ class OutboxReadMongodbAdapterImplTestIT extends MongodbIT {
 
   @Test
   void findPendingEventsShouldReturnPendingEventsOrderedByCreatedAt() {
-    final Outbox outbox = OutboxTestDataBuilder.builder().processedAt(null).build().outboxEventDo();
+    final Outbox outbox =
+        OutboxTestDataBuilder.<User>builder()
+            .payload(
+                PayloadVoTestDataBuilder.<User>builder()
+                    .data(UserTestDataBuilder.builder().build().user())
+                    .build()
+                    .payloadVo())
+            .processedAt(null)
+            .build()
+            .outbox();
     final OutboxStatusAndAggregateProjector outboxStatusAndAggregateProjector = OutboxStatusAndAggregateProjectorTestDataBuilder.builder().build().outboxStatusAndAggregateProjector();
 
     final List<Outbox> result = outboxReadMongodbAdapterImpl.findByStatusAndAggregateType(outboxStatusAndAggregateProjector);

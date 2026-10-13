@@ -2,10 +2,11 @@ package com.architecture.hexagonal.infrastructure.inbound.rest.testutils.dto;
 
 import com.architecture.hexagonal.contract.inbound.rest.user.server.dto.UserReadDto;
 import com.architecture.hexagonal.contract.inbound.rest.user.server.dto.UsersResponseDto;
-import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.time.TestClock;
 import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.List;
+
+import com.architecture.hexagonal.application.testutils.time.TestClock;
 import lombok.Builder;
 
 @Builder

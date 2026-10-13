@@ -1,15 +1,16 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.controller;
 
 import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;
-import com.architecture.hexagonal.contract.application.generated.email.GetBlockedRulesQuery;
+import com.architecture.hexagonal.contract.application.usecase.generated.email.GetBlockedRulesQuery;
 import com.architecture.hexagonal.contract.inbound.rest.email.server.dto.EmailBlockRulesResponseDto;
 import com.architecture.hexagonal.application.port.in.bus.query.QueryBus;
+import com.architecture.hexagonal.domain.testutils.data.model.vo.email.EmailBlockRulesVoTestDataBuilder;
+import com.architecture.hexagonal.application.testutils.time.TestClock;
 import com.architecture.hexagonal.infrastructure.inbound.rest.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.email.EmailBlockRulesDtoMapper;
 import com.architecture.hexagonal.infrastructure.inbound.rest.resources.email.EmailResponseResource;
-import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.model.vo.email.EmailBlockRulesTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.inbound.rest.testutils.time.TestClock;
 import java.time.Clock;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,9 +58,15 @@ class EmailControllerImplTestIT {
   @Test
   void getBlockedRulesShouldReturnBlockedRulesResponseWhenBlockedRulesExist() throws Exception {
 
-    final EmailBlockRulesVo emailBlockRulesVo = EmailBlockRulesTestDataBuilder.builder()
-        .build()
-        .emailBlockRules();
+    final EmailBlockRulesVo emailBlockRulesVo =
+        EmailBlockRulesVoTestDataBuilder.builder()
+            .email(Set.of("test@example.com"))
+            .host(Set.of("example"))
+            .tld(Set.of("com"))
+            .domain(Set.of("example.com"))
+            .username(Set.of("test"))
+            .build()
+            .emailBlockRulesVo();
 
     final EmailBlockRulesResponseDto expectedResponse = emailBlockRulesResponseDtoJson
         .readObject(emailResponseResource.getBlockedRules);
@@ -82,5 +89,4 @@ class EmailControllerImplTestIT {
     Mockito.verify(clock).instant();
   }
 }
-
 
