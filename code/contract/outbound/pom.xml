@@ -12,6 +12,6 @@
     </parent>
 
     <modules>
-        <module>rabbitmq</module>
+        <module>event</module>
     </modules>
 </project>

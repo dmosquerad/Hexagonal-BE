@@ -45,7 +45,8 @@ Hexagonal-BE/
 │   │           │           ├── port/        # Ports In/Out for the use case
 │   │           │           └── usecase/     # Use case logic
 │   │           ├── technical/               # Technical use cases (infrastructure patterns)
-│   │           │   └── outbox/              # Outbox event processing
+│   │           │   ├── outbox/              # Outbox event processing
+│   │           │   └── inbox/               # Inbox event processing
 │   │           │       ├── block/           # Block/suspend event processing
 │   │           │       ├── find/            # Find pending events
 │   │           │       └── process/         # Process and publish events
@@ -53,20 +54,18 @@ Hexagonal-BE/
 │   ├── infrastructure/
 │   │   ├── inbound/
 │   │   │   ├── bus/                 # CQRS bus implementations
-│   │   │   ├── execution/           # Schedulers (Outbox polling)
-│   │   │   ├── handler/             # Inbound message handlers
+│   │   │   ├── execution/           # Schedulers (Outbox and Inbox polling)
+│   │   │   ├── handler/             # Inbound Kafka message handlers
 │   │   │   └── rest/                # REST controllers implementation
 │   │   ├── outbound/
 │   │   │   ├── database/
 │   │   │   │   ├── postgresql/      # DB adapters (JPA/PostgreSQL)
-│   │   │   │   └── mongodb/         # DB adapters (MongoDB/Outbox events)
+│   │   │   │   └── mongodb/         # DB adapters (MongoDB/Outbox and Inbox events)
 │   │   │   ├── message/
 │   │   │   │   └── rabbitmq/        # Messaging adapters (RabbitMQ)
 │   │   │   └── configuration/       # Config adapters (application.yml rules)
-│   │   └── outbox/
-│   │       ├── adapter/             # Outbox message processing adapter
-│   │       ├── inbox/               # Inbox message adapters
-│   │       └── transaction/         # Spring transaction adapters
+│   │   ├── outbox/                  # Outbox message processing adapter
+│   │   └── inbox/                   # Inbox message processing adapter
 │   └── boot/                        # Spring Boot composition root
 ├── e2e/
 │   └── karate/                      # End-to-end API tests (Karate)
@@ -94,7 +93,8 @@ flowchart LR
         direction TB
         REST[REST Controllers]
         BUS[CommandBus / QueryBus]
-        EXEC[Execution\nOutbox Scheduler]
+        EXEC[Execution\nOutbox and Inbox Schedulers]
+        KAFKA[Kafka Consumer]
     end
 
     subgraph APP["Application"]
@@ -123,6 +123,7 @@ flowchart LR
 
     OAS -.implements.-> REST
     Client --> REST
+    KAFKA --> MONGO
     REST --> BUS
     BUS --> HANDLERS
     HANDLERS --> UC
@@ -209,17 +210,21 @@ Holds the OpenAPI 3.0 specifications and generates server-side stubs consumed by
 - `inbound-email-rest-server`: OpenAPI spec for the Email rules API
 - Generated Java interfaces implemented by REST controllers
 
-#### Outbound — RabbitMQ (`code/contract/outbound/rabbitmq`)
-The AsyncAPI 2.6 specification defines user event payloads and publication operations. ZenWave's Maven plugin generates the Java event models and typed Spring Cloud Stream producer from the contract during `generate-sources`; the RabbitMQ adapter consumes that generated API. The broker bindings remain configured in `application-rabbitmq.yml`.
+#### Inbound — Kafka (`code/contract/inbound/messaging/kafka`)
+The AsyncAPI 3.0 specification defines the user events consumed from Kafka. During `generate-sources`, the evryfs AsyncAPI Maven plugin generates the Java payload models and Spring Kafka consumer contract interfaces. `UserKafkaConsumer` implements those generated contracts and receives messages through `@KafkaListener`; JSON conversion and retries are configured with Spring Kafka. No handwritten Kafka consumer port or JavaScript generator is required.
 
-Contract generation runs in the JVM through Maven and does not require Node.js, npm, or npx.
+#### Outbound — RabbitMQ (`code/contract/outbound/event/rabbitmq`)
+The AsyncAPI 3.0 specification defines user event payloads and `send` operations. During `generate-sources`, the evryfs AsyncAPI Maven plugin generates the Java payload models. `UserEventsProducer` remains a handwritten application port because the plugin's client contract generator targets Spring Kafka, not Spring Cloud Stream or RabbitMQ. The RabbitMQ adapter implements the port using Spring Cloud Stream's Rabbit binder and `StreamBridge`; broker bindings and the Outbox fallback remain configured in the application.
+
+The evryfs plugin supports AsyncAPI 3.0.x (not 3.1.x) and local external references. AsyncAPI generation is part of Maven's `generate-sources` phase and requires no Node.js or npm.
 
 #### Inbound — Bus (`code/infrastructure/inbound/bus`)
 Implements the inbound CQRS buses that dispatch commands and queries to application handlers.
 
 **Content:**
 - Spring `CommandBus` and `QueryBus` implementations
-- Command/Query handler registration and dispatching
+- Command/Query handler beans injected by Spring and indexed by reflecting on their `handle` method parameter
+- Dispatching to the handler registered for the exact runtime command or query type
 
 #### Inbound — Execution (`code/infrastructure/inbound/execution`)
 Manages scheduled tasks and event processing workflows.
@@ -258,9 +263,8 @@ Implements persistence with PostgreSQL and MongoDB through modular adapters.
 Publishes persisted outbox events to external messaging systems.
 
 **Modules:**
-- **Adapter** (`adapter/`): outbox processing and message serialization/routing
-- **Inbox** (`inbox/`): inbox message adapters
-- **Transaction** (`transaction/`): Spring read/write transaction boundaries
+- Outbox processing adapter and message serialization/routing
+- Spring read/write transaction boundaries
 - The adapter uses the RabbitMQ message adapter to publish outbox events
   - `UserSenderAdapter` implementing the message Port Out
   - Domain event DTOs: `UserCreated`, `UserUpdated`, `UserDeleted`
@@ -269,7 +273,15 @@ Publishes persisted outbox events to external messaging systems.
 
 **Content:**
 - Outbox processing adapter and message serialization/routing
-- Inbox message processing and Spring transaction boundary adapters
+- Scheduled outbox polling and publishing
+
+#### Inbox (`code/infrastructure/inbox` and `code/infrastructure/inbound/handler/kafka`)
+Persists consumed Kafka messages before their offsets are committed, then processes them asynchronously.
+
+- Kafka uses its own message DTOs with a `messageHeader` and nested `data`; these are not RabbitMQ contract classes.
+- MongoDB deduplicates by the unique `(messageId, messageDate)` key.
+- The scheduled worker claims `PENDING` records, dispatches user commands, retries failures, and marks exhausted records `FAILED`.
+- Kafka offsets are committed only after inbox persistence succeeds; failures are retried with backoff.
 
 #### Outbound — Configuration (`code/infrastructure/outbound/configuration`)
 Implements configuration-driven business rules loaded from `application.yml`.

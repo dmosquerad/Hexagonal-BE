@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.application.testutils.usecase.common;
 
-import com.architecture.hexagonal.contract.application.usecase.generated.common.Pagination;
+import com.architecture.hexagonal.contract.bus.model.common.Pagination;
 import lombok.Builder;
 
 @Builder

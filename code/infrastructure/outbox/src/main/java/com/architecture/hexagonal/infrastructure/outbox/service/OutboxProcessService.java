@@ -2,8 +2,8 @@ package com.architecture.hexagonal.infrastructure.outbox.service;
 
 import com.architecture.hexagonal.application.port.out.outbox.OutboxProcess;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
-import com.architecture.hexagonal.domain.model.vo.outbox.ActionType;
-import com.architecture.hexagonal.domain.model.vo.outbox.AggregateTypeVo;
+import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
+import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.infrastructure.outbox.mapper.user.UserFromOutboxMapper;
 import com.architecture.hexagonal.infrastructure.outbox.naming.OutboxNaming;
 import jakarta.annotation.PostConstruct;

@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.application.testutils.projector.outbox;
 
 import com.architecture.hexagonal.application.projector.outbox.OutboxStatusAndAggregateProjector;
-import com.architecture.hexagonal.domain.model.vo.outbox.AggregateTypeVo;
-import com.architecture.hexagonal.domain.model.vo.outbox.OutboxStatusVo;
+import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
+import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
 import lombok.Builder;
 
 @Builder
@@ -12,7 +12,7 @@ public class OutboxStatusAndAggregateProjectorTestDataBuilder {
   private AggregateTypeVo aggregateType = AggregateTypeVo.USER;
 
   @Builder.Default
-  private OutboxStatusVo status = OutboxStatusVo.PENDING;
+  private StatusVo status = StatusVo.PENDING;
 
   public OutboxStatusAndAggregateProjector outboxStatusAndAggregateProjector() {
     return OutboxStatusAndAggregateProjector.builder()

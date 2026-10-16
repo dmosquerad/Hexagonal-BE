@@ -14,7 +14,7 @@
     <modules>
         <module>database</module>
         <module>configuration</module>
-        <module>message</module>
+        <module>event</module>
     </modules>
     <dependencies>
         <!-- ============================================ -->

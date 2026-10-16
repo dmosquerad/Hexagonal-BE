@@ -18,7 +18,7 @@
     <!-- JAVA & MVN -->
     <!-- ============================================ -->
     <java.version>25</java.version>
-    <mvn.version>3.9.15</mvn.version>
+    <mvn.version>3.9.16</mvn.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- ============================================ -->
     <!-- SPRING DOC -->
@@ -34,7 +34,7 @@
     <mapstruct.version>1.6.3</mapstruct.version>
     <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
     <!-- ============================================ -->
-    <!-- LOMBOK -->
+    <!-- JAVA FORMAT -->
     <!-- ============================================ -->
     <google-java-format.version>1.35.0</google-java-format.version>
     <!-- ============================================ -->
@@ -42,7 +42,7 @@
     <!-- ============================================ -->
     <maven-enforcer-plugin.version>3.6.2</maven-enforcer-plugin.version>
     <openapi-generator-maven-plugin.version>7.21.0</openapi-generator-maven-plugin.version>
-    <zenwave.version>1.7.1</zenwave.version>
+    <asyncapi-generator-maven-plugin.version>0.3.4-BETA</asyncapi-generator-maven-plugin.version>
     <jacoco-maven-plugin.version>0.8.15</jacoco-maven-plugin.version>
     <spotless-maven-plugin.version>3.6.0</spotless-maven-plugin.version>
     <!-- ============================================ -->
@@ -93,17 +93,22 @@
       <!-- ============================================ -->
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>contract-application</artifactId>
+        <artifactId>contract-bus</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>inbound-contract-rest</artifactId>
+        <artifactId>contract-inbound-rest</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>outbound-contract-rabbitmq</artifactId>
+        <artifactId>contract-inbound-kafka</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>contract-outbound-rabbitmq</artifactId>
         <version>${project.version}</version>
       </dependency>
       <!-- ============================================ -->
@@ -111,22 +116,22 @@
       <!-- ============================================ -->
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>rest-server</artifactId>
+        <artifactId>endpoint-rest</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>handler-kafka</artifactId>
+        <artifactId>messaging-kafka</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>execution-outbox</artifactId>
+        <artifactId>scheduled-outbox</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>execution-inbox</artifactId>
+        <artifactId>scheduled-inbox</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -159,7 +164,7 @@
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>mesage-rabbitmq</artifactId>
+        <artifactId>event-rabbitmq</artifactId>
         <version>${project.version}</version>
       </dependency>
       <!-- ============================================ -->
@@ -265,16 +270,6 @@
   </dependencies>
 
   <build>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.openapitools</groupId>
-          <artifactId>openapi-generator-maven-plugin</artifactId>
-          <version>${openapi-generator-maven-plugin.version}</version>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "user-deleted-event",
+  "title": "UserDeletedEvent",
+  "description": "Event emitted by the application when a user has been deleted.",
+  "type": "object",
+  "properties": {
+    "userId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Identifier of the deleted user."
+    },
+    "name": {
+      "type": "string",
+      "description": "Name of the deleted user."
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "description": "Email of the deleted user."
+    }
+  },
+  "required": [
+    "userId",
+    "name",
+    "email"
+  ],
+  "additionalProperties": false
+}
