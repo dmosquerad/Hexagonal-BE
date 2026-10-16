@@ -7,9 +7,9 @@ import com.architecture.hexagonal.application.port.out.scheduler.SchedulerConfig
 import com.architecture.hexagonal.application.projector.outbox.OutboxStatusAndAggregateProjector;
 import com.architecture.hexagonal.application.service.technical.outbox.impl.OutboxServiceImpl;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
-import com.architecture.hexagonal.domain.model.vo.outbox.AggregateTypeVo;
-import com.architecture.hexagonal.domain.model.vo.outbox.OutboxStatusVo;
 import com.architecture.hexagonal.domain.model.vo.outbox.SchedulerOutboxConfigurationVo;
+import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
+import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
 import com.architecture.hexagonal.domain.testutils.data.model.entity.outbox.OutboxTestDataBuilder;
 import com.architecture.hexagonal.domain.testutils.data.model.vo.outbox.SchedulerOutboxConfigurationVoTestDataBuilder;
 import com.architecture.hexagonal.domain.testutils.data.time.TestClock;
@@ -49,7 +49,7 @@ class OutboxServiceImplTest {
     final OutboxStatusAndAggregateProjector projector =
         OutboxStatusAndAggregateProjector.builder()
             .aggregateType(AggregateTypeVo.USER)
-            .status(OutboxStatusVo.PENDING)
+            .status(StatusVo.PENDING)
             .build();
 
     Mockito.when(outboxRepositoryReadPort.findByStatusAndAggregateType(projector))
@@ -66,11 +66,11 @@ class OutboxServiceImplTest {
     final Outbox outbox = OutboxTestDataBuilder.builder().build().outbox();
     final Outbox processing =
         outbox.toBuilder()
-            .status(OutboxStatusVo.PROCESSING)
+            .status(StatusVo.PROCESSING)
             .retryCount(1)
             .processedAt(TestClock.FIXED_INSTANT.atOffset(ZoneOffset.UTC))
             .build();
-    final Outbox published = processing.toBuilder().status(OutboxStatusVo.PUBLISHED).build();
+    final Outbox published = processing.toBuilder().status(StatusVo.PROCESSED).build();
     final SchedulerOutboxConfigurationVo schedulerConfig =
         SchedulerOutboxConfigurationVoTestDataBuilder.builder()
             .build()
@@ -111,11 +111,11 @@ class OutboxServiceImplTest {
     final Outbox outbox = OutboxTestDataBuilder.builder().build().outbox();
     final Outbox processing =
         outbox.toBuilder()
-            .status(OutboxStatusVo.PROCESSING)
+            .status(StatusVo.PROCESSING)
             .retryCount(1)
             .processedAt(TestClock.FIXED_INSTANT.atOffset(ZoneOffset.UTC))
             .build();
-    final Outbox pending = processing.toBuilder().status(OutboxStatusVo.PENDING).build();
+    final Outbox pending = processing.toBuilder().status(StatusVo.PENDING).build();
     final SchedulerOutboxConfigurationVo schedulerConfig =
         SchedulerOutboxConfigurationVoTestDataBuilder.builder()
             .build()
@@ -144,18 +144,18 @@ class OutboxServiceImplTest {
     final Outbox outbox = OutboxTestDataBuilder.builder().build().outbox();
     final Outbox firstProcessing =
         outbox.toBuilder()
-            .status(OutboxStatusVo.PROCESSING)
+            .status(StatusVo.PROCESSING)
             .retryCount(1)
             .processedAt(TestClock.FIXED_INSTANT.atOffset(ZoneOffset.UTC))
             .build();
-    final Outbox pendingRetry = firstProcessing.toBuilder().status(OutboxStatusVo.PENDING).build();
+    final Outbox pendingRetry = firstProcessing.toBuilder().status(StatusVo.PENDING).build();
     final Outbox secondProcessing =
         pendingRetry.toBuilder()
-            .status(OutboxStatusVo.PROCESSING)
+            .status(StatusVo.PROCESSING)
             .retryCount(2)
             .processedAt(TestClock.FIXED_INSTANT.atOffset(ZoneOffset.UTC))
             .build();
-    final Outbox published = secondProcessing.toBuilder().status(OutboxStatusVo.PUBLISHED).build();
+    final Outbox published = secondProcessing.toBuilder().status(StatusVo.PROCESSED).build();
     final SchedulerOutboxConfigurationVo schedulerConfig =
         SchedulerOutboxConfigurationVoTestDataBuilder.builder()
             .build()
@@ -194,11 +194,11 @@ class OutboxServiceImplTest {
     final Outbox outbox = OutboxTestDataBuilder.builder().retryCount(5).build().outbox();
     final Outbox processing =
         outbox.toBuilder()
-            .status(OutboxStatusVo.PROCESSING)
+            .status(StatusVo.PROCESSING)
             .retryCount(6)
             .processedAt(TestClock.FIXED_INSTANT.atOffset(ZoneOffset.UTC))
             .build();
-    final Outbox expectedFailed = processing.toBuilder().status(OutboxStatusVo.FAILED).build();
+    final Outbox expectedFailed = processing.toBuilder().status(StatusVo.FAILED).build();
     final SchedulerOutboxConfigurationVo schedulerConfig =
         SchedulerOutboxConfigurationVoTestDataBuilder.builder()
             .maxRetries(5)

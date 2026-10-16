@@ -8,7 +8,7 @@ import com.architecture.hexagonal.application.testutils.transaction.SpyTransacti
 import com.architecture.hexagonal.application.testutils.transaction.SpyTransactionWriteBoundary;
 import com.architecture.hexagonal.contract.application.usecase.generated.retry.RetryOutboxeventCommand;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
-import com.architecture.hexagonal.domain.model.vo.outbox.AggregateTypeVo;
+import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.domain.testutils.data.model.entity.outbox.OutboxTestDataBuilder;
 import java.util.List;
 import org.assertj.core.api.AssertionsForClassTypes;

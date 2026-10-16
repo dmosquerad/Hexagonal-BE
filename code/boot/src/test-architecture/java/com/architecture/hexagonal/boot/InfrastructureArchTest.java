@@ -49,14 +49,10 @@ class InfrastructureArchTest {
           .or()
           .areAssignableTo(SchedulingConfigurer.class)
           .and()
-          .resideInAPackage("..infrastructure.inbound.execution.outbox..")
-          .and()
           .areNotInterfaces()
           .should()
           .dependOnClassesThat()
-          .resideInAnyPackage(
-              "..application.port.in.bus.command..",
-              "..application.port.in.bus.query..")
+          .resideInAnyPackage("..infrastructure.bus.command..", "..infrastructure.bus.query..")
           .because("REST controllers, Kafka consumer classes in the consumer package, and outbox SchedulingConfigurer implementations must depend on CommandBus or QueryBus");
 
 }

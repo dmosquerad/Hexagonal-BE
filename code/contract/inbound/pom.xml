@@ -12,6 +12,7 @@
     </parent>
 
     <modules>
+        <module>kafka</module>
         <module>rest</module>
     </modules>
 </project>

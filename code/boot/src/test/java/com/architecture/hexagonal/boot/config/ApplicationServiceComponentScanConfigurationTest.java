@@ -3,6 +3,7 @@ package com.architecture.hexagonal.boot.config;
 import com.architecture.hexagonal.application.annotation.ApplicationService;
 import com.architecture.hexagonal.application.service.business.email.impl.EmailServiceImpl;
 import com.architecture.hexagonal.application.service.business.user.impl.UserServiceImpl;
+import com.architecture.hexagonal.application.service.technical.inbox.impl.InboxServiceImpl;
 import com.architecture.hexagonal.application.service.technical.outbox.impl.OutboxServiceImpl;
 import java.util.List;
 import org.assertj.core.api.Assertions;
@@ -27,6 +28,7 @@ class ApplicationServiceComponentScanConfigurationTest {
             List.of(
                 EmailServiceImpl.class.getName(),
                 UserServiceImpl.class.getName(),
-                OutboxServiceImpl.class.getName()));
+                OutboxServiceImpl.class.getName(),
+                InboxServiceImpl.class.getName()));
   }
 }

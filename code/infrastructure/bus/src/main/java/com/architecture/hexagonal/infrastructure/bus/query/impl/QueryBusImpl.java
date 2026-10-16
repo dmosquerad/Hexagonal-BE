@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.bus.query.impl;
 
-import com.architecture.hexagonal.application.port.in.bus.query.QueryBus;
 import com.architecture.hexagonal.application.port.in.bus.query.QueryHandler;
+import com.architecture.hexagonal.infrastructure.bus.query.QueryBus;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;

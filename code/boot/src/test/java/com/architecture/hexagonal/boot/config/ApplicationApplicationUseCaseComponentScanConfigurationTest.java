@@ -2,6 +2,8 @@ package com.architecture.hexagonal.boot.config;
 
 import com.architecture.hexagonal.application.annotation.ApplicationUseCase;
 import com.architecture.hexagonal.application.usecase.email.getblockedrules.impl.GetBlockedRulesUseCaseImpl;
+import com.architecture.hexagonal.application.usecase.inbox.persist.impl.PersistInboxUseCaseImpl;
+import com.architecture.hexagonal.application.usecase.inbox.retry.impl.RetryInboxUseCaseImpl;
 import com.architecture.hexagonal.application.usecase.outbox.retry.impl.RetryOutboxUseCaseImpl;
 import com.architecture.hexagonal.application.usecase.user.create.impl.CreateUserUseCaseImpl;
 import com.architecture.hexagonal.application.usecase.user.delete.impl.DeleteUserUseCaseImpl;
@@ -38,6 +40,8 @@ class ApplicationApplicationUseCaseComponentScanConfigurationTest {
                 GetAllUsersUseCaseImpl.class.getName(),
                 PatchUserUseCaseImpl.class.getName(),
                 UpdateUserUseCaseImpl.class.getName(),
-                RetryOutboxUseCaseImpl.class.getName()));
+                RetryOutboxUseCaseImpl.class.getName(),
+                PersistInboxUseCaseImpl.class.getName(),
+                RetryInboxUseCaseImpl.class.getName()));
   }
 }

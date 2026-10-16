@@ -8,8 +8,8 @@ import com.architecture.hexagonal.application.projector.outbox.OutboxStatusAndAg
 import com.architecture.hexagonal.application.service.technical.outbox.OutboxService;
 import com.architecture.hexagonal.contract.application.usecase.generated.retry.RetryOutboxeventCommand;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
-import com.architecture.hexagonal.domain.model.vo.outbox.AggregateTypeVo;
-import com.architecture.hexagonal.domain.model.vo.outbox.OutboxStatusVo;
+import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
+import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
 import java.util.List;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class RetryOutboxUseCaseImpl implements CommandHandler<RetryOutboxeventCo
       final OutboxStatusAndAggregateProjector projector =
           OutboxStatusAndAggregateProjector.builder()
               .aggregateType(aggregateType)
-              .status(OutboxStatusVo.PENDING)
+              .status(StatusVo.PENDING)
               .build();
       final List<Outbox> pendingEvents =
           transactionReadBoundary.execute(() -> outboxService.find(projector));

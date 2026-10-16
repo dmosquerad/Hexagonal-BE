@@ -6,7 +6,7 @@ import com.architecture.hexagonal.contract.application.usecase.generated.retry.R
 import com.architecture.hexagonal.domain.testutils.data.model.vo.outbox.SchedulerOutboxConfigurationVoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.execution.outbox.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.inbound.execution.outbox.executor.impl.OutboxSchedulerImpl;
-import com.architecture.hexagonal.application.port.in.bus.command.CommandBus;
+import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;

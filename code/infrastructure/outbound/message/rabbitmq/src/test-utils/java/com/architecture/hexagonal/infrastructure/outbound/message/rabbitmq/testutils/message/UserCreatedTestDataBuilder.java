@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.message;
 
-import com.architecture.hexagonal.contract.outbound.rabbitmq.MessageHeader;
-import com.architecture.hexagonal.contract.outbound.rabbitmq.UserData;
-import com.architecture.hexagonal.contract.outbound.rabbitmq.UserCreated;
+import com.architecture.hexagonal.contract.outbound.rabbitmq.model.MessageHeader;
+import com.architecture.hexagonal.contract.outbound.rabbitmq.model.UserData;
+import com.architecture.hexagonal.contract.outbound.rabbitmq.model.UserCreated;
 import lombok.Builder;
 
 @Builder

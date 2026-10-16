@@ -23,8 +23,12 @@
             <groupId>com.architecture.hexagonal</groupId>
             <artifactId>contract-application</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.architecture.hexagonal</groupId>
+            <artifactId>inbound-contract-kafka</artifactId>
+        </dependency>
         <!-- ============================================ -->
-        <!-- SPRING KAFKA -->
+        <!-- SPRINGBOOT -->
         <!-- ============================================ -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

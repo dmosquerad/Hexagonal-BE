@@ -13,8 +13,8 @@ import com.architecture.hexagonal.application.testutils.transaction.SpyTransacti
 import com.architecture.hexagonal.application.testutils.transaction.SpyTransactionWriteBoundary;
 import com.architecture.hexagonal.contract.application.usecase.generated.retry.RetryOutboxeventCommand;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
-import com.architecture.hexagonal.domain.model.vo.outbox.AggregateTypeVo;
-import com.architecture.hexagonal.domain.model.vo.outbox.OutboxStatusVo;
+import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
+import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
 import java.time.Clock;
 import java.time.ZoneOffset;
 import java.util.HashSet;
@@ -57,12 +57,12 @@ class RetryOutboxEventsApplicationUseCaseTestIT {
     final Outbox outbox = OutboxTestDataBuilder.builder().build().outbox();
     final Outbox processingOutbox =
         outbox.toBuilder()
-            .status(OutboxStatusVo.PROCESSING)
+            .status(StatusVo.PROCESSING)
             .retryCount(1)
             .processedAt(TestClock.FIXED_INSTANT.atOffset(ZoneOffset.UTC))
             .build();
     final Outbox publishedOutbox =
-        processingOutbox.toBuilder().status(OutboxStatusVo.PUBLISHED).build();
+        processingOutbox.toBuilder().status(StatusVo.PROCESSED).build();
     Mockito.when(schedulerConfigurationPort.getOutboxScheduler())
         .thenReturn(
             SchedulerOutboxConfigurationVoTestDataBuilder.builder()
@@ -123,7 +123,7 @@ class RetryOutboxEventsApplicationUseCaseTestIT {
         OutboxTestDataBuilder.builder().build().outbox();
     final Outbox processingOutbox =
         outbox.toBuilder()
-            .status(OutboxStatusVo.PROCESSING)
+            .status(StatusVo.PROCESSING)
             .retryCount(1)
             .processedAt(TestClock.FIXED_INSTANT.atOffset(ZoneOffset.UTC))
             .build();

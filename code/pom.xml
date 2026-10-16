@@ -18,7 +18,7 @@
     <!-- JAVA & MVN -->
     <!-- ============================================ -->
     <java.version>25</java.version>
-    <mvn.version>3.9.15</mvn.version>
+    <mvn.version>3.9.16</mvn.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- ============================================ -->
     <!-- SPRING DOC -->
@@ -42,7 +42,8 @@
     <!-- ============================================ -->
     <maven-enforcer-plugin.version>3.6.2</maven-enforcer-plugin.version>
     <openapi-generator-maven-plugin.version>7.21.0</openapi-generator-maven-plugin.version>
-    <zenwave.version>1.7.1</zenwave.version>
+    <exec-maven-plugin.version>3.5.0</exec-maven-plugin.version>
+    <build-helper-maven-plugin.version>3.6.1</build-helper-maven-plugin.version>
     <jacoco-maven-plugin.version>0.8.15</jacoco-maven-plugin.version>
     <spotless-maven-plugin.version>3.6.0</spotless-maven-plugin.version>
     <!-- ============================================ -->
@@ -99,6 +100,11 @@
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>inbound-contract-rest</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>inbound-contract-kafka</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -271,6 +277,16 @@
           <groupId>org.openapitools</groupId>
           <artifactId>openapi-generator-maven-plugin</artifactId>
           <version>${openapi-generator-maven-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>${exec-maven-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <version>${build-helper-maven-plugin.version}</version>
         </plugin>
       </plugins>
     </pluginManagement>

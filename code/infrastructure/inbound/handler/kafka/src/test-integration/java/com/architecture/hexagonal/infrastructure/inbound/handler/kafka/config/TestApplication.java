@@ -1,5 +1,7 @@
 package com.architecture.hexagonal.infrastructure.inbound.handler.kafka.config;
 
+import java.time.Clock;
+import org.springframework.context.annotation.Bean;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.kafka.autoconfigure.KafkaAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
@@ -9,4 +11,10 @@ import org.springframework.context.annotation.ComponentScan;
     "com.architecture.hexagonal.infrastructure.inbound.handler.kafka.config",
     "com.architecture.hexagonal.infrastructure.inbound.handler.kafka.mapper"
 })
-public class TestApplication {}
+public class TestApplication {
+
+  @Bean
+  Clock clock() {
+    return Clock.systemUTC();
+  }
+}

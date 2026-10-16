@@ -6,7 +6,7 @@ import com.architecture.hexagonal.application.service.business.user.UserService;
 import com.architecture.hexagonal.application.usecase.user.create.impl.CreateUserUseCaseImpl;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.infrastructure.bus.config.TestApplication;
-import com.architecture.hexagonal.application.port.in.bus.command.CommandBus;
+import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
 import com.architecture.hexagonal.contract.application.usecase.generated.user.CreateUserCommand;
 import com.architecture.hexagonal.contract.application.usecase.generated.user.DeleteUserCommand;
 import java.util.UUID;

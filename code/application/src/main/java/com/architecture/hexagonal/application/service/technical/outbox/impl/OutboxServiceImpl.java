@@ -8,7 +8,7 @@ import com.architecture.hexagonal.application.port.out.scheduler.SchedulerConfig
 import com.architecture.hexagonal.application.projector.outbox.OutboxStatusAndAggregateProjector;
 import com.architecture.hexagonal.application.service.technical.outbox.OutboxService;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
-import com.architecture.hexagonal.domain.model.vo.outbox.OutboxStatusVo;
+import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
 import java.time.Clock;
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -35,7 +35,7 @@ public class OutboxServiceImpl implements OutboxService {
   public Outbox process(final @NonNull Outbox outbox) {
     final Outbox processingOutbox =
         outbox.toBuilder()
-            .status(OutboxStatusVo.PROCESSING)
+            .status(StatusVo.PROCESSING)
             .retryCount(outbox.retryCount() + 1)
             .processedAt(OffsetDateTime.now(clock))
             .build();
@@ -49,7 +49,7 @@ public class OutboxServiceImpl implements OutboxService {
     if (outbox.retryCount() >= schedulerConfigurationPort.getOutboxScheduler().maxRetries()) {
       return outboxRepositoryWritePort.upsertByEventIdentity(
           claimedOutbox.get().toBuilder()
-              .status(OutboxStatusVo.FAILED)
+              .status(StatusVo.FAILED)
               .processedAt(OffsetDateTime.now(clock))
               .build());
     }
@@ -57,10 +57,10 @@ public class OutboxServiceImpl implements OutboxService {
     try {
       outboxProcess.process(claimedOutbox.get());
       return outboxRepositoryWritePort.upsertByEventIdentity(
-          claimedOutbox.get().toBuilder().status(OutboxStatusVo.PUBLISHED).build());
+          claimedOutbox.get().toBuilder().status(StatusVo.PROCESSED).build());
     } catch (Exception _) {
       return outboxRepositoryWritePort.upsertByEventIdentity(
-          claimedOutbox.get().toBuilder().status(OutboxStatusVo.PENDING).build());
+          claimedOutbox.get().toBuilder().status(StatusVo.PENDING).build());
     }
   }
 }

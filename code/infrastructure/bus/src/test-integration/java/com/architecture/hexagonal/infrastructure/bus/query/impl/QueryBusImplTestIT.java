@@ -5,7 +5,7 @@ import com.architecture.hexagonal.application.service.business.user.UserService;
 import com.architecture.hexagonal.application.usecase.user.findbyid.impl.FindUserByUserIdUseCaseImpl;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.infrastructure.bus.config.TestApplication;
-import com.architecture.hexagonal.application.port.in.bus.query.QueryBus;
+import com.architecture.hexagonal.infrastructure.bus.query.QueryBus;
 import com.architecture.hexagonal.contract.application.usecase.generated.user.FindUserByUserIdQuery;
 import com.architecture.hexagonal.contract.application.usecase.generated.user.GetUsersFilteredQuery;
 import java.util.UUID;

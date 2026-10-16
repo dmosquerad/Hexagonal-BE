@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.message;
 
-import com.architecture.hexagonal.contract.outbound.rabbitmq.UserData;
+import com.architecture.hexagonal.contract.outbound.rabbitmq.model.UserData;
 import com.architecture.hexagonal.domain.model.vo.email.EmailVo;
 import com.architecture.hexagonal.domain.testutils.data.model.vo.email.EmailVoTestDataBuilder;
 import lombok.Builder;

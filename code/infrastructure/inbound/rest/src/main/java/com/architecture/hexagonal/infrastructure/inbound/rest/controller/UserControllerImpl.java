@@ -1,7 +1,5 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.controller;
 
-import com.architecture.hexagonal.application.port.in.bus.command.CommandBus;
-import com.architecture.hexagonal.application.port.in.bus.query.QueryBus;
 import com.architecture.hexagonal.contract.inbound.rest.user.server.controller.UsersApi;
 import com.architecture.hexagonal.contract.inbound.rest.user.server.dto.ResponsePaginationDto;
 import com.architecture.hexagonal.contract.inbound.rest.user.server.dto.UserCreateDto;
@@ -12,6 +10,8 @@ import com.architecture.hexagonal.contract.inbound.rest.user.server.dto.UsersRes
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResultVo;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationVo;
+import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
+import com.architecture.hexagonal.infrastructure.bus.query.QueryBus;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.user.*;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.user.FindUserByUserIdQueryDtoMapper;
 import java.time.Clock;

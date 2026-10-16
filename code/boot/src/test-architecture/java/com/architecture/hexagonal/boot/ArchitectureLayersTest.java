@@ -73,15 +73,13 @@ class ArchitectureLayersTest {
           .domainModels("com.architecture.hexagonal.domain..")
           .domainServices("com.architecture.hexagonal.domain.service..")
           .applicationServices("com.architecture.hexagonal.application..")
-          .adapter(
-              "inbound",
+          .adapter("inbound",
               "com.architecture.hexagonal.infrastructure.inbound..",
               "com.architecture.hexagonal.infrastructure.bus..",
-              "com.architecture.hexagonal.contract.inbound..")
-          .adapter(
-              "outbound",
-              "com.architecture.hexagonal.infrastructure.outbound..",
               "com.architecture.hexagonal.infrastructure.inbox..",
+              "com.architecture.hexagonal.contract.inbound..")
+          .adapter("outbound",
+              "com.architecture.hexagonal.infrastructure.outbound..",
               "com.architecture.hexagonal.infrastructure.outbox..",
               "com.architecture.hexagonal.infrastructure.transaction..",
               "com.architecture.hexagonal.contract.outbound..")

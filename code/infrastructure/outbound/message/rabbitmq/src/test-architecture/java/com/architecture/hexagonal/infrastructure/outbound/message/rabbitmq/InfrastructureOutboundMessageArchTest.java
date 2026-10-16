@@ -16,8 +16,8 @@ class InfrastructureOutboundMessageArchTest {
     static final ArchRule senders_should_reside_in_sender_package =
         ArchRuleDefinition.classes()
             .that()
-            .haveSimpleNameEndingWith("Sender")
+            .haveSimpleNameEndingWith("ProducerImpl")
             .should()
-            .resideInAPackage("..infrastructure.outbound.message.rabbitmq.sender..")
-            .because("Message sender classes must be grouped under the sender package");
+            .resideInAPackage("..infrastructure.outbound.message.rabbitmq.producer..")
+            .because("Message producer classes must be grouped under the producer package");
 }
