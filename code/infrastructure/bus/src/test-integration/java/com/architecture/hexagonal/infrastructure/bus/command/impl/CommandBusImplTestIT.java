@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.infrastructure.bus.command.impl;
 
 import com.architecture.hexagonal.application.port.out.transaction.TransactionWriteBoundary;
-import com.architecture.hexagonal.application.service.business.email.EmailService;
-import com.architecture.hexagonal.application.service.business.user.UserService;
+import com.architecture.hexagonal.application.service.email.EmailService;
+import com.architecture.hexagonal.application.service.user.UserService;
 import com.architecture.hexagonal.application.usecase.user.create.impl.CreateUserUseCaseImpl;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.infrastructure.bus.config.TestApplication;

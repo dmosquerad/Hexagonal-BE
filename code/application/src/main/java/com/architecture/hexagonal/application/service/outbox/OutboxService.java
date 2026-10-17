@@ -1,4 +1,4 @@
-package com.architecture.hexagonal.application.service.technical.outbox;
+package com.architecture.hexagonal.application.service.outbox;
 
 import com.architecture.hexagonal.application.projector.outbox.OutboxStatusAndAggregateProjector;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;

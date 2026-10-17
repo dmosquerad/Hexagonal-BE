@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.application.usecase.user.delete.impl;
 
 import com.architecture.hexagonal.application.port.out.transaction.TransactionWriteBoundary;
-import com.architecture.hexagonal.application.service.business.user.UserService;
+import com.architecture.hexagonal.application.service.user.UserService;
 import com.architecture.hexagonal.application.testutils.transaction.SpyTransactionWriteBoundary;
 import com.architecture.hexagonal.application.testutils.usecase.command.DeleteUserInputTestDataBuilder;
 import com.architecture.hexagonal.contract.application.usecase.generated.user.DeleteUserCommand;

@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.application.usecase.user.exists.impl;
 
 import com.architecture.hexagonal.application.port.out.transaction.TransactionReadBoundary;
-import com.architecture.hexagonal.application.service.business.user.UserService;
+import com.architecture.hexagonal.application.service.user.UserService;
 import com.architecture.hexagonal.application.testutils.transaction.SpyTransactionReadBoundary;
 import com.architecture.hexagonal.application.testutils.usecase.query.UserExistsInputTestDataBuilder;
 import com.architecture.hexagonal.contract.application.usecase.generated.user.UserExistsQuery;

@@ -1,7 +1,7 @@
-package com.architecture.hexagonal.application.service.business.email;
+package com.architecture.hexagonal.application.service.email;
 
 import com.architecture.hexagonal.application.port.out.email.EmailConfigurationPort;
-import com.architecture.hexagonal.application.service.business.email.impl.EmailServiceImpl;
+import com.architecture.hexagonal.application.service.email.impl.EmailServiceImpl;
 import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;
 import com.architecture.hexagonal.domain.model.vo.email.factory.EmailVoFactory;
 import com.architecture.hexagonal.domain.testutils.data.model.vo.email.EmailBlockRulesVoTestDataBuilder;

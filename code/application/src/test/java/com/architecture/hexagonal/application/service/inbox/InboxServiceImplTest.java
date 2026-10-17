@@ -1,4 +1,4 @@
-package com.architecture.hexagonal.application.service.technical.inbox;
+package com.architecture.hexagonal.application.service.inbox;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -10,7 +10,7 @@ import com.architecture.hexagonal.application.port.out.inbox.InboxProcess;
 import com.architecture.hexagonal.application.port.out.inbox.InboxRepositoryReadPort;
 import com.architecture.hexagonal.application.port.out.inbox.InboxRepositoryWritePort;
 import com.architecture.hexagonal.application.port.out.scheduler.SchedulerConfigurationPort;
-import com.architecture.hexagonal.application.service.technical.inbox.impl.InboxServiceImpl;
+import com.architecture.hexagonal.application.service.inbox.impl.InboxServiceImpl;
 import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
 import com.architecture.hexagonal.domain.model.vo.inbox.SchedulerInboxConfigurationVo;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;

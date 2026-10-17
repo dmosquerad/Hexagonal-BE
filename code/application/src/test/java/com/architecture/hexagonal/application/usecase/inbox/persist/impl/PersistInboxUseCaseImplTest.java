@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.application.usecase.inbox.persist.impl;
 
 import com.architecture.hexagonal.application.port.out.transaction.TransactionWriteBoundary;
-import com.architecture.hexagonal.application.service.technical.inbox.InboxService;
+import com.architecture.hexagonal.application.service.inbox.InboxService;
 import com.architecture.hexagonal.application.testutils.transaction.SpyTransactionWriteBoundary;
 import com.architecture.hexagonal.contract.application.usecase.generated.inbox.MessageHeader;
 import com.architecture.hexagonal.contract.application.usecase.generated.inbox.RegisterInboxCommand;

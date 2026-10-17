@@ -5,8 +5,8 @@ import com.architecture.hexagonal.application.port.out.outbox.OutboxRepositoryRe
 import com.architecture.hexagonal.application.port.out.outbox.OutboxRepositoryWritePort;
 import com.architecture.hexagonal.application.port.out.outbox.OutboxProcess;
 import com.architecture.hexagonal.application.projector.outbox.OutboxStatusAndAggregateProjector;
-import com.architecture.hexagonal.application.service.technical.outbox.OutboxService;
-import com.architecture.hexagonal.application.service.technical.outbox.impl.OutboxServiceImpl;
+import com.architecture.hexagonal.application.service.outbox.OutboxService;
+import com.architecture.hexagonal.application.service.outbox.impl.OutboxServiceImpl;
 import com.architecture.hexagonal.domain.testutils.data.model.entity.outbox.OutboxTestDataBuilder;
 import com.architecture.hexagonal.domain.testutils.data.model.vo.outbox.SchedulerOutboxConfigurationVoTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.transaction.SpyTransactionReadBoundary;

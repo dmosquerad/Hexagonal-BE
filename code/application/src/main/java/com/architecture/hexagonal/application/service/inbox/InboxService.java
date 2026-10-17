@@ -1,4 +1,4 @@
-package com.architecture.hexagonal.application.service.technical.inbox;
+package com.architecture.hexagonal.application.service.inbox;
 
 import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;

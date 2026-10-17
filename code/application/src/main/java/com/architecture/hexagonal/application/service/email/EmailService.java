@@ -1,4 +1,4 @@
-package com.architecture.hexagonal.application.service.business.email;
+package com.architecture.hexagonal.application.service.email;
 
 import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;
 import com.architecture.hexagonal.domain.model.vo.email.EmailVo;

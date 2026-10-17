@@ -1,4 +1,4 @@
-package com.architecture.hexagonal.application.service.business.user;
+package com.architecture.hexagonal.application.service.user;
 
 import com.architecture.hexagonal.application.projector.user.UserEmailProjector;
 import com.architecture.hexagonal.domain.model.entity.user.User;

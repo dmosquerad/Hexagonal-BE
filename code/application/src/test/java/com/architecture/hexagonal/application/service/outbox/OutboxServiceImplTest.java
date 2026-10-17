@@ -1,11 +1,11 @@
-package com.architecture.hexagonal.application.service.technical.outbox;
+package com.architecture.hexagonal.application.service.outbox;
 
 import com.architecture.hexagonal.application.port.out.outbox.OutboxProcess;
 import com.architecture.hexagonal.application.port.out.outbox.OutboxRepositoryReadPort;
 import com.architecture.hexagonal.application.port.out.outbox.OutboxRepositoryWritePort;
 import com.architecture.hexagonal.application.port.out.scheduler.SchedulerConfigurationPort;
 import com.architecture.hexagonal.application.projector.outbox.OutboxStatusAndAggregateProjector;
-import com.architecture.hexagonal.application.service.technical.outbox.impl.OutboxServiceImpl;
+import com.architecture.hexagonal.application.service.outbox.impl.OutboxServiceImpl;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
 import com.architecture.hexagonal.domain.model.vo.outbox.SchedulerOutboxConfigurationVo;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;

@@ -3,7 +3,7 @@ package com.architecture.hexagonal.application.usecase.outbox.retry.impl;
 import com.architecture.hexagonal.application.port.out.transaction.TransactionReadBoundary;
 import com.architecture.hexagonal.application.port.out.transaction.TransactionWriteBoundary;
 import com.architecture.hexagonal.application.projector.outbox.OutboxStatusAndAggregateProjector;
-import com.architecture.hexagonal.application.service.technical.outbox.OutboxService;
+import com.architecture.hexagonal.application.service.outbox.OutboxService;
 import com.architecture.hexagonal.application.testutils.transaction.SpyTransactionReadBoundary;
 import com.architecture.hexagonal.application.testutils.transaction.SpyTransactionWriteBoundary;
 import com.architecture.hexagonal.contract.application.usecase.generated.retry.RetryOutboxeventCommand;
