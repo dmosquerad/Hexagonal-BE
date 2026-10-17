@@ -1,9 +1,9 @@
 package com.architecture.hexagonal.infrastructure.inbound.handler.kafka.mapper;
 
-import com.architecture.hexagonal.contract.bus.model.inbox.RegisterInboxCommand;
-import com.architecture.hexagonal.contract.bus.model.user.CreateUserCommand;
-import com.architecture.hexagonal.contract.bus.model.user.DeleteUserCommand;
-import com.architecture.hexagonal.contract.bus.model.user.UpdateUserCommand;
+import com.architecture.hexagonal.contract.bus.model.inbox.command.RegisterInboxCommand;
+import com.architecture.hexagonal.contract.bus.model.user.command.CreateUserCommand;
+import com.architecture.hexagonal.contract.bus.model.user.command.DeleteUserCommand;
+import com.architecture.hexagonal.contract.bus.model.user.command.UpdateUserCommand;
 import com.architecture.hexagonal.contract.inbound.kafka.model.UserCreated;
 import com.architecture.hexagonal.contract.inbound.kafka.model.UserDeleted;
 import com.architecture.hexagonal.contract.inbound.kafka.model.UserUpdated;

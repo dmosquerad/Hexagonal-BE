@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.inbound.execution.outbox.executor.impl;
 
 import com.architecture.hexagonal.application.port.out.scheduler.SchedulerConfigurationPort;
-import com.architecture.hexagonal.contract.bus.model.retry.RetryOutboxeventCommand;
+import com.architecture.hexagonal.contract.bus.model.retry.command.RetryOutboxeventCommand;
 import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
 import com.architecture.hexagonal.infrastructure.inbound.execution.outbox.executor.OutboxScheduler;
 import lombok.RequiredArgsConstructor;

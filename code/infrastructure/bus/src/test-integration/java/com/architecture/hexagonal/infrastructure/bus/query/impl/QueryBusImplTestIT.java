@@ -2,13 +2,13 @@ package com.architecture.hexagonal.infrastructure.bus.query.impl;
 
 import com.architecture.hexagonal.application.port.out.transaction.TransactionReadBoundary;
 import com.architecture.hexagonal.application.service.user.UserService;
-import com.architecture.hexagonal.application.usecase.user.findbyid.impl.FindUserByUserIdUseCaseImpl;
+import com.architecture.hexagonal.application.usecase.user.query.findbyid.impl.FindUserByUserIdUseCaseImpl;
+import com.architecture.hexagonal.contract.bus.model.user.query.FindUserByUserIdQuery;
+import com.architecture.hexagonal.contract.bus.model.user.query.GetUsersFilteredQuery;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.infrastructure.bus.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.bus.MessageHandlerFinder;
 import com.architecture.hexagonal.infrastructure.bus.query.QueryBus;
-import com.architecture.hexagonal.contract.bus.model.user.FindUserByUserIdQuery;
-import com.architecture.hexagonal.contract.bus.model.user.GetUsersFilteredQuery;
 import java.util.UUID;
 import java.util.function.Supplier;
 import org.assertj.core.api.AssertionsForClassTypes;

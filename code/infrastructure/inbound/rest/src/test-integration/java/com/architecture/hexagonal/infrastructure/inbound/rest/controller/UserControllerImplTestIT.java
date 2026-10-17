@@ -1,13 +1,13 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.controller;
 
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResultVo;
-import com.architecture.hexagonal.contract.bus.model.user.CreateUserCommand;
-import com.architecture.hexagonal.contract.bus.model.user.DeleteUserCommand;
-import com.architecture.hexagonal.contract.bus.model.user.FindUserByUserIdQuery;
-import com.architecture.hexagonal.contract.bus.model.user.GetUsersFilteredQuery;
-import com.architecture.hexagonal.contract.bus.model.user.PatchUserCommand;
-import com.architecture.hexagonal.contract.bus.model.user.UpdateUserCommand;
-import com.architecture.hexagonal.contract.bus.model.user.UserExistsQuery;
+import com.architecture.hexagonal.contract.bus.model.user.command.CreateUserCommand;
+import com.architecture.hexagonal.contract.bus.model.user.command.DeleteUserCommand;
+import com.architecture.hexagonal.contract.bus.model.user.query.FindUserByUserIdQuery;
+import com.architecture.hexagonal.contract.bus.model.user.query.GetUsersFilteredQuery;
+import com.architecture.hexagonal.contract.bus.model.user.command.PatchUserCommand;
+import com.architecture.hexagonal.contract.bus.model.user.command.UpdateUserCommand;
+import com.architecture.hexagonal.contract.bus.model.user.query.UserExistsQuery;
 import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
 import com.architecture.hexagonal.infrastructure.bus.query.QueryBus;
 import com.architecture.hexagonal.application.testutils.time.TestClock;

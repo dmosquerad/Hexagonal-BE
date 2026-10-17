@@ -5,8 +5,8 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.architecture.hexagonal.contract.bus.model.inbox.RegisterInboxCommand;
-import com.architecture.hexagonal.contract.bus.model.user.CreateUserCommand;
+import com.architecture.hexagonal.contract.bus.model.inbox.command.RegisterInboxCommand;
+import com.architecture.hexagonal.contract.bus.model.user.command.CreateUserCommand;
 import com.architecture.hexagonal.contract.inbound.kafka.model.MessageHeader;
 import com.architecture.hexagonal.contract.inbound.kafka.model.UserCreated;
 import com.architecture.hexagonal.contract.inbound.kafka.model.UserCreatedData;
