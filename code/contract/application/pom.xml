@@ -39,6 +39,7 @@
                             <targetPackage>com.architecture.hexagonal.contract.application.usecase.generated</targetPackage>
                             <outputDirectory>${project.build.directory}/generated-sources/jsonschema2pojo</outputDirectory>
                             <removeOldOutput>true</removeOldOutput>
+                            <dateTimeType>java.time.OffsetDateTime</dateTimeType>
                             <includeJsr303Annotations>true</includeJsr303Annotations>
                             <useJakartaValidation>true</useJakartaValidation>
                         </configuration>

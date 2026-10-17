@@ -1,5 +1,6 @@
 package com.architecture.hexagonal.infrastructure.inbound.execution.inbox.executor;
 
+import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
 import com.architecture.hexagonal.application.port.out.scheduler.SchedulerConfigurationPort;
 import com.architecture.hexagonal.domain.model.vo.inbox.SchedulerInboxConfigurationVo;
 import com.architecture.hexagonal.infrastructure.inbound.execution.inbox.config.TestApplication;
@@ -27,6 +28,9 @@ class InboxSchedulerIntegrationTest {
 
     @MockitoBean
     private ScheduledTaskRegistrar scheduledTaskRegistrar;
+
+    @MockitoBean
+    private CommandBus commandBus;
 
     @Test
     void shouldConfigureTasksWithCorrectInterval() {

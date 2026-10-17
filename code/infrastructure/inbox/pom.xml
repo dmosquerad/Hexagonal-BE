@@ -17,7 +17,11 @@
         <!-- ============================================ -->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>database-mongodb</artifactId>
+            <artifactId>bus</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>inbound-contract-kafka</artifactId>
         </dependency>
     </dependencies>
 </project>

@@ -23,15 +23,5 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>outbound-contract-rabbitmq</artifactId>
         </dependency>
-        <!-- ============================================ -->
-        <!-- TEST -->
-        <!-- ============================================ -->
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>application</artifactId>
-            <type>test-jar</type>
-            <classifier>tests</classifier>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 </project>

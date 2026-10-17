@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.message;
 
-import com.architecture.hexagonal.contract.outbound.rabbitmq.MessageHeader;
+import com.architecture.hexagonal.contract.outbound.rabbitmq.model.MessageHeader;
 import lombok.Builder;
 
 import java.time.OffsetDateTime;

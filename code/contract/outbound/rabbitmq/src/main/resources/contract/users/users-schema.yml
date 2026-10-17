@@ -1,5 +1,6 @@
 schemas:
   MessageHeader:
+    title: MessageHeader
     type: object
     additionalProperties: false
     required:
@@ -30,6 +31,7 @@ schemas:
         type: string
         format: email
   UserCreated:
+    title: UserCreated
     type: object
     additionalProperties: false
     required:
@@ -41,6 +43,7 @@ schemas:
       data:
         $ref: './users-schema.yml#/schemas/UserData'
   UserUpdated:
+    title: UserUpdated
     type: object
     additionalProperties: false
     required:
@@ -52,6 +55,7 @@ schemas:
       data:
         $ref: './users-schema.yml#/schemas/UserData'
   UserDeleted:
+    title: UserDeleted
     type: object
     additionalProperties: false
     required:

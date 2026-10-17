@@ -1,18 +1,17 @@
 package com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.adapter;
 
 import com.architecture.hexagonal.application.port.out.outbox.OutboxRepositoryWritePort;
-import com.architecture.hexagonal.contract.outbound.rabbitmq.MessageHeader;
-import com.architecture.hexagonal.contract.outbound.rabbitmq.UserData;
+import com.architecture.hexagonal.contract.outbound.rabbitmq.UserEventsProducer;
+import com.architecture.hexagonal.contract.outbound.rabbitmq.model.MessageHeader;
+import com.architecture.hexagonal.contract.outbound.rabbitmq.model.UserData;
+import com.architecture.hexagonal.contract.outbound.rabbitmq.model.UserCreated;
+import com.architecture.hexagonal.contract.outbound.rabbitmq.model.UserDeleted;
+import com.architecture.hexagonal.contract.outbound.rabbitmq.model.UserUpdated;
 import com.architecture.hexagonal.domain.model.entity.user.User;
-import com.architecture.hexagonal.domain.model.vo.outbox.MessageHeaderVo;
+import com.architecture.hexagonal.domain.model.vo.payload.MessageHeaderVo;
 import com.architecture.hexagonal.domain.testutils.data.model.entity.user.UserTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.config.TestApplication;
-import com.architecture.hexagonal.contract.outbound.rabbitmq.UserCreated;
-import com.architecture.hexagonal.contract.outbound.rabbitmq.UserDeleted;
-import com.architecture.hexagonal.contract.outbound.rabbitmq.IUserEventsProducer;
-import com.architecture.hexagonal.contract.outbound.rabbitmq.UserUpdated;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.mapper.user.UserMessageDaoMapper;
-import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.sender.UserMessageSender;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.message.UserCreatedTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.message.UserDeletedTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.testutils.message.UserUpdatedTestDataBuilder;
@@ -39,14 +38,11 @@ class UserSenderAdapterImplTestIT {
   @MockitoSpyBean
   UserMessageDaoMapper userMessageDaoMapper;
 
-  @MockitoSpyBean
-  UserMessageSender userMessageSender;
-
   @MockitoBean
   OutboxRepositoryWritePort outboxRepositoryWritePort;
 
   @MockitoSpyBean
-  IUserEventsProducer userEventStreamPublisher;
+  UserEventsProducer userEventStreamPublisher;
 
   @Autowired
   TransactionTemplate transactionTemplate;

@@ -1,10 +1,10 @@
 package com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.mapper.user;
 
-import com.architecture.hexagonal.contract.outbound.rabbitmq.UserCreated;
-import com.architecture.hexagonal.contract.outbound.rabbitmq.UserDeleted;
-import com.architecture.hexagonal.contract.outbound.rabbitmq.UserUpdated;
+import com.architecture.hexagonal.contract.outbound.rabbitmq.model.UserCreated;
+import com.architecture.hexagonal.contract.outbound.rabbitmq.model.UserDeleted;
+import com.architecture.hexagonal.contract.outbound.rabbitmq.model.UserUpdated;
 import com.architecture.hexagonal.domain.model.entity.user.User;
-import com.architecture.hexagonal.domain.model.vo.outbox.MessageHeaderVo;
+import com.architecture.hexagonal.domain.model.vo.payload.MessageHeaderVo;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.config.MapstructConfig;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.mapper.converter.EmailConverter;
 import org.mapstruct.Mapper;

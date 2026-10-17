@@ -1,0 +1,85 @@
+schemas:
+  MessageHeader:
+    title: MessageHeader
+    type: object
+    additionalProperties: false
+    required:
+      - messageId
+      - messageDate
+    properties:
+      messageId:
+        type: string
+        format: uuid
+      messageDate:
+        type: string
+        format: date-time
+  UserCreated:
+    title: UserCreated
+    type: object
+    additionalProperties: false
+    required:
+      - messageHeader
+      - data
+    properties:
+      messageHeader:
+        $ref: './users-schema.yml#/schemas/MessageHeader'
+      data:
+        title: UserCreatedData
+        type: object
+        additionalProperties: false
+        required:
+          - name
+          - email
+        properties:
+          name:
+            type: string
+          email:
+            type: string
+            format: email
+  UserUpdated:
+    title: UserUpdated
+    type: object
+    additionalProperties: false
+    required:
+      - messageHeader
+      - data
+    properties:
+      messageHeader:
+        $ref: './users-schema.yml#/schemas/MessageHeader'
+      data:
+        title: UserUpdatedData
+        type: object
+        additionalProperties: false
+        required:
+          - userId
+          - name
+          - email
+        properties:
+          userId:
+            type: string
+            format: uuid
+          name:
+            type: string
+          email:
+            type: string
+            format: email
+  UserDeleted:
+    title: UserDeleted
+    type: object
+    additionalProperties: false
+    required:
+      - messageHeader
+      - data
+    properties:
+      messageHeader:
+        $ref: './users-schema.yml#/schemas/MessageHeader'
+      data:
+        title: UserDeletedData
+        type: object
+        additionalProperties: false
+        required:
+          - userId
+        properties:
+          userId:
+            type: string
+            format: uuid

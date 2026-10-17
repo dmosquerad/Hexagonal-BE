@@ -1,12 +1,13 @@
 package com.architecture.hexagonal.infrastructure.bus.command.impl;
 
 import com.architecture.hexagonal.application.port.out.transaction.TransactionWriteBoundary;
-import com.architecture.hexagonal.application.service.business.email.EmailService;
-import com.architecture.hexagonal.application.service.business.user.UserService;
+import com.architecture.hexagonal.application.service.email.EmailService;
+import com.architecture.hexagonal.application.service.user.UserService;
 import com.architecture.hexagonal.application.usecase.user.create.impl.CreateUserUseCaseImpl;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.infrastructure.bus.config.TestApplication;
-import com.architecture.hexagonal.application.port.in.bus.command.CommandBus;
+import com.architecture.hexagonal.infrastructure.bus.MessageHandlerFinder;
+import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
 import com.architecture.hexagonal.contract.application.usecase.generated.user.CreateUserCommand;
 import com.architecture.hexagonal.contract.application.usecase.generated.user.DeleteUserCommand;
 import java.util.UUID;
@@ -20,7 +21,8 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.mockito.AdditionalAnswers;
 import org.mockito.Mockito;
 
-@SpringBootTest(classes = {CommandBusImpl.class, CreateUserUseCaseImpl.class})
+@SpringBootTest(
+    classes = {CommandBusImpl.class, MessageHandlerFinder.class, CreateUserUseCaseImpl.class})
 @ContextConfiguration(classes = TestApplication.class)
 class CommandBusImplTestIT {
 
@@ -60,6 +62,7 @@ class CommandBusImplTestIT {
 
     AssertionsForClassTypes.assertThatThrownBy(() -> commandBus.execute(command))
         .isInstanceOf(IllegalStateException.class)
-        .hasMessageContaining("No handler found for command");
+        .hasMessageContaining("Expected one CommandHandler")
+        .hasMessageContaining("found 0");
   }
 }

@@ -8,8 +8,8 @@ import com.architecture.hexagonal.contract.application.usecase.generated.user.Ge
 import com.architecture.hexagonal.contract.application.usecase.generated.user.PatchUserCommand;
 import com.architecture.hexagonal.contract.application.usecase.generated.user.UpdateUserCommand;
 import com.architecture.hexagonal.contract.application.usecase.generated.user.UserExistsQuery;
-import com.architecture.hexagonal.application.port.in.bus.command.CommandBus;
-import com.architecture.hexagonal.application.port.in.bus.query.QueryBus;
+import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
+import com.architecture.hexagonal.infrastructure.bus.query.QueryBus;
 import com.architecture.hexagonal.application.testutils.time.TestClock;
 import com.architecture.hexagonal.infrastructure.inbound.rest.mapper.user.*;
 import com.architecture.hexagonal.domain.testutils.data.model.vo.pagination.PaginationVoTestDataBuilder;

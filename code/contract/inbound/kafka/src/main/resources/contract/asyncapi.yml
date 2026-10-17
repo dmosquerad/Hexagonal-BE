@@ -1,0 +1,44 @@
+asyncapi: 2.6.0
+info:
+  title: User Kafka Events
+  version: 0.0.1
+  description: >-
+    User events published to Kafka and consumed by the inbound user handler,
+    which uses the consumer group user.handler.
+id: urn:com:architecture:hexagonal:inbound:kafka:user-events
+defaultContentType: application/json
+tags:
+  - name: user
+servers:
+  local:
+    url: localhost:9092
+    protocol: kafka
+    description: Local Kafka broker used by the application configuration.
+  docker:
+    url: kafka:29092
+    protocol: kafka
+    description: Kafka broker address for clients on the Docker network.
+channels:
+  user.created:
+    $ref: './users/users-channels.yml#/channels/user.created'
+  user.updated:
+    $ref: './users/users-channels.yml#/channels/user.updated'
+  user.deleted:
+    $ref: './users/users-channels.yml#/channels/user.deleted'
+components:
+  messages:
+    UserCreated:
+      $ref: './users/users-messages.yml#/messages/UserCreated'
+    UserUpdated:
+      $ref: './users/users-messages.yml#/messages/UserUpdated'
+    UserDeleted:
+      $ref: './users/users-messages.yml#/messages/UserDeleted'
+  schemas:
+    MessageHeader:
+      $ref: './users/users-schema.yml#/schemas/MessageHeader'
+    UserCreated:
+      $ref: './users/users-schema.yml#/schemas/UserCreated'
+    UserUpdated:
+      $ref: './users/users-schema.yml#/schemas/UserUpdated'
+    UserDeleted:
+      $ref: './users/users-schema.yml#/schemas/UserDeleted'

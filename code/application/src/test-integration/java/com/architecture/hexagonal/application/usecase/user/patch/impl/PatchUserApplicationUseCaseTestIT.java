@@ -4,10 +4,10 @@ import com.architecture.hexagonal.application.port.out.email.EmailConfigurationP
 import com.architecture.hexagonal.application.port.out.user.UserRepositoryReadPort;
 import com.architecture.hexagonal.application.port.out.user.UserRepositoryWritePort;
 import com.architecture.hexagonal.application.port.out.user.UserSenderPort;
-import com.architecture.hexagonal.application.service.business.email.EmailService;
-import com.architecture.hexagonal.application.service.business.email.impl.EmailServiceImpl;
-import com.architecture.hexagonal.application.service.business.user.UserService;
-import com.architecture.hexagonal.application.service.business.user.impl.UserServiceImpl;
+import com.architecture.hexagonal.application.service.email.EmailService;
+import com.architecture.hexagonal.application.service.email.impl.EmailServiceImpl;
+import com.architecture.hexagonal.application.service.user.UserService;
+import com.architecture.hexagonal.application.service.user.impl.UserServiceImpl;
 import com.architecture.hexagonal.domain.testutils.data.model.entity.user.UserTestDataBuilder;
 import com.architecture.hexagonal.domain.testutils.data.model.vo.email.EmailBlockRulesVoTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.usecase.command.PatchUserInputTestDataBuilder;

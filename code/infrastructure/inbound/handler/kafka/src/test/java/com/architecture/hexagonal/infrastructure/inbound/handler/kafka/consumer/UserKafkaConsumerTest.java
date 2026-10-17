@@ -1,22 +1,27 @@
 package com.architecture.hexagonal.infrastructure.inbound.handler.kafka.consumer;
 
-import com.architecture.hexagonal.application.port.in.bus.command.CommandBus;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import com.architecture.hexagonal.contract.application.usecase.generated.inbox.RegisterInboxCommand;
 import com.architecture.hexagonal.contract.application.usecase.generated.user.CreateUserCommand;
-import com.architecture.hexagonal.contract.application.usecase.generated.user.DeleteUserCommand;
-import com.architecture.hexagonal.contract.application.usecase.generated.user.UpdateUserCommand;
-import com.architecture.hexagonal.infrastructure.inbound.handler.kafka.data.UserCreatedMessage;
-import com.architecture.hexagonal.infrastructure.inbound.handler.kafka.data.UserDeletedMessage;
-import com.architecture.hexagonal.infrastructure.inbound.handler.kafka.data.UserUpdatedMessage;
+import com.architecture.hexagonal.contract.inbound.kafka.model.MessageHeader;
+import com.architecture.hexagonal.contract.inbound.kafka.model.UserCreated;
+import com.architecture.hexagonal.contract.inbound.kafka.model.UserCreatedData;
+import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
 import com.architecture.hexagonal.infrastructure.inbound.handler.kafka.mapper.UserKafkaMessageMapper;
-import com.architecture.hexagonal.infrastructure.inbound.handler.kafka.testutils.data.UserCreatedMessageTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.inbound.handler.kafka.testutils.data.UserDeletedMessageTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.inbound.handler.kafka.testutils.data.UserUpdatedMessageTestDataBuilder;
+import java.time.Clock;
+import java.time.OffsetDateTime;
+import java.util.Map;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -24,43 +29,57 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class UserKafkaConsumerTest {
 
   @InjectMocks private UserKafkaConsumer userKafkaConsumer;
-
   @Mock private CommandBus commandBus;
+
+  @Spy private Clock clock = Clock.systemUTC();
 
   @Spy
   private UserKafkaMessageMapper userKafkaMessageMapper =
       Mappers.getMapper(UserKafkaMessageMapper.class);
 
   @Test
-  void consumeUserCreatedShouldExecuteCreateCommandWhenMessageIsReceived() {
-    final UserCreatedMessage message =
-        UserCreatedMessageTestDataBuilder.builder().build().userCreatedMessage();
+  void consumeUserCreatedShouldExecuteCommandWithoutSavingInboxOnSuccess() {
+    final UserCreated message = message();
+    final CreateUserCommand command = org.mockito.Mockito.mock(CreateUserCommand.class);
+    when(userKafkaMessageMapper.toCreateUserCommand(message)).thenReturn(command);
 
-    userKafkaConsumer.consumeUserCreated(message);
+    userKafkaConsumer.onUserCreated(message, Map.of());
 
-    Mockito.verify(userKafkaMessageMapper).toCreateUserCommand(message);
-    Mockito.verify(commandBus).execute(Mockito.any(CreateUserCommand.class));
+    verify(commandBus).execute(command);
   }
 
   @Test
-  void consumeUserUpdatedShouldExecuteUpdateCommandWhenMessageIsReceived() {
-    final UserUpdatedMessage message =
-        UserUpdatedMessageTestDataBuilder.builder().build().userUpdatedMessage();
+  void consumeUserCreatedShouldRegisterInboxWhenCommandExecutionFails() {
+    final OffsetDateTime before = OffsetDateTime.now();
+    final UserCreated message = message();
+    final CreateUserCommand command = org.mockito.Mockito.mock(CreateUserCommand.class);
+    when(userKafkaMessageMapper.toCreateUserCommand(message)).thenReturn(command);
+    doThrow(new IllegalStateException("command failed")).when(commandBus).execute(command);
 
-    userKafkaConsumer.consumeUserUpdated(message);
+    userKafkaConsumer.onUserCreated(message, Map.of());
 
-    Mockito.verify(userKafkaMessageMapper).toUpdateUserCommand(message);
-    Mockito.verify(commandBus).execute(Mockito.any(UpdateUserCommand.class));
+    final ArgumentCaptor<RegisterInboxCommand> registerInboxCommandCaptor =
+        ArgumentCaptor.forClass(RegisterInboxCommand.class);
+    verify(commandBus).execute(registerInboxCommandCaptor.capture());
+    verify(commandBus).execute(command);
+    final RegisterInboxCommand registerCommand = registerInboxCommandCaptor.getValue();
+    assertThat(registerCommand.getMessageHeader().getMessageId())
+        .isEqualTo(message.getMessageHeader().getMessageId());
+    assertThat(registerCommand.getMessageHeader().getMessageDate())
+        .isEqualTo(message.getMessageHeader().getMessageDate().toString());
+    assertThat(registerCommand.getAction()).isEqualTo("USER_CREATED");
+    assertThat(registerCommand.getAggregateType()).isEqualTo("USER");
+    assertThat(registerCommand.getData()).isSameAs(message);
+    assertThat(registerCommand.getCreatedAt()).isBetween(before, OffsetDateTime.now());
   }
 
-  @Test
-  void consumeUserDeletedShouldExecuteDeleteCommandWhenMessageIsReceived() {
-    final UserDeletedMessage message =
-        UserDeletedMessageTestDataBuilder.builder().build().userDeletedMessage();
-
-    userKafkaConsumer.consumeUserDeleted(message);
-
-    Mockito.verify(userKafkaMessageMapper).toDeleteUserCommand(message);
-    Mockito.verify(commandBus).execute(Mockito.any(DeleteUserCommand.class));
+  private UserCreated message() {
+    final MessageHeader header = new MessageHeader();
+    header.setMessageId(UUID.randomUUID());
+    header.setMessageDate(OffsetDateTime.parse("2026-10-13T10:15:30Z"));
+    final UserCreated message = new UserCreated();
+    message.setMessageHeader(header);
+    message.setData(new UserCreatedData());
+    return message;
   }
 }

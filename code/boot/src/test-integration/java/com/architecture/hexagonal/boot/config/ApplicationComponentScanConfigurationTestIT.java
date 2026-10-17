@@ -1,6 +1,9 @@
 package com.architecture.hexagonal.boot.config;
 
 import com.architecture.hexagonal.application.port.out.email.EmailConfigurationPort;
+import com.architecture.hexagonal.application.port.out.inbox.InboxProcess;
+import com.architecture.hexagonal.application.port.out.inbox.InboxRepositoryReadPort;
+import com.architecture.hexagonal.application.port.out.inbox.InboxRepositoryWritePort;
 import com.architecture.hexagonal.application.port.out.scheduler.SchedulerConfigurationPort;
 import com.architecture.hexagonal.application.port.out.outbox.OutboxRepositoryReadPort;
 import com.architecture.hexagonal.application.port.out.outbox.OutboxRepositoryWritePort;
@@ -10,10 +13,13 @@ import com.architecture.hexagonal.application.port.out.user.UserSenderPort;
 import com.architecture.hexagonal.application.port.out.outbox.OutboxProcess;
 import com.architecture.hexagonal.application.port.out.transaction.TransactionReadBoundary;
 import com.architecture.hexagonal.application.port.out.transaction.TransactionWriteBoundary;
-import com.architecture.hexagonal.application.service.business.email.impl.EmailServiceImpl;
-import com.architecture.hexagonal.application.service.business.user.impl.UserServiceImpl;
-import com.architecture.hexagonal.application.service.technical.outbox.impl.OutboxServiceImpl;
+import com.architecture.hexagonal.application.service.email.impl.EmailServiceImpl;
+import com.architecture.hexagonal.application.service.user.impl.UserServiceImpl;
+import com.architecture.hexagonal.application.service.inbox.impl.InboxServiceImpl;
+import com.architecture.hexagonal.application.service.outbox.impl.OutboxServiceImpl;
 import com.architecture.hexagonal.application.usecase.email.getblockedrules.impl.GetBlockedRulesUseCaseImpl;
+import com.architecture.hexagonal.application.usecase.inbox.persist.impl.PersistInboxUseCaseImpl;
+import com.architecture.hexagonal.application.usecase.inbox.retry.impl.RetryInboxUseCaseImpl;
 import com.architecture.hexagonal.application.usecase.user.create.impl.CreateUserUseCaseImpl;
 import com.architecture.hexagonal.application.usecase.user.delete.impl.DeleteUserUseCaseImpl;
 import com.architecture.hexagonal.application.usecase.user.exists.impl.UserExistsUseCaseImpl;
@@ -45,6 +51,8 @@ class ApplicationComponentScanConfigurationTestIT {
 
   @Autowired private OutboxServiceImpl outboxService;
 
+  @Autowired private InboxServiceImpl inboxService;
+
   @Autowired private GetBlockedRulesUseCaseImpl getBlockedRulesUseCase;
 
   @Autowired private CreateUserUseCaseImpl createUserUseCase;
@@ -63,6 +71,10 @@ class ApplicationComponentScanConfigurationTestIT {
 
   @Autowired private RetryOutboxUseCaseImpl retryOutboxUseCase;
 
+  @Autowired private PersistInboxUseCaseImpl persistInboxUseCase;
+
+  @Autowired private RetryInboxUseCaseImpl retryInboxUseCase;
+
   @MockitoBean private EmailConfigurationPort emailConfigurationPort;
 
   @MockitoBean private UserRepositoryReadPort userRepositoryReadPort;
@@ -77,6 +89,12 @@ class ApplicationComponentScanConfigurationTestIT {
 
   @MockitoBean private OutboxProcess outboxProcess;
 
+  @MockitoBean private InboxRepositoryReadPort inboxRepositoryReadPort;
+
+  @MockitoBean private InboxRepositoryWritePort inboxRepositoryWritePort;
+
+  @MockitoBean private InboxProcess inboxProcess;
+
   @MockitoBean private SchedulerConfigurationPort schedulerConfigurationPort;
 
   @MockitoBean private TransactionReadBoundary transactionReadBoundary;
@@ -89,6 +107,7 @@ class ApplicationComponentScanConfigurationTestIT {
     Assertions.assertThat(emailService).isNotNull();
     Assertions.assertThat(userService).isNotNull();
     Assertions.assertThat(outboxService).isNotNull();
+    Assertions.assertThat(inboxService).isNotNull();
     Assertions.assertThat(getBlockedRulesUseCase).isNotNull();
     Assertions.assertThat(createUserUseCase).isNotNull();
     Assertions.assertThat(deleteUserUseCase).isNotNull();
@@ -98,5 +117,7 @@ class ApplicationComponentScanConfigurationTestIT {
     Assertions.assertThat(patchUserUseCase).isNotNull();
     Assertions.assertThat(updateUserUseCase).isNotNull();
     Assertions.assertThat(retryOutboxUseCase).isNotNull();
+    Assertions.assertThat(persistInboxUseCase).isNotNull();
+    Assertions.assertThat(retryInboxUseCase).isNotNull();
   }
 }

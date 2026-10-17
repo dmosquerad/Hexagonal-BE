@@ -1,9 +1,9 @@
 package com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.mapper.user;
 
-import com.architecture.hexagonal.contract.outbound.rabbitmq.UserCreated;
-import com.architecture.hexagonal.contract.outbound.rabbitmq.UserDeleted;
-import com.architecture.hexagonal.contract.outbound.rabbitmq.UserUpdated;
-import com.architecture.hexagonal.domain.model.vo.outbox.PayloadVo;
+import com.architecture.hexagonal.contract.outbound.rabbitmq.model.UserCreated;
+import com.architecture.hexagonal.contract.outbound.rabbitmq.model.UserDeleted;
+import com.architecture.hexagonal.contract.outbound.rabbitmq.model.UserUpdated;
+import com.architecture.hexagonal.domain.model.vo.payload.PayloadVo;
 import com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.config.MapstructConfig;
 import org.mapstruct.Mapper;
 
