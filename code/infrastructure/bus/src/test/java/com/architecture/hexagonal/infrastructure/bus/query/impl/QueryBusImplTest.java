@@ -25,7 +25,7 @@ class QueryBusImplTest {
 
     Mockito.when(getAllUsersUseCase.handle(query)).thenReturn(users);
     final QueryBusImpl queryBus =
-        new QueryBusImpl(new MessageHandlerFinder(List.of(getAllUsersUseCase)));
+        new QueryBusImpl(new MessageHandlerFinder(List.of(), List.of(getAllUsersUseCase)));
 
     final PaginationResultVo<User> result = queryBus.execute(query);
 
@@ -37,7 +37,7 @@ class QueryBusImplTest {
   @Test
   void executeShouldThrowIllegalStateExceptionWhenNoHandlerIsFound() {
     final String unknownQuery = "unknown";
-    final QueryBusImpl queryBus = new QueryBusImpl(new MessageHandlerFinder(List.of()));
+    final QueryBusImpl queryBus = new QueryBusImpl(new MessageHandlerFinder(List.of(), List.of()));
 
     AssertionsForClassTypes.assertThatThrownBy(() -> queryBus.execute(unknownQuery))
         .isInstanceOf(IllegalStateException.class)

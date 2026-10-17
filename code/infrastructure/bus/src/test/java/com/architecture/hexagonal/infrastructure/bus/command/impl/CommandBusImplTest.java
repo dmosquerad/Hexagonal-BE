@@ -25,7 +25,7 @@ class CommandBusImplTest {
 
     Mockito.when(deleteUserUseCase.handle(command)).thenReturn(user);
     final CommandBusImpl commandBus =
-        new CommandBusImpl(new MessageHandlerFinder(List.of(deleteUserUseCase)));
+        new CommandBusImpl(new MessageHandlerFinder(List.of(deleteUserUseCase), List.of()));
 
     final User result = commandBus.execute(command);
 
@@ -37,7 +37,7 @@ class CommandBusImplTest {
   @Test
   void executeShouldRejectMultipleHandlersForTheSameCommandType() {
     final MessageHandlerFinder finder =
-        new MessageHandlerFinder(List.of(deleteUserUseCase, deleteUserUseCase));
+        new MessageHandlerFinder(List.of(deleteUserUseCase, deleteUserUseCase), List.of());
 
     AssertionsForClassTypes.assertThatThrownBy(
             () -> finder.find(new DeleteUserCommand(), CommandHandler.class))
