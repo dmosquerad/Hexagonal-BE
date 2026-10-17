@@ -24,12 +24,13 @@ public final class MessageHandlerFinder {
   private Map<Class<?>, List<Object>> buildHandlersByMessage(
       final List<CommandHandler<?, ?>> commandHandlers,
       final List<QueryHandler<?, ?>> queryHandlers) {
-    final Map<Class<?>, List<Object>> handlersByMessage = new HashMap<>();
+    final Map<Class<?>, List<Object>> mutableHandlersByMessage = new HashMap<>();
     commandHandlers.forEach(
-        handler -> addHandler(handlersByMessage, handler, CommandHandler.class));
-    queryHandlers.forEach(handler -> addHandler(handlersByMessage, handler, QueryHandler.class));
-    handlersByMessage.replaceAll((messageType, handlers) -> List.copyOf(handlers));
-    return Map.copyOf(handlersByMessage);
+        handler -> addHandler(mutableHandlersByMessage, handler, CommandHandler.class));
+    queryHandlers.forEach(
+        handler -> addHandler(mutableHandlersByMessage, handler, QueryHandler.class));
+    mutableHandlersByMessage.replaceAll((messageType, handlers) -> List.copyOf(handlers));
+    return Map.copyOf(mutableHandlersByMessage);
   }
 
   private void addHandler(
