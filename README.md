@@ -223,7 +223,9 @@ Implements the inbound CQRS buses that dispatch commands and queries to applicat
 
 **Content:**
 - Spring `CommandBus` and `QueryBus` implementations
-- Command/Query handler registration and dispatching
+- Shared application `MessageHandler` contract, extended by command and query handler ports
+- Command/Query handler beans injected by Spring and indexed by reflecting on their `handle` method parameter
+- Dispatching to the handler registered for the exact runtime command or query type
 
 #### Inbound — Execution (`code/infrastructure/inbound/execution`)
 Manages scheduled tasks and event processing workflows.
