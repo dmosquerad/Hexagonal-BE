@@ -4,7 +4,7 @@ import com.architecture.hexagonal.application.port.out.transaction.TransactionRe
 import com.architecture.hexagonal.application.service.user.UserService;
 import com.architecture.hexagonal.application.testutils.transaction.SpyTransactionReadBoundary;
 import com.architecture.hexagonal.application.testutils.usecase.query.FindUserByUserIdInputTestDataBuilder;
-import com.architecture.hexagonal.contract.application.usecase.generated.user.FindUserByUserIdQuery;
+import com.architecture.hexagonal.contract.bus.model.user.FindUserByUserIdQuery;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.domain.testutils.data.model.entity.user.UserTestDataBuilder;
 import org.assertj.core.api.AssertionsForClassTypes;

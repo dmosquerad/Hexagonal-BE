@@ -11,7 +11,7 @@ import com.architecture.hexagonal.domain.testutils.data.model.vo.pagination.Pagi
 import com.architecture.hexagonal.domain.testutils.data.model.vo.email.EmailBlockRulesVoTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.usecase.query.GetUsersInputTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.transaction.SpyTransactionReadBoundary;
-import com.architecture.hexagonal.contract.application.usecase.generated.user.GetUsersFilteredQuery;
+import com.architecture.hexagonal.contract.bus.model.user.GetUsersFilteredQuery;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationVo;
 import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;

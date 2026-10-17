@@ -6,7 +6,7 @@ import com.architecture.hexagonal.application.service.email.impl.EmailServiceImp
 import com.architecture.hexagonal.domain.testutils.data.model.vo.email.EmailBlockRulesVoTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.usecase.query.GetBlockedRulesQueryTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.transaction.SpyTransactionReadBoundary;
-import com.architecture.hexagonal.contract.application.usecase.generated.email.GetBlockedRulesQuery;
+import com.architecture.hexagonal.contract.bus.model.email.GetBlockedRulesQuery;
 import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

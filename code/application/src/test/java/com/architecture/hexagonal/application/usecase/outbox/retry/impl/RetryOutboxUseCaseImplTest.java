@@ -6,7 +6,7 @@ import com.architecture.hexagonal.application.projector.outbox.OutboxStatusAndAg
 import com.architecture.hexagonal.application.service.outbox.OutboxService;
 import com.architecture.hexagonal.application.testutils.transaction.SpyTransactionReadBoundary;
 import com.architecture.hexagonal.application.testutils.transaction.SpyTransactionWriteBoundary;
-import com.architecture.hexagonal.contract.application.usecase.generated.retry.RetryOutboxeventCommand;
+import com.architecture.hexagonal.contract.bus.model.retry.RetryOutboxeventCommand;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.domain.testutils.data.model.entity.outbox.OutboxTestDataBuilder;

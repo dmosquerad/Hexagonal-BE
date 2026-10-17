@@ -6,7 +6,7 @@ import com.architecture.hexagonal.application.port.out.transaction.TransactionRe
 import com.architecture.hexagonal.application.port.out.transaction.TransactionWriteBoundary;
 import com.architecture.hexagonal.application.projector.outbox.OutboxStatusAndAggregateProjector;
 import com.architecture.hexagonal.application.service.outbox.OutboxService;
-import com.architecture.hexagonal.contract.application.usecase.generated.retry.RetryOutboxeventCommand;
+import com.architecture.hexagonal.contract.bus.model.retry.RetryOutboxeventCommand;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;

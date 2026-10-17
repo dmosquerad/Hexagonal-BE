@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.bus.query.impl;
 
 import com.architecture.hexagonal.application.usecase.user.getall.impl.GetAllUsersUseCaseImpl;
-import com.architecture.hexagonal.contract.application.usecase.generated.user.GetUsersFilteredQuery;
+import com.architecture.hexagonal.contract.bus.model.user.GetUsersFilteredQuery;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResultVo;
 import com.architecture.hexagonal.infrastructure.bus.MessageHandlerFinder;

@@ -5,7 +5,7 @@ import com.architecture.hexagonal.application.port.in.bus.command.CommandHandler
 import com.architecture.hexagonal.application.port.out.transaction.TransactionWriteBoundary;
 import com.architecture.hexagonal.application.service.email.EmailService;
 import com.architecture.hexagonal.application.service.user.UserService;
-import com.architecture.hexagonal.contract.application.usecase.generated.user.CreateUserCommand;
+import com.architecture.hexagonal.contract.bus.model.user.CreateUserCommand;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.InvalidValueException;
 import com.architecture.hexagonal.domain.model.entity.user.User;

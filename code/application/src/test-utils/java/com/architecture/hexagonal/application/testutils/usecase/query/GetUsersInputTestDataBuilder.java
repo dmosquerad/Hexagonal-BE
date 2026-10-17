@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.application.testutils.usecase.query;
 
 import com.architecture.hexagonal.application.testutils.usecase.common.PaginationTestDataBuilder;
-import com.architecture.hexagonal.contract.application.usecase.generated.common.Pagination;
-import com.architecture.hexagonal.contract.application.usecase.generated.user.GetUsersFilteredQuery;
+import com.architecture.hexagonal.contract.bus.model.common.Pagination;
+import com.architecture.hexagonal.contract.bus.model.user.GetUsersFilteredQuery;
 import lombok.Builder;
 
 @Builder

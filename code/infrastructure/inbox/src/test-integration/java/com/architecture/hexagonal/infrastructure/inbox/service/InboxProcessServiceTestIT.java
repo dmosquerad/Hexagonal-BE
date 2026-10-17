@@ -5,9 +5,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 
-import com.architecture.hexagonal.contract.application.usecase.generated.user.CreateUserCommand;
-import com.architecture.hexagonal.contract.application.usecase.generated.user.DeleteUserCommand;
-import com.architecture.hexagonal.contract.application.usecase.generated.user.UpdateUserCommand;
+import com.architecture.hexagonal.contract.bus.model.user.CreateUserCommand;
+import com.architecture.hexagonal.contract.bus.model.user.DeleteUserCommand;
+import com.architecture.hexagonal.contract.bus.model.user.UpdateUserCommand;
 import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.domain.model.vo.payload.MessageHeaderVo;

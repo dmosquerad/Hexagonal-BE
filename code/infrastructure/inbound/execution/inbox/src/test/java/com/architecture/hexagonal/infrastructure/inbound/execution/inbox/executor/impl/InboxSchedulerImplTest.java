@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.inbound.execution.inbox.executor.impl;
 
-import com.architecture.hexagonal.contract.application.usecase.generated.retry.RetryInboxeventCommand;
+import com.architecture.hexagonal.contract.bus.model.retry.RetryInboxeventCommand;
 import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

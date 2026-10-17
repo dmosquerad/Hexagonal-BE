@@ -12,7 +12,7 @@ import com.architecture.hexagonal.domain.testutils.data.model.entity.user.UserTe
 import com.architecture.hexagonal.domain.testutils.data.model.vo.email.EmailBlockRulesVoTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.usecase.command.UpdateUserInputTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.transaction.SpyTransactionWriteBoundary;
-import com.architecture.hexagonal.contract.application.usecase.generated.user.UpdateUserCommand;
+import com.architecture.hexagonal.contract.bus.model.user.UpdateUserCommand;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.domain.model.vo.email.EmailVo;
 import java.util.Optional;

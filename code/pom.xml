@@ -94,7 +94,7 @@
       <!-- ============================================ -->
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>contract-application</artifactId>
+        <artifactId>contract-bus</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>

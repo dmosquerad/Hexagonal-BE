@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.mapper.user;
 
-import com.architecture.hexagonal.contract.application.usecase.generated.user.DeleteUserCommand;
+import com.architecture.hexagonal.contract.bus.model.user.DeleteUserCommand;
 import com.architecture.hexagonal.infrastructure.inbound.rest.config.mapstruct.MapstructConfig;
 import java.util.UUID;
 import org.mapstruct.Mapper;

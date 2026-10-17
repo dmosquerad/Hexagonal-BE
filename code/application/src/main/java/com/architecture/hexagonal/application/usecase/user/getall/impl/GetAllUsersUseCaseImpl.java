@@ -6,8 +6,8 @@ import com.architecture.hexagonal.application.port.out.transaction.TransactionRe
 import com.architecture.hexagonal.application.projector.user.UserEmailProjector;
 import com.architecture.hexagonal.application.service.email.EmailService;
 import com.architecture.hexagonal.application.service.user.UserService;
-import com.architecture.hexagonal.contract.application.usecase.generated.common.Pagination;
-import com.architecture.hexagonal.contract.application.usecase.generated.user.GetUsersFilteredQuery;
+import com.architecture.hexagonal.contract.bus.model.common.Pagination;
+import com.architecture.hexagonal.contract.bus.model.user.GetUsersFilteredQuery;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResultVo;

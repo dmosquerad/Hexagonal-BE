@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.application.testutils.usecase.query;
 
-import com.architecture.hexagonal.contract.application.usecase.generated.user.UserExistsQuery;
+import com.architecture.hexagonal.contract.bus.model.user.UserExistsQuery;
 import lombok.Builder;
 
 import java.util.UUID;

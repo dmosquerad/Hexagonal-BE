@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.inbound.handler.kafka.consumer;
 
-import com.architecture.hexagonal.contract.application.usecase.generated.inbox.RegisterInboxCommand;
+import com.architecture.hexagonal.contract.bus.model.inbox.RegisterInboxCommand;
 import com.architecture.hexagonal.contract.inbound.kafka.UserEventsConsumerService;
 import com.architecture.hexagonal.contract.inbound.kafka.model.UserCreated;
 import com.architecture.hexagonal.contract.inbound.kafka.model.UserDeleted;

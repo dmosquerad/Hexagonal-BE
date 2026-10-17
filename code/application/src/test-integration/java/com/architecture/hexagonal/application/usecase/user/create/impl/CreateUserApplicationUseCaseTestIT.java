@@ -12,7 +12,7 @@ import com.architecture.hexagonal.domain.testutils.data.model.vo.email.EmailBloc
 import com.architecture.hexagonal.domain.testutils.data.model.entity.user.UserTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.usecase.command.CreateUserInputTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.transaction.SpyTransactionWriteBoundary;
-import com.architecture.hexagonal.contract.application.usecase.generated.user.CreateUserCommand;
+import com.architecture.hexagonal.contract.bus.model.user.CreateUserCommand;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.domain.model.vo.email.EmailVo;
 import org.junit.jupiter.api.Test;

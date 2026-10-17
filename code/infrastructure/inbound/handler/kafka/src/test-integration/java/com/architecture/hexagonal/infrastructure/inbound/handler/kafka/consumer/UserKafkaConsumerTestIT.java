@@ -2,10 +2,10 @@ package com.architecture.hexagonal.infrastructure.inbound.handler.kafka.consumer
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.architecture.hexagonal.contract.application.usecase.generated.inbox.RegisterInboxCommand;
-import com.architecture.hexagonal.contract.application.usecase.generated.user.CreateUserCommand;
-import com.architecture.hexagonal.contract.application.usecase.generated.user.DeleteUserCommand;
-import com.architecture.hexagonal.contract.application.usecase.generated.user.UpdateUserCommand;
+import com.architecture.hexagonal.contract.bus.model.inbox.RegisterInboxCommand;
+import com.architecture.hexagonal.contract.bus.model.user.CreateUserCommand;
+import com.architecture.hexagonal.contract.bus.model.user.DeleteUserCommand;
+import com.architecture.hexagonal.contract.bus.model.user.UpdateUserCommand;
 import com.architecture.hexagonal.contract.inbound.kafka.model.MessageHeader;
 import com.architecture.hexagonal.contract.inbound.kafka.model.UserCreated;
 import com.architecture.hexagonal.contract.inbound.kafka.model.UserCreatedData;

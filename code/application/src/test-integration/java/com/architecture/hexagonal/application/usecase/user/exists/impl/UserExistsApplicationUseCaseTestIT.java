@@ -8,7 +8,7 @@ import com.architecture.hexagonal.application.service.user.impl.UserServiceImpl;
 import com.architecture.hexagonal.domain.testutils.data.model.entity.user.UserTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.usecase.query.UserExistsInputTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.transaction.SpyTransactionReadBoundary;
-import com.architecture.hexagonal.contract.application.usecase.generated.user.UserExistsQuery;
+import com.architecture.hexagonal.contract.bus.model.user.UserExistsQuery;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;

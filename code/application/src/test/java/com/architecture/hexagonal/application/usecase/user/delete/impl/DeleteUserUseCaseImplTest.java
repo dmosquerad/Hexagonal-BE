@@ -4,7 +4,7 @@ import com.architecture.hexagonal.application.port.out.transaction.TransactionWr
 import com.architecture.hexagonal.application.service.user.UserService;
 import com.architecture.hexagonal.application.testutils.transaction.SpyTransactionWriteBoundary;
 import com.architecture.hexagonal.application.testutils.usecase.command.DeleteUserInputTestDataBuilder;
-import com.architecture.hexagonal.contract.application.usecase.generated.user.DeleteUserCommand;
+import com.architecture.hexagonal.contract.bus.model.user.DeleteUserCommand;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.domain.testutils.data.model.entity.user.UserTestDataBuilder;
 import java.util.function.Supplier;

@@ -3,7 +3,7 @@ package com.architecture.hexagonal.application.usecase.inbox.retry.impl;
 import com.architecture.hexagonal.application.port.out.transaction.TransactionReadBoundary;
 import com.architecture.hexagonal.application.service.inbox.InboxService;
 import com.architecture.hexagonal.application.testutils.transaction.SpyTransactionReadBoundary;
-import com.architecture.hexagonal.contract.application.usecase.generated.retry.RetryInboxeventCommand;
+import com.architecture.hexagonal.contract.bus.model.retry.RetryInboxeventCommand;
 import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import java.util.List;

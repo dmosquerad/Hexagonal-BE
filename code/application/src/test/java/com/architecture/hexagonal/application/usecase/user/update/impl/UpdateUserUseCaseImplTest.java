@@ -5,7 +5,7 @@ import com.architecture.hexagonal.application.service.email.EmailService;
 import com.architecture.hexagonal.application.service.user.UserService;
 import com.architecture.hexagonal.application.testutils.transaction.SpyTransactionWriteBoundary;
 import com.architecture.hexagonal.application.testutils.usecase.command.UpdateUserInputTestDataBuilder;
-import com.architecture.hexagonal.contract.application.usecase.generated.user.UpdateUserCommand;
+import com.architecture.hexagonal.contract.bus.model.user.UpdateUserCommand;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.InvalidValueException;
 import com.architecture.hexagonal.domain.model.entity.user.User;

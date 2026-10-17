@@ -4,7 +4,7 @@ import com.architecture.hexagonal.application.port.out.transaction.TransactionRe
 import com.architecture.hexagonal.application.service.user.UserService;
 import com.architecture.hexagonal.application.testutils.transaction.SpyTransactionReadBoundary;
 import com.architecture.hexagonal.application.testutils.usecase.query.UserExistsInputTestDataBuilder;
-import com.architecture.hexagonal.contract.application.usecase.generated.user.UserExistsQuery;
+import com.architecture.hexagonal.contract.bus.model.user.UserExistsQuery;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

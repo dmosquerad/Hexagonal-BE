@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.application.testutils.usecase.command;
 
-import com.architecture.hexagonal.contract.application.usecase.generated.user.PatchUserCommand;
+import com.architecture.hexagonal.contract.bus.model.user.PatchUserCommand;
 import lombok.Builder;
 
 import java.util.UUID;

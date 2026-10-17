@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.inbound.rest.mapper.user;
 
-import com.architecture.hexagonal.contract.application.usecase.generated.user.GetUsersFilteredQuery;
+import com.architecture.hexagonal.contract.bus.model.user.GetUsersFilteredQuery;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationVo;
 import com.architecture.hexagonal.infrastructure.inbound.rest.config.mapstruct.MapstructConfig;
 import org.mapstruct.Mapper;
