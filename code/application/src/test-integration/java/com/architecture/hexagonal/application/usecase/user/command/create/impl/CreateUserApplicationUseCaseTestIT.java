@@ -3,12 +3,13 @@ package com.architecture.hexagonal.application.usecase.user.command.create.impl;
 import com.architecture.hexagonal.application.port.out.email.EmailConfigurationPort;
 import com.architecture.hexagonal.application.port.out.user.UserRepositoryReadPort;
 import com.architecture.hexagonal.application.port.out.user.UserRepositoryWritePort;
-import com.architecture.hexagonal.application.port.out.user.UserSenderPort;
+import com.architecture.hexagonal.application.port.out.bus.event.EventBus;
 import com.architecture.hexagonal.application.service.email.EmailService;
 import com.architecture.hexagonal.application.service.email.impl.EmailServiceImpl;
 import com.architecture.hexagonal.application.service.user.UserService;
 import com.architecture.hexagonal.application.service.user.impl.UserServiceImpl;
 import com.architecture.hexagonal.contract.bus.model.user.command.CreateUserCommand;
+import com.architecture.hexagonal.contract.bus.model.user.event.UserCreatedEvent;
 import com.architecture.hexagonal.domain.testutils.data.model.vo.email.EmailBlockRulesVoTestDataBuilder;
 import com.architecture.hexagonal.domain.testutils.data.model.entity.user.UserTestDataBuilder;
 import com.architecture.hexagonal.application.testutils.usecase.user.command.CreateUserInputTestDataBuilder;
@@ -31,7 +32,7 @@ class CreateUserApplicationUseCaseTestIT {
 
   @Mock private UserRepositoryReadPort userRepositoryReadPort;
   @Mock private UserRepositoryWritePort userRepositoryWritePort;
-  @Mock private UserSenderPort userSenderPort;
+  @Mock private EventBus eventBus;
   @Mock private EmailConfigurationPort emailConfigurationPort;
   @Mock private UserService userService;
   @Mock private EmailService emailService;
@@ -67,6 +68,7 @@ class CreateUserApplicationUseCaseTestIT {
     Mockito.verify(emailService).isEmailBlocked(ArgumentMatchers.any(EmailVo.class));
     Mockito.verify(userService).createUser(ArgumentMatchers.any(User.class));
     Mockito.verify(userRepositoryWritePort).saveUser(ArgumentMatchers.any(User.class));
-    Mockito.verify(userSenderPort).userSenderCreated(user);
+    Mockito.verify(eventBus)
+        .publish(ArgumentMatchers.any(UserCreatedEvent.class));
   }
 }

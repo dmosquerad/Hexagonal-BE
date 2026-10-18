@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "user-created-event",
+  "title": "UserCreatedEvent",
+  "description": "Event emitted by the application when a user has been created.",
+  "type": "object",
+  "properties": {
+    "userId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Identifier of the created user."
+    },
+    "name": {
+      "type": "string",
+      "description": "Name of the created user."
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "description": "Email of the created user."
+    }
+  },
+  "required": [
+    "userId",
+    "name",
+    "email"
+  ],
+  "additionalProperties": false
+}

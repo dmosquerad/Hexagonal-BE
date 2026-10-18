@@ -1,6 +1,7 @@
 package com.architecture.hexagonal.infrastructure.bus;
 
 import com.architecture.hexagonal.application.port.in.bus.command.CommandHandler;
+import com.architecture.hexagonal.application.port.in.bus.event.EventHandler;
 import com.architecture.hexagonal.application.port.in.bus.query.QueryHandler;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +33,10 @@ public final class BusHandlerFinder implements SmartInitializingSingleton {
         .getBeansOfType(QueryHandler.class)
         .values()
         .forEach(handler -> addHandler(mutableHandlersByMessage, handler, QueryHandler.class));
+    beanFactory
+        .getBeansOfType(EventHandler.class)
+        .values()
+        .forEach(handler -> addHandler(mutableHandlersByMessage, handler, EventHandler.class));
     mutableHandlersByMessage.replaceAll((messageType, handlers) -> List.copyOf(handlers));
     handlersByMessage = Map.copyOf(mutableHandlersByMessage);
   }
@@ -56,12 +61,15 @@ public final class BusHandlerFinder implements SmartInitializingSingleton {
     return messageType;
   }
 
+  public <H> List<H> findAll(final Object message, final Class<H> handlerType) {
+    return handlersByMessage.getOrDefault(message.getClass(), List.of()).stream()
+        .filter(handlerType::isInstance)
+        .map(handlerType::cast)
+        .toList();
+  }
+
   public <H> H find(final Object message, final Class<H> handlerType) {
-    final List<H> matchingHandlers =
-        handlersByMessage.getOrDefault(message.getClass(), List.of()).stream()
-            .filter(handlerType::isInstance)
-            .map(handlerType::cast)
-            .toList();
+    final List<H> matchingHandlers = findAll(message, handlerType);
     if (matchingHandlers.size() != 1) {
       throw new IllegalStateException(
           "Expected one "

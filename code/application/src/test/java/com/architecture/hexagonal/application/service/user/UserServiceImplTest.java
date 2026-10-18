@@ -1,11 +1,14 @@
 package com.architecture.hexagonal.application.service.user;
 
+import com.architecture.hexagonal.application.port.out.bus.event.EventBus;
 import com.architecture.hexagonal.application.port.out.user.UserRepositoryReadPort;
 import com.architecture.hexagonal.application.port.out.user.UserRepositoryWritePort;
-import com.architecture.hexagonal.application.port.out.user.UserSenderPort;
 import com.architecture.hexagonal.application.projector.user.UserEmailProjector;
 import com.architecture.hexagonal.application.service.user.impl.UserServiceImpl;
 import com.architecture.hexagonal.application.testutils.projector.user.UserEmailProjectorTestDataBuilder;
+import com.architecture.hexagonal.contract.bus.model.user.event.UserCreatedEvent;
+import com.architecture.hexagonal.contract.bus.model.user.event.UserDeletedEvent;
+import com.architecture.hexagonal.contract.bus.model.user.event.UserUpdatedEvent;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import com.architecture.hexagonal.domain.model.entity.user.User;
@@ -24,6 +27,7 @@ import java.util.UUID;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -38,7 +42,7 @@ class UserServiceImplTest {
 
   @Mock UserRepositoryReadPort userRepositoryReadPort;
 
-  @Mock UserSenderPort userSenderPort;
+  @Mock EventBus eventBus;
 
   @Test
   void createShouldCreateUserUserWhenEmailIsAllowed() {
@@ -56,7 +60,16 @@ class UserServiceImplTest {
     AssertionsForClassTypes.assertThat(result).usingRecursiveComparison().isEqualTo(savedUser);
 
     Mockito.verify(userRepositoryWritePort).saveUser(user);
-    Mockito.verify(userSenderPort).userSenderCreated(savedUser);
+    final UserCreatedEvent expectedEvent = new UserCreatedEvent();
+    expectedEvent.setUserId(savedUser.userId());
+    expectedEvent.setName(savedUser.name());
+    expectedEvent.setEmail(savedUser.email().getEmail());
+    final ArgumentCaptor<UserCreatedEvent> eventCaptor =
+        ArgumentCaptor.forClass(UserCreatedEvent.class);
+    Mockito.verify(eventBus).publish(eventCaptor.capture());
+    AssertionsForClassTypes.assertThat(eventCaptor.getValue())
+        .usingRecursiveComparison()
+        .isEqualTo(expectedEvent);
   }
 
   @Test
@@ -70,7 +83,11 @@ class UserServiceImplTest {
     AssertionsForClassTypes.assertThat(result).usingRecursiveComparison().isEqualTo(user);
 
     Mockito.verify(userRepositoryWritePort).deleteUser(user.userId());
-    Mockito.verify(userSenderPort).userSenderDeleted(user);
+    final UserDeletedEvent expectedEvent = new UserDeletedEvent();
+    expectedEvent.setUserId(user.userId());
+    expectedEvent.setName(user.name());
+    expectedEvent.setEmail(user.email().getEmail());
+    Mockito.verify(eventBus).publish(expectedEvent);
   }
 
   @Test
@@ -84,7 +101,7 @@ class UserServiceImplTest {
         .hasMessage(ExceptionMessage.NOT_FOUND_DATA_MESSAGE + user.userId());
 
     Mockito.verify(userRepositoryWritePort).deleteUser(user.userId());
-    Mockito.verifyNoInteractions(userSenderPort);
+    Mockito.verifyNoInteractions(eventBus);
   }
 
   @Test
@@ -229,7 +246,11 @@ class UserServiceImplTest {
 
     Mockito.verify(userRepositoryReadPort).findUserById(user.userId());
     Mockito.verify(userRepositoryWritePort).saveUser(user);
-    Mockito.verify(userSenderPort).userSenderUpdated(user);
+    final UserUpdatedEvent expectedEvent = new UserUpdatedEvent();
+    expectedEvent.setUserId(user.userId());
+    expectedEvent.setName(user.name());
+    expectedEvent.setEmail(user.email().getEmail());
+    Mockito.verify(eventBus).publish(expectedEvent);
   }
 
   @Test
@@ -244,7 +265,7 @@ class UserServiceImplTest {
 
     Mockito.verify(userRepositoryReadPort).findUserById(patch.userId());
     Mockito.verifyNoInteractions(userRepositoryWritePort);
-    Mockito.verifyNoInteractions(userSenderPort);
+    Mockito.verifyNoInteractions(eventBus);
   }
 
   @Test
@@ -260,7 +281,11 @@ class UserServiceImplTest {
 
     Mockito.verify(userRepositoryReadPort).findUserById(user.userId());
     Mockito.verify(userRepositoryWritePort).saveUser(user);
-    Mockito.verify(userSenderPort).userSenderUpdated(user);
+    final UserUpdatedEvent expectedEvent = new UserUpdatedEvent();
+    expectedEvent.setUserId(user.userId());
+    expectedEvent.setName(user.name());
+    expectedEvent.setEmail(user.email().getEmail());
+    Mockito.verify(eventBus).publish(expectedEvent);
   }
 
   @Test
@@ -275,6 +300,6 @@ class UserServiceImplTest {
 
     Mockito.verify(userRepositoryReadPort).findUserById(user.userId());
     Mockito.verifyNoInteractions(userRepositoryWritePort);
-    Mockito.verifyNoInteractions(userSenderPort);
+    Mockito.verifyNoInteractions(eventBus);
   }
 }

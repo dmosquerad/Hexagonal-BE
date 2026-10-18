@@ -2,7 +2,7 @@ package com.architecture.hexagonal.application.usecase.user.query.findbyid.impl;
 
 import com.architecture.hexagonal.application.port.out.user.UserRepositoryReadPort;
 import com.architecture.hexagonal.application.port.out.user.UserRepositoryWritePort;
-import com.architecture.hexagonal.application.port.out.user.UserSenderPort;
+import com.architecture.hexagonal.application.port.out.bus.event.EventBus;
 import com.architecture.hexagonal.application.service.user.UserService;
 import com.architecture.hexagonal.application.service.user.impl.UserServiceImpl;
 import com.architecture.hexagonal.contract.bus.model.user.query.FindUserByUserIdQuery;
@@ -28,7 +28,7 @@ class FindUserByUserIdApplicationUseCaseTestIT {
 
   @Mock private UserRepositoryReadPort userRepositoryReadPort;
   @Mock private UserRepositoryWritePort userRepositoryWritePort;
-  @Mock private UserSenderPort userSenderPort;
+  @Mock private EventBus eventBus;
   @Mock private UserService userService;
 
   @Spy private SpyTransactionReadBoundary transactionReadBoundary =

@@ -5,7 +5,7 @@ import com.architecture.hexagonal.contract.bus.model.user.query.GetUsersFiltered
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResultVo;
 import com.architecture.hexagonal.infrastructure.bus.BusHandlerFinder;
-import com.architecture.hexagonal.infrastructure.bus.middleware.BusLoggingMiddleware;
+import com.architecture.hexagonal.infrastructure.bus.middleware.impl.BusLoggingMiddleware;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

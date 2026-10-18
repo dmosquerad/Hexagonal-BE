@@ -9,7 +9,7 @@ import com.architecture.hexagonal.application.port.out.outbox.OutboxRepositoryRe
 import com.architecture.hexagonal.application.port.out.outbox.OutboxRepositoryWritePort;
 import com.architecture.hexagonal.application.port.out.user.UserRepositoryReadPort;
 import com.architecture.hexagonal.application.port.out.user.UserRepositoryWritePort;
-import com.architecture.hexagonal.application.port.out.user.UserSenderPort;
+import com.architecture.hexagonal.application.port.out.bus.event.EventBus;
 import com.architecture.hexagonal.application.port.out.outbox.OutboxProcess;
 import com.architecture.hexagonal.application.port.out.transaction.TransactionReadBoundary;
 import com.architecture.hexagonal.application.port.out.transaction.TransactionWriteBoundary;
@@ -81,7 +81,7 @@ class ApplicationComponentScanConfigurationTestIT {
 
   @MockitoBean private UserRepositoryWritePort userRepositoryWritePort;
 
-  @MockitoBean private UserSenderPort userSenderPort;
+  @MockitoBean private EventBus eventBus;
 
   @MockitoBean private OutboxRepositoryReadPort outboxRepositoryReadPort;
 
