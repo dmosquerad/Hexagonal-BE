@@ -76,6 +76,16 @@ class InboxWriteMongodbRepositoryImplTestIT extends MongodbIT {
     assertThat(secondClaim).isNull();
   }
 
+  @Test
+  void updateByMessageIdentityShouldThrowWhenInboxDoesNotExist() {
+    final InboxDao inboxDao = inbox(UUID.randomUUID(), "2026-10-13T12:15:30.123+02:00");
+
+    assertThatThrownBy(() -> inboxWriteMongodbRepository.updateByMessageIdentity(inboxDao))
+        .isInstanceOf(IllegalStateException.class)
+        .hasMessageContaining(
+            inboxDao.getPayload().getMessageHeader().getMessageId().toString());
+  }
+
   private InboxDao inbox(final UUID messageId, final String messageDate) {
     final InboxDao inboxDao = new InboxDao();
     final MessageHeaderDao messageHeader = new MessageHeaderDao();

@@ -2,6 +2,7 @@ package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.adap
 
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
 import com.architecture.hexagonal.domain.model.entity.user.User;
+import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
 import com.architecture.hexagonal.domain.testutils.data.model.entity.outbox.OutboxTestDataBuilder;
 import com.architecture.hexagonal.domain.testutils.data.model.entity.user.UserTestDataBuilder;
 import com.architecture.hexagonal.domain.testutils.data.model.vo.payload.PayloadVoTestDataBuilder;
@@ -13,6 +14,7 @@ import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.mappe
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.repository.outbox.OutboxWriteMongodbRepository;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.data.outbox.OutboxDaoTestDataBuilder;
 
+import java.util.Optional;
 import java.util.UUID;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
@@ -63,5 +65,47 @@ class OutboxWriteMongodbAdapterImplTestIT extends MongodbIT {
     Mockito.verify(outboxDaoMapper).toOutboxDao(outbox);
     Mockito.verify(outboxWriteMongodbRepository).upsertByEventIdentity(outboxDao);
     Mockito.verify(outboxDoFromMongodbMapper).toOutbox(outboxDao);
+  }
+
+  @Test
+  void claimPendingForProcessingShouldReturnMappedOutboxWhenClaimSucceeds() {
+    final Outbox outbox =
+        OutboxTestDataBuilder.<User>builder().processedAt(null).build().outbox();
+    final OutboxDao claimedOutbox =
+        OutboxDaoTestDataBuilder.builder()
+            .status(StatusVo.PROCESSING)
+            .retryCount(1)
+            .build()
+            .outboxEventDao();
+    Mockito.when(
+            outboxWriteMongodbRepository.claimPendingForProcessing(
+                Mockito.any(OutboxDao.class)))
+        .thenReturn(claimedOutbox);
+
+    final Optional<Outbox> result = outboxWriteMongodbAdapterImpl.claimPendingForProcessing(outbox);
+
+    AssertionsForClassTypes.assertThat(result).isPresent();
+    Mockito.verify(outboxDaoMapper).toOutboxDao(outbox);
+    Mockito.verify(outboxWriteMongodbRepository)
+        .claimPendingForProcessing(Mockito.any(OutboxDao.class));
+    Mockito.verify(outboxDoFromMongodbMapper).toOutbox(claimedOutbox);
+  }
+
+  @Test
+  void claimPendingForProcessingShouldReturnEmptyWhenNoOutboxCanBeClaimed() {
+    final Outbox outbox =
+        OutboxTestDataBuilder.<User>builder().processedAt(null).build().outbox();
+    Mockito.when(
+            outboxWriteMongodbRepository.claimPendingForProcessing(
+                Mockito.any(OutboxDao.class)))
+        .thenReturn(null);
+
+    final Optional<Outbox> result = outboxWriteMongodbAdapterImpl.claimPendingForProcessing(outbox);
+
+    AssertionsForClassTypes.assertThat(result).isEmpty();
+    Mockito.verify(outboxDaoMapper).toOutboxDao(outbox);
+    Mockito.verify(outboxWriteMongodbRepository)
+        .claimPendingForProcessing(Mockito.any(OutboxDao.class));
+    Mockito.verifyNoInteractions(outboxDoFromMongodbMapper);
   }
 }
