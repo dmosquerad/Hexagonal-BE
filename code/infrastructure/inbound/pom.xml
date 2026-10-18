@@ -14,7 +14,7 @@
     <modules>
         <module>rest</module>
         <module>execution</module>
-        <module>handler</module>
+        <module>message</module>
     </modules>
 
 </project>
