@@ -8,8 +8,9 @@ import com.architecture.hexagonal.contract.bus.model.user.command.CreateUserComm
 import com.architecture.hexagonal.contract.bus.model.user.command.DeleteUserCommand;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.infrastructure.bus.config.TestApplication;
-import com.architecture.hexagonal.infrastructure.bus.MessageHandlerFinder;
+import com.architecture.hexagonal.infrastructure.bus.BusHandlerFinder;
 import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
+import com.architecture.hexagonal.infrastructure.bus.middleware.BusLoggingMiddleware;
 import java.util.UUID;
 import java.util.function.Supplier;
 import org.assertj.core.api.AssertionsForClassTypes;
@@ -22,7 +23,12 @@ import org.mockito.AdditionalAnswers;
 import org.mockito.Mockito;
 
 @SpringBootTest(
-    classes = {CommandBusImpl.class, MessageHandlerFinder.class, CreateUserUseCaseImpl.class})
+    classes = {
+      CommandBusImpl.class,
+      BusHandlerFinder.class,
+      BusLoggingMiddleware.class,
+      CreateUserUseCaseImpl.class
+    })
 @ContextConfiguration(classes = TestApplication.class)
 class CommandBusImplTestIT {
 

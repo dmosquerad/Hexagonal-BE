@@ -7,7 +7,8 @@ import com.architecture.hexagonal.contract.bus.model.user.query.FindUserByUserId
 import com.architecture.hexagonal.contract.bus.model.user.query.GetUsersFilteredQuery;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.infrastructure.bus.config.TestApplication;
-import com.architecture.hexagonal.infrastructure.bus.MessageHandlerFinder;
+import com.architecture.hexagonal.infrastructure.bus.BusHandlerFinder;
+import com.architecture.hexagonal.infrastructure.bus.middleware.BusLoggingMiddleware;
 import com.architecture.hexagonal.infrastructure.bus.query.QueryBus;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -21,7 +22,12 @@ import org.mockito.AdditionalAnswers;
 import org.mockito.Mockito;
 
 @SpringBootTest(
-    classes = {QueryBusImpl.class, MessageHandlerFinder.class, FindUserByUserIdUseCaseImpl.class})
+    classes = {
+      QueryBusImpl.class,
+      BusHandlerFinder.class,
+      BusLoggingMiddleware.class,
+      FindUserByUserIdUseCaseImpl.class
+    })
 @ContextConfiguration(classes = TestApplication.class)
 class QueryBusImplTestIT {
 

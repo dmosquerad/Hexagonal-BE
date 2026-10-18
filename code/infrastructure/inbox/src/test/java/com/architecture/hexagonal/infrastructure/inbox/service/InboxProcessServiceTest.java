@@ -13,24 +13,21 @@ import com.architecture.hexagonal.infrastructure.inbox.mapper.UserCommandFromInb
 import com.architecture.hexagonal.infrastructure.inbox.naming.InboxNaming;
 import java.util.Map;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.ObjectProvider;
 import tools.jackson.databind.ObjectMapper;
 
 @ExtendWith(MockitoExtension.class)
 class InboxProcessServiceTest {
 
-  @Spy @InjectMocks private InboxProcessService inboxProcessService;
-
-  @Mock private ObjectProvider<CommandBus> commandBusProvider;
+  private InboxProcessService inboxProcessService;
 
   @Mock private CommandBus commandBus;
 
@@ -40,10 +37,14 @@ class InboxProcessServiceTest {
 
   @Spy private final ObjectMapper objectMapper = new ObjectMapper();
 
+  @BeforeEach
+  void setUp() {
+    inboxProcessService =
+        Mockito.spy(new InboxProcessService(commandBus, userCommandFromInboxMapper, objectMapper));
+  }
+
   @Test
   void processShouldDispatchCreateCommandForPreviouslyStoredUserData() {
-    Mockito.when(commandBusProvider.getObject()).thenReturn(commandBus);
-
     final UserCreatedData createdData = new UserCreatedData();
     createdData.setName("Inbox User");
     createdData.setEmail("inbox@example.com");

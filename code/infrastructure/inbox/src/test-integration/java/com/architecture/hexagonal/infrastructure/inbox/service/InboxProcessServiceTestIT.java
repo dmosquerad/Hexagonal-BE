@@ -20,24 +20,22 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.ObjectProvider;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import tools.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.extension.ExtendWith;
 
+@ExtendWith(MockitoExtension.class)
 class InboxProcessServiceTestIT {
 
-  private CommandBus commandBus;
-  private ObjectProvider<CommandBus> commandBusProvider;
+  @Mock private CommandBus commandBus;
   private InboxProcessService inboxProcessService;
 
   @BeforeEach
   void setUp() {
-    commandBus = Mockito.mock(CommandBus.class);
-    commandBusProvider = Mockito.mock(ObjectProvider.class);
-    Mockito.when(commandBusProvider.getObject()).thenReturn(commandBus);
     inboxProcessService =
         new InboxProcessService(
-            commandBusProvider,
+            commandBus,
             Mappers.getMapper(UserCommandFromInboxMapper.class),
             new ObjectMapper());
     inboxProcessService.validateAggregateHandlers();

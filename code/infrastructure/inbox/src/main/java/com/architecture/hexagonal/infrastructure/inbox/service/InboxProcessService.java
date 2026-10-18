@@ -17,19 +17,25 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import tools.jackson.databind.ObjectMapper;
 
 @Service
-@RequiredArgsConstructor
 public class InboxProcessService implements InboxProcess {
 
-  private final ObjectProvider<CommandBus> commandBusProvider;
+  private final CommandBus commandBus;
   private final UserCommandFromInboxMapper userCommandFromInboxMapper;
   private final ObjectMapper objectMapper;
+
+  public InboxProcessService(
+      final CommandBus commandBus,
+      final UserCommandFromInboxMapper userCommandFromInboxMapper,
+      final ObjectMapper objectMapper) {
+    this.commandBus = commandBus;
+    this.userCommandFromInboxMapper = userCommandFromInboxMapper;
+    this.objectMapper = objectMapper;
+  }
 
   @PostConstruct
   void validateAggregateHandlers() {
@@ -70,27 +76,18 @@ public class InboxProcessService implements InboxProcess {
     return Map.of(
         ActionType.UserActionType.USER_CREATED.getActionType(),
             inbox ->
-                commandBusProvider
-                    .getObject()
-                    .execute(
-                        userCommandFromInboxMapper.toCreateUserCommand(
-                            objectMapper.convertValue(
-                                inbox.payload().data(), UserCreatedData.class))),
+                commandBus.execute(
+                    userCommandFromInboxMapper.toCreateUserCommand(
+                        objectMapper.convertValue(inbox.payload().data(), UserCreatedData.class))),
         ActionType.UserActionType.USER_UPDATED.getActionType(),
             inbox ->
-                commandBusProvider
-                    .getObject()
-                    .execute(
-                        userCommandFromInboxMapper.toUpdateUserCommand(
-                            objectMapper.convertValue(
-                                inbox.payload().data(), UserUpdatedData.class))),
+                commandBus.execute(
+                    userCommandFromInboxMapper.toUpdateUserCommand(
+                        objectMapper.convertValue(inbox.payload().data(), UserUpdatedData.class))),
         ActionType.UserActionType.USER_DELETED.getActionType(),
             inbox ->
-                commandBusProvider
-                    .getObject()
-                    .execute(
-                        userCommandFromInboxMapper.toDeleteUserCommand(
-                            objectMapper.convertValue(
-                                inbox.payload().data(), UserDeletedData.class))));
+                commandBus.execute(
+                    userCommandFromInboxMapper.toDeleteUserCommand(
+                        objectMapper.convertValue(inbox.payload().data(), UserDeletedData.class))));
   }
 }

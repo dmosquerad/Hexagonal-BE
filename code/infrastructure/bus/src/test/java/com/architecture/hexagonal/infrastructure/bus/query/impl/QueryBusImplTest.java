@@ -4,14 +4,15 @@ import com.architecture.hexagonal.application.usecase.user.query.getall.impl.Get
 import com.architecture.hexagonal.contract.bus.model.user.query.GetUsersFilteredQuery;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResultVo;
-import com.architecture.hexagonal.infrastructure.bus.MessageHandlerFinder;
-import java.util.List;
+import com.architecture.hexagonal.infrastructure.bus.BusHandlerFinder;
+import com.architecture.hexagonal.infrastructure.bus.middleware.BusLoggingMiddleware;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.support.StaticListableBeanFactory;
 
 @ExtendWith(MockitoExtension.class)
 class QueryBusImplTest {
@@ -25,7 +26,7 @@ class QueryBusImplTest {
 
     Mockito.when(getAllUsersUseCase.handle(query)).thenReturn(users);
     final QueryBusImpl queryBus =
-        new QueryBusImpl(new MessageHandlerFinder(List.of(), List.of(getAllUsersUseCase)));
+        new QueryBusImpl(finderWith(getAllUsersUseCase), new BusLoggingMiddleware());
 
     final PaginationResultVo<User> result = queryBus.execute(query);
 
@@ -37,11 +38,21 @@ class QueryBusImplTest {
   @Test
   void executeShouldThrowIllegalStateExceptionWhenNoHandlerIsFound() {
     final String unknownQuery = "unknown";
-    final QueryBusImpl queryBus = new QueryBusImpl(new MessageHandlerFinder(List.of(), List.of()));
+    final QueryBusImpl queryBus = new QueryBusImpl(finderWith(), new BusLoggingMiddleware());
 
     AssertionsForClassTypes.assertThatThrownBy(() -> queryBus.execute(unknownQuery))
         .isInstanceOf(IllegalStateException.class)
         .hasMessageContaining("Expected one QueryHandler")
         .hasMessageContaining("found 0");
+  }
+
+  private BusHandlerFinder finderWith(final Object... handlers) {
+    final StaticListableBeanFactory beanFactory = new StaticListableBeanFactory();
+    for (int index = 0; index < handlers.length; index++) {
+      beanFactory.addBean("handler" + index, handlers[index]);
+    }
+    final BusHandlerFinder finder = new BusHandlerFinder(beanFactory);
+    finder.afterSingletonsInstantiated();
+    return finder;
   }
 }

@@ -6,31 +6,34 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.RequiredArgsConstructor;
 import org.springframework.aop.framework.AopProxyUtils;
+import org.springframework.beans.factory.ListableBeanFactory;
+import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.core.ResolvableType;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class MessageHandlerFinder {
+@RequiredArgsConstructor
+public final class BusHandlerFinder implements SmartInitializingSingleton {
 
-  private final Map<Class<?>, List<Object>> handlersByMessage;
+  private final ListableBeanFactory beanFactory;
 
-  public MessageHandlerFinder(
-      final List<CommandHandler<?, ?>> commandHandlers,
-      final List<QueryHandler<?, ?>> queryHandlers) {
-    this.handlersByMessage = buildHandlersByMessage(commandHandlers, queryHandlers);
-  }
+  private Map<Class<?>, List<Object>> handlersByMessage = Map.of();
 
-  private Map<Class<?>, List<Object>> buildHandlersByMessage(
-      final List<CommandHandler<?, ?>> commandHandlers,
-      final List<QueryHandler<?, ?>> queryHandlers) {
+  @Override
+  public void afterSingletonsInstantiated() {
     final Map<Class<?>, List<Object>> mutableHandlersByMessage = new HashMap<>();
-    commandHandlers.forEach(
-        handler -> addHandler(mutableHandlersByMessage, handler, CommandHandler.class));
-    queryHandlers.forEach(
-        handler -> addHandler(mutableHandlersByMessage, handler, QueryHandler.class));
+    beanFactory
+        .getBeansOfType(CommandHandler.class)
+        .values()
+        .forEach(handler -> addHandler(mutableHandlersByMessage, handler, CommandHandler.class));
+    beanFactory
+        .getBeansOfType(QueryHandler.class)
+        .values()
+        .forEach(handler -> addHandler(mutableHandlersByMessage, handler, QueryHandler.class));
     mutableHandlersByMessage.replaceAll((messageType, handlers) -> List.copyOf(handlers));
-    return Map.copyOf(mutableHandlersByMessage);
+    handlersByMessage = Map.copyOf(mutableHandlersByMessage);
   }
 
   private void addHandler(
@@ -54,9 +57,10 @@ public final class MessageHandlerFinder {
   }
 
   public <H> H find(final Object message, final Class<H> handlerType) {
-    final List<Object> matchingHandlers =
+    final List<H> matchingHandlers =
         handlersByMessage.getOrDefault(message.getClass(), List.of()).stream()
             .filter(handlerType::isInstance)
+            .map(handlerType::cast)
             .toList();
     if (matchingHandlers.size() != 1) {
       throw new IllegalStateException(
@@ -67,6 +71,6 @@ public final class MessageHandlerFinder {
               + ", found "
               + matchingHandlers.size());
     }
-    return handlerType.cast(matchingHandlers.getFirst());
+    return matchingHandlers.getFirst();
   }
 }
