@@ -39,6 +39,7 @@ class OutboxWriteMongodbAdapterImplTestIT extends MongodbIT {
   void saveShouldPersistOutboxEventAndReturnOutboxDo() {
     final Outbox outbox =
         OutboxTestDataBuilder.<User>builder()
+            .action("USER_CREATED")
             .payload(
                 PayloadVoTestDataBuilder.<User>builder()
                     .data(UserTestDataBuilder.builder().build().user())

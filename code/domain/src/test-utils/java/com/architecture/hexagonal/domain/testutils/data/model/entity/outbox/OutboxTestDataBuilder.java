@@ -1,6 +1,7 @@
 package com.architecture.hexagonal.domain.testutils.data.model.entity.outbox;
 
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
+import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
 import com.architecture.hexagonal.domain.model.vo.payload.PayloadVo;
@@ -17,7 +18,7 @@ public class OutboxTestDataBuilder<T> {
     @Builder.Default private UUID eventId = UUID.fromString("ec9633ff-1137-4f3a-87ef-ea7738ad411f");
     @Builder.Default private AggregateTypeVo aggregateType = AggregateTypeVo.USER;
     @Builder.Default private String aggregateId = "123";
-    @Builder.Default private String action = "USER_CREATED";
+    @Builder.Default private String action = ActionType.UserActionType.USER_DELETED.name();
     @Builder.Default private PayloadVo payload = PayloadVoTestDataBuilder.<T>builder().build().payloadVo();
     @Builder.Default private StatusVo status = StatusVo.PENDING;
     @Builder.Default private int retryCount = 0;

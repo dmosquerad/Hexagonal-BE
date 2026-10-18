@@ -4,8 +4,6 @@ import static org.mockito.Mockito.verify;
 
 import com.architecture.hexagonal.contract.bus.model.user.command.CreateUserCommand;
 import com.architecture.hexagonal.contract.inbound.kafka.model.UserCreatedData;
-import com.architecture.hexagonal.contract.inbound.kafka.model.UserDeletedData;
-import com.architecture.hexagonal.contract.inbound.kafka.model.UserUpdatedData;
 import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.domain.model.vo.payload.MessageHeaderVo;
@@ -14,15 +12,15 @@ import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
 import com.architecture.hexagonal.infrastructure.inbox.mapper.UserCommandFromInboxMapper;
 import com.architecture.hexagonal.infrastructure.inbox.naming.InboxNaming;
 import java.util.Map;
-import java.util.UUID;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.ObjectProvider;
 import tools.jackson.databind.ObjectMapper;
@@ -30,35 +28,26 @@ import tools.jackson.databind.ObjectMapper;
 @ExtendWith(MockitoExtension.class)
 class InboxProcessServiceTest {
 
-  @Mock private CommandBus commandBus;
+  @Spy @InjectMocks private InboxProcessService inboxProcessService;
+
   @Mock private ObjectProvider<CommandBus> commandBusProvider;
 
-  private InboxProcessService inboxProcessService;
-  private UserCreatedData createdData;
-  private UserUpdatedData updatedData;
-  private UserDeletedData deletedData;
+  @Mock private CommandBus commandBus;
 
-  @BeforeEach
-  void setUp() {
-    inboxProcessService =
-        new InboxProcessService(
-            commandBusProvider,
-            Mappers.getMapper(UserCommandFromInboxMapper.class),
-            new ObjectMapper());
-    createdData = new UserCreatedData();
-    createdData.setName("Inbox User");
-    createdData.setEmail("inbox@example.com");
-    updatedData = new UserUpdatedData();
-    updatedData.setUserId(UUID.randomUUID());
-    updatedData.setName("Inbox User");
-    updatedData.setEmail("inbox@example.com");
-    deletedData = new UserDeletedData();
-    deletedData.setUserId(updatedData.getUserId());
-  }
+  @Spy
+  private final UserCommandFromInboxMapper userCommandFromInboxMapper =
+      Mappers.getMapper(UserCommandFromInboxMapper.class);
+
+  @Spy private final ObjectMapper objectMapper = new ObjectMapper();
 
   @Test
   void processShouldDispatchCreateCommandForPreviouslyStoredUserData() {
     Mockito.when(commandBusProvider.getObject()).thenReturn(commandBus);
+
+    final UserCreatedData createdData = new UserCreatedData();
+    createdData.setName("Inbox User");
+    createdData.setEmail("inbox@example.com");
+
     inboxProcessService.process(
         inbox(
             "USER_CREATED",
@@ -79,20 +68,19 @@ class InboxProcessServiceTest {
 
   @Test
   void shouldThrowWhenAggregateHandlerIsMissing() {
-    final InboxProcessService service = Mockito.spy(inboxProcessService);
-    Mockito.when(service.aggregateHandlers()).thenReturn(Map.of());
+    Mockito.when(inboxProcessService.aggregateHandlers()).thenReturn(Map.of());
 
-    Assertions.assertThatThrownBy(service::validateAggregateHandlers)
+    Assertions.assertThatThrownBy(inboxProcessService::validateAggregateHandlers)
         .isInstanceOf(IllegalStateException.class)
         .hasMessageContaining(InboxNaming.UNSUPPORTED_AGGREGATE_TYPE);
   }
 
   @Test
   void processShouldThrowWhenAggregateHandlerIsMissing() {
-    final InboxProcessService service = Mockito.spy(inboxProcessService);
-    Mockito.when(service.aggregateHandlers()).thenReturn(Map.of());
+    Mockito.when(inboxProcessService.aggregateHandlers()).thenReturn(Map.of());
 
-    Assertions.assertThatThrownBy(() -> service.process(inbox("USER_CREATED", createdData)))
+    Assertions.assertThatThrownBy(
+            () -> inboxProcessService.process(inbox("USER_CREATED", Map.of("name", "Inbox User"))))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining(InboxNaming.UNSUPPORTED_AGGREGATE_TYPE);
 
@@ -101,7 +89,7 @@ class InboxProcessServiceTest {
 
   @Test
   void processShouldThrowWhenActionIsUnsupported() {
-    Assertions.assertThatThrownBy(() -> inboxProcessService.process(inbox("", createdData)))
+    Assertions.assertThatThrownBy(() -> inboxProcessService.process(inbox("", Map.of())))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining(InboxNaming.UNSUPPORTED_USER_ACTION);
 

@@ -6,7 +6,9 @@ import com.architecture.hexagonal.application.testutils.transaction.SpyTransacti
 import com.architecture.hexagonal.contract.bus.model.retry.command.RetryInboxeventCommand;
 import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
+import com.architecture.hexagonal.domain.testutils.data.model.entity.inbox.InboxTestDataBuilder;
 import java.util.List;
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,21 +24,20 @@ class RetryInboxUseCaseImplTest {
 
   @Spy private TransactionReadBoundary transactionReadBoundary = new SpyTransactionReadBoundary();
 
-  @InjectMocks private RetryInboxUseCaseImpl useCase;
+  @InjectMocks private RetryInboxUseCaseImpl retryInboxUseCaseImpl;
 
   @Test
-  void handleShouldProcessPendingEventsForEachAggregateType() {
-    final Inbox inbox = Mockito.mock(Inbox.class);
+  void handleShouldProcessPendingEventsForUserAggregateType() {
+    final Inbox inbox = InboxTestDataBuilder.builder().build().inbox();
     Mockito.when(inboxService.findPending(Mockito.any(AggregateTypeVo.class)))
         .thenReturn(List.of(inbox));
 
-    useCase.handle(new RetryInboxeventCommand());
+    final Void result = retryInboxUseCaseImpl.handle(new RetryInboxeventCommand());
 
-    for (final AggregateTypeVo aggregateType : AggregateTypeVo.values()) {
-      Mockito.verify(inboxService).findPending(aggregateType);
-    }
-    Mockito.verify(inboxService, Mockito.times(AggregateTypeVo.values().length)).process(inbox);
-    Mockito.verify(transactionReadBoundary, Mockito.times(AggregateTypeVo.values().length))
-        .execute(Mockito.any());
+    AssertionsForClassTypes.assertThat(result).isNull();
+
+    Mockito.verify(inboxService).findPending(AggregateTypeVo.USER);
+    Mockito.verify(transactionReadBoundary).execute(Mockito.any());
+    Mockito.verify(inboxService).process(inbox);
   }
 }

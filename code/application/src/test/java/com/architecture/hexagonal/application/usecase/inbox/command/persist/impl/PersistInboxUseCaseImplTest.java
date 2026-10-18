@@ -3,14 +3,15 @@ package com.architecture.hexagonal.application.usecase.inbox.command.persist.imp
 import com.architecture.hexagonal.application.port.out.transaction.TransactionWriteBoundary;
 import com.architecture.hexagonal.application.service.inbox.InboxService;
 import com.architecture.hexagonal.application.testutils.transaction.SpyTransactionWriteBoundary;
-import com.architecture.hexagonal.contract.bus.model.inbox.command.MessageHeader;
+import com.architecture.hexagonal.application.testutils.usecase.inbox.command.RegisterInboxInputTestDataBuilder;
 import com.architecture.hexagonal.contract.bus.model.inbox.command.RegisterInboxCommand;
 import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
-import java.time.OffsetDateTime;
-import java.util.UUID;
 import java.util.function.Supplier;
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.AdditionalAnswers;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -29,34 +30,19 @@ class PersistInboxUseCaseImplTest {
 
   @Test
   void handleShouldSaveInboxIfAbsentWithinWriteBoundary() {
-    final Object data = new Object();
-    final RegisterInboxCommand command = new RegisterInboxCommand();
-    final MessageHeader messageHeader = new MessageHeader();
-    messageHeader.setMessageId(UUID.fromString("b45f40b7-1b2b-4f4f-9f80-636bb1150c47"));
-    messageHeader.setMessageDate(OffsetDateTime.parse("2026-10-13T11:00:00.123+02:00"));
-    command.setMessageHeader(messageHeader);
-    command.setData(data);
-    command.setAggregateType("USER");
-    command.setAction("USER_CREATED");
-    command.setCreatedAt(OffsetDateTime.parse("2026-10-13T12:00:00.456+02:00"));
-    Mockito.when(inboxService.save(Mockito.any()))
-        .thenAnswer(invocation -> invocation.getArgument(0));
+    final RegisterInboxCommand command =
+        RegisterInboxInputTestDataBuilder.builder().build().registerInboxInput();
+
+    Mockito.when(inboxService.save(Mockito.any(Inbox.class)))
+        .thenAnswer(AdditionalAnswers.returnsFirstArg());
 
     final Inbox result = useCase.handle(command);
 
-    org.assertj.core.api.Assertions.assertThat(result.aggregateType().name()).isEqualTo("USER");
-    org.assertj.core.api.Assertions.assertThat(result.action()).isEqualTo("USER_CREATED");
-    org.assertj.core.api.Assertions.assertThat(result.status().name()).isEqualTo("PENDING");
-    org.assertj.core.api.Assertions.assertThat(result.retryCount()).isZero();
-    org.assertj.core.api.Assertions.assertThat(result.createdAt().toString())
-        .isEqualTo("2026-10-13T12:00:00.456+02:00");
-    org.assertj.core.api.Assertions.assertThat(result.payload().messageHeader().messageId())
-        .isEqualTo(messageHeader.getMessageId());
-    org.assertj.core.api.Assertions.assertThat(
-            result.payload().messageHeader().messageDate().toString())
-        .isEqualTo("2026-10-13T11:00:00.123+02:00");
-    org.assertj.core.api.Assertions.assertThat(result.payload().data()).isSameAs(data);
-    Mockito.verify(inboxService).save(result);
+    final ArgumentCaptor<Inbox> inboxCaptor = ArgumentCaptor.forClass(Inbox.class);
+    Mockito.verify(inboxService).save(inboxCaptor.capture());
+    final Inbox savedInbox = inboxCaptor.getValue();
+
+    AssertionsForClassTypes.assertThat(result).isSameAs(savedInbox);
     Mockito.verify(transactionWriteBoundary).execute(Mockito.<Supplier<Inbox>>any());
   }
 }
