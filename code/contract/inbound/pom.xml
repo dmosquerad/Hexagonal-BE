@@ -12,7 +12,7 @@
     </parent>
 
     <modules>
-        <module>kafka</module>
-        <module>rest</module>
+        <module>messaging</module>
+        <module>endpoint</module>
     </modules>
 </project>

@@ -10,11 +10,11 @@ import java.time.Clock;
 
 @EnableAutoConfiguration
 @ComponentScan(basePackages = {
-    "com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.config",
-    "com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.mapper",
-    "com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.event",
-    "com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq.producer",
-    "com.architecture.hexagonal.contract.outbound.rabbitmq"
+    "com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.config",
+    "com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.mapper",
+    "com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.event",
+    "com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.producer",
+    "com.architecture.hexagonal.contract.outbound.event.rabbitmq"
 })
 public class TestApplication {
     @Bean

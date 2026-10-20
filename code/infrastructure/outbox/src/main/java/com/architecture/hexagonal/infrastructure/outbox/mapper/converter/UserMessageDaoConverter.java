@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.outbox.mapper.converter;
 
-import com.architecture.hexagonal.contract.outbound.rabbitmq.model.UserData;
+import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.UserData;
 import lombok.experimental.UtilityClass;
 import org.mapstruct.Named;
 import tools.jackson.databind.ObjectMapper;

@@ -12,9 +12,9 @@
     </parent>
 
     <modules>
-        <module>rest</module>
-        <module>execution</module>
-        <module>message</module>
+        <module>endpoint</module>
+        <module>job</module>
+        <module>messaging</module>
     </modules>
 
 </project>

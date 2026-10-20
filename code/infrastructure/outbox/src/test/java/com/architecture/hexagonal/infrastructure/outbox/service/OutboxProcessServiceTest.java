@@ -1,9 +1,9 @@
 package com.architecture.hexagonal.infrastructure.outbox.service;
 
-import com.architecture.hexagonal.contract.outbound.rabbitmq.model.UserCreated;
-import com.architecture.hexagonal.contract.outbound.rabbitmq.model.UserData;
-import com.architecture.hexagonal.contract.outbound.rabbitmq.model.UserDeleted;
-import com.architecture.hexagonal.contract.outbound.rabbitmq.model.UserUpdated;
+import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.UserCreated;
+import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.UserData;
+import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.UserDeleted;
+import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.UserUpdated;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
 import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;

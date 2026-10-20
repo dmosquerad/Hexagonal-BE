@@ -8,7 +8,7 @@ import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.lang.syntax.ArchRuleDefinition;
 
-@AnalyzeClasses(packages = "com.architecture.hexagonal.infrastructure.outbound.message.rabbitmq", importOptions = ImportOption.DoNotIncludeTests.class)
+@AnalyzeClasses(packages = "com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq", importOptions = ImportOption.DoNotIncludeTests.class)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 class InfrastructureOutboundMessageArchTest {
 
@@ -18,6 +18,6 @@ class InfrastructureOutboundMessageArchTest {
             .that()
             .haveSimpleNameEndingWith("ProducerImpl")
             .should()
-            .resideInAPackage("..infrastructure.outbound.message.rabbitmq.producer..")
+            .resideInAPackage("..infrastructure.outbound.event.rabbitmq.producer..")
             .because("Message producer classes must be grouped under the producer package");
 }

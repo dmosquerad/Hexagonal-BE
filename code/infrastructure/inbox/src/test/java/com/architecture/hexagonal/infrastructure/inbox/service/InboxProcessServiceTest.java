@@ -3,7 +3,7 @@ package com.architecture.hexagonal.infrastructure.inbox.service;
 import static org.mockito.Mockito.verify;
 
 import com.architecture.hexagonal.contract.bus.model.user.command.CreateUserCommand;
-import com.architecture.hexagonal.contract.inbound.kafka.model.UserCreatedData;
+import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserCreatedData;
 import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.domain.model.vo.payload.MessageHeaderVo;

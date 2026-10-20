@@ -21,7 +21,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>inbound-contract-kafka</artifactId>
+            <artifactId>contract-inbound-kafka</artifactId>
         </dependency>
     </dependencies>
 </project>

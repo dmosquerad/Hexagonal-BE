@@ -17,11 +17,11 @@
         <!-- ============================================ -->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>mesage-rabbitmq</artifactId>
+            <artifactId>event-rabbitmq</artifactId>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>outbound-contract-rabbitmq</artifactId>
+            <artifactId>contract-outbound-rabbitmq</artifactId>
         </dependency>
     </dependencies>
 </project>
