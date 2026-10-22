@@ -69,7 +69,7 @@ class UserKafkaConsumerTest {
         .isEqualTo(message.getMessageHeader().getMessageDate().toString());
     assertThat(registerCommand.getAction()).isEqualTo("USER_CREATED");
     assertThat(registerCommand.getAggregateType()).isEqualTo("USER");
-    assertThat(registerCommand.getData()).isSameAs(message);
+    assertThat(registerCommand.getData()).isSameAs(message.getData());
     assertThat(registerCommand.getCreatedAt()).isBetween(before, OffsetDateTime.now());
   }
 

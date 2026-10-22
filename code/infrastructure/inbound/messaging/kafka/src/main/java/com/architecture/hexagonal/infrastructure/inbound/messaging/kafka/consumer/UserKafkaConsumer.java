@@ -12,6 +12,7 @@ import java.time.OffsetDateTime;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -25,7 +26,7 @@ public class UserKafkaConsumer implements UserEventsConsumerService {
   @Override
   @KafkaListener(topics = "user.created", groupId = "user.handler")
   public void onUserCreated(
-      final UserCreated userCreatedMessage, final Map<String, Object> headers) {
+      final UserCreated userCreatedMessage, @Headers final Map<String, Object> headers) {
     final OffsetDateTime currentDateTime = OffsetDateTime.now(clock);
 
     try {
@@ -42,7 +43,7 @@ public class UserKafkaConsumer implements UserEventsConsumerService {
   @Override
   @KafkaListener(topics = "user.updated", groupId = "user.handler")
   public void onUserUpdated(
-      final UserUpdated userUpdatedMessage, final Map<String, Object> headers) {
+      final UserUpdated userUpdatedMessage, @Headers final Map<String, Object> headers) {
     final OffsetDateTime currentDateTime = OffsetDateTime.now(clock);
 
     try {
@@ -59,7 +60,7 @@ public class UserKafkaConsumer implements UserEventsConsumerService {
   @Override
   @KafkaListener(topics = "user.deleted", groupId = "user.handler")
   public void onUserDeleted(
-      final UserDeleted userDeletedMessage, final Map<String, Object> headers) {
+      final UserDeleted userDeletedMessage, @Headers final Map<String, Object> headers) {
     final OffsetDateTime currentDateTime = OffsetDateTime.now(clock);
 
     try {

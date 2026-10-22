@@ -45,6 +45,24 @@ class InboxWriteMongodbAdapterImplTestIT extends MongodbIT {
   }
 
   @Test
+  void saveShouldPersistPayloadContainingOffsetDateTime() {
+    final Inbox inbox =
+        inbox(UUID.randomUUID(), OffsetDateTime.parse("2026-10-13T10:15:30Z"), StatusVo.PENDING);
+    final Inbox inboxWithTimestampPayload =
+        inbox.toBuilder()
+            .payload(
+                PayloadVo.builder()
+                    .messageHeader(inbox.payload().messageHeader())
+                    .data(new TimestampPayload(OffsetDateTime.parse("2026-10-13T10:14:30Z")))
+                    .build())
+            .build();
+
+    inboxWriteMongodbAdapter.save(inboxWithTimestampPayload);
+
+    AssertionsForClassTypes.assertThat(inboxWriteMongodbRepository.count()).isEqualTo(1);
+  }
+
+  @Test
   void claimPendingForProcessingShouldReturnClaimedInbox() {
     final Inbox pending =
         inbox(UUID.randomUUID(), OffsetDateTime.parse("2026-10-13T10:15:30Z"), StatusVo.PENDING);
@@ -117,4 +135,6 @@ class InboxWriteMongodbAdapterImplTestIT extends MongodbIT {
         .processedAt(null)
         .build();
   }
+
+  private record TimestampPayload(OffsetDateTime timestamp) {}
 }

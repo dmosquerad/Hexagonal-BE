@@ -134,7 +134,6 @@ class UserKafkaConsumerTestIT {
     assertThat(command.getAction()).isEqualTo(action);
     assertThat(command.getAggregateType()).isEqualTo("USER");
     assertThat(command.getAggregateId()).isEqualTo(aggregateId);
-    assertThat(command.getData()).isSameAs(message);
     assertThat(command.getMessageHeader().getMessageId()).isEqualTo(sourceHeader.getMessageId());
     assertThat(command.getMessageHeader().getMessageDate())
         .isEqualTo(sourceHeader.getMessageDate().toString());

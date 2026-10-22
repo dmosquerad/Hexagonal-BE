@@ -30,7 +30,7 @@ public class InboxDao {
 
   @NotNull private AggregateTypeVo aggregateType;
 
-  @Indexed private Object aggregateId;
+  private Object aggregateId;
 
   @NotBlank private String action;
 

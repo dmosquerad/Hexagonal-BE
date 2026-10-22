@@ -26,7 +26,7 @@ public interface UserKafkaMessageMapper {
 
   @Mapping(
       target = "data",
-      source = "message",
+      source = "message.data",
       qualifiedByName = UserKafkaMessageConverter.TO_OBJECT)
   @Mapping(target = "aggregateType", constant = "USER")
   @Mapping(target = "aggregateId", ignore = true)
@@ -36,7 +36,7 @@ public interface UserKafkaMessageMapper {
 
   @Mapping(
       target = "data",
-      source = "message",
+      source = "message.data",
       qualifiedByName = UserKafkaMessageConverter.TO_OBJECT)
   @Mapping(target = "aggregateType", constant = "USER")
   @Mapping(
@@ -49,7 +49,7 @@ public interface UserKafkaMessageMapper {
 
   @Mapping(
       target = "data",
-      source = "message",
+      source = "message.data",
       qualifiedByName = UserKafkaMessageConverter.TO_OBJECT)
   @Mapping(target = "aggregateType", constant = "USER")
   @Mapping(
