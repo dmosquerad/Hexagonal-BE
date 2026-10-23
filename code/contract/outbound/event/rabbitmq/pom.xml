@@ -25,59 +25,23 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
+                <groupId>org.jsonschema2pojo</groupId>
+                <artifactId>jsonschema2pojo-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>install-rabbitmq-contract-node-dependencies</id>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>npm</executable>
-                            <workingDirectory>${project.basedir}</workingDirectory>
-                            <arguments>
-                                <argument>ci</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>generate-rabbitmq-producer-contract-asyncapi</id>
+                        <id>generate-rabbitmq-contract-models</id>
                         <phase>generate-sources</phase>
                         <goals>
-                            <goal>exec</goal>
+                            <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <executable>npm</executable>
-                            <workingDirectory>${project.basedir}</workingDirectory>
-                            <arguments>
-                                <argument>run</argument>
-                                <argument>generate</argument>
-                                <argument>--</argument>
-                                <argument>${project.basedir}/src/main/resources/contract/asyncapi.yml</argument>
-                                <argument>${project.build.directory}/generated-sources/asyncapi-services</argument>
-                                <argument>${project.basedir}/codegen/producer-contract</argument>
-                                <argument>com/architecture/hexagonal/contract/outbound/event/rabbitmq</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>add-asyncapi-contract-source</id>
-                        <phase>process-sources</phase>
-                        <goals>
-                            <goal>add-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>${project.build.directory}/generated-sources/asyncapi-services</source>
-                            </sources>
+                            <sourceDirectory>${project.basedir}/src/main/resources/contract/users/schemas</sourceDirectory>
+                            <targetPackage>com.architecture.hexagonal.contract.outbound.event.rabbitmq.model</targetPackage>
+                            <outputDirectory>${project.build.directory}/generated-sources/jsonschema2pojo</outputDirectory>
+                            <removeOldOutput>true</removeOldOutput>
+                            <dateTimeType>java.time.OffsetDateTime</dateTimeType>
+                            <includeJsr303Annotations>true</includeJsr303Annotations>
+                            <useJakartaValidation>true</useJakartaValidation>
                         </configuration>
                     </execution>
                 </executions>

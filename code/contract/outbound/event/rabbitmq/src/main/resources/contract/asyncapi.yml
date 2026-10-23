@@ -29,12 +29,12 @@ components:
       $ref: './users/users-messages.yml#/messages/UserDeleted'
   schemas:
     MessageHeader:
-      $ref: './users/users-schema.yml#/schemas/MessageHeader'
+      $ref: './users/schemas/message-header.json'
     UserData:
-      $ref: './users/users-schema.yml#/schemas/UserData'
+      $ref: './users/schemas/user-data.json'
     UserCreated:
-      $ref: './users/users-schema.yml#/schemas/UserCreated'
+      $ref: './users/schemas/user-created.json'
     UserUpdated:
-      $ref: './users/users-schema.yml#/schemas/UserUpdated'
+      $ref: './users/schemas/user-updated.json'
     UserDeleted:
-      $ref: './users/users-schema.yml#/schemas/UserDeleted'
+      $ref: './users/schemas/user-deleted.json'

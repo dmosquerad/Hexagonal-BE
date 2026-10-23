@@ -16,7 +16,6 @@ import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserUpd
 import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
 import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.config.TestApplication;
 import java.time.OffsetDateTime;
-import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -38,7 +37,7 @@ class UserKafkaConsumerTestIT {
   void consumeUserCreatedShouldMapCommandWithoutPersistingInboxOnSuccess() {
     final UserCreated message = userCreated();
 
-    userKafkaConsumer.onUserCreated(message, Map.of());
+    userKafkaConsumer.onUserCreated(message);
 
     final ArgumentCaptor<CreateUserCommand> commandCaptor =
         ArgumentCaptor.forClass(CreateUserCommand.class);
@@ -55,7 +54,7 @@ class UserKafkaConsumerTestIT {
         .when(commandBus)
         .execute(Mockito.any(CreateUserCommand.class));
 
-    userKafkaConsumer.onUserCreated(message, Map.of());
+    userKafkaConsumer.onUserCreated(message);
 
     Mockito.verify(commandBus).execute(Mockito.any(CreateUserCommand.class));
     assertInboxRegistered(
@@ -66,7 +65,7 @@ class UserKafkaConsumerTestIT {
   void consumeUserUpdatedShouldMapCommandWithoutPersistingInboxOnSuccess() {
     final UserUpdated message = userUpdated();
 
-    userKafkaConsumer.onUserUpdated(message, Map.of());
+    userKafkaConsumer.onUserUpdated(message);
 
     final ArgumentCaptor<UpdateUserCommand> commandCaptor =
         ArgumentCaptor.forClass(UpdateUserCommand.class);
@@ -84,7 +83,7 @@ class UserKafkaConsumerTestIT {
         .when(commandBus)
         .execute(Mockito.any(UpdateUserCommand.class));
 
-    userKafkaConsumer.onUserUpdated(message, Map.of());
+    userKafkaConsumer.onUserUpdated(message);
 
     Mockito.verify(commandBus).execute(Mockito.any(UpdateUserCommand.class));
     assertInboxRegistered(
@@ -95,7 +94,7 @@ class UserKafkaConsumerTestIT {
   void consumeUserDeletedShouldMapCommandWithoutPersistingInboxOnSuccess() {
     final UserDeleted message = userDeleted();
 
-    userKafkaConsumer.onUserDeleted(message, Map.of());
+    userKafkaConsumer.onUserDeleted(message);
 
     final ArgumentCaptor<DeleteUserCommand> commandCaptor =
         ArgumentCaptor.forClass(DeleteUserCommand.class);
@@ -111,7 +110,7 @@ class UserKafkaConsumerTestIT {
         .when(commandBus)
         .execute(Mockito.any(DeleteUserCommand.class));
 
-    userKafkaConsumer.onUserDeleted(message, Map.of());
+    userKafkaConsumer.onUserDeleted(message);
 
     Mockito.verify(commandBus).execute(Mockito.any(DeleteUserCommand.class));
     assertInboxRegistered(

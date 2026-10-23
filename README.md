@@ -211,12 +211,12 @@ Holds the OpenAPI 3.0 specifications and generates server-side stubs consumed by
 - Generated Java interfaces implemented by REST controllers
 
 #### Inbound — Kafka (`code/contract/inbound/kafka`)
-The AsyncAPI 2.6 specification defines the user events consumed from Kafka. Maven runs the Kafka module's AsyncAPI template during `generate-sources`; the template uses Modelina to generate Java payload models and creates `UserEventsConsumerService` from each `subscribe` operation. The Kafka adapter implements that generated contract and declares the listener endpoints.
+The AsyncAPI 2.6 specification defines the user events consumed from Kafka and references the JSON Schemas used to generate Java payload models. The `jsonschema2pojo-maven-plugin` generates the models during `generate-sources`; the small `UserEventsConsumerService` interface is maintained explicitly in Java and implemented by the Kafka adapter.
 
 #### Outbound — RabbitMQ (`code/contract/outbound/rabbitmq`)
-The AsyncAPI 2.6 specification defines user event payloads and publication operations. Maven runs the RabbitMQ module's AsyncAPI template during `generate-sources`; the template uses Modelina to generate Java payload models and creates `UserEventsProducer` from each `publish` operation. The RabbitMQ adapter implements that generated contract. Broker bindings remain configured in `application-rabbitmq.yml`.
+The AsyncAPI 2.6 specification defines user event payloads and publication operations and references the JSON Schemas used to generate Java payload models. The `jsonschema2pojo-maven-plugin` generates the models during `generate-sources`; the small `UserEventsProducer` interface is maintained explicitly in Java and implemented by the RabbitMQ adapter. Broker bindings remain configured in `application-rabbitmq.yml`.
 
-Contract generation requires Node.js and npm (versions pinned in `.tool-versions`). Each Kafka and RabbitMQ contract module has its own `package.json` and lockfile; Maven runs `npm ci` in that module during `initialize` and then its `generate` npm script. Modelina generates the Java payload models from within each template.
+Kafka and RabbitMQ model generation is Maven-native and does not require Node.js or npm.
 
 #### Inbound — Bus (`code/infrastructure/inbound/bus`)
 Implements the inbound CQRS buses that dispatch commands and queries to application handlers.

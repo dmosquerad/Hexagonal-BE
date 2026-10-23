@@ -5,18 +5,18 @@ messages:
     messageId: user-created
     contentType: application/json
     payload:
-      $ref: './users-schema.yml#/schemas/UserCreated'
+      $ref: './schemas/user-created.json'
   UserUpdated:
     name: UserUpdated
     title: User updated
     messageId: user-updated
     contentType: application/json
     payload:
-      $ref: './users-schema.yml#/schemas/UserUpdated'
+      $ref: './schemas/user-updated.json'
   UserDeleted:
     name: UserDeleted
     title: User deleted
     messageId: user-deleted
     contentType: application/json
     payload:
-      $ref: './users-schema.yml#/schemas/UserDeleted'
+      $ref: './schemas/user-deleted.json'

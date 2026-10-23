@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "UserCreatedData",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "name",
+    "email"
+  ],
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string",
+      "format": "email"
+    }
+  }
+}

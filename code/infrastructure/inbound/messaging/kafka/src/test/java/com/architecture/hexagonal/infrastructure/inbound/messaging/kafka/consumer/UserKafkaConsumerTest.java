@@ -14,7 +14,6 @@ import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
 import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.mapper.UserKafkaMessageMapper;
 import java.time.Clock;
 import java.time.OffsetDateTime;
-import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,7 +42,7 @@ class UserKafkaConsumerTest {
     final CreateUserCommand command = org.mockito.Mockito.mock(CreateUserCommand.class);
     when(userKafkaMessageMapper.toCreateUserCommand(message)).thenReturn(command);
 
-    userKafkaConsumer.onUserCreated(message, Map.of());
+    userKafkaConsumer.onUserCreated(message);
 
     verify(commandBus).execute(command);
   }
@@ -56,7 +55,7 @@ class UserKafkaConsumerTest {
     when(userKafkaMessageMapper.toCreateUserCommand(message)).thenReturn(command);
     doThrow(new IllegalStateException("command failed")).when(commandBus).execute(command);
 
-    userKafkaConsumer.onUserCreated(message, Map.of());
+    userKafkaConsumer.onUserCreated(message);
 
     final ArgumentCaptor<RegisterInboxCommand> registerInboxCommandCaptor =
         ArgumentCaptor.forClass(RegisterInboxCommand.class);
