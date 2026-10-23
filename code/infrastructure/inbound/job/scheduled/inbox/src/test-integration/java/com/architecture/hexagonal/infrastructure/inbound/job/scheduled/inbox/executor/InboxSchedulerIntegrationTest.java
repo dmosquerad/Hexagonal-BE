@@ -1,0 +1,56 @@
+package com.architecture.hexagonal.infrastructure.inbound.job.scheduled.inbox.executor;
+
+import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
+import com.architecture.hexagonal.application.port.out.scheduler.SchedulerConfigurationPort;
+import com.architecture.hexagonal.domain.model.vo.inbox.SchedulerInboxConfigurationVo;
+import com.architecture.hexagonal.infrastructure.inbound.job.scheduled.inbox.config.TestApplication;
+import com.architecture.hexagonal.domain.testutils.data.model.vo.inbox.SchedulerInboxConfigurationVoTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.inbound.job.scheduled.inbox.executor.impl.InboxSchedulerImpl;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.scheduling.config.ScheduledTaskRegistrar;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+
+import java.time.Duration;
+
+@SpringBootTest(classes = {TestApplication.class, InboxSchedulerImpl.class})
+class InboxSchedulerIntegrationTest {
+
+    @Autowired
+    private InboxSchedulerImpl inboxSchedulerImpl;
+
+    @MockitoBean
+    private SchedulerConfigurationPort schedulerConfigurationPort;
+
+    @MockitoBean
+    private ScheduledTaskRegistrar scheduledTaskRegistrar;
+
+    @MockitoBean
+    private CommandBus commandBus;
+
+    @Test
+    void shouldConfigureTasksWithCorrectInterval() {
+        final SchedulerInboxConfigurationVo schedulerConfig = SchedulerInboxConfigurationVoTestDataBuilder.builder().build().schedulerInboxConfigurationVo();
+
+        Mockito.when(schedulerConfigurationPort.getInboxScheduler()).thenReturn(schedulerConfig);
+
+        inboxSchedulerImpl.configureTasks(scheduledTaskRegistrar);
+
+        final ArgumentCaptor<Runnable> scheduleProcessCaptor = ArgumentCaptor.forClass(Runnable.class);
+        final ArgumentCaptor<Duration> durationCaptor = ArgumentCaptor.forClass(Duration.class);
+
+        Mockito.verify(scheduledTaskRegistrar).addFixedDelayTask(scheduleProcessCaptor.capture(), durationCaptor.capture());
+        final Duration expectedDuration = schedulerConfig.pollingInterval();
+        final Duration capturedDuration = durationCaptor.getValue();
+        
+        Assertions.assertEquals(expectedDuration, capturedDuration);
+
+        Mockito.verify(schedulerConfigurationPort).getInboxScheduler();
+
+        scheduleProcessCaptor.getValue().run();
+    }
+}

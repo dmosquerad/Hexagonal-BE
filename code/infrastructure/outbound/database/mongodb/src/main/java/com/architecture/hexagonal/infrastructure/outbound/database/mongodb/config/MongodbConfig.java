@@ -1,6 +1,7 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.config;
 
 import java.time.Clock;
+import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Objects;
@@ -25,6 +26,8 @@ public class MongodbConfig {
         adapter -> {
           adapter.registerConverter(new ZonedDateTimeToDateConverter());
           adapter.registerConverter(new DateToZonedDateTimeConverter(clock));
+          adapter.registerConverter(new OffsetDateTimeToDateConverter());
+          adapter.registerConverter(new DateToOffsetDateTimeConverter(clock));
         });
   }
 
@@ -66,6 +69,27 @@ public class MongodbConfig {
     @Override
     public ZonedDateTime convert(final Date date) {
       return date.toInstant().atZone(clock.getZone());
+    }
+  }
+
+  @WritingConverter
+  private static class OffsetDateTimeToDateConverter implements Converter<OffsetDateTime, Date> {
+
+    @Override
+    public Date convert(final OffsetDateTime offsetDateTime) {
+      return Date.from(offsetDateTime.toInstant());
+    }
+  }
+
+  @ReadingConverter
+  @RequiredArgsConstructor
+  private static class DateToOffsetDateTimeConverter implements Converter<Date, OffsetDateTime> {
+
+    private final Clock clock;
+
+    @Override
+    public OffsetDateTime convert(final Date date) {
+      return date.toInstant().atZone(clock.getZone()).toOffsetDateTime();
     }
   }
 }

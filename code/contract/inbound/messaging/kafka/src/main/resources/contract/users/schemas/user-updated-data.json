@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "UserUpdatedData",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "userId",
+    "name",
+    "email"
+  ],
+  "properties": {
+    "userId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "name": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string",
+      "format": "email"
+    }
+  }
+}

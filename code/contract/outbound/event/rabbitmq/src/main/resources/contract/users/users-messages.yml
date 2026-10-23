@@ -1,0 +1,16 @@
+messages:
+  UserCreated:
+    name: UserCreated
+    messageId: user-created
+    payload:
+      $ref: './schemas/user-created.json'
+  UserUpdated:
+    name: UserUpdated
+    messageId: user-updated
+    payload:
+      $ref: './schemas/user-updated.json'
+  UserDeleted:
+    name: UserDeleted
+    messageId: user-deleted
+    payload:
+      $ref: './schemas/user-deleted.json'

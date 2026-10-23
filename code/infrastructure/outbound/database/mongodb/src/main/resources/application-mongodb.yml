@@ -1,4 +1,7 @@
 spring:
+  data:
+    mongodb:
+      auto-index-creation: true
   mongodb:
     port: 27017
     database: mydatabase

@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MessageHeader",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "messageId",
+    "messageDate"
+  ],
+  "properties": {
+    "messageId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "messageDate": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}
