@@ -10,7 +10,6 @@ import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.UserDat
 import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.UserDeleted;
 import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.UserUpdated;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.mapper.user.UserEventMessageMapper;
-import java.time.Clock;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 import org.assertj.core.api.Assertions;
@@ -24,7 +23,6 @@ class UserEventHandlersTest {
 
   private final ApplicationEventPublisher publisher = Mockito.mock(ApplicationEventPublisher.class);
   private final UserEventMessageMapper mapper = Mappers.getMapper(UserEventMessageMapper.class);
-  private final Clock clock = TestClock.FIXED_CLOCK;
   private final UUID userId = UUID.randomUUID();
 
   private static final String NAME = "name";
@@ -42,7 +40,7 @@ class UserEventHandlersTest {
     Assertions.assertThat(actual.getMessageId()).isNotNull();
     final MessageHeader header = new MessageHeader();
     header.setMessageId(actual.getMessageId());
-    header.setMessageDate(OffsetDateTime.now(clock));
+    header.setMessageDate(OffsetDateTime.now(TestClock.FIXED_CLOCK));
     return header;
   }
 
@@ -53,7 +51,7 @@ class UserEventHandlersTest {
     event.setName(NAME);
     event.setEmail(EMAIL);
 
-    new UserCreatedEventHandler(publisher, mapper, clock).handle(event);
+    new UserCreatedEventHandler(publisher, mapper, TestClock.FIXED_CLOCK).handle(event);
 
     final ArgumentCaptor<UserCreated> captor = ArgumentCaptor.forClass(UserCreated.class);
     Mockito.verify(publisher).publishEvent(captor.capture());
@@ -70,7 +68,7 @@ class UserEventHandlersTest {
     event.setName(NAME);
     event.setEmail(EMAIL);
 
-    new UserUpdatedEventHandler(publisher, mapper, clock).handle(event);
+    new UserUpdatedEventHandler(publisher, mapper, TestClock.FIXED_CLOCK).handle(event);
 
     final ArgumentCaptor<UserUpdated> captor = ArgumentCaptor.forClass(UserUpdated.class);
     Mockito.verify(publisher).publishEvent(captor.capture());
@@ -87,7 +85,7 @@ class UserEventHandlersTest {
     event.setName(NAME);
     event.setEmail(EMAIL);
 
-    new UserDeletedEventHandler(publisher, mapper, clock).handle(event);
+    new UserDeletedEventHandler(publisher, mapper, TestClock.FIXED_CLOCK).handle(event);
 
     final ArgumentCaptor<UserDeleted> captor = ArgumentCaptor.forClass(UserDeleted.class);
     Mockito.verify(publisher).publishEvent(captor.capture());

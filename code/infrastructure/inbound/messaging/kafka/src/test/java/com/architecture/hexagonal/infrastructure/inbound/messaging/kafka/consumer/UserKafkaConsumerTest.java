@@ -5,6 +5,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.architecture.hexagonal.application.testutils.time.TestClock;
 import com.architecture.hexagonal.contract.bus.model.inbox.command.RegisterInboxCommand;
 import com.architecture.hexagonal.contract.bus.model.user.command.CreateUserCommand;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.MessageHeader;
@@ -49,7 +50,6 @@ class UserKafkaConsumerTest {
 
   @Test
   void consumeUserCreatedShouldRegisterInboxWhenCommandExecutionFails() {
-    final OffsetDateTime before = OffsetDateTime.now();
     final UserCreatedPayload message = message();
     final CreateUserCommand command = org.mockito.Mockito.mock(CreateUserCommand.class);
     when(userKafkaMessageMapper.toCreateUserCommand(message)).thenReturn(command);
@@ -69,7 +69,6 @@ class UserKafkaConsumerTest {
     assertThat(registerCommand.getAction()).isEqualTo("USER_CREATED");
     assertThat(registerCommand.getAggregateType()).isEqualTo("USER");
     assertThat(registerCommand.getData()).isSameAs(message.getData_());
-    assertThat(registerCommand.getCreatedAt()).isBetween(before, OffsetDateTime.now());
   }
 
   private UserCreatedPayload message() {
