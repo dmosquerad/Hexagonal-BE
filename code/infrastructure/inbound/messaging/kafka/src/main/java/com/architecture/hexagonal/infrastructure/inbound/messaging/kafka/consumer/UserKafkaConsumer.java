@@ -1,29 +1,37 @@
 package com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.consumer;
 
 import com.architecture.hexagonal.contract.bus.model.inbox.command.RegisterInboxCommand;
-import com.architecture.hexagonal.contract.inbound.messaging.kafka.UserEventsConsumerService;
-import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserCreated;
-import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserDeleted;
-import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserUpdated;
+import com.architecture.hexagonal.contract.inbound.messaging.kafka.client.consumer.UserCreatedConsumer;
+import com.architecture.hexagonal.contract.inbound.messaging.kafka.client.consumer.UserDeletedConsumer;
+import com.architecture.hexagonal.contract.inbound.messaging.kafka.client.consumer.UserUpdatedConsumer;
+import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserCreatedPayload;
+import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserDeletedPayload;
+import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserUpdatedPayload;
 import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
 import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.mapper.UserKafkaMessageMapper;
 import java.time.Clock;
 import java.time.OffsetDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class UserKafkaConsumer implements UserEventsConsumerService {
+public class UserKafkaConsumer
+    implements UserCreatedConsumer, UserUpdatedConsumer, UserDeletedConsumer {
 
   private final CommandBus commandBus;
   private final UserKafkaMessageMapper userKafkaMessageMapper;
   private final Clock clock;
 
   @Override
-  @KafkaListener(topics = "user.created", groupId = "user.handler")
-  public void onUserCreated(final UserCreated userCreatedMessage) {
+  @KafkaListener(topics = UserCreatedConsumer.USER_CREATED_TOPIC_ADDRESS)
+  public void listenUserCreated(
+      @Payload final UserCreatedPayload userCreatedMessage,
+      @Header(name = KafkaHeaders.RECEIVED_TOPIC, required = true) final String receivedTopic) {
     final OffsetDateTime currentDateTime = OffsetDateTime.now(clock);
 
     try {
@@ -38,8 +46,10 @@ public class UserKafkaConsumer implements UserEventsConsumerService {
   }
 
   @Override
-  @KafkaListener(topics = "user.updated", groupId = "user.handler")
-  public void onUserUpdated(final UserUpdated userUpdatedMessage) {
+  @KafkaListener(topics = UserUpdatedConsumer.USER_UPDATED_TOPIC_ADDRESS)
+  public void listenUserUpdated(
+      @Payload final UserUpdatedPayload userUpdatedMessage,
+      @Header(name = KafkaHeaders.RECEIVED_TOPIC, required = true) final String receivedTopic) {
     final OffsetDateTime currentDateTime = OffsetDateTime.now(clock);
 
     try {
@@ -54,8 +64,10 @@ public class UserKafkaConsumer implements UserEventsConsumerService {
   }
 
   @Override
-  @KafkaListener(topics = "user.deleted", groupId = "user.handler")
-  public void onUserDeleted(final UserDeleted userDeletedMessage) {
+  @KafkaListener(topics = UserDeletedConsumer.USER_DELETED_TOPIC_ADDRESS)
+  public void listenUserDeleted(
+      @Payload final UserDeletedPayload userDeletedMessage,
+      @Header(name = KafkaHeaders.RECEIVED_TOPIC, required = true) final String receivedTopic) {
     final OffsetDateTime currentDateTime = OffsetDateTime.now(clock);
 
     try {

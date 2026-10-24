@@ -14,21 +14,21 @@ public interface UserFromOutboxMapper {
 
   @Mapping(
       source = "payload.data",
-      target = "data",
+      target = "userData",
       qualifiedByName = UserMessageDaoConverter.TO_USER_DATA)
   @Mapping(source = "payload.messageHeader", target = "messageHeader")
   UserCreated toUserCreated(PayloadVo payload);
 
   @Mapping(
       source = "payload.data",
-      target = "data",
+      target = "userData",
       qualifiedByName = UserMessageDaoConverter.TO_USER_DATA)
   @Mapping(source = "payload.messageHeader", target = "messageHeader")
   UserUpdated toUserUpdated(PayloadVo payload);
 
   @Mapping(
       source = "payload.data",
-      target = "data",
+      target = "userData",
       qualifiedByName = UserMessageDaoConverter.TO_USER_DATA)
   @Mapping(source = "payload.messageHeader", target = "messageHeader")
   UserDeleted toUserDeleted(PayloadVo payload);

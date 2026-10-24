@@ -14,15 +14,15 @@ import org.mapstruct.Mapping;
 @Mapper(config = MapstructConfig.class)
 public interface UserEventMessageMapper {
 
-  @Mapping(source = "event", target = "data")
+  @Mapping(source = "event", target = "userData")
   @Mapping(source = "messageHeader", target = "messageHeader")
   UserCreated toUserCreated(UserCreatedEvent event, MessageHeaderVo messageHeader);
 
-  @Mapping(source = "event", target = "data")
+  @Mapping(source = "event", target = "userData")
   @Mapping(source = "messageHeader", target = "messageHeader")
   UserUpdated toUserUpdated(UserUpdatedEvent event, MessageHeaderVo messageHeader);
 
-  @Mapping(source = "event", target = "data")
+  @Mapping(source = "event", target = "userData")
   @Mapping(source = "messageHeader", target = "messageHeader")
   UserDeleted toUserDeleted(UserDeletedEvent event, MessageHeaderVo messageHeader);
 }

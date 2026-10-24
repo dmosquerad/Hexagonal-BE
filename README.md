@@ -210,13 +210,13 @@ Holds the OpenAPI 3.0 specifications and generates server-side stubs consumed by
 - `inbound-email-rest-server`: OpenAPI spec for the Email rules API
 - Generated Java interfaces implemented by REST controllers
 
-#### Inbound — Kafka (`code/contract/inbound/kafka`)
-The AsyncAPI 2.6 specification defines the user events consumed from Kafka and references the JSON Schemas used to generate Java payload models. The `jsonschema2pojo-maven-plugin` generates the models during `generate-sources`; the small `UserEventsConsumerService` interface is maintained explicitly in Java and implemented by the Kafka adapter.
+#### Inbound — Kafka (`code/contract/inbound/messaging/kafka`)
+The AsyncAPI 3.0 specification defines the user events consumed from Kafka. During `generate-sources`, the evryfs AsyncAPI Maven plugin generates the Java payload models and Spring Kafka consumer contract interfaces. `UserKafkaConsumer` implements those generated contracts and receives messages through `@KafkaListener`; JSON conversion and retries are configured with Spring Kafka. No handwritten Kafka consumer port or JavaScript generator is required.
 
-#### Outbound — RabbitMQ (`code/contract/outbound/rabbitmq`)
-The AsyncAPI 2.6 specification defines user event payloads and publication operations and references the JSON Schemas used to generate Java payload models. The `jsonschema2pojo-maven-plugin` generates the models during `generate-sources`; the small `UserEventsProducer` interface is maintained explicitly in Java and implemented by the RabbitMQ adapter. Broker bindings remain configured in `application-rabbitmq.yml`.
+#### Outbound — RabbitMQ (`code/contract/outbound/event/rabbitmq`)
+The AsyncAPI 3.0 specification defines user event payloads and `send` operations. During `generate-sources`, the evryfs AsyncAPI Maven plugin generates the Java payload models. `UserEventsProducer` remains a handwritten application port because the plugin's client contract generator targets Spring Kafka, not Spring Cloud Stream or RabbitMQ. The RabbitMQ adapter implements the port using Spring Cloud Stream's Rabbit binder and `StreamBridge`; broker bindings and the Outbox fallback remain configured in the application.
 
-Kafka and RabbitMQ model generation is Maven-native and does not require Node.js or npm.
+The evryfs plugin supports AsyncAPI 3.0.x (not 3.1.x) and local external references. AsyncAPI generation is part of Maven's `generate-sources` phase and requires no Node.js or npm.
 
 #### Inbound — Bus (`code/infrastructure/inbound/bus`)
 Implements the inbound CQRS buses that dispatch commands and queries to application handlers.

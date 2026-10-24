@@ -2,9 +2,9 @@ spring:
   kafka:
     bootstrap-servers: localhost:9092
     consumer:
+      group-id: user.handler
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
-      properties:
-        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
-        spring.json.trusted.packages: "com.architecture.hexagonal.contract.inbound.messaging.kafka.model"
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    listener:
+      ack-mode: record

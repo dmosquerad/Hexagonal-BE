@@ -34,7 +34,7 @@ public class UserEventsProducerImpl implements UserEventsProducer {
 
     outboxRepositoryWritePort.upsertByEventIdentity(
         Outbox.builder()
-            .aggregateId(payload.getData().getUserId())
+            .aggregateId(payload.getUserData().getUserId())
             .aggregateType(AggregateTypeVo.USER)
             .action(ActionType.UserActionType.USER_CREATED.getActionType())
             .status(StatusVo.PENDING)
@@ -47,7 +47,7 @@ public class UserEventsProducerImpl implements UserEventsProducer {
   private boolean tryPublishUserCreated(final UserCreated payload) {
     try {
       return streamBridge.send(
-          "publish-user-created-out-0", MessageBuilder.withPayload(payload).build());
+          "publishUserCreated-out-0", MessageBuilder.withPayload(payload).build());
     } catch (final RuntimeException _) {
       return false;
     }
@@ -62,7 +62,7 @@ public class UserEventsProducerImpl implements UserEventsProducer {
 
     outboxRepositoryWritePort.upsertByEventIdentity(
         Outbox.builder()
-            .aggregateId(payload.getData().getUserId())
+            .aggregateId(payload.getUserData().getUserId())
             .aggregateType(AggregateTypeVo.USER)
             .action(ActionType.UserActionType.USER_UPDATED.getActionType())
             .status(StatusVo.PENDING)
@@ -75,7 +75,7 @@ public class UserEventsProducerImpl implements UserEventsProducer {
   private boolean tryPublishUserUpdated(final UserUpdated payload) {
     try {
       return streamBridge.send(
-          "publish-user-updated-out-0", MessageBuilder.withPayload(payload).build());
+          "publishUserUpdated-out-0", MessageBuilder.withPayload(payload).build());
     } catch (final RuntimeException _) {
       return false;
     }
@@ -90,7 +90,7 @@ public class UserEventsProducerImpl implements UserEventsProducer {
 
     outboxRepositoryWritePort.upsertByEventIdentity(
         Outbox.builder()
-            .aggregateId(payload.getData().getUserId())
+            .aggregateId(payload.getUserData().getUserId())
             .aggregateType(AggregateTypeVo.USER)
             .action(ActionType.UserActionType.USER_DELETED.getActionType())
             .status(StatusVo.PENDING)
@@ -103,7 +103,7 @@ public class UserEventsProducerImpl implements UserEventsProducer {
   private boolean tryPublishUserDeleted(final UserDeleted payload) {
     try {
       return streamBridge.send(
-          "publish-user-deleted-out-0", MessageBuilder.withPayload(payload).build());
+          "publishUserDeleted-out-0", MessageBuilder.withPayload(payload).build());
     } catch (final RuntimeException _) {
       return false;
     }

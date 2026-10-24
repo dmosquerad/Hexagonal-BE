@@ -17,7 +17,7 @@ public class UserDeletedTestDataBuilder {
     public UserDeleted userDeleted() {
         final UserDeleted userDeleted = new UserDeleted();
         userDeleted.setMessageHeader(messageHeader);
-        userDeleted.setData(userData);
+        userDeleted.setUserData(userData);
 
         return userDeleted;
     }

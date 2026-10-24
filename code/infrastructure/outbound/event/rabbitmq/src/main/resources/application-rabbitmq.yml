@@ -7,20 +7,20 @@ spring:
   cloud:
     stream:
       bindings:
-        publish-user-created-out-0:
+        publishUserCreated-out-0:
           destination: user.created
-        publish-user-updated-out-0:
+        publishUserUpdated-out-0:
           destination: user.updated
-        publish-user-deleted-out-0:
+        publishUserDeleted-out-0:
           destination: user.deleted
       rabbit:
         bindings:
-          publish-user-created-out-0:
+          publishUserCreated-out-0:
             producer:
               exchangeType: topic
-          publish-user-updated-out-0:
+          publishUserUpdated-out-0:
             producer:
               exchangeType: topic
-          publish-user-deleted-out-0:
+          publishUserDeleted-out-0:
             producer:
               exchangeType: topic

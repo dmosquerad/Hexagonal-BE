@@ -32,7 +32,7 @@ class UserEventHandlersTest {
 
   private UserData expectedData() {
     final UserData data = new UserData();
-    data.setUserId(userId);
+    data.setUserId(userId.toString());
     data.setName(NAME);
     data.setEmail(EMAIL);
     return data;
@@ -59,7 +59,7 @@ class UserEventHandlersTest {
     Mockito.verify(publisher).publishEvent(captor.capture());
     final UserCreated expected = new UserCreated();
     expected.setMessageHeader(expectedHeader(captor.getValue().getMessageHeader()));
-    expected.setData(expectedData());
+    expected.setUserData(expectedData());
     Assertions.assertThat(captor.getValue()).usingRecursiveComparison().isEqualTo(expected);
   }
 
@@ -76,7 +76,7 @@ class UserEventHandlersTest {
     Mockito.verify(publisher).publishEvent(captor.capture());
     final UserUpdated expected = new UserUpdated();
     expected.setMessageHeader(expectedHeader(captor.getValue().getMessageHeader()));
-    expected.setData(expectedData());
+    expected.setUserData(expectedData());
     Assertions.assertThat(captor.getValue()).usingRecursiveComparison().isEqualTo(expected);
   }
 
@@ -93,7 +93,7 @@ class UserEventHandlersTest {
     Mockito.verify(publisher).publishEvent(captor.capture());
     final UserDeleted expected = new UserDeleted();
     expected.setMessageHeader(expectedHeader(captor.getValue().getMessageHeader()));
-    expected.setData(expectedData());
+    expected.setUserData(expectedData());
     Assertions.assertThat(captor.getValue()).usingRecursiveComparison().isEqualTo(expected);
   }
 }

@@ -1,4 +1,4 @@
-asyncapi: 2.6.0
+asyncapi: 3.0.0
 info:
   title: User Kafka Events
   version: 0.0.1
@@ -7,24 +7,80 @@ info:
     which uses the consumer group user.handler.
 id: urn:com:architecture:hexagonal:inbound:kafka:user-events
 defaultContentType: application/json
-tags:
-  - name: user
 servers:
   local:
-    url: localhost:9092
+    host: localhost:9092
     protocol: kafka
     description: Local Kafka broker used by the application configuration.
   docker:
-    url: kafka:29092
+    host: kafka:29092
     protocol: kafka
     description: Kafka broker address for clients on the Docker network.
 channels:
-  user.created:
-    $ref: './users/users-channels.yml#/channels/user.created'
-  user.updated:
-    $ref: './users/users-channels.yml#/channels/user.updated'
-  user.deleted:
-    $ref: './users/users-channels.yml#/channels/user.deleted'
+  userCreated:
+    address: user.created
+    bindings:
+      kafka:
+        topic: user.created
+        partitions: 3
+        replicas: 1
+        bindingVersion: '0.4.0'
+    messages:
+      UserCreated:
+        $ref: './users/users-messages.yml#/messages/UserCreated'
+  userUpdated:
+    address: user.updated
+    bindings:
+      kafka:
+        topic: user.updated
+        partitions: 3
+        replicas: 1
+        bindingVersion: '0.4.0'
+    messages:
+      UserUpdated:
+        $ref: './users/users-messages.yml#/messages/UserUpdated'
+  userDeleted:
+    address: user.deleted
+    bindings:
+      kafka:
+        topic: user.deleted
+        partitions: 3
+        replicas: 1
+        bindingVersion: '0.4.0'
+    messages:
+      UserDeleted:
+        $ref: './users/users-messages.yml#/messages/UserDeleted'
+operations:
+  onUserCreated:
+    action: receive
+    channel:
+      $ref: '#/channels/userCreated'
+    messages:
+      - $ref: '#/channels/userCreated/messages/UserCreated'
+    summary: User-created event.
+    description: The inbound handler dispatches user creation and registers the event in the inbox if command handling fails.
+    tags:
+      - name: user
+  onUserUpdated:
+    action: receive
+    channel:
+      $ref: '#/channels/userUpdated'
+    messages:
+      - $ref: '#/channels/userUpdated/messages/UserUpdated'
+    summary: User-updated event.
+    description: The inbound handler dispatches user updates and registers the event in the inbox if command handling fails.
+    tags:
+      - name: user
+  onUserDeleted:
+    action: receive
+    channel:
+      $ref: '#/channels/userDeleted'
+    messages:
+      - $ref: '#/channels/userDeleted/messages/UserDeleted'
+    summary: User-deleted event.
+    description: The inbound handler dispatches user deletion and registers the event in the inbox if command handling fails.
+    tags:
+      - name: user
 components:
   messages:
     UserCreated:
@@ -35,16 +91,10 @@ components:
       $ref: './users/users-messages.yml#/messages/UserDeleted'
   schemas:
     MessageHeader:
-      $ref: './users/schemas/message-header.json'
-    UserCreatedData:
-      $ref: './users/schemas/user-created-data.json'
+      $ref: './users/users-schema.yml#/schemas/MessageHeader'
     UserCreated:
-      $ref: './users/schemas/user-created.json'
-    UserUpdatedData:
-      $ref: './users/schemas/user-updated-data.json'
+      $ref: './users/users-schema.yml#/schemas/UserCreated'
     UserUpdated:
-      $ref: './users/schemas/user-updated.json'
-    UserDeletedData:
-      $ref: './users/schemas/user-deleted-data.json'
+      $ref: './users/users-schema.yml#/schemas/UserUpdated'
     UserDeleted:
-      $ref: './users/schemas/user-deleted.json'
+      $ref: './users/users-schema.yml#/schemas/UserDeleted'

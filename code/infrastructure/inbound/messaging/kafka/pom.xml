@@ -27,12 +27,5 @@
             <groupId>com.architecture.hexagonal</groupId>
             <artifactId>contract-inbound-kafka</artifactId>
         </dependency>
-        <!-- ============================================ -->
-        <!-- SPRINGBOOT -->
-        <!-- ============================================ -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-kafka</artifactId>
-        </dependency>
     </dependencies>
 </project>

@@ -23,25 +23,94 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>${project.build.directory}/generated-sources/asyncapi/src/main/resources</directory>
+                <targetPath>asyncapi-rabbitmq</targetPath>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
-                <groupId>org.jsonschema2pojo</groupId>
-                <artifactId>jsonschema2pojo-maven-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.5.0</version>
                 <executions>
                     <execution>
-                        <id>generate-rabbitmq-contract-models</id>
+                        <id>generate-rabbitmq-stream-contract</id>
                         <phase>generate-sources</phase>
                         <goals>
-                            <goal>generate</goal>
+                            <goal>exec</goal>
                         </goals>
                         <configuration>
-                            <sourceDirectory>${project.basedir}/src/main/resources/contract/users/schemas</sourceDirectory>
-                            <targetPackage>com.architecture.hexagonal.contract.outbound.event.rabbitmq.model</targetPackage>
-                            <outputDirectory>${project.build.directory}/generated-sources/jsonschema2pojo</outputDirectory>
-                            <removeOldOutput>true</removeOldOutput>
-                            <dateTimeType>java.time.OffsetDateTime</dateTimeType>
-                            <includeJsr303Annotations>true</includeJsr303Annotations>
-                            <useJakartaValidation>true</useJakartaValidation>
+                            <executable>npx</executable>
+                            <arguments>
+                                <argument>--yes</argument>
+                                <argument>--package=node@20</argument>
+                                <argument>--package=npm@10</argument>
+                                <argument>--package=@asyncapi/generator@2.3.0</argument>
+                                <argument>ag</argument>
+                                <argument>-o</argument>
+                                <argument>${project.build.directory}/generated-sources/asyncapi</argument>
+                                <argument>-p</argument>
+                                <argument>artifactType=library</argument>
+                                <argument>-p</argument>
+                                <argument>binder=rabbit</argument>
+                                <argument>-p</argument>
+                                <argument>view=provider</argument>
+                                <argument>-p</argument>
+                                <argument>groupId=com.architecture.hexagonal</argument>
+                                <argument>-p</argument>
+                                <argument>artifactId=contract-outbound-rabbitmq</argument>
+                                <argument>-p</argument>
+                                <argument>javaPackage=com.architecture.hexagonal.contract.outbound.event.rabbitmq.model</argument>
+                                <argument>-p</argument>
+                                <argument>springCloudStreamVersion=5.0.0</argument>
+                                <argument>${project.basedir}/src/main/resources/contract/asyncapi.yml</argument>
+                                <argument>@asyncapi/java-spring-cloud-stream-template@0.13.0</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>add-generated-rabbitmq-sources</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.build.directory}/generated-sources/asyncapi/src/main/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>fix-template-json-property-annotations</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <replace
+                                    dir="${project.build.directory}/generated-sources/asyncapi/src/main/java/com/architecture/hexagonal/contract/outbound/event/rabbitmq/model"
+                                    includes="UserCreated.java,UserUpdated.java,UserDeleted.java"
+                                    token="@JsonProperty"
+                                    value="@com.fasterxml.jackson.annotation.JsonProperty"/>
+                            </target>
                         </configuration>
                     </execution>
                 </executions>

@@ -41,7 +41,7 @@ class UserEventsProducerImplTestIT {
 
     Mockito.when(
             streamBridge.send(
-                Mockito.eq("publish-user-created-out-0"),
+                Mockito.eq("publishUserCreated-out-0"),
                 Mockito.any(org.springframework.messaging.Message.class)))
         .thenThrow(new IllegalStateException("broker unavailable"));
 
@@ -61,7 +61,7 @@ class UserEventsProducerImplTestIT {
 
     Mockito.when(
             streamBridge.send(
-                Mockito.eq("publish-user-updated-out-0"),
+                Mockito.eq("publishUserUpdated-out-0"),
                 Mockito.any(org.springframework.messaging.Message.class)))
         .thenThrow(new IllegalStateException("broker unavailable"));
 
@@ -81,7 +81,7 @@ class UserEventsProducerImplTestIT {
 
     Mockito.when(
             streamBridge.send(
-                Mockito.eq("publish-user-deleted-out-0"),
+                Mockito.eq("publishUserDeleted-out-0"),
                 Mockito.any(org.springframework.messaging.Message.class)))
         .thenThrow(new IllegalStateException("broker unavailable"));
 

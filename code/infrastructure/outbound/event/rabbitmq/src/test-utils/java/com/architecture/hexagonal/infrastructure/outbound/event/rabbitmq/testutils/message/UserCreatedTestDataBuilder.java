@@ -17,7 +17,7 @@ public class UserCreatedTestDataBuilder {
   public UserCreated userCreated() {
     final UserCreated userCreated = new UserCreated();
     userCreated.setMessageHeader(messageHeader);
-    userCreated.setData(userData);
+    userCreated.setUserData(userData);
 
     return userCreated;
   }

@@ -8,8 +8,8 @@ import static org.mockito.Mockito.when;
 import com.architecture.hexagonal.contract.bus.model.inbox.command.RegisterInboxCommand;
 import com.architecture.hexagonal.contract.bus.model.user.command.CreateUserCommand;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.MessageHeader;
-import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserCreated;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserCreatedData;
+import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserCreatedPayload;
 import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
 import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.mapper.UserKafkaMessageMapper;
 import java.time.Clock;
@@ -38,11 +38,11 @@ class UserKafkaConsumerTest {
 
   @Test
   void consumeUserCreatedShouldExecuteCommandWithoutSavingInboxOnSuccess() {
-    final UserCreated message = message();
+    final UserCreatedPayload message = message();
     final CreateUserCommand command = org.mockito.Mockito.mock(CreateUserCommand.class);
     when(userKafkaMessageMapper.toCreateUserCommand(message)).thenReturn(command);
 
-    userKafkaConsumer.onUserCreated(message);
+    userKafkaConsumer.listenUserCreated(message, "user.created");
 
     verify(commandBus).execute(command);
   }
@@ -50,12 +50,12 @@ class UserKafkaConsumerTest {
   @Test
   void consumeUserCreatedShouldRegisterInboxWhenCommandExecutionFails() {
     final OffsetDateTime before = OffsetDateTime.now();
-    final UserCreated message = message();
+    final UserCreatedPayload message = message();
     final CreateUserCommand command = org.mockito.Mockito.mock(CreateUserCommand.class);
     when(userKafkaMessageMapper.toCreateUserCommand(message)).thenReturn(command);
     doThrow(new IllegalStateException("command failed")).when(commandBus).execute(command);
 
-    userKafkaConsumer.onUserCreated(message);
+    userKafkaConsumer.listenUserCreated(message, "user.created");
 
     final ArgumentCaptor<RegisterInboxCommand> registerInboxCommandCaptor =
         ArgumentCaptor.forClass(RegisterInboxCommand.class);
@@ -68,17 +68,17 @@ class UserKafkaConsumerTest {
         .isEqualTo(message.getMessageHeader().getMessageDate().toString());
     assertThat(registerCommand.getAction()).isEqualTo("USER_CREATED");
     assertThat(registerCommand.getAggregateType()).isEqualTo("USER");
-    assertThat(registerCommand.getData()).isSameAs(message.getData());
+    assertThat(registerCommand.getData()).isSameAs(message.getData_());
     assertThat(registerCommand.getCreatedAt()).isBetween(before, OffsetDateTime.now());
   }
 
-  private UserCreated message() {
+  private UserCreatedPayload message() {
     final MessageHeader header = new MessageHeader();
     header.setMessageId(UUID.randomUUID());
     header.setMessageDate(OffsetDateTime.parse("2026-10-13T10:15:30Z"));
-    final UserCreated message = new UserCreated();
+    final UserCreatedPayload message = new UserCreatedPayload();
     message.setMessageHeader(header);
-    message.setData(new UserCreatedData());
+    message.setData_(new UserCreatedData());
     return message;
   }
 }

@@ -45,7 +45,7 @@ class UserEventHandlersTestIT {
     event.setEmail(USER_EMAIL);
     Mockito.when(
             streamBridge.send(
-                Mockito.eq("publish-user-created-out-0"), Mockito.any(Message.class)))
+                Mockito.eq("publishUserCreated-out-0"), Mockito.any(Message.class)))
         .thenReturn(true);
 
     transactionTemplate.execute(
@@ -55,7 +55,7 @@ class UserEventHandlersTestIT {
         });
 
     Mockito.verify(streamBridge)
-        .send(Mockito.eq("publish-user-created-out-0"), Mockito.any(Message.class));
+        .send(Mockito.eq("publishUserCreated-out-0"), Mockito.any(Message.class));
     Mockito.verifyNoInteractions(outboxRepositoryWritePort);
   }
 
@@ -67,7 +67,7 @@ class UserEventHandlersTestIT {
     event.setEmail(USER_EMAIL);
     Mockito.when(
             streamBridge.send(
-                Mockito.eq("publish-user-updated-out-0"), Mockito.any(Message.class)))
+                Mockito.eq("publishUserUpdated-out-0"), Mockito.any(Message.class)))
         .thenReturn(true);
 
     transactionTemplate.execute(
@@ -77,7 +77,7 @@ class UserEventHandlersTestIT {
         });
 
     Mockito.verify(streamBridge)
-        .send(Mockito.eq("publish-user-updated-out-0"), Mockito.any(Message.class));
+        .send(Mockito.eq("publishUserUpdated-out-0"), Mockito.any(Message.class));
     Mockito.verifyNoInteractions(outboxRepositoryWritePort);
   }
 
@@ -89,7 +89,7 @@ class UserEventHandlersTestIT {
     event.setEmail(USER_EMAIL);
     Mockito.when(
             streamBridge.send(
-                Mockito.eq("publish-user-deleted-out-0"), Mockito.any(Message.class)))
+                Mockito.eq("publishUserDeleted-out-0"), Mockito.any(Message.class)))
         .thenReturn(true);
 
     transactionTemplate.execute(
@@ -99,7 +99,7 @@ class UserEventHandlersTestIT {
         });
 
     Mockito.verify(streamBridge)
-        .send(Mockito.eq("publish-user-deleted-out-0"), Mockito.any(Message.class));
+        .send(Mockito.eq("publishUserDeleted-out-0"), Mockito.any(Message.class));
     Mockito.verifyNoInteractions(outboxRepositoryWritePort);
   }
 }
