@@ -2,12 +2,12 @@ messages:
   UserCreated:
     name: UserCreated
     payload:
-      $ref: './users-schema.yml#/schemas/UserCreated'
+      $ref: './schemas/users-schema.yml#/schemas/UserCreated'
   UserUpdated:
     name: UserUpdated
     payload:
-      $ref: './users-schema.yml#/schemas/UserUpdated'
+      $ref: './schemas/users-schema.yml#/schemas/UserUpdated'
   UserDeleted:
     name: UserDeleted
     payload:
-      $ref: './users-schema.yml#/schemas/UserDeleted'
+      $ref: './schemas/users-schema.yml#/schemas/UserDeleted'

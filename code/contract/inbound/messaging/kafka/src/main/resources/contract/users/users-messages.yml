@@ -1,19 +1,16 @@
 messages:
   UserCreated:
     name: UserCreated
-    title: User created
     contentType: application/json
     payload:
-      $ref: './users-schema.yml#/schemas/UserCreated'
+      $ref: './schemas/users-schema.yml#/schemas/UserCreated'
   UserUpdated:
     name: UserUpdated
-    title: User updated
     contentType: application/json
     payload:
-      $ref: './users-schema.yml#/schemas/UserUpdated'
+      $ref: './schemas/users-schema.yml#/schemas/UserUpdated'
   UserDeleted:
     name: UserDeleted
-    title: User deleted
     contentType: application/json
     payload:
-      $ref: './users-schema.yml#/schemas/UserDeleted'
+      $ref: './schemas/users-schema.yml#/schemas/UserDeleted'

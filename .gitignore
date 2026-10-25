@@ -8,9 +8,6 @@ target/
 *.iml
 *.ipr
 
-node_modules/
-**/__transpiled/
-
 ### VS Code ###
 .vscode/
 

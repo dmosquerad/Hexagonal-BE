@@ -47,7 +47,7 @@ public class UserEventsProducerImpl implements UserEventsProducer {
   private boolean tryPublishUserCreated(final UserCreated payload) {
     try {
       return streamBridge.send(
-          "publishUserCreated-out-0", MessageBuilder.withPayload(payload).build());
+          "publish-user-created-out-0", MessageBuilder.withPayload(payload).build());
     } catch (final RuntimeException _) {
       return false;
     }
@@ -75,7 +75,7 @@ public class UserEventsProducerImpl implements UserEventsProducer {
   private boolean tryPublishUserUpdated(final UserUpdated payload) {
     try {
       return streamBridge.send(
-          "publishUserUpdated-out-0", MessageBuilder.withPayload(payload).build());
+          "publish-user-updated-out-0", MessageBuilder.withPayload(payload).build());
     } catch (final RuntimeException _) {
       return false;
     }
@@ -103,7 +103,7 @@ public class UserEventsProducerImpl implements UserEventsProducer {
   private boolean tryPublishUserDeleted(final UserDeleted payload) {
     try {
       return streamBridge.send(
-          "publishUserDeleted-out-0", MessageBuilder.withPayload(payload).build());
+          "publish-user-deleted-out-0", MessageBuilder.withPayload(payload).build());
     } catch (final RuntimeException _) {
       return false;
     }
