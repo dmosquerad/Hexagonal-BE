@@ -6,6 +6,7 @@ import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResultVo;
 import com.architecture.hexagonal.infrastructure.bus.BusHandlerFinder;
 import com.architecture.hexagonal.infrastructure.bus.middleware.impl.BusLoggingMiddleware;
+import java.time.Clock;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,7 +27,8 @@ class QueryBusImplTest {
 
     Mockito.when(getAllUsersUseCase.handle(query)).thenReturn(users);
     final QueryBusImpl queryBus =
-        new QueryBusImpl(finderWith(getAllUsersUseCase), new BusLoggingMiddleware());
+        new QueryBusImpl(
+            finderWith(getAllUsersUseCase), new BusLoggingMiddleware(Clock.systemUTC()));
 
     final PaginationResultVo<User> result = queryBus.execute(query);
 
@@ -38,7 +40,8 @@ class QueryBusImplTest {
   @Test
   void executeShouldThrowIllegalStateExceptionWhenNoHandlerIsFound() {
     final String unknownQuery = "unknown";
-    final QueryBusImpl queryBus = new QueryBusImpl(finderWith(), new BusLoggingMiddleware());
+    final QueryBusImpl queryBus =
+        new QueryBusImpl(finderWith(), new BusLoggingMiddleware(Clock.systemUTC()));
 
     AssertionsForClassTypes.assertThatThrownBy(() -> queryBus.execute(unknownQuery))
         .isInstanceOf(IllegalStateException.class)

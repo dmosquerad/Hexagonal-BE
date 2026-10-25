@@ -6,6 +6,7 @@ import com.architecture.hexagonal.contract.bus.model.user.command.DeleteUserComm
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.infrastructure.bus.BusHandlerFinder;
 import com.architecture.hexagonal.infrastructure.bus.middleware.impl.BusLoggingMiddleware;
+import java.time.Clock;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,7 +27,8 @@ class CommandBusImplTest {
 
     Mockito.when(deleteUserUseCase.handle(command)).thenReturn(user);
     final CommandBusImpl commandBus =
-        new CommandBusImpl(finderWith(deleteUserUseCase), new BusLoggingMiddleware());
+        new CommandBusImpl(
+            finderWith(deleteUserUseCase), new BusLoggingMiddleware(Clock.systemUTC()));
 
     final User result = commandBus.execute(command);
 

@@ -3,6 +3,7 @@ package com.architecture.hexagonal.infrastructure.bus.event.impl;
 import com.architecture.hexagonal.application.port.in.bus.event.EventHandler;
 import com.architecture.hexagonal.infrastructure.bus.BusHandlerFinder;
 import com.architecture.hexagonal.infrastructure.bus.middleware.impl.BusLoggingMiddleware;
+import java.time.Clock;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.NonNull;
@@ -45,7 +46,7 @@ class EventBusImplTest {
     final RecordingHandler first = new RecordingHandler();
     final RecordingHandler second = new RecordingHandler();
     final EventBusImpl eventBus =
-        new EventBusImpl(finderWith(first, second), new BusLoggingMiddleware());
+        new EventBusImpl(finderWith(first, second), new BusLoggingMiddleware(Clock.systemUTC()));
     final TestEvent event = new TestEvent("value");
 
     eventBus.publish(event);
@@ -56,7 +57,8 @@ class EventBusImplTest {
 
   @Test
   void publishShouldNotFailWhenNoHandlerIsRegistered() {
-    final EventBusImpl eventBus = new EventBusImpl(finderWith(), new BusLoggingMiddleware());
+    final EventBusImpl eventBus =
+        new EventBusImpl(finderWith(), new BusLoggingMiddleware(Clock.systemUTC()));
 
     Assertions.assertThatCode(() -> eventBus.publish(new TestEvent("value")))
         .doesNotThrowAnyException();
@@ -69,7 +71,7 @@ class EventBusImplTest {
     final EventBusImpl eventBus =
         new EventBusImpl(
             finderWith(new FailingHandler("sensitive"), recording, new FailingHandler("other")),
-            new BusLoggingMiddleware());
+            new BusLoggingMiddleware(Clock.systemUTC()));
 
     Assertions.assertThatCode(() -> eventBus.publish(new TestEvent("value")))
         .doesNotThrowAnyException();
