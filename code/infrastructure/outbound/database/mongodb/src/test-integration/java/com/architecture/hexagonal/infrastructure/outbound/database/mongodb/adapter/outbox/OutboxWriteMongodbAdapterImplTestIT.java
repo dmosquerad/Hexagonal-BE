@@ -52,7 +52,7 @@ class OutboxWriteMongodbAdapterImplTestIT extends MongodbIT {
             .outbox();
 
       final OutboxDao outboxDao =
-              OutboxDaoTestDataBuilder.builder().processedAt(null).build().outboxEventDao();
+              OutboxDaoTestDataBuilder.builder().processedAt(null).build().outboxDao();
 
     Mockito.when(outboxWriteMongodbRepository.upsertByEventIdentity(Mockito.any(OutboxDao.class))).thenReturn(outboxDao);
 
@@ -76,7 +76,7 @@ class OutboxWriteMongodbAdapterImplTestIT extends MongodbIT {
             .status(StatusVo.PROCESSING)
             .retryCount(1)
             .build()
-            .outboxEventDao();
+            .outboxDao();
     Mockito.when(
             outboxWriteMongodbRepository.claimPendingForProcessing(
                 Mockito.any(OutboxDao.class)))

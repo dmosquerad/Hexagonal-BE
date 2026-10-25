@@ -42,7 +42,7 @@ public class OutboxDaoTestDataBuilder {
   @Builder.Default
   private ZonedDateTime processedAt = TestClock.FIXED_INSTANT.atZone(ZoneOffset.UTC);
 
-  public OutboxDao outboxEventDao() {
+  public OutboxDao outboxDao() {
     final OutboxDao outboxDao = new OutboxDao();
     outboxDao.setOutboxId(eventId);
     outboxDao.setAggregateType(aggregateType);

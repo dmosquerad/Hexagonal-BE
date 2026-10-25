@@ -6,10 +6,12 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
+import com.architecture.hexagonal.domain.testutils.data.model.entity.inbox.InboxTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.inbox.InboxDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.mapper.inbox.InboxDaoMapper;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.mapper.inbox.InboxDoFromMongodbMapper;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.repository.inbox.InboxWriteMongodbRepository;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.data.inbox.InboxDaoTestDataBuilder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
@@ -33,8 +35,9 @@ class InboxRepositoryWriteMongodbAdapterImplTest {
 
   @Test
   void saveShouldMapInboxToDocumentAndBack() {
-    final Inbox inbox = InboxRepositoryReadMongodbAdapterImplTest.inbox();
-    final InboxDao inboxDao = Mappers.getMapper(InboxDaoMapper.class).toInboxDao(inbox);
+    final Inbox inbox = InboxTestDataBuilder.builder().build().inbox();
+    final InboxDao inboxDao = InboxDaoTestDataBuilder.builder().build().inboxDao();
+
     when(repository.save(any(InboxDao.class))).thenReturn(inboxDao);
 
     final Inbox result = adapter.save(inbox);

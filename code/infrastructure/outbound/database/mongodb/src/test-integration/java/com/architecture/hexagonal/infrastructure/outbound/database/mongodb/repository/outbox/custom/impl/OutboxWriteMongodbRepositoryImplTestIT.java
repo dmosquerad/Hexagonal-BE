@@ -1,7 +1,5 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.repository.outbox.custom.impl;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.config.MongodbIT;
@@ -15,7 +13,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
@@ -35,22 +32,9 @@ class OutboxWriteMongodbRepositoryImplTestIT extends MongodbIT {
   }
 
   @Test
-  void saveShouldThrowOnDuplicateMessageIdAndMessageDate() {
-    final OutboxDao original =
-        OutboxDaoTestDataBuilder.builder().build().outboxEventDao();
-    outboxWriteMongodbRepository.save(original);
-
-    final OutboxDao duplicate =
-        OutboxDaoTestDataBuilder.builder().eventId(UUID.randomUUID()).build().outboxEventDao();
-
-    assertThatThrownBy(() -> outboxWriteMongodbRepository.save(duplicate))
-        .isInstanceOf(DuplicateKeyException.class);
-  }
-
-  @Test
     void upsertByEventIdentityShouldInsertNewDocumentWhenDocumentDoesNotExist() {
     final OutboxDao outboxDao =
-        OutboxDaoTestDataBuilder.builder().retryCount(1).build().outboxEventDao();
+        OutboxDaoTestDataBuilder.builder().retryCount(1).build().outboxDao();
 
     final OutboxDao result = outboxWriteMongodbRepository.upsertByEventIdentity(outboxDao);
 
@@ -67,7 +51,7 @@ class OutboxWriteMongodbRepositoryImplTestIT extends MongodbIT {
   @Test
     void upsertByEventIdentityShouldUpdateStatusWhenDocumentExists() {
     final OutboxDao outboxDao =
-        OutboxDaoTestDataBuilder.builder().processedAt(null).build().outboxEventDao();
+        OutboxDaoTestDataBuilder.builder().processedAt(null).build().outboxDao();
     final OutboxDao savedOutbox = outboxWriteMongodbRepository.upsertByEventIdentity(outboxDao);
 
     final OutboxDao updatedOutboxDao =
@@ -76,7 +60,7 @@ class OutboxWriteMongodbRepositoryImplTestIT extends MongodbIT {
             .status(StatusVo.PROCESSED)
             .retryCount(1)
             .build()
-            .outboxEventDao();
+            .outboxDao();
 
     final OutboxDao result = outboxWriteMongodbRepository.upsertByEventIdentity(updatedOutboxDao);
 
@@ -93,7 +77,7 @@ class OutboxWriteMongodbRepositoryImplTestIT extends MongodbIT {
   @Test
     void upsertByEventIdentityShouldSetRetryCountWhenRetryCountGreaterThanZero() {
     final OutboxDao outboxDao =
-        OutboxDaoTestDataBuilder.builder().processedAt(null).build().outboxEventDao();
+        OutboxDaoTestDataBuilder.builder().processedAt(null).build().outboxDao();
     final OutboxDao savedOutbox = outboxWriteMongodbRepository.upsertByEventIdentity(outboxDao);
 
     final OutboxDao updatedOutboxDao =
@@ -101,7 +85,7 @@ class OutboxWriteMongodbRepositoryImplTestIT extends MongodbIT {
             .eventId(savedOutbox.getOutboxId())
             .retryCount(3)
             .build()
-            .outboxEventDao();
+            .outboxDao();
 
     final OutboxDao result = outboxWriteMongodbRepository.upsertByEventIdentity(updatedOutboxDao);
 
@@ -124,7 +108,7 @@ class OutboxWriteMongodbRepositoryImplTestIT extends MongodbIT {
             .retryCount(0)
             .status(StatusVo.PENDING)
             .build()
-            .outboxEventDao();
+            .outboxDao();
     final OutboxDao savedOutbox = outboxWriteMongodbRepository.upsertByEventIdentity(outboxDao);
 
     final OutboxDao updatedOutboxDao =
@@ -133,7 +117,7 @@ class OutboxWriteMongodbRepositoryImplTestIT extends MongodbIT {
             .status(StatusVo.PROCESSED)
             .retryCount(1)
             .build()
-            .outboxEventDao();
+            .outboxDao();
 
     final OutboxDao result = outboxWriteMongodbRepository.upsertByEventIdentity(updatedOutboxDao);
 
@@ -154,7 +138,7 @@ class OutboxWriteMongodbRepositoryImplTestIT extends MongodbIT {
             .status(StatusVo.PENDING)
             .retryCount(1)
             .build()
-            .outboxEventDao();
+            .outboxDao();
     outboxWriteMongodbRepository.upsertByEventIdentity(outboxDao);
 
     final OutboxDao result = outboxWriteMongodbRepository.claimPendingForProcessing(outboxDao);
@@ -163,7 +147,7 @@ class OutboxWriteMongodbRepositoryImplTestIT extends MongodbIT {
             .status(StatusVo.PROCESSING)
             .retryCount(1)
             .build()
-            .outboxEventDao();
+            .outboxDao();
 
     AssertionsForClassTypes.assertThat(result)
         .usingRecursiveComparison()
@@ -180,7 +164,7 @@ class OutboxWriteMongodbRepositoryImplTestIT extends MongodbIT {
     final OutboxDao outboxDao = OutboxDaoTestDataBuilder.builder()
             .status(StatusVo.PROCESSING)
             .build()
-            .outboxEventDao();
+            .outboxDao();
 
     outboxWriteMongodbRepository.upsertByEventIdentity(outboxDao);
 

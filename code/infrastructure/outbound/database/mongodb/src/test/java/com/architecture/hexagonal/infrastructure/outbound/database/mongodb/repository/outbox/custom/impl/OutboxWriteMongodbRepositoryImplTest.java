@@ -37,9 +37,9 @@ class OutboxWriteMongodbRepositoryImplTest {
   @Test
   void upsertByEventIdentityShouldUpdateStatusAndUpsertWhenDocumentExists() {
     final OutboxDao outboxDao =
-        OutboxDaoTestDataBuilder.builder().processedAt(null).build().outboxEventDao();
+        OutboxDaoTestDataBuilder.builder().processedAt(null).build().outboxDao();
     final OutboxDao persistedDao =
-        OutboxDaoTestDataBuilder.builder().processedAt(null).build().outboxEventDao();
+        OutboxDaoTestDataBuilder.builder().processedAt(null).build().outboxDao();
 
     Mockito.when(mongoTemplate.update(OutboxDao.class)).thenReturn(executableUpdate);
     Mockito.when(executableUpdate.matching(Mockito.any(Query.class))).thenReturn(updateWithQuery);
@@ -62,7 +62,7 @@ class OutboxWriteMongodbRepositoryImplTest {
   @Test
   void upsertByEventIdentityShouldSetRetryCountWhenRetryCountGreaterThanZero() {
     final OutboxDao outboxDao =
-        OutboxDaoTestDataBuilder.builder().processedAt(null).retryCount(3).build().outboxEventDao();
+        OutboxDaoTestDataBuilder.builder().processedAt(null).retryCount(3).build().outboxDao();
 
     Mockito.when(mongoTemplate.update(OutboxDao.class)).thenReturn(executableUpdate);
     Mockito.when(executableUpdate.matching(Mockito.any(Query.class))).thenReturn(updateWithQuery);
@@ -85,7 +85,7 @@ class OutboxWriteMongodbRepositoryImplTest {
   @Test
   void upsertByEventIdentityShouldSetProcessedAtWhenProcessedAtIsNotNull() {
     final OutboxDao outboxDao =
-        OutboxDaoTestDataBuilder.builder().status(StatusVo.PROCESSED).build().outboxEventDao();
+        OutboxDaoTestDataBuilder.builder().status(StatusVo.PROCESSED).build().outboxDao();
 
     Mockito.when(mongoTemplate.update(OutboxDao.class)).thenReturn(executableUpdate);
     Mockito.when(executableUpdate.matching(Mockito.any(Query.class))).thenReturn(updateWithQuery);
@@ -112,13 +112,13 @@ class OutboxWriteMongodbRepositoryImplTest {
             .status(StatusVo.PENDING)
             .retryCount(1)
             .build()
-            .outboxEventDao();
+            .outboxDao();
     final OutboxDao claimedOutbox =
         OutboxDaoTestDataBuilder.builder()
             .status(StatusVo.PROCESSING)
             .retryCount(1)
             .build()
-            .outboxEventDao();
+            .outboxDao();
 
     Mockito.when(mongoTemplate.update(OutboxDao.class)).thenReturn(executableUpdate);
     Mockito.when(executableUpdate.matching(Mockito.any(Query.class))).thenReturn(updateWithQuery);
@@ -141,7 +141,7 @@ class OutboxWriteMongodbRepositoryImplTest {
   @Test
   void claimPendingForProcessingShouldReturnNullWhenEventWasAlreadyClaimed() {
     final OutboxDao outboxDao =
-        OutboxDaoTestDataBuilder.builder().status(StatusVo.PENDING).build().outboxEventDao();
+        OutboxDaoTestDataBuilder.builder().status(StatusVo.PENDING).build().outboxDao();
 
     Mockito.when(mongoTemplate.update(OutboxDao.class)).thenReturn(executableUpdate);
     Mockito.when(executableUpdate.matching(Mockito.any(Query.class))).thenReturn(updateWithQuery);

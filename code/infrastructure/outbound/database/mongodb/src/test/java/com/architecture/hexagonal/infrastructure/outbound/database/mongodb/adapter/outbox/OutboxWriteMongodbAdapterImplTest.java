@@ -45,7 +45,7 @@ class OutboxWriteMongodbAdapterImplTest {
                     .payloadVo())
             .build()
             .outbox();
-    final OutboxDao outboxDao = OutboxDaoTestDataBuilder.builder().build().outboxEventDao();
+    final OutboxDao outboxDao = OutboxDaoTestDataBuilder.builder().build().outboxDao();
 
     Mockito.when(outboxWriteMongodbRepository.upsertByEventIdentity(Mockito.any(OutboxDao.class)))
         .thenReturn(outboxDao);

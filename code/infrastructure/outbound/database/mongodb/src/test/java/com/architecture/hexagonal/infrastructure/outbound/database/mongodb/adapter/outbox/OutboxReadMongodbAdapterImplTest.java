@@ -50,7 +50,7 @@ class OutboxReadMongodbAdapterImplTest {
         OutboxStatusAndAggregateProjectorTestDataBuilder.builder()
             .build()
             .outboxStatusAndAggregateProjector();
-    final OutboxDao outboxDao = OutboxDaoTestDataBuilder.builder().build().outboxEventDao();
+    final OutboxDao outboxDao = OutboxDaoTestDataBuilder.builder().build().outboxDao();
 
     Mockito.when(
             outboxReadMongodbRepository.findByStatusAndAggregateTypeOrderByCreatedAtAsc(
