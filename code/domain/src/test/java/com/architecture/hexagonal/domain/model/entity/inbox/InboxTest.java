@@ -1,32 +1,20 @@
 package com.architecture.hexagonal.domain.model.entity.inbox;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import com.architecture.hexagonal.domain.model.vo.payload.MessageHeaderVo;
-import com.architecture.hexagonal.domain.model.vo.payload.PayloadVo;
-import java.time.OffsetDateTime;
-import java.util.UUID;
+import com.architecture.hexagonal.domain.testutils.data.model.entity.inbox.InboxTestDataBuilder;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class InboxTest {
 
   @Test
   void getIdShouldReturnMessageIdentity() {
-    final UUID messageId = UUID.randomUUID();
-    final OffsetDateTime messageDate = OffsetDateTime.parse("2026-10-13T10:15:30Z");
-    final Inbox inbox =
-        Inbox.builder()
-            .payload(
-                PayloadVo.builder()
-                    .messageHeader(
-                        MessageHeaderVo.builder()
-                            .messageId(messageId)
-                            .messageDate(messageDate)
-                            .build())
-                    .build())
-            .build();
+    final Inbox inbox = InboxTestDataBuilder.builder().build().inbox();
 
-    assertThat(inbox.getId())
-        .isEqualTo(Inbox.InboxKey.builder().messageId(messageId).messageDate(messageDate).build());
+    Assertions.assertThat(inbox.getId())
+        .isEqualTo(
+            Inbox.InboxKey.builder()
+                .messageId(inbox.payload().messageHeader().messageId())
+                .messageDate(inbox.payload().messageHeader().messageDate())
+                .build());
   }
 }

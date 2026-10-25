@@ -1,13 +1,10 @@
 package com.architecture.hexagonal.infrastructure.inbox.service;
 
-import static org.mockito.Mockito.verify;
-
 import com.architecture.hexagonal.contract.bus.model.user.command.CreateUserCommand;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserCreatedData;
 import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
-import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
-import com.architecture.hexagonal.domain.model.vo.payload.MessageHeaderVo;
-import com.architecture.hexagonal.domain.model.vo.payload.PayloadVo;
+import com.architecture.hexagonal.domain.testutils.data.model.entity.inbox.InboxTestDataBuilder;
+import com.architecture.hexagonal.domain.testutils.data.model.vo.payload.PayloadVoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
 import com.architecture.hexagonal.infrastructure.inbox.mapper.UserCommandFromInboxMapper;
 import com.architecture.hexagonal.infrastructure.inbox.naming.InboxNaming;
@@ -49,14 +46,22 @@ class InboxProcessServiceTest {
     createdData.setName("Inbox User");
     createdData.setEmail("inbox@example.com");
 
-    inboxProcessService.process(
-        inbox(
-            "USER_CREATED",
-            Map.of("name", createdData.getName(), "email", createdData.getEmail())));
+    final Inbox inbox =
+        InboxTestDataBuilder.<Object>builder()
+            .payload(
+                PayloadVoTestDataBuilder.<Object>builder()
+                    .data(Map.of("name", createdData.getName(), "email", createdData.getEmail()))
+                    .build()
+                    .payloadVo())
+            .action("USER_CREATED")
+            .build()
+            .inbox();
+
+    inboxProcessService.process(inbox);
 
     final ArgumentCaptor<CreateUserCommand> commandCaptor =
         ArgumentCaptor.forClass(CreateUserCommand.class);
-    verify(commandBus).execute(commandCaptor.capture());
+    Mockito.verify(commandBus).execute(commandCaptor.capture());
     Assertions.assertThat(commandCaptor.getValue().getName()).isEqualTo(createdData.getName());
     Assertions.assertThat(commandCaptor.getValue().getEmail()).isEqualTo(createdData.getEmail());
   }
@@ -80,8 +85,18 @@ class InboxProcessServiceTest {
   void processShouldThrowWhenAggregateHandlerIsMissing() {
     Mockito.when(inboxProcessService.aggregateHandlers()).thenReturn(Map.of());
 
-    Assertions.assertThatThrownBy(
-            () -> inboxProcessService.process(inbox("USER_CREATED", Map.of("name", "Inbox User"))))
+    final Inbox inbox =
+        InboxTestDataBuilder.<Object>builder()
+            .payload(
+                PayloadVoTestDataBuilder.<Object>builder()
+                    .data(Map.of("name", "Inbox User"))
+                    .build()
+                    .payloadVo())
+            .action("USER_CREATED")
+            .build()
+            .inbox();
+
+    Assertions.assertThatThrownBy(() -> inboxProcessService.process(inbox))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining(InboxNaming.UNSUPPORTED_AGGREGATE_TYPE);
 
@@ -90,22 +105,17 @@ class InboxProcessServiceTest {
 
   @Test
   void processShouldThrowWhenActionIsUnsupported() {
-    Assertions.assertThatThrownBy(() -> inboxProcessService.process(inbox("", Map.of())))
+    final Inbox inbox =
+        InboxTestDataBuilder.<Object>builder()
+            .payload(PayloadVoTestDataBuilder.<Object>builder().data(Map.of()).build().payloadVo())
+            .action("")
+            .build()
+            .inbox();
+
+    Assertions.assertThatThrownBy(() -> inboxProcessService.process(inbox))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining(InboxNaming.UNSUPPORTED_USER_ACTION);
 
     Mockito.verifyNoInteractions(commandBus);
-  }
-
-  private Inbox inbox(final String action, final Object message) {
-    return Inbox.builder()
-        .payload(
-            PayloadVo.builder()
-                .messageHeader(MessageHeaderVo.builder().build())
-                .data(message)
-                .build())
-        .aggregateType(AggregateTypeVo.USER)
-        .action(action)
-        .build();
   }
 }

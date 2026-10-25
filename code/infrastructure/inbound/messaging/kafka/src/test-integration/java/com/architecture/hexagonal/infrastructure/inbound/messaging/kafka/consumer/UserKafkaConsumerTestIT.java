@@ -1,22 +1,19 @@
 package com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.consumer;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.architecture.hexagonal.contract.bus.model.inbox.command.RegisterInboxCommand;
 import com.architecture.hexagonal.contract.bus.model.user.command.CreateUserCommand;
 import com.architecture.hexagonal.contract.bus.model.user.command.DeleteUserCommand;
 import com.architecture.hexagonal.contract.bus.model.user.command.UpdateUserCommand;
-import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.MessageHeader;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserCreatedPayload;
-import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserCreatedData;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserDeletedPayload;
-import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserDeletedData;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserUpdatedPayload;
-import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserUpdatedData;
 import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
 import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.config.TestApplication;
-import java.time.OffsetDateTime;
-import java.util.UUID;
+import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.testutils.command.RegisterInboxCommandTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.testutils.message.UserCreatedPayloadTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.testutils.message.UserDeletedPayloadTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.testutils.message.UserUpdatedPayloadTestDataBuilder;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
@@ -36,21 +33,21 @@ class UserKafkaConsumerTestIT {
 
   @Test
   void consumeUserCreatedShouldMapCommandWithoutPersistingInboxOnSuccess() {
-    final UserCreatedPayload message = userCreated();
+    final UserCreatedPayload message = UserCreatedPayloadTestDataBuilder.builder().build().userCreatedPayload();
 
     userKafkaConsumer.listenUserCreated(message, "user.created");
 
     final ArgumentCaptor<CreateUserCommand> commandCaptor =
         ArgumentCaptor.forClass(CreateUserCommand.class);
     Mockito.verify(commandBus).execute(commandCaptor.capture());
-    assertThat(commandCaptor.getValue().getName()).isEqualTo("Test User");
-    assertThat(commandCaptor.getValue().getEmail()).isEqualTo("user@example.com");
+    Assertions.assertThat(commandCaptor.getValue().getName()).isEqualTo(message.getData_().getName());
+    Assertions.assertThat(commandCaptor.getValue().getEmail()).isEqualTo(message.getData_().getEmail());
     Mockito.verify(commandBus, Mockito.never()).execute(Mockito.any(RegisterInboxCommand.class));
   }
 
   @Test
   void consumeUserCreatedShouldRegisterInboxWhenCommandExecutionFails() {
-    final UserCreatedPayload message = userCreated();
+    final UserCreatedPayload message = UserCreatedPayloadTestDataBuilder.builder().build().userCreatedPayload();
     Mockito.doThrow(new IllegalStateException("command failed"))
         .when(commandBus)
         .execute(Mockito.any(CreateUserCommand.class));
@@ -58,28 +55,40 @@ class UserKafkaConsumerTestIT {
     userKafkaConsumer.listenUserCreated(message, "user.created");
 
     Mockito.verify(commandBus).execute(Mockito.any(CreateUserCommand.class));
-    assertInboxRegistered(
-        message, "USER_CREATED", null, captureInboxCommand());
+    final ArgumentCaptor<RegisterInboxCommand> inboxCaptor =
+        ArgumentCaptor.forClass(RegisterInboxCommand.class);
+    Mockito.verify(commandBus).execute(inboxCaptor.capture());
+    final RegisterInboxCommand expected =
+        RegisterInboxCommandTestDataBuilder.builder()
+            .build()
+            .registerInboxCommand();
+    Assertions.assertThat(inboxCaptor.getValue())
+        .usingRecursiveComparison()
+        .ignoringFields("createdAt")
+        .isEqualTo(expected);
   }
 
   @Test
   void consumeUserUpdatedShouldMapCommandWithoutPersistingInboxOnSuccess() {
-    final UserUpdatedPayload message = userUpdated();
+    final UserUpdatedPayload message = UserUpdatedPayloadTestDataBuilder.builder().build().userUpdatedPayload();
 
     userKafkaConsumer.listenUserUpdated(message, "user.updated");
 
     final ArgumentCaptor<UpdateUserCommand> commandCaptor =
         ArgumentCaptor.forClass(UpdateUserCommand.class);
     Mockito.verify(commandBus).execute(commandCaptor.capture());
-    assertThat(commandCaptor.getValue().getUserId()).isEqualTo(message.getData_().getUserId());
-    assertThat(commandCaptor.getValue().getName()).isEqualTo(message.getData_().getName());
-    assertThat(commandCaptor.getValue().getEmail()).isEqualTo(message.getData_().getEmail());
+    Assertions.assertThat(commandCaptor.getValue().getUserId())
+        .isEqualTo(message.getData_().getUserId());
+    Assertions.assertThat(commandCaptor.getValue().getName())
+        .isEqualTo(message.getData_().getName());
+    Assertions.assertThat(commandCaptor.getValue().getEmail())
+        .isEqualTo(message.getData_().getEmail());
     Mockito.verify(commandBus, Mockito.never()).execute(Mockito.any(RegisterInboxCommand.class));
   }
 
   @Test
   void consumeUserUpdatedShouldRegisterInboxWhenCommandExecutionFails() {
-    final UserUpdatedPayload message = userUpdated();
+    final UserUpdatedPayload message = UserUpdatedPayloadTestDataBuilder.builder().build().userUpdatedPayload();
     Mockito.doThrow(new IllegalStateException("command failed"))
         .when(commandBus)
         .execute(Mockito.any(UpdateUserCommand.class));
@@ -87,26 +96,39 @@ class UserKafkaConsumerTestIT {
     userKafkaConsumer.listenUserUpdated(message, "user.updated");
 
     Mockito.verify(commandBus).execute(Mockito.any(UpdateUserCommand.class));
-    assertInboxRegistered(
-        message, "USER_UPDATED", message.getData_().getUserId(), captureInboxCommand());
+    final ArgumentCaptor<RegisterInboxCommand> inboxCaptor =
+        ArgumentCaptor.forClass(RegisterInboxCommand.class);
+    Mockito.verify(commandBus).execute(inboxCaptor.capture());
+    final RegisterInboxCommand expected =
+        RegisterInboxCommandTestDataBuilder.builder()
+            .data(message.getData_())
+            .action("USER_UPDATED")
+            .aggregateId(message.getData_().getUserId())
+            .build()
+            .registerInboxCommand();
+    Assertions.assertThat(inboxCaptor.getValue())
+        .usingRecursiveComparison()
+        .ignoringFields("createdAt")
+        .isEqualTo(expected);
   }
 
   @Test
   void consumeUserDeletedShouldMapCommandWithoutPersistingInboxOnSuccess() {
-    final UserDeletedPayload message = userDeleted();
+    final UserDeletedPayload message = UserDeletedPayloadTestDataBuilder.builder().build().userDeletedPayload();
 
     userKafkaConsumer.listenUserDeleted(message, "user.deleted");
 
     final ArgumentCaptor<DeleteUserCommand> commandCaptor =
         ArgumentCaptor.forClass(DeleteUserCommand.class);
     Mockito.verify(commandBus).execute(commandCaptor.capture());
-    assertThat(commandCaptor.getValue().getUserId()).isEqualTo(message.getData_().getUserId());
+    Assertions.assertThat(commandCaptor.getValue().getUserId())
+        .isEqualTo(message.getData_().getUserId());
     Mockito.verify(commandBus, Mockito.never()).execute(Mockito.any(RegisterInboxCommand.class));
   }
 
   @Test
   void consumeUserDeletedShouldRegisterInboxWhenCommandExecutionFails() {
-    final UserDeletedPayload message = userDeleted();
+    final UserDeletedPayload message = UserDeletedPayloadTestDataBuilder.builder().build().userDeletedPayload();
     Mockito.doThrow(new IllegalStateException("command failed"))
         .when(commandBus)
         .execute(Mockito.any(DeleteUserCommand.class));
@@ -114,76 +136,19 @@ class UserKafkaConsumerTestIT {
     userKafkaConsumer.listenUserDeleted(message, "user.deleted");
 
     Mockito.verify(commandBus).execute(Mockito.any(DeleteUserCommand.class));
-    assertInboxRegistered(
-        message, "USER_DELETED", message.getData_().getUserId(), captureInboxCommand());
-  }
-
-  private RegisterInboxCommand captureInboxCommand() {
-    final ArgumentCaptor<RegisterInboxCommand> commandCaptor =
+    final ArgumentCaptor<RegisterInboxCommand> inboxCaptor =
         ArgumentCaptor.forClass(RegisterInboxCommand.class);
-    Mockito.verify(commandBus).execute(commandCaptor.capture());
-    return commandCaptor.getValue();
-  }
-
-  private void assertInboxRegistered(
-      final Object message,
-      final String action,
-      final UUID aggregateId,
-      final RegisterInboxCommand command) {
-    final MessageHeader sourceHeader = messageHeader(message);
-    assertThat(command.getAction()).isEqualTo(action);
-    assertThat(command.getAggregateType()).isEqualTo("USER");
-    assertThat(command.getAggregateId()).isEqualTo(aggregateId);
-    assertThat(command.getMessageHeader().getMessageId()).isEqualTo(sourceHeader.getMessageId());
-    assertThat(command.getMessageHeader().getMessageDate())
-        .isEqualTo(sourceHeader.getMessageDate().toString());
-    assertThat(command.getCreatedAt()).isNotNull();
-  }
-
-  private MessageHeader messageHeader(final Object message) {
-    if (message instanceof UserCreatedPayload userCreated) {
-      return userCreated.getMessageHeader();
-    }
-    if (message instanceof UserUpdatedPayload userUpdated) {
-      return userUpdated.getMessageHeader();
-    }
-    return ((UserDeletedPayload) message).getMessageHeader();
-  }
-
-  private UserCreatedPayload userCreated() {
-    final UserCreatedData data = new UserCreatedData();
-    data.setName("Test User");
-    data.setEmail("user@example.com");
-    final UserCreatedPayload message = new UserCreatedPayload();
-    message.setMessageHeader(messageHeader());
-    message.setData_(data);
-    return message;
-  }
-
-  private UserUpdatedPayload userUpdated() {
-    final UserUpdatedData data = new UserUpdatedData();
-    data.setUserId(UUID.randomUUID());
-    data.setName("Updated User");
-    data.setEmail("updated@example.com");
-    final UserUpdatedPayload message = new UserUpdatedPayload();
-    message.setMessageHeader(messageHeader());
-    message.setData_(data);
-    return message;
-  }
-
-  private UserDeletedPayload userDeleted() {
-    final UserDeletedData data = new UserDeletedData();
-    data.setUserId(UUID.randomUUID());
-    final UserDeletedPayload message = new UserDeletedPayload();
-    message.setMessageHeader(messageHeader());
-    message.setData_(data);
-    return message;
-  }
-
-  private MessageHeader messageHeader() {
-    final MessageHeader header = new MessageHeader();
-    header.setMessageId(UUID.randomUUID());
-    header.setMessageDate(OffsetDateTime.parse("2026-10-13T10:15:30Z"));
-    return header;
+    Mockito.verify(commandBus).execute(inboxCaptor.capture());
+    final RegisterInboxCommand expected =
+        RegisterInboxCommandTestDataBuilder.builder()
+            .data(message.getData_())
+            .action("USER_DELETED")
+            .aggregateId(message.getData_().getUserId())
+            .build()
+            .registerInboxCommand();
+    Assertions.assertThat(inboxCaptor.getValue())
+        .usingRecursiveComparison()
+        .ignoringFields("createdAt")
+        .isEqualTo(expected);
   }
 }

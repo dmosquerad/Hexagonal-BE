@@ -1,7 +1,5 @@
 package com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.producer;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.architecture.hexagonal.application.port.out.outbox.OutboxRepositoryWritePort;
 import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.UserCreated;
 import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.UserDeleted;
@@ -11,6 +9,7 @@ import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.mapper.
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.testutils.message.UserCreatedTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.testutils.message.UserDeletedTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.testutils.message.UserUpdatedTestDataBuilder;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -79,13 +78,14 @@ class UserEventsProducerTest {
             streamBridge.send(Mockito.eq("publish-user-created-out-0"), Mockito.any(Message.class)))
         .thenReturn(false);
 
-    assertThat(publisher.publishUserCreated(event)).isFalse();
+    Assertions.assertThat(publisher.publishUserCreated(event)).isFalse();
 
     Mockito.verify(payloadMapper).toPayload(event);
     final ArgumentCaptor<Outbox> outboxCaptor = ArgumentCaptor.forClass(Outbox.class);
     Mockito.verify(outboxRepositoryWritePort).upsertByEventIdentity(outboxCaptor.capture());
-    assertThat(outboxCaptor.getValue().aggregateId()).isEqualTo(event.getUserData().getUserId());
-    assertThat(outboxCaptor.getValue().action()).isEqualTo("USER_CREATED");
+    Assertions.assertThat(outboxCaptor.getValue().aggregateId())
+        .isEqualTo(event.getUserData().getUserId());
+    Assertions.assertThat(outboxCaptor.getValue().action()).isEqualTo("USER_CREATED");
   }
 
   @Test
@@ -95,7 +95,7 @@ class UserEventsProducerTest {
         .when(streamBridge)
         .send(Mockito.eq("publish-user-created-out-0"), Mockito.any(Message.class));
 
-    assertThat(publisher.publishUserCreated(event)).isFalse();
+    Assertions.assertThat(publisher.publishUserCreated(event)).isFalse();
 
     Mockito.verify(payloadMapper).toPayload(event);
     Mockito.verify(outboxRepositoryWritePort).upsertByEventIdentity(Mockito.any(Outbox.class));
@@ -108,7 +108,7 @@ class UserEventsProducerTest {
             streamBridge.send(Mockito.eq("publish-user-updated-out-0"), Mockito.any(Message.class)))
         .thenReturn(false);
 
-    assertThat(publisher.publishUserUpdated(event)).isFalse();
+    Assertions.assertThat(publisher.publishUserUpdated(event)).isFalse();
 
     Mockito.verify(payloadMapper).toPayload(event);
     Mockito.verify(outboxRepositoryWritePort).upsertByEventIdentity(Mockito.any(Outbox.class));
@@ -121,7 +121,7 @@ class UserEventsProducerTest {
             streamBridge.send(Mockito.eq("publish-user-deleted-out-0"), Mockito.any(Message.class)))
         .thenReturn(false);
 
-    assertThat(publisher.publishUserDeleted(event)).isFalse();
+    Assertions.assertThat(publisher.publishUserDeleted(event)).isFalse();
 
     Mockito.verify(payloadMapper).toPayload(event);
     Mockito.verify(outboxRepositoryWritePort).upsertByEventIdentity(Mockito.any(Outbox.class));

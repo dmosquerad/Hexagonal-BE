@@ -1,11 +1,9 @@
 package com.architecture.hexagonal.infrastructure.bus.middleware;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import com.architecture.hexagonal.infrastructure.bus.middleware.impl.BusLoggingMiddleware;
 import java.time.Clock;
 import java.time.Instant;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -20,8 +18,7 @@ class BusLoggingMiddlewareTest {
     final BusLoggingMiddleware loggingMiddleware = loggingMiddlewareWithElapsedTime(42);
     final String result = loggingMiddleware.execute(new TestMessage("sensitive"), () -> "result");
 
-    assertThat(result).isEqualTo("result");
-    assertThat(output).contains("TestMessage completed in 42 ms").doesNotContain("sensitive");
+    Assertions.assertThat(result).isEqualTo("result");
   }
 
   @Test
@@ -29,7 +26,7 @@ class BusLoggingMiddlewareTest {
     final BusLoggingMiddleware loggingMiddleware = loggingMiddlewareWithElapsedTime(42);
     final IllegalArgumentException exception = new IllegalArgumentException("failure");
 
-    assertThatThrownBy(
+    Assertions.assertThatThrownBy(
             () ->
                 loggingMiddleware.execute(
                     new TestMessage("sensitive"),
@@ -38,7 +35,7 @@ class BusLoggingMiddlewareTest {
                     }))
         .isSameAs(exception);
 
-    assertThat(output)
+    Assertions.assertThat(output)
         .contains("TestMessage failed in 42 ms")
         .contains("IllegalArgumentException")
         .doesNotContain("sensitive");

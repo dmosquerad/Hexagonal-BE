@@ -1,26 +1,23 @@
 package com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.consumer;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import com.architecture.hexagonal.contract.bus.model.inbox.command.RegisterInboxCommand;
 import com.architecture.hexagonal.contract.bus.model.user.command.CreateUserCommand;
-import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.MessageHeader;
-import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserCreatedData;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserCreatedPayload;
 import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
 import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.mapper.UserKafkaMessageMapper;
+import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.testutils.command.RegisterInboxCommandTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.testutils.message.UserCreatedPayloadTestDataBuilder;
 import java.time.Clock;
-import java.time.OffsetDateTime;
-import java.util.UUID;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -30,7 +27,7 @@ class UserKafkaConsumerTest {
   @InjectMocks private UserKafkaConsumer userKafkaConsumer;
   @Mock private CommandBus commandBus;
 
-  @Spy private Clock clock = Clock.systemUTC();
+  @Spy private Clock clock = Clock.fixed(Instant.parse("2026-01-01T00:00:00Z"), ZoneOffset.UTC);
 
   @Spy
   private UserKafkaMessageMapper userKafkaMessageMapper =
@@ -38,45 +35,34 @@ class UserKafkaConsumerTest {
 
   @Test
   void consumeUserCreatedShouldExecuteCommandWithoutSavingInboxOnSuccess() {
-    final UserCreatedPayload message = message();
-    final CreateUserCommand command = org.mockito.Mockito.mock(CreateUserCommand.class);
-    when(userKafkaMessageMapper.toCreateUserCommand(message)).thenReturn(command);
+    final UserCreatedPayload message =
+        UserCreatedPayloadTestDataBuilder.builder().build().userCreatedPayload();
+    final CreateUserCommand command = Mockito.mock(CreateUserCommand.class);
+    Mockito.when(userKafkaMessageMapper.toCreateUserCommand(message)).thenReturn(command);
 
     userKafkaConsumer.listenUserCreated(message, "user.created");
 
-    verify(commandBus).execute(command);
+    Mockito.verify(commandBus).execute(command);
   }
 
   @Test
   void consumeUserCreatedShouldRegisterInboxWhenCommandExecutionFails() {
-    final UserCreatedPayload message = message();
-    final CreateUserCommand command = org.mockito.Mockito.mock(CreateUserCommand.class);
-    when(userKafkaMessageMapper.toCreateUserCommand(message)).thenReturn(command);
-    doThrow(new IllegalStateException("command failed")).when(commandBus).execute(command);
+    final UserCreatedPayload message =
+        UserCreatedPayloadTestDataBuilder.builder().build().userCreatedPayload();
+    final CreateUserCommand command = Mockito.mock(CreateUserCommand.class);
+    Mockito.when(userKafkaMessageMapper.toCreateUserCommand(message)).thenReturn(command);
+    Mockito.doThrow(new IllegalStateException("command failed")).when(commandBus).execute(command);
 
     userKafkaConsumer.listenUserCreated(message, "user.created");
 
     final ArgumentCaptor<RegisterInboxCommand> registerInboxCommandCaptor =
         ArgumentCaptor.forClass(RegisterInboxCommand.class);
-    verify(commandBus).execute(registerInboxCommandCaptor.capture());
-    verify(commandBus).execute(command);
-    final RegisterInboxCommand registerCommand = registerInboxCommandCaptor.getValue();
-    assertThat(registerCommand.getMessageHeader().getMessageId())
-        .isEqualTo(message.getMessageHeader().getMessageId());
-    assertThat(registerCommand.getMessageHeader().getMessageDate())
-        .isEqualTo(message.getMessageHeader().getMessageDate().toString());
-    assertThat(registerCommand.getAction()).isEqualTo("USER_CREATED");
-    assertThat(registerCommand.getAggregateType()).isEqualTo("USER");
-    assertThat(registerCommand.getData()).isSameAs(message.getData_());
-  }
-
-  private UserCreatedPayload message() {
-    final MessageHeader header = new MessageHeader();
-    header.setMessageId(UUID.randomUUID());
-    header.setMessageDate(OffsetDateTime.parse("2026-10-13T10:15:30Z"));
-    final UserCreatedPayload message = new UserCreatedPayload();
-    message.setMessageHeader(header);
-    message.setData_(new UserCreatedData());
-    return message;
+    Mockito.verify(commandBus).execute(registerInboxCommandCaptor.capture());
+    Mockito.verify(commandBus).execute(command);
+    final RegisterInboxCommand expected =
+        RegisterInboxCommandTestDataBuilder.builder().build().registerInboxCommand();
+    Assertions.assertThat(registerInboxCommandCaptor.getValue())
+        .usingRecursiveComparison()
+        .isEqualTo(expected);
   }
 }
