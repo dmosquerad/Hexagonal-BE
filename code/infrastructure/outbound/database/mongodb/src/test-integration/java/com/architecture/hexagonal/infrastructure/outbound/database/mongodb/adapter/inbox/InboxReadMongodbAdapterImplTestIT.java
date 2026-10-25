@@ -3,18 +3,18 @@ package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.adap
 import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
 import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
-import com.architecture.hexagonal.domain.model.vo.payload.MessageHeaderVo;
-import com.architecture.hexagonal.domain.model.vo.payload.PayloadVo;
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
+import com.architecture.hexagonal.domain.testutils.data.model.entity.inbox.InboxTestDataBuilder;
+import com.architecture.hexagonal.domain.testutils.data.model.vo.payload.MessageHeaderVoTestDataBuilder;
+import com.architecture.hexagonal.domain.testutils.data.model.vo.payload.PayloadVoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.config.MongodbIT;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.config.MongodbTestApplication;
-import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.inbox.InboxDao;
-import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.payload.MessageHeaderDao;
-import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.payload.PayloadDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.repository.inbox.InboxReadMongodbRepository;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.repository.inbox.InboxWriteMongodbRepository;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.data.inbox.InboxDaoTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.data.payload.MessageHeaderDaoTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.data.payload.PayloadDaoTestDataBuilder;
 import java.time.OffsetDateTime;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -40,24 +40,139 @@ class InboxReadMongodbAdapterImplTestIT extends MongodbIT {
 
   @Test
   void findByStatusAndAggregateTypeShouldReturnPendingInboxOrderedByCreatedAt() {
+    final UUID oldestMessageId = UUID.randomUUID();
+    final OffsetDateTime oldestCreatedAt = OffsetDateTime.parse("2026-10-13T10:15:30Z");
     final Inbox oldest =
-        inbox(
-            UUID.randomUUID(),
-            OffsetDateTime.parse("2026-10-13T10:15:30Z"),
-            StatusVo.PENDING);
+        InboxTestDataBuilder.<Object>builder()
+            .payload(
+                PayloadVoTestDataBuilder.<Object>builder()
+                    .messageHeaderVo(
+                        MessageHeaderVoTestDataBuilder.builder()
+                            .messageId(oldestMessageId)
+                            .messageDate(oldestCreatedAt.minusMinutes(1))
+                            .build()
+                            .messageHeaderVo())
+                    .data(Map.of("userId", "user-123"))
+                    .build()
+                    .payloadVo())
+            .aggregateId("user-123")
+            .action(ActionType.UserActionType.USER_CREATED.getActionType())
+            .createdAt(oldestCreatedAt)
+            .processedAt(null)
+            .build()
+            .inbox();
+    final UUID newestMessageId = UUID.randomUUID();
+    final OffsetDateTime newestCreatedAt = OffsetDateTime.parse("2026-10-13T10:17:30Z");
     final Inbox newest =
-        inbox(
-            UUID.randomUUID(),
-            OffsetDateTime.parse("2026-10-13T10:17:30Z"),
-            StatusVo.PENDING);
+        InboxTestDataBuilder.<Object>builder()
+            .payload(
+                PayloadVoTestDataBuilder.<Object>builder()
+                    .messageHeaderVo(
+                        MessageHeaderVoTestDataBuilder.builder()
+                            .messageId(newestMessageId)
+                            .messageDate(newestCreatedAt.minusMinutes(1))
+                            .build()
+                            .messageHeaderVo())
+                    .data(Map.of("userId", "user-123"))
+                    .build()
+                    .payloadVo())
+            .aggregateId("user-123")
+            .action(ActionType.UserActionType.USER_CREATED.getActionType())
+            .createdAt(newestCreatedAt)
+            .processedAt(null)
+            .build()
+            .inbox();
+    final UUID processedMessageId = UUID.randomUUID();
+    final OffsetDateTime processedCreatedAt = OffsetDateTime.parse("2026-10-13T10:16:30Z");
     final Inbox processed =
-        inbox(
-            UUID.randomUUID(),
-            OffsetDateTime.parse("2026-10-13T10:16:30Z"),
-            StatusVo.PROCESSED);
-    inboxWriteMongodbRepository.save(toDao(newest));
-    inboxWriteMongodbRepository.save(toDao(processed));
-    inboxWriteMongodbRepository.save(toDao(oldest));
+        InboxTestDataBuilder.<Object>builder()
+            .payload(
+                PayloadVoTestDataBuilder.<Object>builder()
+                    .messageHeaderVo(
+                        MessageHeaderVoTestDataBuilder.builder()
+                            .messageId(processedMessageId)
+                            .messageDate(processedCreatedAt.minusMinutes(1))
+                            .build()
+                            .messageHeaderVo())
+                    .data(Map.of("userId", "user-123"))
+                    .build()
+                    .payloadVo())
+            .aggregateId("user-123")
+            .action(ActionType.UserActionType.USER_CREATED.getActionType())
+            .status(StatusVo.PROCESSED)
+            .createdAt(processedCreatedAt)
+            .processedAt(null)
+            .build()
+            .inbox();
+    inboxWriteMongodbRepository.save(
+        InboxDaoTestDataBuilder.builder()
+            .inboxId(UUID.randomUUID())
+            .aggregateId("user-123")
+            .action(newest.action())
+            .createdAt(newest.createdAt().toZonedDateTime())
+            .processedAt(null)
+            .payload(
+                PayloadDaoTestDataBuilder.builder()
+                    .messageHeaderDao(
+                        MessageHeaderDaoTestDataBuilder.builder()
+                            .messageId(newest.payload().messageHeader().messageId())
+                            .messageDate(
+                                newest.payload().messageHeader().messageDate().toZonedDateTime())
+                            .build()
+                            .messageHeaderDao())
+                    .data(newest.payload().data())
+                    .build()
+                    .payloadDao())
+            .build()
+            .inboxDao());
+
+    inboxWriteMongodbRepository.save(
+        InboxDaoTestDataBuilder.builder()
+            .inboxId(UUID.randomUUID())
+            .aggregateId("user-123")
+            .action(processed.action())
+            .status(processed.status())
+            .createdAt(processed.createdAt().toZonedDateTime())
+            .processedAt(null)
+            .payload(
+                PayloadDaoTestDataBuilder.builder()
+                    .messageHeaderDao(
+                        MessageHeaderDaoTestDataBuilder.builder()
+                            .messageId(processed.payload().messageHeader().messageId())
+                            .messageDate(
+                                processed.payload()
+                                    .messageHeader()
+                                    .messageDate()
+                                    .toZonedDateTime())
+                            .build()
+                            .messageHeaderDao())
+                    .data(processed.payload().data())
+                    .build()
+                    .payloadDao())
+            .build()
+            .inboxDao());
+
+    inboxWriteMongodbRepository.save(
+        InboxDaoTestDataBuilder.builder()
+            .inboxId(UUID.randomUUID())
+            .aggregateId("user-123")
+            .action(oldest.action())
+            .createdAt(oldest.createdAt().toZonedDateTime())
+            .processedAt(null)
+            .payload(
+                PayloadDaoTestDataBuilder.builder()
+                    .messageHeaderDao(
+                        MessageHeaderDaoTestDataBuilder.builder()
+                            .messageId(oldest.payload().messageHeader().messageId())
+                            .messageDate(
+                                oldest.payload().messageHeader().messageDate().toZonedDateTime())
+                            .build()
+                            .messageHeaderDao())
+                    .data(oldest.payload().data())
+                    .build()
+                    .payloadDao())
+            .build()
+            .inboxDao());
 
     final List<Inbox> result =
         inboxReadMongodbAdapter.findByStatusAndAggregateType(
@@ -67,49 +182,5 @@ class InboxReadMongodbAdapterImplTestIT extends MongodbIT {
         .usingRecursiveComparison()
         .isEqualTo(List.of(oldest, newest));
     AssertionsForClassTypes.assertThat(inboxReadMongodbRepository.count()).isEqualTo(3);
-  }
-
-  private Inbox inbox(
-      final UUID messageId, final OffsetDateTime createdAt, final StatusVo status) {
-    return Inbox.builder()
-        .payload(
-            PayloadVo.builder()
-                .messageHeader(
-                    MessageHeaderVo.builder()
-                        .messageId(messageId)
-                        .messageDate(createdAt.minusMinutes(1))
-                        .build())
-                .data(Map.of("userId", "user-123"))
-                .build())
-        .aggregateType(AggregateTypeVo.USER)
-        .aggregateId("user-123")
-        .action(ActionType.UserActionType.USER_CREATED.getActionType())
-        .status(status)
-        .retryCount(0)
-        .createdAt(createdAt)
-        .processedAt(null)
-        .build();
-  }
-
-  private InboxDao toDao(final Inbox inbox) {
-    final InboxDao inboxDao = new InboxDao();
-    inboxDao.setInboxId(UUID.randomUUID());
-    inboxDao.setAggregateType(inbox.aggregateType());
-    inboxDao.setAggregateId(inbox.aggregateId());
-    inboxDao.setAction(inbox.action());
-    inboxDao.setStatus(inbox.status());
-    inboxDao.setRetryCount(inbox.retryCount());
-    inboxDao.setCreatedAt(inbox.createdAt().toZonedDateTime());
-
-    final MessageHeaderDao messageHeaderDao = new MessageHeaderDao();
-    messageHeaderDao.setMessageId(inbox.payload().messageHeader().messageId());
-    messageHeaderDao.setMessageDate(
-        inbox.payload().messageHeader().messageDate().toZonedDateTime());
-    final PayloadDao payloadDao = new PayloadDao();
-    payloadDao.setMessageHeader(messageHeaderDao);
-    payloadDao.setData(inbox.payload().data());
-    inboxDao.setPayload(payloadDao);
-
-    return inboxDao;
   }
 }

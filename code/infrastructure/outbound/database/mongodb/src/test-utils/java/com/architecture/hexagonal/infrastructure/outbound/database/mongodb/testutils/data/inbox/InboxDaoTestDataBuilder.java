@@ -24,7 +24,7 @@ public class InboxDaoTestDataBuilder {
   @Builder.Default private String action = ActionType.UserActionType.USER_DELETED.name();
 
   @Builder.Default
-  private PayloadDao payload = PayloadDaoTestDataBuilder.builder().user(null).build().payloadDao();
+  private PayloadDao payload = PayloadDaoTestDataBuilder.builder().data(null).build().payloadDao();
 
   @Builder.Default private StatusVo status = StatusVo.PENDING;
 

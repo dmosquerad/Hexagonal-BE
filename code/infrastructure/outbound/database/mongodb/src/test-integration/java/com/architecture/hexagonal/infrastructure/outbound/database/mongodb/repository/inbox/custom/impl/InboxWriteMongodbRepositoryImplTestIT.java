@@ -62,7 +62,7 @@ class InboxWriteMongodbRepositoryImplTestIT extends MongodbIT {
         InboxDaoTestDataBuilder.builder()
             .payload(
                 PayloadDaoTestDataBuilder.builder()
-                    .user(null)
+                    .data(null)
                     .messageHeaderDao(nextHeader)
                     .build()
                     .payloadDao())
