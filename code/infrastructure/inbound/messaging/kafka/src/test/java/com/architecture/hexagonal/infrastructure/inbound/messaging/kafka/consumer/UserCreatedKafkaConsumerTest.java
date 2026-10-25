@@ -22,9 +22,9 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class UserKafkaConsumerTest {
+class UserCreatedKafkaConsumerTest {
 
-  @InjectMocks private UserKafkaConsumer userKafkaConsumer;
+  @InjectMocks private UserCreatedKafkaConsumer userCreatedKafkaConsumer;
   @Mock private CommandBus commandBus;
 
   @Spy private Clock clock = Clock.fixed(Instant.parse("2026-01-01T00:00:00Z"), ZoneOffset.UTC);
@@ -40,7 +40,7 @@ class UserKafkaConsumerTest {
     final CreateUserCommand command = Mockito.mock(CreateUserCommand.class);
     Mockito.when(userKafkaMessageMapper.toCreateUserCommand(message)).thenReturn(command);
 
-    userKafkaConsumer.listenUserCreated(message, "user.created");
+    userCreatedKafkaConsumer.listenUserCreated(message, "user.created");
 
     Mockito.verify(commandBus).execute(command);
   }
@@ -53,7 +53,7 @@ class UserKafkaConsumerTest {
     Mockito.when(userKafkaMessageMapper.toCreateUserCommand(message)).thenReturn(command);
     Mockito.doThrow(new IllegalStateException("command failed")).when(commandBus).execute(command);
 
-    userKafkaConsumer.listenUserCreated(message, "user.created");
+    userCreatedKafkaConsumer.listenUserCreated(message, "user.created");
 
     final ArgumentCaptor<RegisterInboxCommand> registerInboxCommandCaptor =
         ArgumentCaptor.forClass(RegisterInboxCommand.class);
