@@ -2,7 +2,9 @@ package com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.consum
 
 import com.architecture.hexagonal.contract.bus.model.inbox.command.RegisterInboxCommand;
 import com.architecture.hexagonal.contract.bus.model.user.command.UpdateUserCommand;
+import com.architecture.hexagonal.contract.inbound.messaging.kafka.client.consumer.UserUpdatedConsumer;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserUpdatedPayload;
+import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
 import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
 import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.testutils.command.RegisterInboxCommandTestDataBuilder;
@@ -16,8 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-@SpringBootTest(
-    classes = UserUpdatedKafkaConsumer.class, properties = "spring.kafka.listener.auto-startup=false")
+@SpringBootTest(classes = UserUpdatedKafkaConsumer.class)
 @ContextConfiguration(classes = TestApplication.class)
 class UserUpdatedKafkaConsumerTestIT {
 
@@ -29,7 +30,8 @@ class UserUpdatedKafkaConsumerTestIT {
   void consumeUserUpdatedShouldMapCommandWithoutPersistingInboxOnSuccess() {
     final UserUpdatedPayload message = UserUpdatedPayloadTestDataBuilder.builder().build().userUpdatedPayload();
 
-    userUpdatedKafkaConsumer.listenUserUpdated(message, "user.updated");
+    userUpdatedKafkaConsumer.listenUserUpdated(
+        message, UserUpdatedConsumer.USER_UPDATED_TOPIC_ADDRESS);
 
     final ArgumentCaptor<UpdateUserCommand> commandCaptor =
         ArgumentCaptor.forClass(UpdateUserCommand.class);
@@ -50,7 +52,8 @@ class UserUpdatedKafkaConsumerTestIT {
         .when(commandBus)
         .execute(Mockito.any(UpdateUserCommand.class));
 
-    userUpdatedKafkaConsumer.listenUserUpdated(message, "user.updated");
+    userUpdatedKafkaConsumer.listenUserUpdated(
+        message, UserUpdatedConsumer.USER_UPDATED_TOPIC_ADDRESS);
 
     Mockito.verify(commandBus).execute(Mockito.any(UpdateUserCommand.class));
     final ArgumentCaptor<RegisterInboxCommand> inboxCaptor =
@@ -59,7 +62,7 @@ class UserUpdatedKafkaConsumerTestIT {
     final RegisterInboxCommand expected =
         RegisterInboxCommandTestDataBuilder.builder()
             .data(message.getData_())
-            .action("USER_UPDATED")
+            .action(ActionType.UserActionType.USER_UPDATED.getActionType())
             .aggregateId(message.getData_().getUserId())
             .build()
             .registerInboxCommand();

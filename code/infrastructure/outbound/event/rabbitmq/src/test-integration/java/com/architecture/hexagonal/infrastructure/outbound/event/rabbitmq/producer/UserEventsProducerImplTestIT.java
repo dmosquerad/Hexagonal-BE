@@ -7,6 +7,7 @@ import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.UserUpd
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.mapper.user.PayloadMapper;
+import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.naming.UserEventsProducerBinding;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.testutils.message.UserCreatedTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.testutils.message.UserDeletedTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.testutils.message.UserUpdatedTestDataBuilder;
@@ -41,7 +42,7 @@ class UserEventsProducerImplTestIT {
 
     Mockito.when(
             streamBridge.send(
-                Mockito.eq("publish-user-created-out-0"),
+                Mockito.eq(UserEventsProducerBinding.PUBLISH_USER_CREATED_OUT_0.getBindingName()),
                 Mockito.any(org.springframework.messaging.Message.class)))
         .thenThrow(new IllegalStateException("broker unavailable"));
 
@@ -61,7 +62,7 @@ class UserEventsProducerImplTestIT {
 
     Mockito.when(
             streamBridge.send(
-                Mockito.eq("publish-user-updated-out-0"),
+                Mockito.eq(UserEventsProducerBinding.PUBLISH_USER_UPDATED_OUT_0.getBindingName()),
                 Mockito.any(org.springframework.messaging.Message.class)))
         .thenThrow(new IllegalStateException("broker unavailable"));
 
@@ -81,7 +82,7 @@ class UserEventsProducerImplTestIT {
 
     Mockito.when(
             streamBridge.send(
-                Mockito.eq("publish-user-deleted-out-0"),
+                Mockito.eq(UserEventsProducerBinding.PUBLISH_USER_DELETED_OUT_0.getBindingName()),
                 Mockito.any(org.springframework.messaging.Message.class)))
         .thenThrow(new IllegalStateException("broker unavailable"));
 

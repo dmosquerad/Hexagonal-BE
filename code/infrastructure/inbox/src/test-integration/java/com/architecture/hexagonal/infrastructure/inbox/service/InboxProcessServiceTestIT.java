@@ -4,6 +4,7 @@ import com.architecture.hexagonal.contract.bus.model.user.command.CreateUserComm
 import com.architecture.hexagonal.contract.bus.model.user.command.DeleteUserCommand;
 import com.architecture.hexagonal.contract.bus.model.user.command.UpdateUserCommand;
 import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
+import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
 import com.architecture.hexagonal.domain.testutils.data.model.entity.inbox.InboxTestDataBuilder;
 import com.architecture.hexagonal.domain.testutils.data.model.vo.payload.PayloadVoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
@@ -42,7 +43,7 @@ class InboxProcessServiceTestIT {
     final Inbox inbox =
         InboxTestDataBuilder.<Object>builder()
             .payload(PayloadVoTestDataBuilder.<Object>builder().data(Map.of("name", "Inbox User", "email", "inbox@example.com")).build().payloadVo())
-            .action("USER_CREATED")
+            .action(ActionType.UserActionType.USER_CREATED.getActionType())
             .build()
             .inbox();
 
@@ -64,7 +65,7 @@ class InboxProcessServiceTestIT {
                     "userId", userId.toString(),
                     "name", "Updated User",
                     "email", "updated@example.com")).build().payloadVo())
-            .action("USER_UPDATED")
+            .action(ActionType.UserActionType.USER_UPDATED.getActionType())
             .build()
             .inbox();
 
@@ -84,7 +85,7 @@ class InboxProcessServiceTestIT {
     final Inbox inbox =
         InboxTestDataBuilder.<Object>builder()
             .payload(PayloadVoTestDataBuilder.<Object>builder().data(Map.of("userId", userId.toString())).build().payloadVo())
-            .action("USER_DELETED")
+            .action(ActionType.UserActionType.USER_DELETED.getActionType())
             .build()
             .inbox();
 

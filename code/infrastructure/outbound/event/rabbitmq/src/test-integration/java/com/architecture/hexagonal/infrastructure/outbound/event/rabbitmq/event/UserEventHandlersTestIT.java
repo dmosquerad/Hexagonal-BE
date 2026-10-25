@@ -5,6 +5,7 @@ import com.architecture.hexagonal.contract.bus.model.user.event.UserCreatedEvent
 import com.architecture.hexagonal.contract.bus.model.user.event.UserDeletedEvent;
 import com.architecture.hexagonal.contract.bus.model.user.event.UserUpdatedEvent;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.config.TestApplication;
+import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.naming.UserEventsProducerBinding;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.producer.UserEventsProducerImpl;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -45,7 +46,8 @@ class UserEventHandlersTestIT {
     event.setEmail(USER_EMAIL);
     Mockito.when(
             streamBridge.send(
-                Mockito.eq("publish-user-created-out-0"), Mockito.any(Message.class)))
+                Mockito.eq(UserEventsProducerBinding.PUBLISH_USER_CREATED_OUT_0.getBindingName()),
+                Mockito.any(Message.class)))
         .thenReturn(true);
 
     transactionTemplate.execute(
@@ -55,7 +57,9 @@ class UserEventHandlersTestIT {
         });
 
     Mockito.verify(streamBridge)
-        .send(Mockito.eq("publish-user-created-out-0"), Mockito.any(Message.class));
+        .send(
+            Mockito.eq(UserEventsProducerBinding.PUBLISH_USER_CREATED_OUT_0.getBindingName()),
+            Mockito.any(Message.class));
     Mockito.verifyNoInteractions(outboxRepositoryWritePort);
   }
 
@@ -67,7 +71,8 @@ class UserEventHandlersTestIT {
     event.setEmail(USER_EMAIL);
     Mockito.when(
             streamBridge.send(
-                Mockito.eq("publish-user-updated-out-0"), Mockito.any(Message.class)))
+                Mockito.eq(UserEventsProducerBinding.PUBLISH_USER_UPDATED_OUT_0.getBindingName()),
+                Mockito.any(Message.class)))
         .thenReturn(true);
 
     transactionTemplate.execute(
@@ -77,7 +82,9 @@ class UserEventHandlersTestIT {
         });
 
     Mockito.verify(streamBridge)
-        .send(Mockito.eq("publish-user-updated-out-0"), Mockito.any(Message.class));
+        .send(
+            Mockito.eq(UserEventsProducerBinding.PUBLISH_USER_UPDATED_OUT_0.getBindingName()),
+            Mockito.any(Message.class));
     Mockito.verifyNoInteractions(outboxRepositoryWritePort);
   }
 
@@ -89,7 +96,8 @@ class UserEventHandlersTestIT {
     event.setEmail(USER_EMAIL);
     Mockito.when(
             streamBridge.send(
-                Mockito.eq("publish-user-deleted-out-0"), Mockito.any(Message.class)))
+                Mockito.eq(UserEventsProducerBinding.PUBLISH_USER_DELETED_OUT_0.getBindingName()),
+                Mockito.any(Message.class)))
         .thenReturn(true);
 
     transactionTemplate.execute(
@@ -99,7 +107,9 @@ class UserEventHandlersTestIT {
         });
 
     Mockito.verify(streamBridge)
-        .send(Mockito.eq("publish-user-deleted-out-0"), Mockito.any(Message.class));
+        .send(
+            Mockito.eq(UserEventsProducerBinding.PUBLISH_USER_DELETED_OUT_0.getBindingName()),
+            Mockito.any(Message.class));
     Mockito.verifyNoInteractions(outboxRepositoryWritePort);
   }
 }

@@ -2,11 +2,13 @@ package com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.consum
 
 import com.architecture.hexagonal.contract.bus.model.inbox.command.RegisterInboxCommand;
 import com.architecture.hexagonal.contract.bus.model.user.command.DeleteUserCommand;
+import com.architecture.hexagonal.contract.inbound.messaging.kafka.client.consumer.UserDeletedConsumer;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserDeletedPayload;
 import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
 import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.testutils.command.RegisterInboxCommandTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.testutils.message.UserDeletedPayloadTestDataBuilder;
+import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -16,8 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-@SpringBootTest(
-    classes = UserDeletedKafkaConsumer.class, properties = "spring.kafka.listener.auto-startup=false")
+@SpringBootTest(classes = UserDeletedKafkaConsumer.class)
 @ContextConfiguration(classes = TestApplication.class)
 class UserDeletedKafkaConsumerTestIT {
 
@@ -29,7 +30,8 @@ class UserDeletedKafkaConsumerTestIT {
   void consumeUserDeletedShouldMapCommandWithoutPersistingInboxOnSuccess() {
     final UserDeletedPayload message = UserDeletedPayloadTestDataBuilder.builder().build().userDeletedPayload();
 
-    userDeletedKafkaConsumer.listenUserDeleted(message, "user.deleted");
+    userDeletedKafkaConsumer.listenUserDeleted(
+        message, UserDeletedConsumer.USER_DELETED_TOPIC_ADDRESS);
 
     final ArgumentCaptor<DeleteUserCommand> commandCaptor =
         ArgumentCaptor.forClass(DeleteUserCommand.class);
@@ -46,7 +48,8 @@ class UserDeletedKafkaConsumerTestIT {
         .when(commandBus)
         .execute(Mockito.any(DeleteUserCommand.class));
 
-    userDeletedKafkaConsumer.listenUserDeleted(message, "user.deleted");
+    userDeletedKafkaConsumer.listenUserDeleted(
+        message, UserDeletedConsumer.USER_DELETED_TOPIC_ADDRESS);
 
     Mockito.verify(commandBus).execute(Mockito.any(DeleteUserCommand.class));
     final ArgumentCaptor<RegisterInboxCommand> inboxCaptor =
@@ -55,7 +58,7 @@ class UserDeletedKafkaConsumerTestIT {
     final RegisterInboxCommand expected =
         RegisterInboxCommandTestDataBuilder.builder()
             .data(message.getData_())
-            .action("USER_DELETED")
+            .action(ActionType.UserActionType.USER_DELETED.getActionType())
             .aggregateId(message.getData_().getUserId())
             .build()
             .registerInboxCommand();

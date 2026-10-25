@@ -5,7 +5,9 @@ import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.UserCre
 import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.UserDeleted;
 import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.UserUpdated;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
+import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.mapper.user.PayloadMapper;
+import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.naming.UserEventsProducerBinding;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.testutils.message.UserCreatedTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.testutils.message.UserDeletedTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.testutils.message.UserUpdatedTestDataBuilder;
@@ -33,13 +35,17 @@ class UserEventsProducerTest {
   void publishUserCreatedShouldSendOnBindingDeclaredByContract() {
     final UserCreated event = UserCreatedTestDataBuilder.builder().build().userCreated();
     Mockito.when(
-            streamBridge.send(Mockito.eq("publish-user-created-out-0"), Mockito.any(Message.class)))
+            streamBridge.send(
+                Mockito.eq(UserEventsProducerBinding.PUBLISH_USER_CREATED_OUT_0.getBindingName()),
+                Mockito.any(Message.class)))
         .thenReturn(true);
 
     publisher.publishUserCreated(event);
 
     Mockito.verify(streamBridge)
-        .send(Mockito.eq("publish-user-created-out-0"), Mockito.any(Message.class));
+        .send(
+            Mockito.eq(UserEventsProducerBinding.PUBLISH_USER_CREATED_OUT_0.getBindingName()),
+            Mockito.any(Message.class));
     Mockito.verifyNoInteractions(outboxRepositoryWritePort);
   }
 
@@ -47,13 +53,17 @@ class UserEventsProducerTest {
   void publishUserUpdatedShouldSendOnBindingDeclaredByContract() {
     final UserUpdated event = UserUpdatedTestDataBuilder.builder().build().userUpdated();
     Mockito.when(
-            streamBridge.send(Mockito.eq("publish-user-updated-out-0"), Mockito.any(Message.class)))
+            streamBridge.send(
+                Mockito.eq(UserEventsProducerBinding.PUBLISH_USER_UPDATED_OUT_0.getBindingName()),
+                Mockito.any(Message.class)))
         .thenReturn(true);
 
     publisher.publishUserUpdated(event);
 
     Mockito.verify(streamBridge)
-        .send(Mockito.eq("publish-user-updated-out-0"), Mockito.any(Message.class));
+        .send(
+            Mockito.eq(UserEventsProducerBinding.PUBLISH_USER_UPDATED_OUT_0.getBindingName()),
+            Mockito.any(Message.class));
     Mockito.verifyNoInteractions(outboxRepositoryWritePort);
   }
 
@@ -61,13 +71,17 @@ class UserEventsProducerTest {
   void publishUserDeletedShouldSendOnBindingDeclaredByContract() {
     final UserDeleted event = UserDeletedTestDataBuilder.builder().build().userDeleted();
     Mockito.when(
-            streamBridge.send(Mockito.eq("publish-user-deleted-out-0"), Mockito.any(Message.class)))
+            streamBridge.send(
+                Mockito.eq(UserEventsProducerBinding.PUBLISH_USER_DELETED_OUT_0.getBindingName()),
+                Mockito.any(Message.class)))
         .thenReturn(true);
 
     publisher.publishUserDeleted(event);
 
     Mockito.verify(streamBridge)
-        .send(Mockito.eq("publish-user-deleted-out-0"), Mockito.any(Message.class));
+        .send(
+            Mockito.eq(UserEventsProducerBinding.PUBLISH_USER_DELETED_OUT_0.getBindingName()),
+            Mockito.any(Message.class));
     Mockito.verifyNoInteractions(outboxRepositoryWritePort);
   }
 
@@ -75,7 +89,9 @@ class UserEventsProducerTest {
   void publishUserCreatedShouldSaveOutboxWhenStreamBridgeReturnsFalse() {
     final UserCreated event = UserCreatedTestDataBuilder.builder().build().userCreated();
     Mockito.when(
-            streamBridge.send(Mockito.eq("publish-user-created-out-0"), Mockito.any(Message.class)))
+            streamBridge.send(
+                Mockito.eq(UserEventsProducerBinding.PUBLISH_USER_CREATED_OUT_0.getBindingName()),
+                Mockito.any(Message.class)))
         .thenReturn(false);
 
     Assertions.assertThat(publisher.publishUserCreated(event)).isFalse();
@@ -85,7 +101,8 @@ class UserEventsProducerTest {
     Mockito.verify(outboxRepositoryWritePort).upsertByEventIdentity(outboxCaptor.capture());
     Assertions.assertThat(outboxCaptor.getValue().aggregateId())
         .isEqualTo(event.getUserData().getUserId());
-    Assertions.assertThat(outboxCaptor.getValue().action()).isEqualTo("USER_CREATED");
+    Assertions.assertThat(outboxCaptor.getValue().action())
+        .isEqualTo(ActionType.UserActionType.USER_CREATED.getActionType());
   }
 
   @Test
@@ -93,7 +110,9 @@ class UserEventsProducerTest {
     final UserCreated event = UserCreatedTestDataBuilder.builder().build().userCreated();
     Mockito.doThrow(new IllegalStateException("broker unavailable"))
         .when(streamBridge)
-        .send(Mockito.eq("publish-user-created-out-0"), Mockito.any(Message.class));
+        .send(
+            Mockito.eq(UserEventsProducerBinding.PUBLISH_USER_CREATED_OUT_0.getBindingName()),
+            Mockito.any(Message.class));
 
     Assertions.assertThat(publisher.publishUserCreated(event)).isFalse();
 
@@ -105,7 +124,9 @@ class UserEventsProducerTest {
   void publishUserUpdatedShouldSaveOutboxWhenStreamBridgeReturnsFalse() {
     final UserUpdated event = UserUpdatedTestDataBuilder.builder().build().userUpdated();
     Mockito.when(
-            streamBridge.send(Mockito.eq("publish-user-updated-out-0"), Mockito.any(Message.class)))
+            streamBridge.send(
+                Mockito.eq(UserEventsProducerBinding.PUBLISH_USER_UPDATED_OUT_0.getBindingName()),
+                Mockito.any(Message.class)))
         .thenReturn(false);
 
     Assertions.assertThat(publisher.publishUserUpdated(event)).isFalse();
@@ -118,7 +139,9 @@ class UserEventsProducerTest {
   void publishUserDeletedShouldSaveOutboxWhenStreamBridgeReturnsFalse() {
     final UserDeleted event = UserDeletedTestDataBuilder.builder().build().userDeleted();
     Mockito.when(
-            streamBridge.send(Mockito.eq("publish-user-deleted-out-0"), Mockito.any(Message.class)))
+            streamBridge.send(
+                Mockito.eq(UserEventsProducerBinding.PUBLISH_USER_DELETED_OUT_0.getBindingName()),
+                Mockito.any(Message.class)))
         .thenReturn(false);
 
     Assertions.assertThat(publisher.publishUserDeleted(event)).isFalse();

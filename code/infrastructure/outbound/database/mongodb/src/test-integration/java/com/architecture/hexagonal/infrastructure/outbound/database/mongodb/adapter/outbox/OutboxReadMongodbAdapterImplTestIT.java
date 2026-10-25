@@ -2,6 +2,7 @@ package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.adap
 
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
 import com.architecture.hexagonal.domain.model.entity.user.User;
+import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
 import com.architecture.hexagonal.application.projector.outbox.OutboxStatusAndAggregateProjector;
 import com.architecture.hexagonal.application.testutils.projector.outbox.OutboxStatusAndAggregateProjectorTestDataBuilder;
 import com.architecture.hexagonal.domain.testutils.data.model.entity.outbox.OutboxTestDataBuilder;
@@ -34,7 +35,7 @@ class OutboxReadMongodbAdapterImplTestIT extends MongodbIT {
   void findPendingEventsShouldReturnPendingEventsOrderedByCreatedAt() {
     final Outbox outbox =
         OutboxTestDataBuilder.<User>builder()
-            .action("USER_CREATED")
+            .action(ActionType.UserActionType.USER_CREATED.getActionType())
             .payload(
                 PayloadVoTestDataBuilder.<User>builder()
                     .data(UserTestDataBuilder.builder().build().user())

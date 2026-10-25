@@ -1,6 +1,7 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.data.outbox;
 
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
+import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.outbox.OutboxDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.payload.PayloadDao;
@@ -25,7 +26,7 @@ public class OutboxDaoTestDataBuilder {
   private String aggregateId = "123";
 
   @Builder.Default
-  private String action = "USER_CREATED";
+  private String action = ActionType.UserActionType.USER_CREATED.getActionType();
 
   @Builder.Default
   private PayloadDao payload = PayloadDaoTestDataBuilder.builder().build().payloadDao();

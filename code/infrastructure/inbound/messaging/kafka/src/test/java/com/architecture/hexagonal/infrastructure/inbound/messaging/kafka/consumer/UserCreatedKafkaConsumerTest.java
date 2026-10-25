@@ -2,6 +2,7 @@ package com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.consum
 
 import com.architecture.hexagonal.contract.bus.model.inbox.command.RegisterInboxCommand;
 import com.architecture.hexagonal.contract.bus.model.user.command.CreateUserCommand;
+import com.architecture.hexagonal.contract.inbound.messaging.kafka.client.consumer.UserCreatedConsumer;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserCreatedPayload;
 import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
 import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.mapper.UserKafkaMessageMapper;
@@ -40,7 +41,8 @@ class UserCreatedKafkaConsumerTest {
     final CreateUserCommand command = Mockito.mock(CreateUserCommand.class);
     Mockito.when(userKafkaMessageMapper.toCreateUserCommand(message)).thenReturn(command);
 
-    userCreatedKafkaConsumer.listenUserCreated(message, "user.created");
+    userCreatedKafkaConsumer.listenUserCreated(
+        message, UserCreatedConsumer.USER_CREATED_TOPIC_ADDRESS);
 
     Mockito.verify(commandBus).execute(command);
   }
@@ -53,7 +55,8 @@ class UserCreatedKafkaConsumerTest {
     Mockito.when(userKafkaMessageMapper.toCreateUserCommand(message)).thenReturn(command);
     Mockito.doThrow(new IllegalStateException("command failed")).when(commandBus).execute(command);
 
-    userCreatedKafkaConsumer.listenUserCreated(message, "user.created");
+    userCreatedKafkaConsumer.listenUserCreated(
+        message, UserCreatedConsumer.USER_CREATED_TOPIC_ADDRESS);
 
     final ArgumentCaptor<RegisterInboxCommand> registerInboxCommandCaptor =
         ArgumentCaptor.forClass(RegisterInboxCommand.class);

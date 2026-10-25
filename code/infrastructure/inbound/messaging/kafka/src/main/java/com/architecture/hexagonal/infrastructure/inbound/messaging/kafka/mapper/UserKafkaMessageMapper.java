@@ -7,6 +7,8 @@ import com.architecture.hexagonal.contract.bus.model.user.command.UpdateUserComm
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserCreatedPayload;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserDeletedPayload;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserUpdatedPayload;
+import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
+import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.config.MapstructConfig;
 import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.mapper.converter.UserKafkaMessageConverter;
 import org.mapstruct.Mapper;
@@ -28,9 +30,9 @@ public interface UserKafkaMessageMapper {
       target = "data",
       source = "message.data_",
       qualifiedByName = UserKafkaMessageConverter.TO_OBJECT)
-  @Mapping(target = "aggregateType", constant = "USER")
+  @Mapping(target = "aggregateType", constant = AggregateTypeVo.Naming.AGGREGATE_TYPE_USER)
   @Mapping(target = "aggregateId", ignore = true)
-  @Mapping(target = "action", constant = "USER_CREATED")
+  @Mapping(target = "action", constant = ActionType.UserActionType.Naming.USER_CREATED_ACTION)
   @Mapping(target = "createdAt", ignore = true)
   RegisterInboxCommand toRegisterInboxCommand(UserCreatedPayload message);
 
@@ -38,12 +40,12 @@ public interface UserKafkaMessageMapper {
       target = "data",
       source = "message.data_",
       qualifiedByName = UserKafkaMessageConverter.TO_OBJECT)
-  @Mapping(target = "aggregateType", constant = "USER")
+  @Mapping(target = "aggregateType", constant = AggregateTypeVo.Naming.AGGREGATE_TYPE_USER)
   @Mapping(
       target = "aggregateId",
       source = "message.data_.userId",
       qualifiedByName = UserKafkaMessageConverter.TO_OBJECT)
-  @Mapping(target = "action", constant = "USER_UPDATED")
+  @Mapping(target = "action", constant = ActionType.UserActionType.Naming.USER_UPDATED_ACTION)
   @Mapping(target = "createdAt", ignore = true)
   RegisterInboxCommand toRegisterInboxCommand(UserUpdatedPayload message);
 
@@ -51,12 +53,12 @@ public interface UserKafkaMessageMapper {
       target = "data",
       source = "message.data_",
       qualifiedByName = UserKafkaMessageConverter.TO_OBJECT)
-  @Mapping(target = "aggregateType", constant = "USER")
+  @Mapping(target = "aggregateType", constant = AggregateTypeVo.Naming.AGGREGATE_TYPE_USER)
   @Mapping(
       target = "aggregateId",
       source = "message.data_.userId",
       qualifiedByName = UserKafkaMessageConverter.TO_OBJECT)
-  @Mapping(target = "action", constant = "USER_DELETED")
+  @Mapping(target = "action", constant = ActionType.UserActionType.Naming.USER_DELETED_ACTION)
   @Mapping(target = "createdAt", ignore = true)
   RegisterInboxCommand toRegisterInboxCommand(UserDeletedPayload message);
 }

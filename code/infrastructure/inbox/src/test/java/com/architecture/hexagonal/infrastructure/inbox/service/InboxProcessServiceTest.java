@@ -3,6 +3,7 @@ package com.architecture.hexagonal.infrastructure.inbox.service;
 import com.architecture.hexagonal.contract.bus.model.user.command.CreateUserCommand;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserCreatedData;
 import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
+import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
 import com.architecture.hexagonal.domain.testutils.data.model.entity.inbox.InboxTestDataBuilder;
 import com.architecture.hexagonal.domain.testutils.data.model.vo.payload.PayloadVoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
@@ -53,7 +54,7 @@ class InboxProcessServiceTest {
                     .data(Map.of("name", createdData.getName(), "email", createdData.getEmail()))
                     .build()
                     .payloadVo())
-            .action("USER_CREATED")
+            .action(ActionType.UserActionType.USER_CREATED.getActionType())
             .build()
             .inbox();
 
@@ -92,7 +93,7 @@ class InboxProcessServiceTest {
                     .data(Map.of("name", "Inbox User"))
                     .build()
                     .payloadVo())
-            .action("USER_CREATED")
+            .action(ActionType.UserActionType.USER_CREATED.getActionType())
             .build()
             .inbox();
 

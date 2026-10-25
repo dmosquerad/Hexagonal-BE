@@ -10,6 +10,7 @@ import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.mapper.user.PayloadMapper;
+import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.naming.UserEventsProducerBinding;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.messaging.support.MessageBuilder;
@@ -47,7 +48,8 @@ public class UserEventsProducerImpl implements UserEventsProducer {
   private boolean tryPublishUserCreated(final UserCreated payload) {
     try {
       return streamBridge.send(
-          "publish-user-created-out-0", MessageBuilder.withPayload(payload).build());
+          UserEventsProducerBinding.PUBLISH_USER_CREATED_OUT_0.getBindingName(),
+          MessageBuilder.withPayload(payload).build());
     } catch (final RuntimeException _) {
       return false;
     }
@@ -75,7 +77,8 @@ public class UserEventsProducerImpl implements UserEventsProducer {
   private boolean tryPublishUserUpdated(final UserUpdated payload) {
     try {
       return streamBridge.send(
-          "publish-user-updated-out-0", MessageBuilder.withPayload(payload).build());
+          UserEventsProducerBinding.PUBLISH_USER_UPDATED_OUT_0.getBindingName(),
+          MessageBuilder.withPayload(payload).build());
     } catch (final RuntimeException _) {
       return false;
     }
@@ -103,7 +106,8 @@ public class UserEventsProducerImpl implements UserEventsProducer {
   private boolean tryPublishUserDeleted(final UserDeleted payload) {
     try {
       return streamBridge.send(
-          "publish-user-deleted-out-0", MessageBuilder.withPayload(payload).build());
+          UserEventsProducerBinding.PUBLISH_USER_DELETED_OUT_0.getBindingName(),
+          MessageBuilder.withPayload(payload).build());
     } catch (final RuntimeException _) {
       return false;
     }

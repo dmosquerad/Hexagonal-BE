@@ -1,6 +1,7 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.adapter.inbox;
 
 import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
+import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.domain.model.vo.payload.MessageHeaderVo;
 import com.architecture.hexagonal.domain.model.vo.payload.PayloadVo;
@@ -82,7 +83,7 @@ class InboxReadMongodbAdapterImplTestIT extends MongodbIT {
                 .build())
         .aggregateType(AggregateTypeVo.USER)
         .aggregateId("user-123")
-        .action("USER_CREATED")
+        .action(ActionType.UserActionType.USER_CREATED.getActionType())
         .status(status)
         .retryCount(0)
         .createdAt(createdAt)

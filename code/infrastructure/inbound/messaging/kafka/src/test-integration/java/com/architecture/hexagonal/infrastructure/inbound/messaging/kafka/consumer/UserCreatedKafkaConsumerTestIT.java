@@ -2,6 +2,7 @@ package com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.consum
 
 import com.architecture.hexagonal.contract.bus.model.inbox.command.RegisterInboxCommand;
 import com.architecture.hexagonal.contract.bus.model.user.command.CreateUserCommand;
+import com.architecture.hexagonal.contract.inbound.messaging.kafka.client.consumer.UserCreatedConsumer;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserCreatedPayload;
 import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
 import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.config.TestApplication;
@@ -16,8 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-@SpringBootTest(
-    classes = UserCreatedKafkaConsumer.class, properties = "spring.kafka.listener.auto-startup=false")
+@SpringBootTest(classes = UserCreatedKafkaConsumer.class)
 @ContextConfiguration(classes = TestApplication.class)
 class UserCreatedKafkaConsumerTestIT {
 
@@ -29,7 +29,8 @@ class UserCreatedKafkaConsumerTestIT {
   void consumeUserCreatedShouldMapCommandWithoutPersistingInboxOnSuccess() {
     final UserCreatedPayload message = UserCreatedPayloadTestDataBuilder.builder().build().userCreatedPayload();
 
-    userCreatedKafkaConsumer.listenUserCreated(message, "user.created");
+    userCreatedKafkaConsumer.listenUserCreated(
+        message, UserCreatedConsumer.USER_CREATED_TOPIC_ADDRESS);
 
     final ArgumentCaptor<CreateUserCommand> commandCaptor =
         ArgumentCaptor.forClass(CreateUserCommand.class);
@@ -46,7 +47,8 @@ class UserCreatedKafkaConsumerTestIT {
         .when(commandBus)
         .execute(Mockito.any(CreateUserCommand.class));
 
-    userCreatedKafkaConsumer.listenUserCreated(message, "user.created");
+    userCreatedKafkaConsumer.listenUserCreated(
+        message, UserCreatedConsumer.USER_CREATED_TOPIC_ADDRESS);
 
     Mockito.verify(commandBus).execute(Mockito.any(CreateUserCommand.class));
     final ArgumentCaptor<RegisterInboxCommand> inboxCaptor =
