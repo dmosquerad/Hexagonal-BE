@@ -8,7 +8,6 @@ import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.testuti
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.testutils.message.MessageHeaderTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.testutils.message.UserCreatedTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.testutils.message.UserDataTestDataBuilder;
-
 import java.time.Clock;
 import java.time.OffsetDateTime;
 import org.assertj.core.api.Assertions;

@@ -1,5 +1,6 @@
 package com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.consumer;
 
+import com.architecture.hexagonal.application.testutils.time.TestClock;
 import com.architecture.hexagonal.contract.bus.model.inbox.command.RegisterInboxCommand;
 import com.architecture.hexagonal.contract.bus.model.user.command.CreateUserCommand;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.client.consumer.UserCreatedConsumer;
@@ -9,8 +10,7 @@ import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.mapper.
 import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.testutils.command.RegisterInboxCommandTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.testutils.message.UserCreatedPayloadTestDataBuilder;
 import java.time.Clock;
-import java.time.Instant;
-import java.time.ZoneOffset;
+import java.time.OffsetDateTime;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,7 +28,7 @@ class UserCreatedKafkaConsumerTest {
   @InjectMocks private UserCreatedKafkaConsumer userCreatedKafkaConsumer;
   @Mock private CommandBus commandBus;
 
-  @Spy private Clock clock = Clock.fixed(Instant.parse("2026-01-01T00:00:00Z"), ZoneOffset.UTC);
+  @Spy private Clock clock = TestClock.FIXED_CLOCK;
 
   @Spy
   private UserKafkaMessageMapper userKafkaMessageMapper =
@@ -63,7 +63,10 @@ class UserCreatedKafkaConsumerTest {
     Mockito.verify(commandBus).execute(registerInboxCommandCaptor.capture());
     Mockito.verify(commandBus).execute(command);
     final RegisterInboxCommand expected =
-        RegisterInboxCommandTestDataBuilder.builder().build().registerInboxCommand();
+        RegisterInboxCommandTestDataBuilder.builder()
+            .createdAt(OffsetDateTime.now(clock))
+            .build()
+            .registerInboxCommand();
     Assertions.assertThat(registerInboxCommandCaptor.getValue())
         .usingRecursiveComparison()
         .isEqualTo(expected);
