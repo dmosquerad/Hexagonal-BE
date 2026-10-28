@@ -1,0 +1,24 @@
+package com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.testutils.message;
+
+import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.MessageHeader;
+import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.UserData;
+import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.UserUpdated;
+import lombok.Builder;
+
+@Builder
+public class UserUpdatedTestDataBuilder {
+
+    @Builder.Default
+    private MessageHeader messageHeader = MessageHeaderTestDataBuilder.builder().build().messageHeader();
+
+    @Builder.Default
+    private UserData userData = UserDataTestDataBuilder.builder().build().userData();
+
+    public UserUpdated userUpdated() {
+        final UserUpdated userUpdated = new UserUpdated();
+        userUpdated.setMessageHeader(messageHeader);
+        userUpdated.setUserData(userData);
+
+        return userUpdated;
+    }
+}

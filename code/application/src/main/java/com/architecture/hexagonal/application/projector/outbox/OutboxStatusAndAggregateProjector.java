@@ -1,9 +1,8 @@
 package com.architecture.hexagonal.application.projector.outbox;
 
-import com.architecture.hexagonal.domain.model.vo.outbox.AggregateTypeVo;
-import com.architecture.hexagonal.domain.model.vo.outbox.OutboxStatusVo;
+import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
+import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
 import lombok.Builder;
 
 @Builder
-public record OutboxStatusAndAggregateProjector(
-    AggregateTypeVo aggregateType, OutboxStatusVo status) {}
+public record OutboxStatusAndAggregateProjector(AggregateTypeVo aggregateType, StatusVo status) {}

@@ -1,0 +1,16 @@
+messages:
+  UserCreated:
+    name: UserCreated
+    contentType: application/json
+    payload:
+      $ref: './schemas/users-schema.yml#/schemas/UserCreated'
+  UserUpdated:
+    name: UserUpdated
+    contentType: application/json
+    payload:
+      $ref: './schemas/users-schema.yml#/schemas/UserUpdated'
+  UserDeleted:
+    name: UserDeleted
+    contentType: application/json
+    payload:
+      $ref: './schemas/users-schema.yml#/schemas/UserDeleted'

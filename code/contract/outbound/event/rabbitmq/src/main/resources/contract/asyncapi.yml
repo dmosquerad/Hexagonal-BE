@@ -1,0 +1,70 @@
+asyncapi: 2.6.0
+info:
+  title: User events
+  version: 0.0.1
+  description: RabbitMQ events published.
+defaultContentType: application/json
+servers:
+  local:
+    url: localhost:5672
+    protocol: amqp
+    protocolVersion: 0.9.1
+channels:
+  user.created:
+    publish:
+      operationId: publishUserCreated
+      message:
+        $ref: './users/users-messages.yml#/messages/UserCreated'
+    bindings:
+      amqp:
+        is: routingKey
+        exchange:
+          name: user.created
+          type: topic
+          durable: true
+          autoDelete: false
+  user.updated:
+    publish:
+      operationId: publishUserUpdated
+      message:
+        $ref: './users/users-messages.yml#/messages/UserUpdated'
+    bindings:
+      amqp:
+        is: routingKey
+        exchange:
+          name: user.updated
+          type: topic
+          durable: true
+          autoDelete: false
+  user.deleted:
+    publish:
+      operationId: publishUserDeleted
+      message:
+        $ref: './users/users-messages.yml#/messages/UserDeleted'
+    bindings:
+      amqp:
+        is: routingKey
+        exchange:
+          name: user.deleted
+          type: topic
+          durable: true
+          autoDelete: false
+components:
+  messages:
+    UserCreated:
+      $ref: './users/users-messages.yml#/messages/UserCreated'
+    UserUpdated:
+      $ref: './users/users-messages.yml#/messages/UserUpdated'
+    UserDeleted:
+      $ref: './users/users-messages.yml#/messages/UserDeleted'
+  schemas:
+    MessageHeader:
+      $ref: './users/schemas/users-schema.yml#/schemas/MessageHeader'
+    UserData:
+      $ref: './users/schemas/users-schema.yml#/schemas/UserData'
+    UserCreated:
+      $ref: './users/schemas/users-schema.yml#/schemas/UserCreated'
+    UserUpdated:
+      $ref: './users/schemas/users-schema.yml#/schemas/UserUpdated'
+    UserDeleted:
+      $ref: './users/schemas/users-schema.yml#/schemas/UserDeleted'

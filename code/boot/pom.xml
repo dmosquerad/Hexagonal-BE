@@ -17,19 +17,19 @@
         <!-- ============================================ -->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>rest-server</artifactId>
+            <artifactId>endpoint-rest</artifactId>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>handler-kafka</artifactId>
+            <artifactId>messaging-kafka</artifactId>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>execution-outbox</artifactId>
+            <artifactId>scheduled-outbox</artifactId>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>execution-inbox</artifactId>
+            <artifactId>scheduled-inbox</artifactId>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -41,7 +41,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>mesage-rabbitmq</artifactId>
+            <artifactId>event-rabbitmq</artifactId>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>

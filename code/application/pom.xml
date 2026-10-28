@@ -21,7 +21,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>contract-application</artifactId>
+            <artifactId>contract-bus</artifactId>
         </dependency>
         <!-- ============================================ -->
         <!-- TEST -->

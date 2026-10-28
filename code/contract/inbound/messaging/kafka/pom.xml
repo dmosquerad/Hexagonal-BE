@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>contract-inbound-kafka</artifactId>
+    <packaging>jar</packaging>
+
+    <parent>
+        <groupId>com.architecture.hexagonal</groupId>
+        <artifactId>contract-inbound-messaging</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-json</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-kafka</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>dev.banking.asyncapi.generator</groupId>
+                <artifactId>asyncapi-generator-maven-plugin</artifactId>
+                <version>${asyncapi-generator-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>generate-kafka-contract-models</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <generatorName>java</generatorName>
+                            <inputSpec>${project.basedir}/src/main/resources/contract/asyncapi.yml</inputSpec>
+                            <modelPackage>com.architecture.hexagonal.contract.inbound.messaging.kafka.model</modelPackage>
+                            <modelConfig>
+                                <modelType>java-class</modelType>
+                            </modelConfig>
+                            <clientPackage>com.architecture.hexagonal.contract.inbound.messaging.kafka.client</clientPackage>
+                            <clientConfig>
+                                <clientType>spring-kafka</clientType>
+                                <clientContract>interface</clientContract>
+                                <producer>
+                                    <enabled>false</enabled>
+                                </producer>
+                                <consumer>
+                                    <enabled>true</enabled>
+                                </consumer>
+                            </clientConfig>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
