@@ -1,94 +1,78 @@
 package com.architecture.hexagonal.infrastructure.bus.event.impl;
 
 import com.architecture.hexagonal.application.port.in.bus.event.EventHandler;
+import com.architecture.hexagonal.contract.bus.model.user.event.UserCreatedEvent;
 import com.architecture.hexagonal.infrastructure.bus.BusHandlerFinder;
+import com.architecture.hexagonal.infrastructure.bus.middleware.BusMiddleware;
 import com.architecture.hexagonal.infrastructure.bus.middleware.impl.BusLoggingMiddleware;
 import java.time.Clock;
-import java.util.ArrayList;
 import java.util.List;
-import lombok.NonNull;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.support.StaticListableBeanFactory;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.system.CapturedOutput;
 import org.springframework.boot.test.system.OutputCaptureExtension;
 
-@ExtendWith(OutputCaptureExtension.class)
+@ExtendWith({OutputCaptureExtension.class, MockitoExtension.class})
 class EventBusImplTest {
 
-  private record TestEvent(String value) {}
+  @Mock private BusHandlerFinder handlerFinder;
 
-  private static final class RecordingHandler implements EventHandler<TestEvent> {
-    private final List<TestEvent> received = new ArrayList<>();
+  @Spy private BusMiddleware loggingMiddleware = new BusLoggingMiddleware(Clock.systemUTC());
 
-    @Override
-    public void handle(final @NonNull TestEvent event) {
-      received.add(event);
-    }
-  }
+  @InjectMocks private EventBusImpl eventBus;
 
-  private static final class FailingHandler implements EventHandler<TestEvent> {
-    private final String message;
+  @Mock private EventHandler<UserCreatedEvent> firstHandler;
 
-    private FailingHandler(final String message) {
-      this.message = message;
-    }
+  @Mock private EventHandler<UserCreatedEvent> secondHandler;
 
-    @Override
-    public void handle(final @NonNull TestEvent event) {
-      throw new IllegalStateException(message);
-    }
-  }
+  @Mock private EventHandler<UserCreatedEvent> failingHandler;
+
+  @Mock private EventHandler<UserCreatedEvent> recordingHandler;
+
+  @Mock private EventHandler<UserCreatedEvent> secondFailingHandler;
 
   @Test
   void publishShouldDeliverEventToAllHandlers() {
-    final RecordingHandler first = new RecordingHandler();
-    final RecordingHandler second = new RecordingHandler();
-    final EventBusImpl eventBus =
-        new EventBusImpl(finderWith(first, second), new BusLoggingMiddleware(Clock.systemUTC()));
-    final TestEvent event = new TestEvent("value");
+    final UserCreatedEvent event = new UserCreatedEvent();
+    Mockito.doReturn(List.of(firstHandler, secondHandler))
+        .when(handlerFinder)
+        .findAll(event, EventHandler.class);
 
     eventBus.publish(event);
 
-    Assertions.assertThat(first.received).containsExactly(event);
-    Assertions.assertThat(second.received).containsExactly(event);
+    Mockito.verify(firstHandler).handle(event);
+    Mockito.verify(secondHandler).handle(event);
   }
 
   @Test
   void publishShouldNotFailWhenNoHandlerIsRegistered() {
-    final EventBusImpl eventBus =
-        new EventBusImpl(finderWith(), new BusLoggingMiddleware(Clock.systemUTC()));
+    final UserCreatedEvent event = new UserCreatedEvent();
+    Mockito.doReturn(List.of()).when(handlerFinder).findAll(event, EventHandler.class);
 
-    Assertions.assertThatCode(() -> eventBus.publish(new TestEvent("value")))
-        .doesNotThrowAnyException();
+    Assertions.assertThatCode(() -> eventBus.publish(event)).doesNotThrowAnyException();
   }
 
   @Test
   void publishShouldNotPropagateHandlerFailuresAndInvokeRemainingHandlers(
       final CapturedOutput output) {
-    final RecordingHandler recording = new RecordingHandler();
-    final EventBusImpl eventBus =
-        new EventBusImpl(
-            finderWith(new FailingHandler("sensitive"), recording, new FailingHandler("other")),
-            new BusLoggingMiddleware(Clock.systemUTC()));
+    final UserCreatedEvent event = new UserCreatedEvent();
+    Mockito.doThrow(new IllegalStateException("sensitive")).when(failingHandler).handle(event);
+    Mockito.doThrow(new IllegalStateException("other")).when(secondFailingHandler).handle(event);
+    Mockito.doReturn(List.of(failingHandler, recordingHandler, secondFailingHandler))
+        .when(handlerFinder)
+        .findAll(event, EventHandler.class);
 
-    Assertions.assertThatCode(() -> eventBus.publish(new TestEvent("value")))
-        .doesNotThrowAnyException();
+    Assertions.assertThatCode(() -> eventBus.publish(event)).doesNotThrowAnyException();
 
-    Assertions.assertThat(recording.received).hasSize(1);
+    Mockito.verify(recordingHandler).handle(event);
     Assertions.assertThat(output)
-        .contains("FailingHandler failed handling TestEvent (IllegalStateException)")
+        .contains("failed handling UserCreatedEvent (IllegalStateException)")
         .doesNotContain("sensitive");
-  }
-
-  private BusHandlerFinder finderWith(final Object... handlers) {
-    final StaticListableBeanFactory beanFactory = new StaticListableBeanFactory();
-    for (int index = 0; index < handlers.length; index++) {
-      beanFactory.addBean("handler" + index, handlers[index]);
-    }
-    final BusHandlerFinder finder = new BusHandlerFinder(beanFactory);
-    finder.afterSingletonsInstantiated();
-    return finder;
   }
 }

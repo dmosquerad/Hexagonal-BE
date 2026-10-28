@@ -9,6 +9,7 @@ import com.architecture.hexagonal.domain.testutils.data.model.entity.inbox.Inbox
 import com.architecture.hexagonal.domain.testutils.data.model.vo.payload.PayloadVoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
 import com.architecture.hexagonal.infrastructure.inbox.mapper.UserCommandFromInboxMapper;
+import com.architecture.hexagonal.infrastructure.inbox.naming.InboxNaming;
 import java.util.Map;
 import java.util.UUID;
 import org.assertj.core.api.Assertions;
@@ -16,8 +17,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import tools.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,18 +28,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(MockitoExtension.class)
 class InboxProcessServiceTestIT {
 
-  @Mock private CommandBus commandBus;
-  private InboxProcessService inboxProcessService;
+  @InjectMocks private InboxProcessService inboxProcessService;
 
-  @BeforeEach
-  void setUp() {
-    inboxProcessService =
-        new InboxProcessService(
-            commandBus,
-            Mappers.getMapper(UserCommandFromInboxMapper.class),
-            new ObjectMapper());
-    inboxProcessService.validateAggregateHandlers();
-  }
+  @Mock private CommandBus commandBus;
+
+  @Spy
+  private UserCommandFromInboxMapper userCommandFromInboxMapper =
+      Mappers.getMapper(UserCommandFromInboxMapper.class);
+
+  @Spy private ObjectMapper objectMapper = new ObjectMapper();
 
   @Test
   void processShouldDispatchCreateCommandFromStoredPayload() {
@@ -108,7 +108,7 @@ class InboxProcessServiceTestIT {
 
     Assertions.assertThatThrownBy(() -> inboxProcessService.process(inbox))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessageContaining("Unsupported user action: UNKNOWN_ACTION");
+        .hasMessageContaining(InboxNaming.UNSUPPORTED_USER_ACTION + "UNKNOWN_ACTION");
 
     Mockito.verifyNoInteractions(commandBus);
   }

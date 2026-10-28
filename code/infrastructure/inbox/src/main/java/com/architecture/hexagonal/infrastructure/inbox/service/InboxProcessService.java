@@ -13,29 +13,23 @@ import com.architecture.hexagonal.infrastructure.inbox.naming.InboxNaming;
 import jakarta.annotation.PostConstruct;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import tools.jackson.databind.ObjectMapper;
 
 @Service
+@RequiredArgsConstructor
 public class InboxProcessService implements InboxProcess {
 
   private final CommandBus commandBus;
   private final UserCommandFromInboxMapper userCommandFromInboxMapper;
   private final ObjectMapper objectMapper;
-
-  public InboxProcessService(
-      final CommandBus commandBus,
-      final UserCommandFromInboxMapper userCommandFromInboxMapper,
-      final ObjectMapper objectMapper) {
-    this.commandBus = commandBus;
-    this.userCommandFromInboxMapper = userCommandFromInboxMapper;
-    this.objectMapper = objectMapper;
-  }
 
   @PostConstruct
   void validateAggregateHandlers() {
@@ -53,7 +47,7 @@ public class InboxProcessService implements InboxProcess {
   @Override
   public void process(final @NonNull Inbox inbox) {
     final Consumer<Inbox> handler = aggregateHandlers().get(inbox.aggregateType());
-    if (handler == null) {
+    if (Objects.isNull(handler)) {
       throw new IllegalArgumentException(
           InboxNaming.UNSUPPORTED_AGGREGATE_TYPE + inbox.aggregateType());
     }
@@ -66,7 +60,7 @@ public class InboxProcessService implements InboxProcess {
 
   private void processUserInbox(final @NonNull Inbox inbox) {
     final Consumer<Inbox> handler = userActionHandlers().get(inbox.action());
-    if (handler == null) {
+    if (Objects.isNull(handler)) {
       throw new IllegalArgumentException(InboxNaming.UNSUPPORTED_USER_ACTION + inbox.action());
     }
     handler.accept(inbox);
