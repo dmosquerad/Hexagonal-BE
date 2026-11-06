@@ -37,7 +37,7 @@ services:
       interval: 5s
       retries: 5
   mongo:
-    image: mongo:8.3
+    image: mongo:9.0.4
     container_name: mongodb
     restart: unless-stopped
     ports:
