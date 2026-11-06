@@ -1,0 +1,89 @@
+asyncapi: 3.0.0
+info:
+  title: User Kafka Events
+  version: 0.0.1
+  description: Kafka events consumed.
+defaultContentType: application/json
+servers:
+  local:
+    host: localhost:9092
+    protocol: kafka
+channels:
+  userCreated:
+    address: user.created
+    bindings:
+      kafka:
+        topic: user.created
+        partitions: 3
+        replicas: 1
+        bindingVersion: '0.4.0'
+    messages:
+      UserCreated:
+        $ref: './users/users-messages.yml#/messages/UserCreated'
+  userUpdated:
+    address: user.updated
+    bindings:
+      kafka:
+        topic: user.updated
+        partitions: 3
+        replicas: 1
+        bindingVersion: '0.4.0'
+    messages:
+      UserUpdated:
+        $ref: './users/users-messages.yml#/messages/UserUpdated'
+  userDeleted:
+    address: user.deleted
+    bindings:
+      kafka:
+        topic: user.deleted
+        partitions: 3
+        replicas: 1
+        bindingVersion: '0.4.0'
+    messages:
+      UserDeleted:
+        $ref: './users/users-messages.yml#/messages/UserDeleted'
+operations:
+  onUserCreated:
+    action: receive
+    channel:
+      $ref: '#/channels/userCreated'
+    messages:
+      - $ref: '#/channels/userCreated/messages/UserCreated'
+    summary: User-created event.
+    tags:
+      - name: user
+  onUserUpdated:
+    action: receive
+    channel:
+      $ref: '#/channels/userUpdated'
+    messages:
+      - $ref: '#/channels/userUpdated/messages/UserUpdated'
+    summary: User-updated event.
+    tags:
+      - name: user
+  onUserDeleted:
+    action: receive
+    channel:
+      $ref: '#/channels/userDeleted'
+    messages:
+      - $ref: '#/channels/userDeleted/messages/UserDeleted'
+    summary: User-deleted event.
+    tags:
+      - name: user
+components:
+  messages:
+    UserCreated:
+      $ref: './users/users-messages.yml#/messages/UserCreated'
+    UserUpdated:
+      $ref: './users/users-messages.yml#/messages/UserUpdated'
+    UserDeleted:
+      $ref: './users/users-messages.yml#/messages/UserDeleted'
+  schemas:
+    MessageHeader:
+      $ref: './users/schemas/users-schema.yml#/schemas/MessageHeader'
+    UserCreated:
+      $ref: './users/schemas/users-schema.yml#/schemas/UserCreated'
+    UserUpdated:
+      $ref: './users/schemas/users-schema.yml#/schemas/UserUpdated'
+    UserDeleted:
+      $ref: './users/schemas/users-schema.yml#/schemas/UserDeleted'

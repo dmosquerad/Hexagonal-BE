@@ -1,15 +1,15 @@
 package com.architecture.hexagonal.infrastructure.outbox.service;
 
-import com.architecture.hexagonal.contract.outbound.rabbitmq.UserCreated;
-import com.architecture.hexagonal.contract.outbound.rabbitmq.UserData;
-import com.architecture.hexagonal.contract.outbound.rabbitmq.UserDeleted;
-import com.architecture.hexagonal.contract.outbound.rabbitmq.UserUpdated;
+import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.UserCreated;
+import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.UserData;
+import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.UserDeleted;
+import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.UserUpdated;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
-import com.architecture.hexagonal.domain.model.vo.outbox.ActionType;
-import com.architecture.hexagonal.domain.model.vo.outbox.AggregateTypeVo;
-import com.architecture.hexagonal.domain.model.vo.outbox.PayloadVo;
+import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
+import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
+import com.architecture.hexagonal.domain.model.vo.payload.PayloadVo;
 import com.architecture.hexagonal.domain.testutils.data.model.entity.outbox.OutboxTestDataBuilder;
-import com.architecture.hexagonal.domain.testutils.data.model.vo.outbox.PayloadVoTestDataBuilder;
+import com.architecture.hexagonal.domain.testutils.data.model.vo.payload.PayloadVoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbox.mapper.user.UserFromOutboxMapper;
 import com.architecture.hexagonal.infrastructure.outbox.naming.OutboxNaming;
 import java.util.Map;

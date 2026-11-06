@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "register-inbox-command",
+  "title": "RegisterInboxCommand",
+  "type": "object",
+  "properties": {
+    "messageHeader": {
+      "title": "MessageHeader",
+      "type": "object",
+      "properties": {
+        "messageId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "messageDate": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "messageId",
+        "messageDate"
+      ],
+      "additionalProperties": false
+    },
+    "data": {},
+    "aggregateId": {},
+    "aggregateType": {
+      "type": "string"
+    },
+    "action": {
+      "type": "string"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "messageHeader",
+    "data",
+    "aggregateType",
+    "action",
+    "createdAt"
+  ],
+  "additionalProperties": false
+}

@@ -1,14 +1,16 @@
 package com.architecture.hexagonal.infrastructure.bus.command.impl;
 
 import com.architecture.hexagonal.application.port.out.transaction.TransactionWriteBoundary;
-import com.architecture.hexagonal.application.service.business.email.EmailService;
-import com.architecture.hexagonal.application.service.business.user.UserService;
-import com.architecture.hexagonal.application.usecase.user.create.impl.CreateUserUseCaseImpl;
+import com.architecture.hexagonal.application.service.email.EmailService;
+import com.architecture.hexagonal.application.service.user.UserService;
+import com.architecture.hexagonal.application.usecase.user.command.create.impl.CreateUserUseCaseImpl;
+import com.architecture.hexagonal.contract.bus.model.user.command.CreateUserCommand;
+import com.architecture.hexagonal.contract.bus.model.user.command.DeleteUserCommand;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.infrastructure.bus.config.TestApplication;
-import com.architecture.hexagonal.application.port.in.bus.command.CommandBus;
-import com.architecture.hexagonal.contract.application.usecase.generated.user.CreateUserCommand;
-import com.architecture.hexagonal.contract.application.usecase.generated.user.DeleteUserCommand;
+import com.architecture.hexagonal.infrastructure.bus.BusHandlerFinder;
+import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
+import com.architecture.hexagonal.infrastructure.bus.middleware.impl.BusLoggingMiddleware;
 import java.util.UUID;
 import java.util.function.Supplier;
 import org.assertj.core.api.AssertionsForClassTypes;
@@ -20,7 +22,13 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.mockito.AdditionalAnswers;
 import org.mockito.Mockito;
 
-@SpringBootTest(classes = {CommandBusImpl.class, CreateUserUseCaseImpl.class})
+@SpringBootTest(
+    classes = {
+      CommandBusImpl.class,
+      BusHandlerFinder.class,
+      BusLoggingMiddleware.class,
+      CreateUserUseCaseImpl.class
+    })
 @ContextConfiguration(classes = TestApplication.class)
 class CommandBusImplTestIT {
 
@@ -60,6 +68,7 @@ class CommandBusImplTestIT {
 
     AssertionsForClassTypes.assertThatThrownBy(() -> commandBus.execute(command))
         .isInstanceOf(IllegalStateException.class)
-        .hasMessageContaining("No handler found for command");
+        .hasMessageContaining("Expected one CommandHandler")
+        .hasMessageContaining("found 0");
   }
 }

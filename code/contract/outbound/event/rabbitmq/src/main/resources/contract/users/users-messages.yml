@@ -1,0 +1,13 @@
+messages:
+  UserCreated:
+    name: UserCreated
+    payload:
+      $ref: './schemas/users-schema.yml#/schemas/UserCreated'
+  UserUpdated:
+    name: UserUpdated
+    payload:
+      $ref: './schemas/users-schema.yml#/schemas/UserUpdated'
+  UserDeleted:
+    name: UserDeleted
+    payload:
+      $ref: './schemas/users-schema.yml#/schemas/UserDeleted'

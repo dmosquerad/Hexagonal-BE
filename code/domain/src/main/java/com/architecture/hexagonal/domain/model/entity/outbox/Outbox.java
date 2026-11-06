@@ -1,10 +1,10 @@
 package com.architecture.hexagonal.domain.model.entity.outbox;
 
 import com.architecture.hexagonal.domain.model.entity.EntityId;
-import com.architecture.hexagonal.domain.model.vo.outbox.AggregateTypeVo;
-import com.architecture.hexagonal.domain.model.vo.outbox.MessageHeaderVo;
-import com.architecture.hexagonal.domain.model.vo.outbox.OutboxStatusVo;
-import com.architecture.hexagonal.domain.model.vo.outbox.PayloadVo;
+import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
+import com.architecture.hexagonal.domain.model.vo.payload.MessageHeaderVo;
+import com.architecture.hexagonal.domain.model.vo.payload.PayloadVo;
+import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 import lombok.Builder;
@@ -16,7 +16,7 @@ public record Outbox(
     Object aggregateId,
     String action,
     PayloadVo payload,
-    OutboxStatusVo status,
+    StatusVo status,
     Integer retryCount,
     OffsetDateTime createdAt,
     OffsetDateTime processedAt)

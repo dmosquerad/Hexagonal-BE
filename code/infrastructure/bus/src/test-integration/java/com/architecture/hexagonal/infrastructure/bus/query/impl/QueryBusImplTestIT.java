@@ -1,13 +1,15 @@
 package com.architecture.hexagonal.infrastructure.bus.query.impl;
 
 import com.architecture.hexagonal.application.port.out.transaction.TransactionReadBoundary;
-import com.architecture.hexagonal.application.service.business.user.UserService;
-import com.architecture.hexagonal.application.usecase.user.findbyid.impl.FindUserByUserIdUseCaseImpl;
+import com.architecture.hexagonal.application.service.user.UserService;
+import com.architecture.hexagonal.application.usecase.user.query.findbyid.impl.FindUserByUserIdUseCaseImpl;
+import com.architecture.hexagonal.contract.bus.model.user.query.FindUserByUserIdQuery;
+import com.architecture.hexagonal.contract.bus.model.user.query.GetUsersFilteredQuery;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.infrastructure.bus.config.TestApplication;
-import com.architecture.hexagonal.application.port.in.bus.query.QueryBus;
-import com.architecture.hexagonal.contract.application.usecase.generated.user.FindUserByUserIdQuery;
-import com.architecture.hexagonal.contract.application.usecase.generated.user.GetUsersFilteredQuery;
+import com.architecture.hexagonal.infrastructure.bus.BusHandlerFinder;
+import com.architecture.hexagonal.infrastructure.bus.middleware.impl.BusLoggingMiddleware;
+import com.architecture.hexagonal.infrastructure.bus.query.QueryBus;
 import java.util.UUID;
 import java.util.function.Supplier;
 import org.assertj.core.api.AssertionsForClassTypes;
@@ -19,7 +21,13 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.mockito.AdditionalAnswers;
 import org.mockito.Mockito;
 
-@SpringBootTest(classes = {QueryBusImpl.class, FindUserByUserIdUseCaseImpl.class})
+@SpringBootTest(
+    classes = {
+      QueryBusImpl.class,
+      BusHandlerFinder.class,
+      BusLoggingMiddleware.class,
+      FindUserByUserIdUseCaseImpl.class
+    })
 @ContextConfiguration(classes = TestApplication.class)
 class QueryBusImplTestIT {
 
@@ -54,6 +62,7 @@ class QueryBusImplTestIT {
 
     AssertionsForClassTypes.assertThatThrownBy(() -> queryBus.execute(query))
         .isInstanceOf(IllegalStateException.class)
-        .hasMessageContaining("No handler found for query");
+        .hasMessageContaining("Expected one QueryHandler")
+        .hasMessageContaining("found 0");
   }
 }

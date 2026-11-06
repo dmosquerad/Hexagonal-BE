@@ -12,7 +12,7 @@
     </parent>
 
     <modules>
-        <module>application</module>
+        <module>bus</module>
         <module>inbound</module>
         <module>outbound</module>
     </modules>
