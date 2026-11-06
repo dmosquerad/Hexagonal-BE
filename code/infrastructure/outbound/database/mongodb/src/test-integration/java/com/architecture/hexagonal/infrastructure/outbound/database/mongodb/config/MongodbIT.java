@@ -19,7 +19,7 @@ public abstract class MongodbIT {
 
   @Container
   @ServiceConnection
-  static MongoDBContainer mongo = new MongoDBContainer("mongo:8.3")
+  static MongoDBContainer mongo = new MongoDBContainer("mongo:9.0.4")
           .withCopyFileToContainer(
                     MountableFile.forClasspathResource("init-mongo.js"),
                     "/init-mongo.js"
