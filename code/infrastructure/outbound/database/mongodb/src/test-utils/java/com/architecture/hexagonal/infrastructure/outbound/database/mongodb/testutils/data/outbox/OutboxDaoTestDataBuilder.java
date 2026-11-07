@@ -5,7 +5,7 @@ import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.outbox.OutboxDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.payload.PayloadDao;
-import com.architecture.hexagonal.domain.testutils.data.time.TestClock;
+import com.architecture.hexagonal.domain.data.time.TestClock;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.UUID;

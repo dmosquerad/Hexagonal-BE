@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.repository.inbox.custom.impl;
 
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
-import com.architecture.hexagonal.domain.testutils.data.time.TestClock;
+import com.architecture.hexagonal.domain.data.time.TestClock;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.config.MongodbIT;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.config.MongodbTestApplication;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.inbox.InboxDao;

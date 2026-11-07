@@ -10,9 +10,9 @@ import com.architecture.hexagonal.contract.bus.model.user.command.UpdateUserComm
 import com.architecture.hexagonal.contract.bus.model.user.query.UserExistsQuery;
 import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
 import com.architecture.hexagonal.infrastructure.bus.query.QueryBus;
-import com.architecture.hexagonal.application.testutils.time.TestClock;
+import com.architecture.hexagonal.domain.data.time.TestClock;
 import com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.mapper.user.*;
-import com.architecture.hexagonal.domain.testutils.data.model.vo.pagination.PaginationVoTestDataBuilder;
+import com.architecture.hexagonal.domain.data.model.vo.pagination.PaginationVoTestDataBuilder;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import com.architecture.hexagonal.domain.model.entity.user.User;
@@ -28,7 +28,7 @@ import com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.resources
 import com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.resources.user.UserResponseResource;
 import com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.testutils.dto.ResponseErrorDtoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.testutils.dto.UsersResponseDtoTestDataBuilder;
-import com.architecture.hexagonal.domain.testutils.data.model.entity.user.UserTestDataBuilder;
+import com.architecture.hexagonal.domain.data.model.entity.user.UserTestDataBuilder;
 import java.time.Clock;
 import java.util.Collections;
 

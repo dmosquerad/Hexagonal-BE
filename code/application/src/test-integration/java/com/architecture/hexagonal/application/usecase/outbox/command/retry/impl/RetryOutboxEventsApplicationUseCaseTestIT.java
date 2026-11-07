@@ -8,10 +8,10 @@ import com.architecture.hexagonal.application.projector.outbox.OutboxStatusAndAg
 import com.architecture.hexagonal.application.service.outbox.OutboxService;
 import com.architecture.hexagonal.application.service.outbox.impl.OutboxServiceImpl;
 import com.architecture.hexagonal.contract.bus.model.retry.command.RetryOutboxeventCommand;
-import com.architecture.hexagonal.domain.testutils.data.model.entity.outbox.OutboxTestDataBuilder;
-import com.architecture.hexagonal.domain.testutils.data.model.vo.outbox.SchedulerOutboxConfigurationVoTestDataBuilder;
-import com.architecture.hexagonal.application.testutils.transaction.SpyTransactionReadBoundary;
-import com.architecture.hexagonal.application.testutils.transaction.SpyTransactionWriteBoundary;
+import com.architecture.hexagonal.domain.data.model.entity.outbox.OutboxTestDataBuilder;
+import com.architecture.hexagonal.domain.data.model.vo.outbox.SchedulerOutboxConfigurationVoTestDataBuilder;
+import com.architecture.hexagonal.application.transaction.SpyTransactionReadBoundary;
+import com.architecture.hexagonal.application.transaction.SpyTransactionWriteBoundary;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
@@ -23,7 +23,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
-import com.architecture.hexagonal.domain.testutils.data.time.TestClock;
+import com.architecture.hexagonal.domain.data.time.TestClock;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;

@@ -2,8 +2,8 @@ package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.adap
 
 import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
-import com.architecture.hexagonal.domain.testutils.data.model.entity.inbox.InboxTestDataBuilder;
-import com.architecture.hexagonal.domain.testutils.data.model.vo.payload.PayloadVoTestDataBuilder;
+import com.architecture.hexagonal.domain.data.model.entity.inbox.InboxTestDataBuilder;
+import com.architecture.hexagonal.domain.data.model.vo.payload.PayloadVoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.config.MongodbIT;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.config.MongodbTestApplication;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.repository.inbox.InboxWriteMongodbRepository;

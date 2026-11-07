@@ -3,7 +3,7 @@ package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.test
 import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
-import com.architecture.hexagonal.domain.testutils.data.time.TestClock;
+import com.architecture.hexagonal.domain.data.time.TestClock;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.inbox.InboxDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.payload.PayloadDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.data.payload.PayloadDaoTestDataBuilder;

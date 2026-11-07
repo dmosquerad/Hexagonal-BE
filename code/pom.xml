@@ -53,6 +53,7 @@
 
   <modules>
     <module>contract</module>
+    <module>test-kit</module>
     <module>domain</module>
     <module>application</module>
     <module>infrastructure</module>
@@ -200,6 +201,15 @@
         <version>${project.version}</version>
       </dependency>
       <!-- ============================================ -->
+      <!-- TEST MOTHER CLASS -->
+      <!-- ============================================ -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>test-kit-base</artifactId>
+        <version>${project.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <!-- ============================================ -->
       <!-- MAPSTRUCT -->
       <!-- ============================================ -->
       <dependency>
@@ -234,25 +244,6 @@
         <groupId>com.tngtech.archunit</groupId>
         <artifactId>archunit-junit5</artifactId>
         <version>${archunit-junit5.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <!-- ============================================ -->
-      <!-- TEST MOTHER CLASS -->
-      <!-- ============================================ -->
-       <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>application</artifactId>
-        <version>${project.version}</version>
-        <type>test-jar</type>
-        <classifier>tests</classifier>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>domain</artifactId>
-        <version>${project.version}</version>
-        <type>test-jar</type>
-        <classifier>tests</classifier>
         <scope>test</scope>
       </dependency>
     </dependencies>

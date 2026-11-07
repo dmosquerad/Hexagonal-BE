@@ -4,7 +4,7 @@ import com.architecture.hexagonal.contract.inbound.endpoint.rest.user.server.dto
 import com.architecture.hexagonal.contract.inbound.endpoint.rest.user.server.dto.UserResponseDto;
 import java.time.OffsetDateTime;
 
-import com.architecture.hexagonal.application.testutils.time.TestClock;
+import com.architecture.hexagonal.domain.data.time.TestClock;
 import lombok.Builder;
 
 @Builder

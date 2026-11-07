@@ -1,10 +1,10 @@
 package com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.consumer;
 
-import com.architecture.hexagonal.application.testutils.time.TestClock;
 import com.architecture.hexagonal.contract.bus.model.inbox.command.RegisterInboxCommand;
 import com.architecture.hexagonal.contract.bus.model.user.command.CreateUserCommand;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.client.consumer.UserCreatedConsumer;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserCreatedPayload;
+import com.architecture.hexagonal.domain.data.time.TestClock;
 import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
 import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.mapper.UserKafkaMessageMapper;
 import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.testutils.command.RegisterInboxCommandTestDataBuilder;

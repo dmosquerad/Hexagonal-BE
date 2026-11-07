@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.postgresql.adapter;
 
+import com.architecture.hexagonal.domain.data.model.entity.user.UserTestDataBuilder;
 import com.architecture.hexagonal.domain.model.entity.user.User;
-import com.architecture.hexagonal.domain.testutils.data.model.entity.user.UserTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.data.UserDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.mapper.user.UserDaoMapper;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.mapper.user.UserFromPostgresqlMapper;

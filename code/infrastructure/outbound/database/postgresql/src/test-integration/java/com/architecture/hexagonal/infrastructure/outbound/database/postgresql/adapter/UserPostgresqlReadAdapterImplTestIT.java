@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.postgresql.adapter;
 
-import com.architecture.hexagonal.application.testutils.projector.user.UserEmailProjectorTestDataBuilder;
+import com.architecture.hexagonal.application.projector.user.UserEmailProjectorTestDataBuilder;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationVo;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.config.PostgresqlIT;
@@ -9,9 +9,9 @@ import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.da
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.mapper.user.UserFromPostgresqlMapper;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.repository.UserPostgresqlReadRepository;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResultVo;
-import com.architecture.hexagonal.domain.testutils.data.model.entity.user.UserTestDataBuilder;
-import com.architecture.hexagonal.domain.testutils.data.model.vo.pagination.PaginationVoTestDataBuilder;
-import com.architecture.hexagonal.domain.testutils.data.model.vo.email.EmailBlockRulesVoTestDataBuilder;
+import com.architecture.hexagonal.domain.data.model.entity.user.UserTestDataBuilder;
+import com.architecture.hexagonal.domain.data.model.vo.pagination.PaginationVoTestDataBuilder;
+import com.architecture.hexagonal.domain.data.model.vo.email.EmailBlockRulesVoTestDataBuilder;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;

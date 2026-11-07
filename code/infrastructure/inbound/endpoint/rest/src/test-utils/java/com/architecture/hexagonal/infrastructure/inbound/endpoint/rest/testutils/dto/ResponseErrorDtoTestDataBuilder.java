@@ -3,7 +3,7 @@ package com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.testutil
 import com.architecture.hexagonal.contract.inbound.endpoint.rest.user.server.dto.ResponseErrorDto;
 import java.time.OffsetDateTime;
 
-import com.architecture.hexagonal.application.testutils.time.TestClock;
+import com.architecture.hexagonal.domain.data.time.TestClock;
 import lombok.Builder;
 
 @Builder

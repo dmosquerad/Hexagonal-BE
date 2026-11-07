@@ -2,7 +2,7 @@ package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.test
 
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.payload.MessageHeaderDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.payload.PayloadDao;
-import com.architecture.hexagonal.domain.testutils.data.model.entity.user.UserTestDataBuilder;
+import com.architecture.hexagonal.domain.data.model.entity.user.UserTestDataBuilder;
 import lombok.Builder;
 
 @Builder

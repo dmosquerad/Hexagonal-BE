@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.event;
 
-import com.architecture.hexagonal.application.testutils.time.TestClock;
 import com.architecture.hexagonal.contract.bus.model.user.event.UserCreatedEvent;
 import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.UserCreated;
+import com.architecture.hexagonal.domain.data.time.TestClock;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.mapper.user.UserEventMessageMapper;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.testutils.event.UserCreatedEventTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.testutils.message.MessageHeaderTestDataBuilder;

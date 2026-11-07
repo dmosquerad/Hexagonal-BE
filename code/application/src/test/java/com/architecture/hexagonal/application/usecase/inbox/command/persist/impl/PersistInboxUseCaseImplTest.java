@@ -2,8 +2,8 @@ package com.architecture.hexagonal.application.usecase.inbox.command.persist.imp
 
 import com.architecture.hexagonal.application.port.out.transaction.TransactionWriteBoundary;
 import com.architecture.hexagonal.application.service.inbox.InboxService;
-import com.architecture.hexagonal.application.testutils.transaction.SpyTransactionWriteBoundary;
-import com.architecture.hexagonal.application.testutils.usecase.inbox.command.RegisterInboxInputTestDataBuilder;
+import com.architecture.hexagonal.application.transaction.SpyTransactionWriteBoundary;
+import com.architecture.hexagonal.application.usecase.inbox.command.RegisterInboxInputTestDataBuilder;
 import com.architecture.hexagonal.contract.bus.model.inbox.command.RegisterInboxCommand;
 import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
 import java.util.function.Supplier;

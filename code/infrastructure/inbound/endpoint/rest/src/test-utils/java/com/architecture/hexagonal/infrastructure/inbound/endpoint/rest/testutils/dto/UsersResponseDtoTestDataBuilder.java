@@ -6,7 +6,7 @@ import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.List;
 
-import com.architecture.hexagonal.application.testutils.time.TestClock;
+import com.architecture.hexagonal.domain.data.time.TestClock;
 import lombok.Builder;
 
 @Builder

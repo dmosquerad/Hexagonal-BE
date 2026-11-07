@@ -1,9 +1,9 @@
 package com.architecture.hexagonal.infrastructure.outbound.configuration.adapter;
 
+import com.architecture.hexagonal.domain.data.model.vo.inbox.SchedulerInboxConfigurationVoTestDataBuilder;
+import com.architecture.hexagonal.domain.data.model.vo.outbox.SchedulerOutboxConfigurationVoTestDataBuilder;
 import com.architecture.hexagonal.domain.model.vo.inbox.SchedulerInboxConfigurationVo;
 import com.architecture.hexagonal.domain.model.vo.outbox.SchedulerOutboxConfigurationVo;
-import com.architecture.hexagonal.domain.testutils.data.model.vo.inbox.SchedulerInboxConfigurationVoTestDataBuilder;
-import com.architecture.hexagonal.domain.testutils.data.model.vo.outbox.SchedulerOutboxConfigurationVoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.configuration.config.SchedulerInboxConfig;
 import com.architecture.hexagonal.infrastructure.outbound.configuration.config.SchedulerOutboxConfig;
 import java.time.Duration;

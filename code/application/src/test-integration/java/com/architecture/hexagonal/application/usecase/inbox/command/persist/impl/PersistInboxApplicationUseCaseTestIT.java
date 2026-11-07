@@ -6,9 +6,9 @@ import com.architecture.hexagonal.application.port.out.inbox.InboxRepositoryWrit
 import com.architecture.hexagonal.application.port.out.scheduler.SchedulerConfigurationPort;
 import com.architecture.hexagonal.application.service.inbox.InboxService;
 import com.architecture.hexagonal.application.service.inbox.impl.InboxServiceImpl;
-import com.architecture.hexagonal.application.testutils.time.TestClock;
-import com.architecture.hexagonal.application.testutils.transaction.SpyTransactionWriteBoundary;
-import com.architecture.hexagonal.application.testutils.usecase.inbox.command.RegisterInboxInputTestDataBuilder;
+import com.architecture.hexagonal.domain.data.time.TestClock;
+import com.architecture.hexagonal.application.transaction.SpyTransactionWriteBoundary;
+import com.architecture.hexagonal.application.usecase.inbox.command.RegisterInboxInputTestDataBuilder;
 import com.architecture.hexagonal.contract.bus.model.inbox.command.RegisterInboxCommand;
 import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
