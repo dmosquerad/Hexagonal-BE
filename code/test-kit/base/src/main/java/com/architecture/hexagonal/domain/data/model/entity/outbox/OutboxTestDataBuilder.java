@@ -1,0 +1,43 @@
+package com.architecture.hexagonal.domain.data.model.entity.outbox;
+
+import com.architecture.hexagonal.domain.data.model.vo.payload.PayloadVoTestDataBuilder;
+import com.architecture.hexagonal.domain.data.time.TestClock;
+import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
+import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
+import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
+import com.architecture.hexagonal.domain.model.vo.payload.PayloadVo;
+import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
+import java.time.OffsetDateTime;
+import java.util.UUID;
+import lombok.Builder;
+
+@Builder
+public class OutboxTestDataBuilder<T> {
+
+  @Builder.Default private UUID eventId = UUID.fromString("ec9633ff-1137-4f3a-87ef-ea7738ad411f");
+  @Builder.Default private AggregateTypeVo aggregateType = AggregateTypeVo.USER;
+  @Builder.Default private String aggregateId = "123";
+  @Builder.Default private String action = ActionType.UserActionType.USER_DELETED.name();
+
+  @Builder.Default
+  private PayloadVo payload = PayloadVoTestDataBuilder.<T>builder().build().payloadVo();
+
+  @Builder.Default private StatusVo status = StatusVo.PENDING;
+  @Builder.Default private int retryCount = 0;
+  @Builder.Default private OffsetDateTime createdAt = OffsetDateTime.now(TestClock.FIXED_CLOCK);
+  @Builder.Default private OffsetDateTime processedAt = OffsetDateTime.now(TestClock.FIXED_CLOCK);
+
+  public Outbox outbox() {
+    return Outbox.builder()
+        .outboxId(eventId)
+        .aggregateType(aggregateType)
+        .aggregateId(aggregateId)
+        .action(action)
+        .payload(payload)
+        .status(status)
+        .retryCount(retryCount)
+        .createdAt(createdAt)
+        .processedAt(processedAt)
+        .build();
+  }
+}

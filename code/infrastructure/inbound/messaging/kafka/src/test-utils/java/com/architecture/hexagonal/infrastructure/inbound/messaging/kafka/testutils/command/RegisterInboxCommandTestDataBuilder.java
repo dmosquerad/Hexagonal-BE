@@ -2,10 +2,12 @@ package com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.testut
 
 import com.architecture.hexagonal.contract.bus.model.inbox.command.MessageHeader;
 import com.architecture.hexagonal.contract.bus.model.inbox.command.RegisterInboxCommand;
+import com.architecture.hexagonal.domain.data.time.TestClock;
 import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.testutils.message.UserCreatedDataTestDataBuilder;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import lombok.Builder;
 
 @Builder
@@ -24,7 +26,7 @@ public class RegisterInboxCommandTestDataBuilder {
   private final String action = ActionType.UserActionType.USER_CREATED.getActionType();
 
   @Builder.Default
-  private final OffsetDateTime createdAt = OffsetDateTime.parse("2026-01-01T00:00:00Z");
+  private final OffsetDateTime createdAt = TestClock.FIXED_INSTANT.atOffset(ZoneOffset.UTC);
 
   public RegisterInboxCommand registerInboxCommand() {
     final RegisterInboxCommand command = new RegisterInboxCommand();

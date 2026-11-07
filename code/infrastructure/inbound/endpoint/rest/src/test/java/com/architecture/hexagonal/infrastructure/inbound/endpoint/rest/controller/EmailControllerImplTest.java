@@ -1,12 +1,12 @@
 package com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.controller;
 
-import com.architecture.hexagonal.application.testutils.time.TestClock;
 import com.architecture.hexagonal.contract.bus.model.email.query.GetBlockedRulesQuery;
 import com.architecture.hexagonal.contract.inbound.endpoint.rest.email.server.dto.EmailBlockRulesDto;
 import com.architecture.hexagonal.contract.inbound.endpoint.rest.email.server.dto.EmailBlockRulesResponseDto;
+import com.architecture.hexagonal.domain.data.model.vo.email.EmailBlockRulesVoTestDataBuilder;
+import com.architecture.hexagonal.domain.data.time.TestClock;
 import com.architecture.hexagonal.domain.exception.DomainException;
 import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;
-import com.architecture.hexagonal.domain.testutils.data.model.vo.email.EmailBlockRulesVoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.bus.query.QueryBus;
 import com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.mapper.email.EmailBlockRulesDtoMapper;
 import com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.testutils.dto.EmailBlockRulesDtoTestDataBuilder;

@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.testutils.data.payload;
 
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.payload.MessageHeaderDao;
-import com.architecture.hexagonal.domain.testutils.data.time.TestClock;
+import com.architecture.hexagonal.domain.data.time.TestClock;
 import lombok.Builder;
 
 import java.time.ZoneOffset;

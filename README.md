@@ -157,7 +157,7 @@ cd deployment/docker
 docker compose up -d
 ```
 
-This starts **PostgreSQL** (port 5432) and **RabbitMQ** (ports 5672 / 15672).
+This starts **PostgreSQL** (port 5432), **MongoDB 9.0.4** (port 27017), **RabbitMQ** (ports 5672 / 15672), **Kafka** (port 9092), and Kafka UI (port 8090).
 
 ### 2. Build & Run
 ```bash

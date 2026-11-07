@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.postgresql.repository.specification;
 
+import com.architecture.hexagonal.domain.data.model.vo.email.EmailBlockRulesVoTestDataBuilder;
 import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;
-import com.architecture.hexagonal.domain.testutils.data.model.vo.email.EmailBlockRulesVoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.data.UserDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.repository.custom.predicate.UserPredicates;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.repository.custom.specification.UserSpecifications;

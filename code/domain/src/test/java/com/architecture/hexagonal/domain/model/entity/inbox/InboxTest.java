@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.domain.model.entity.inbox;
 
-import com.architecture.hexagonal.domain.testutils.data.model.entity.inbox.InboxTestDataBuilder;
+import com.architecture.hexagonal.domain.data.model.entity.inbox.InboxTestDataBuilder;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 

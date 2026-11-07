@@ -2,11 +2,11 @@ package com.architecture.hexagonal.application.usecase.user.query.findbyid.impl;
 
 import com.architecture.hexagonal.application.port.out.transaction.TransactionReadBoundary;
 import com.architecture.hexagonal.application.service.user.UserService;
-import com.architecture.hexagonal.application.testutils.transaction.SpyTransactionReadBoundary;
-import com.architecture.hexagonal.application.testutils.usecase.user.query.FindUserByUserIdInputTestDataBuilder;
+import com.architecture.hexagonal.application.transaction.SpyTransactionReadBoundary;
+import com.architecture.hexagonal.application.usecase.user.query.FindUserByUserIdInputTestDataBuilder;
 import com.architecture.hexagonal.contract.bus.model.user.query.FindUserByUserIdQuery;
+import com.architecture.hexagonal.domain.data.model.entity.user.UserTestDataBuilder;
 import com.architecture.hexagonal.domain.model.entity.user.User;
-import com.architecture.hexagonal.domain.testutils.data.model.entity.user.UserTestDataBuilder;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

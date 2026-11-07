@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.adapter.inbox;
 
+import com.architecture.hexagonal.domain.data.model.entity.inbox.InboxTestDataBuilder;
 import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
-import com.architecture.hexagonal.domain.testutils.data.model.entity.inbox.InboxTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.inbox.InboxDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.mapper.inbox.InboxDaoMapper;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.mapper.inbox.InboxDoFromMongodbMapper;

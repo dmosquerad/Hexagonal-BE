@@ -4,12 +4,12 @@ import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.UserCre
 import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.UserData;
 import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.UserDeleted;
 import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.UserUpdated;
+import com.architecture.hexagonal.domain.data.model.entity.outbox.OutboxTestDataBuilder;
+import com.architecture.hexagonal.domain.data.model.vo.payload.PayloadVoTestDataBuilder;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
 import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.domain.model.vo.payload.PayloadVo;
-import com.architecture.hexagonal.domain.testutils.data.model.entity.outbox.OutboxTestDataBuilder;
-import com.architecture.hexagonal.domain.testutils.data.model.vo.payload.PayloadVoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbox.mapper.user.UserFromOutboxMapper;
 import com.architecture.hexagonal.infrastructure.outbox.naming.OutboxNaming;
 import java.util.Map;

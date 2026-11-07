@@ -38,9 +38,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>application</artifactId>
-            <type>test-jar</type>
-            <classifier>tests</classifier>
+            <artifactId>test-kit-base</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

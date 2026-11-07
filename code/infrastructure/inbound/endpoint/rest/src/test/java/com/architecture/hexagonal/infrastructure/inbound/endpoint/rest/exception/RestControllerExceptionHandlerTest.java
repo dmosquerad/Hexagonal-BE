@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.exception;
 
-import com.architecture.hexagonal.application.testutils.time.TestClock;
 import com.architecture.hexagonal.contract.inbound.endpoint.rest.user.server.dto.ResponseErrorDto;
+import com.architecture.hexagonal.domain.data.time.TestClock;
 import com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.testutils.dto.ResponseErrorDtoTestDataBuilder;
 import jakarta.validation.ConstraintViolationException;
 import java.time.Clock;

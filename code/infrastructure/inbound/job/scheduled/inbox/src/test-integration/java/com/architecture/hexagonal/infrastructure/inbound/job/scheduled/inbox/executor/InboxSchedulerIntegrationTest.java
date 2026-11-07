@@ -4,7 +4,7 @@ import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
 import com.architecture.hexagonal.application.port.out.scheduler.SchedulerConfigurationPort;
 import com.architecture.hexagonal.domain.model.vo.inbox.SchedulerInboxConfigurationVo;
 import com.architecture.hexagonal.infrastructure.inbound.job.scheduled.inbox.config.TestApplication;
-import com.architecture.hexagonal.domain.testutils.data.model.vo.inbox.SchedulerInboxConfigurationVoTestDataBuilder;
+import com.architecture.hexagonal.domain.data.model.vo.inbox.SchedulerInboxConfigurationVoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.job.scheduled.inbox.executor.impl.InboxSchedulerImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

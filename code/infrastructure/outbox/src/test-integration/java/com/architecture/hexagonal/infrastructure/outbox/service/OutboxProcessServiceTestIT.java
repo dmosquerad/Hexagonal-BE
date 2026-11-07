@@ -6,8 +6,8 @@ import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.UserUpd
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
 import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
-import com.architecture.hexagonal.domain.testutils.data.model.entity.outbox.OutboxTestDataBuilder;
-import com.architecture.hexagonal.domain.testutils.data.model.vo.payload.PayloadVoTestDataBuilder;
+import com.architecture.hexagonal.domain.data.model.entity.outbox.OutboxTestDataBuilder;
+import com.architecture.hexagonal.domain.data.model.vo.payload.PayloadVoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbox.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.outbox.mapper.user.UserFromOutboxMapper;
 import org.junit.jupiter.api.Test;

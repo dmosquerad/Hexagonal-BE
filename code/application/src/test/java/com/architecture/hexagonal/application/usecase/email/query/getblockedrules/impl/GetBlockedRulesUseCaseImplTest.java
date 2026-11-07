@@ -2,10 +2,10 @@ package com.architecture.hexagonal.application.usecase.email.query.getblockedrul
 
 import com.architecture.hexagonal.application.port.out.transaction.TransactionReadBoundary;
 import com.architecture.hexagonal.application.service.email.EmailService;
-import com.architecture.hexagonal.application.testutils.transaction.SpyTransactionReadBoundary;
-import com.architecture.hexagonal.application.testutils.usecase.email.query.GetBlockedRulesQueryTestDataBuilder;
+import com.architecture.hexagonal.application.transaction.SpyTransactionReadBoundary;
+import com.architecture.hexagonal.application.usecase.email.query.GetBlockedRulesQueryTestDataBuilder;
+import com.architecture.hexagonal.domain.data.model.vo.email.EmailBlockRulesVoTestDataBuilder;
 import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;
-import com.architecture.hexagonal.domain.testutils.data.model.vo.email.EmailBlockRulesVoTestDataBuilder;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
