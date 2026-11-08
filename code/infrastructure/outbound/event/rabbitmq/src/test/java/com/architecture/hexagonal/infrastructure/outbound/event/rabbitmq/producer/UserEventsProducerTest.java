@@ -136,6 +136,26 @@ class UserEventsProducerTest {
   }
 
   @Test
+  void publishUserUpdatedShouldSaveOutboxWhenStreamBridgeThrows() {
+    final UserUpdated event = UserUpdatedTestDataBuilder.builder().build().userUpdated();
+    Mockito.doThrow(new IllegalStateException("broker unavailable"))
+        .when(streamBridge)
+        .send(
+            Mockito.eq(UserEventsProducerBinding.PUBLISH_USER_UPDATED_OUT_0.getBindingName()),
+            Mockito.any(Message.class));
+
+    Assertions.assertThat(publisher.publishUserUpdated(event)).isFalse();
+
+    Mockito.verify(payloadMapper).toPayload(event);
+    final ArgumentCaptor<Outbox> outboxCaptor = ArgumentCaptor.forClass(Outbox.class);
+    Mockito.verify(outboxRepositoryWritePort).upsertByEventIdentity(outboxCaptor.capture());
+    Assertions.assertThat(outboxCaptor.getValue().aggregateId())
+        .isEqualTo(event.getUserData().getUserId());
+    Assertions.assertThat(outboxCaptor.getValue().action())
+        .isEqualTo(ActionType.UserActionType.USER_UPDATED.getActionType());
+  }
+
+  @Test
   void publishUserDeletedShouldSaveOutboxWhenStreamBridgeReturnsFalse() {
     final UserDeleted event = UserDeletedTestDataBuilder.builder().build().userDeleted();
     Mockito.when(
@@ -148,5 +168,25 @@ class UserEventsProducerTest {
 
     Mockito.verify(payloadMapper).toPayload(event);
     Mockito.verify(outboxRepositoryWritePort).upsertByEventIdentity(Mockito.any(Outbox.class));
+  }
+
+  @Test
+  void publishUserDeletedShouldSaveOutboxWhenStreamBridgeThrows() {
+    final UserDeleted event = UserDeletedTestDataBuilder.builder().build().userDeleted();
+    Mockito.doThrow(new IllegalStateException("broker unavailable"))
+        .when(streamBridge)
+        .send(
+            Mockito.eq(UserEventsProducerBinding.PUBLISH_USER_DELETED_OUT_0.getBindingName()),
+            Mockito.any(Message.class));
+
+    Assertions.assertThat(publisher.publishUserDeleted(event)).isFalse();
+
+    Mockito.verify(payloadMapper).toPayload(event);
+    final ArgumentCaptor<Outbox> outboxCaptor = ArgumentCaptor.forClass(Outbox.class);
+    Mockito.verify(outboxRepositoryWritePort).upsertByEventIdentity(outboxCaptor.capture());
+    Assertions.assertThat(outboxCaptor.getValue().aggregateId())
+        .isEqualTo(event.getUserData().getUserId());
+    Assertions.assertThat(outboxCaptor.getValue().action())
+        .isEqualTo(ActionType.UserActionType.USER_DELETED.getActionType());
   }
 }

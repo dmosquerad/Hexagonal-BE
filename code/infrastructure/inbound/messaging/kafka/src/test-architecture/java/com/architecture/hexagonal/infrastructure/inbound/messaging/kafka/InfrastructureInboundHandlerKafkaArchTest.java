@@ -16,7 +16,7 @@ class InfrastructureInboundHandlerKafkaArchTest {
   static final ArchRule consumers_should_reside_in_consumer_package =
       ArchRuleDefinition.classes()
           .that()
-          .haveSimpleNameEndingWith("Consumer")
+          .haveSimpleNameEndingWith("ConsumerImpl")
           .should()
           .resideInAPackage("..infrastructure.inbound.messaging.kafka.consumer..")
           .because("Kafka consumers must be grouped under the consumer package");
