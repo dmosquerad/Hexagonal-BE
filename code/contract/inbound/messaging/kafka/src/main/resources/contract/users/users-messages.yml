@@ -6,12 +6,12 @@ messages:
       type: object
       additionalProperties: false
       required:
-        - __TypeId__
+        - X-Event-Type
       properties:
-        __TypeId__:
+        X-Event-Type:
           type: string
           enum:
-            - com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserCreatedPayload
+            - create
     payload:
       $ref: './schemas/users-schema.yml#/schemas/UserCreated'
   UserUpdated:
@@ -21,14 +21,20 @@ messages:
       type: object
       additionalProperties: false
       required:
-        - __TypeId__
+        - X-Event-Type
       properties:
-        __TypeId__:
+        X-Event-Type:
           type: string
           enum:
-            - com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserUpdatedPayload
+            - update
     payload:
       $ref: './schemas/users-schema.yml#/schemas/UserUpdated'
+    bindings:
+      kafka:
+        key:
+          type: string
+          format: uuid
+          description: User aggregate ID from the message payload.
   UserDeleted:
     name: UserDeleted
     contentType: application/json
@@ -36,11 +42,17 @@ messages:
       type: object
       additionalProperties: false
       required:
-        - __TypeId__
+        - X-Event-Type
       properties:
-        __TypeId__:
+        X-Event-Type:
           type: string
           enum:
-            - com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserDeletedPayload
+            - delete
     payload:
       $ref: './schemas/users-schema.yml#/schemas/UserDeleted'
+    bindings:
+      kafka:
+        key:
+          type: string
+          format: uuid
+          description: User aggregate ID from the message payload.
