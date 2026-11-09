@@ -1,4 +1,3 @@
 spring:
-  kafka:
-    listener:
-      auto-startup: false
+  profiles:
+    active: messaging-kafka

@@ -4,10 +4,10 @@ import com.architecture.hexagonal.application.port.out.outbox.OutboxRepositoryWr
 import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.UserCreated;
 import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.UserDeleted;
 import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.UserUpdated;
+import com.architecture.hexagonal.contract.outbound.event.rabbitmq.naming.router.UserEventsProducerBinding;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
 import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.mapper.user.PayloadMapper;
-import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.naming.UserEventsProducerBinding;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.testutils.message.UserCreatedTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.testutils.message.UserDeletedTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.testutils.message.UserUpdatedTestDataBuilder;

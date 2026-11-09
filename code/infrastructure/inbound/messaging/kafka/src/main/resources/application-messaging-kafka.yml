@@ -1,0 +1,24 @@
+spring:
+  cloud:
+    function:
+      definition: functionRouter
+      routing-expression: "new String(headers['X-Event-Type'])"
+    stream:
+      bindings:
+        functionRouter-in-0:
+          binder: kafka
+          destination: user
+          group: user.handler
+          contentType: application/json
+          consumer:
+            maxAttempts: 3
+            backOffInitialInterval: 1000
+      kafka:
+        binder:
+          brokers: localhost:9092
+        bindings:
+          functionRouter-in-0:
+            consumer:
+              startOffset: earliest
+              enableDlq: true
+              dlqName: user.handler.dlq

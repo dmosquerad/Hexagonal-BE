@@ -5,7 +5,7 @@ import com.architecture.hexagonal.contract.bus.model.user.event.UserCreatedEvent
 import com.architecture.hexagonal.contract.bus.model.user.event.UserDeletedEvent;
 import com.architecture.hexagonal.contract.bus.model.user.event.UserUpdatedEvent;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.config.TestApplication;
-import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.naming.UserEventsProducerBinding;
+import com.architecture.hexagonal.contract.outbound.event.rabbitmq.naming.router.UserEventsProducerBinding;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.producer.UserEventsProducerImpl;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;

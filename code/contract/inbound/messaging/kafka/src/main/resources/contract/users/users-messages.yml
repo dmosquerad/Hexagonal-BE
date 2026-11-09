@@ -7,11 +7,18 @@ messages:
       additionalProperties: false
       required:
         - X-Event-Type
+        - X-Event-Id
+        - X-Schema-Version
       properties:
         X-Event-Type:
           type: string
           enum:
-            - create
+            - UserCreate
+        X-Event-Id:
+          type: string
+          format: uuid
+        X-Schema-Version:
+          type: string
     payload:
       $ref: './schemas/users-schema.yml#/schemas/UserCreated'
   UserUpdated:
@@ -22,11 +29,18 @@ messages:
       additionalProperties: false
       required:
         - X-Event-Type
+        - X-Event-Id
+        - X-Schema-Version
       properties:
         X-Event-Type:
           type: string
           enum:
-            - update
+            - UserUpdate
+        X-Event-Id:
+          type: string
+          format: uuid
+        X-Schema-Version:
+          type: string
     payload:
       $ref: './schemas/users-schema.yml#/schemas/UserUpdated'
     bindings:
@@ -43,11 +57,18 @@ messages:
       additionalProperties: false
       required:
         - X-Event-Type
+        - X-Event-Id
+        - X-Schema-Version
       properties:
         X-Event-Type:
           type: string
           enum:
-            - delete
+            - UserDelete
+        X-Event-Id:
+          type: string
+          format: uuid
+        X-Schema-Version:
+          type: string
     payload:
       $ref: './schemas/users-schema.yml#/schemas/UserDeleted'
     bindings:

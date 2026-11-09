@@ -1,4 +1,4 @@
-package com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.naming;
+package com.architecture.hexagonal.contract.outbound.event.rabbitmq.naming.router;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

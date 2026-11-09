@@ -21,19 +21,22 @@
         </dependency>
         <dependency>
             <groupId>com.architecture.hexagonal</groupId>
-            <artifactId>contract-bus</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.architecture.hexagonal</groupId>
             <artifactId>contract-inbound-kafka</artifactId>
         </dependency>
+        <!-- ============================================ -->
+        <!-- SPRINGBOOT -->
+        <!-- ============================================ -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-json</artifactId>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-stream-binder-kafka</artifactId>
         </dependency>
+        <!-- ============================================ -->
+        <!-- TEST -->
+        <!-- ============================================ -->
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-stream-test-binder</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>
