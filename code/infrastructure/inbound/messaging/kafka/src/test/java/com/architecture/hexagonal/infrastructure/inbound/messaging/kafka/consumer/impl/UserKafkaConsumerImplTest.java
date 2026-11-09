@@ -8,6 +8,7 @@ import com.architecture.hexagonal.contract.inbound.messaging.kafka.client.consum
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserCreatedPayload;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserDeletedPayload;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserUpdatedPayload;
+import com.architecture.hexagonal.contract.inbound.messaging.kafka.naming.router.UserMessageConsumerBinding;
 import com.architecture.hexagonal.domain.data.time.TestClock;
 import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
 import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
@@ -18,6 +19,7 @@ import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.testuti
 import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.testutils.message.UserUpdatedPayloadTestDataBuilder;
 import java.time.Clock;
 import java.time.OffsetDateTime;
+import java.util.UUID;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -48,7 +50,11 @@ class UserKafkaConsumerImplTest {
         UserCreatedPayloadTestDataBuilder.builder().build().userCreatedPayload();
 
     userKafkaConsumer.listenUserCreated(
-        message, UserEventsConsumer.USER_EVENTS_TOPIC_ADDRESS, "create");
+        message,
+        UserEventsConsumer.USER_EVENTS_TOPIC_ADDRESS,
+        UserMessageConsumerBinding.USER_CREATE_EVENT.getBindingName(),
+        UUID.randomUUID(),
+        "1");
 
     final ArgumentCaptor<CreateUserCommand> commandCaptor =
         ArgumentCaptor.forClass(CreateUserCommand.class);
@@ -69,7 +75,11 @@ class UserKafkaConsumerImplTest {
         .execute(Mockito.any(CreateUserCommand.class));
 
     userKafkaConsumer.listenUserCreated(
-        message, UserEventsConsumer.USER_EVENTS_TOPIC_ADDRESS, "create");
+        message,
+        UserEventsConsumer.USER_EVENTS_TOPIC_ADDRESS,
+        UserMessageConsumerBinding.USER_CREATE_EVENT.getBindingName(),
+        UUID.randomUUID(),
+        "1");
 
     Mockito.verify(commandBus).execute(Mockito.any(CreateUserCommand.class));
     final ArgumentCaptor<RegisterInboxCommand> inboxCaptor =
@@ -93,7 +103,9 @@ class UserKafkaConsumerImplTest {
         message,
         UserEventsConsumer.USER_EVENTS_TOPIC_ADDRESS,
         message.getData_().getUserId(),
-        "update");
+        UserMessageConsumerBinding.USER_UPDATE_EVENT.getBindingName(),
+        UUID.randomUUID(),
+        "1");
 
     final ArgumentCaptor<UpdateUserCommand> commandCaptor =
         ArgumentCaptor.forClass(UpdateUserCommand.class);
@@ -118,7 +130,9 @@ class UserKafkaConsumerImplTest {
         message,
         UserEventsConsumer.USER_EVENTS_TOPIC_ADDRESS,
         message.getData_().getUserId(),
-        "update");
+        UserMessageConsumerBinding.USER_UPDATE_EVENT.getBindingName(),
+        UUID.randomUUID(),
+        "1");
 
     Mockito.verify(commandBus).execute(Mockito.any(UpdateUserCommand.class));
     final ArgumentCaptor<RegisterInboxCommand> inboxCaptor =
@@ -144,7 +158,9 @@ class UserKafkaConsumerImplTest {
         message,
         UserEventsConsumer.USER_EVENTS_TOPIC_ADDRESS,
         message.getData_().getUserId(),
-        "delete");
+        UserMessageConsumerBinding.USER_DELETE_EVENT.getBindingName(),
+        UUID.randomUUID(),
+        "1");
 
     final ArgumentCaptor<DeleteUserCommand> commandCaptor =
         ArgumentCaptor.forClass(DeleteUserCommand.class);
@@ -167,7 +183,9 @@ class UserKafkaConsumerImplTest {
         message,
         UserEventsConsumer.USER_EVENTS_TOPIC_ADDRESS,
         message.getData_().getUserId(),
-        "delete");
+        UserMessageConsumerBinding.USER_DELETE_EVENT.getBindingName(),
+        UUID.randomUUID(),
+        "1");
 
     Mockito.verify(commandBus).execute(Mockito.any(DeleteUserCommand.class));
     final ArgumentCaptor<RegisterInboxCommand> inboxCaptor =

@@ -23,7 +23,7 @@ The API follows a **contract-first** approach with OpenAPI, includes unit/integr
 
 - **Java** and **Spring Boot** (Maven multi-module build)
 - **PostgreSQL** (user data), **MongoDB** (Outbox/Inbox events)
-- **RabbitMQ** (user events published through Spring Cloud Stream) and **Apache Kafka** (user events consumed through `@KafkaListener`)
+- **RabbitMQ** (user events published through Spring Cloud Stream) and **Apache Kafka** (user events consumed through Spring Cloud Stream)
 - **MapStruct** and **Lombok** for mapping and boilerplate
 - **springdoc-openapi** for API documentation
 - **ArchUnit** for architecture tests, **JaCoCo** for coverage, **Spotless** (google-java-format) for formatting, and **Karate** for E2E tests
@@ -238,7 +238,7 @@ Holds the OpenAPI specifications and generates server-side stubs consumed by the
 - Generated Java interfaces implemented by REST controllers
 
 #### Inbound — Kafka (`code/contract/inbound/messaging/kafka`)
-The AsyncAPI specification defines the user events consumed from Kafka. During `generate-sources`, the evryfs AsyncAPI Maven plugin generates the Java payload models and Spring Kafka consumer contract interfaces. `UserKafkaConsumerImpl` implements those generated contracts and receives messages through `@KafkaListener`; JSON conversion and retries are configured with Spring Kafka. No handwritten Kafka consumer port or JavaScript generator is required.
+The AsyncAPI specification defines the user events consumed from Kafka. During `generate-sources`, the evryfs AsyncAPI Maven plugin generates the Java payload models and Spring Kafka consumer contract interfaces. `UserKafkaConsumerImpl` implements those generated contracts and is invoked by a `Consumer<Message<byte[]>>` bean (`consumeUserEvents`, in `UserKafkaStreamConfig`) bound to the `user` topic through Spring Cloud Stream (`spring-cloud-stream-binder-kafka`). The bean dispatches each message on the `X-Event-Type` header (`create`, `update`, `delete`) after deserializing its JSON body; bindings are configured in `application-handler-kafka.yml`. No handwritten Kafka consumer port or JavaScript generator is required.
 
 
 #### Outbound — RabbitMQ (`code/contract/outbound/event/rabbitmq`)

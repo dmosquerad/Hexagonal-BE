@@ -8,10 +8,13 @@ spring:
     stream:
       bindings:
         publish-user-created-out-0:
+          binder: rabbit
           destination: user.created
         publish-user-updated-out-0:
+          binder: rabbit
           destination: user.updated
         publish-user-deleted-out-0:
+          binder: rabbit
           destination: user.deleted
       rabbit:
         bindings:

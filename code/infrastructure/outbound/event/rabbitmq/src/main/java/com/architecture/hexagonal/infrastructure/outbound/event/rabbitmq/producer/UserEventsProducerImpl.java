@@ -5,12 +5,12 @@ import com.architecture.hexagonal.contract.outbound.event.rabbitmq.UserEventsPro
 import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.UserCreated;
 import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.UserDeleted;
 import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.UserUpdated;
+import com.architecture.hexagonal.contract.outbound.event.rabbitmq.naming.router.UserEventsProducerBinding;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
 import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.mapper.user.PayloadMapper;
-import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.naming.UserEventsProducerBinding;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.messaging.support.MessageBuilder;

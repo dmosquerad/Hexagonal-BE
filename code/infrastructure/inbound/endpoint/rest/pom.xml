@@ -21,10 +21,6 @@
         </dependency>
         <dependency>
             <groupId>com.architecture.hexagonal</groupId>
-            <artifactId>contract-bus</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.architecture.hexagonal</groupId>
             <artifactId>inbound-user-rest-server</artifactId>
         </dependency>
         <dependency>
