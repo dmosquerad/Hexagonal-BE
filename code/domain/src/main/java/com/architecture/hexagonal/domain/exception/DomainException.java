@@ -1,8 +1,15 @@
 package com.architecture.hexagonal.domain.exception;
 
-public class DomainException extends RuntimeException {
+import com.architecture.hexagonal.domain.model.vo.exception.FailureType;
+import lombok.Getter;
+import lombok.NonNull;
 
-  public DomainException(final String message) {
+@Getter
+public class DomainException extends RuntimeException {
+  private final FailureType failureType;
+
+  public DomainException(@NonNull final String message, @NonNull final FailureType failureType) {
     super(message);
+    this.failureType = failureType;
   }
 }

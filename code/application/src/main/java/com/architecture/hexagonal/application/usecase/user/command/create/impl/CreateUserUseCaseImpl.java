@@ -8,6 +8,7 @@ import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.InvalidValueException;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.domain.model.vo.email.factory.EmailVoFactory;
+import com.architecture.hexagonal.domain.model.vo.exception.FailureType;
 import com.architecture.hexagonal.domain.port.in.bus.command.CommandHandler;
 import com.architecture.hexagonal.domain.port.in.transaction.TransactionWriteBoundary;
 import lombok.NonNull;
@@ -32,7 +33,8 @@ public class CreateUserUseCaseImpl implements CommandHandler<CreateUserCommand, 
         () -> {
           if (emailService.isEmailBlocked(user.email())) {
             throw new InvalidValueException(
-                ExceptionMessage.EMAIL_NO_ALLOWED_MESSAGE + user.email().getEmail());
+                ExceptionMessage.EMAIL_NO_ALLOWED_MESSAGE + user.email().getEmail(),
+                FailureType.NON_RETRYABLE);
           }
           return userService.createUser(user);
         });

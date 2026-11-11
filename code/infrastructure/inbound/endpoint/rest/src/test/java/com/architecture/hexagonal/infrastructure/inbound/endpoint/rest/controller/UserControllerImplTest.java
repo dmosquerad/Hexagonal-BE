@@ -19,6 +19,7 @@ import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.InvalidValueException;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import com.architecture.hexagonal.domain.model.entity.user.User;
+import com.architecture.hexagonal.domain.model.vo.exception.FailureType;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResultVo;
 import com.architecture.hexagonal.domain.port.in.bus.command.CommandBus;
 import com.architecture.hexagonal.domain.port.in.bus.query.QueryBus;
@@ -181,7 +182,7 @@ class UserControllerImplTest {
     final String errorMessage = "domain exception";
 
     Mockito.when(commandBus.execute(Mockito.any(CreateUserCommand.class)))
-        .thenThrow(new DomainException(errorMessage));
+        .thenThrow(new DomainException(errorMessage, FailureType.NON_RETRYABLE));
 
     AssertionsForClassTypes.assertThatThrownBy(() -> userControllerImpl.createUser(createUserDto))
         .isInstanceOf(DomainException.class)
@@ -235,7 +236,7 @@ class UserControllerImplTest {
     final String errorMessage = "domain exception";
 
     Mockito.when(queryBus.execute(Mockito.any(FindUserByUserIdQuery.class)))
-        .thenThrow(new DomainException(errorMessage));
+        .thenThrow(new DomainException(errorMessage, FailureType.NON_RETRYABLE));
 
     AssertionsForClassTypes.assertThatThrownBy(() -> userControllerImpl.getUserByUuid(user.getId()))
         .isInstanceOf(DomainException.class)
@@ -251,7 +252,7 @@ class UserControllerImplTest {
     final String errorMessage = HttpStatus.NOT_FOUND.getReasonPhrase();
 
     Mockito.when(queryBus.execute(Mockito.any(FindUserByUserIdQuery.class)))
-        .thenThrow(new ResourceNotFoundException(errorMessage));
+        .thenThrow(new ResourceNotFoundException(errorMessage, FailureType.NON_RETRYABLE));
 
     AssertionsForClassTypes.assertThatThrownBy(() -> userControllerImpl.getUserByUuid(user.getId()))
         .isInstanceOf(ResourceNotFoundException.class)
@@ -305,7 +306,7 @@ class UserControllerImplTest {
     final String errorMessage = "domain exception";
 
     Mockito.when(commandBus.execute(Mockito.any(DeleteUserCommand.class)))
-        .thenThrow(new DomainException(errorMessage));
+        .thenThrow(new DomainException(errorMessage, FailureType.NON_RETRYABLE));
 
     AssertionsForClassTypes.assertThatThrownBy(
             () -> userControllerImpl.deleteUserByUuid(user.getId()))
@@ -383,7 +384,7 @@ class UserControllerImplTest {
     final String errorMessage = "domain exception";
 
     Mockito.when(commandBus.execute(Mockito.any(UpdateUserCommand.class)))
-        .thenThrow(new DomainException(errorMessage));
+        .thenThrow(new DomainException(errorMessage, FailureType.NON_RETRYABLE));
 
     AssertionsForClassTypes.assertThatThrownBy(
             () ->
@@ -423,7 +424,7 @@ class UserControllerImplTest {
     final String errorMessage = HttpStatus.NOT_FOUND.getReasonPhrase();
 
     Mockito.when(commandBus.execute(Mockito.any(UpdateUserCommand.class)))
-        .thenThrow(new ResourceNotFoundException(errorMessage));
+        .thenThrow(new ResourceNotFoundException(errorMessage, FailureType.NON_RETRYABLE));
 
     AssertionsForClassTypes.assertThatThrownBy(
             () ->
@@ -471,7 +472,7 @@ class UserControllerImplTest {
     final String errorMessage = HttpStatus.NOT_FOUND.getReasonPhrase();
 
     Mockito.when(commandBus.execute(Mockito.any(PatchUserCommand.class)))
-        .thenThrow(new ResourceNotFoundException(errorMessage));
+        .thenThrow(new ResourceNotFoundException(errorMessage, FailureType.NON_RETRYABLE));
 
     AssertionsForClassTypes.assertThatThrownBy(
             () ->
@@ -511,7 +512,7 @@ class UserControllerImplTest {
     final String errorMessage = "domain exception";
 
     Mockito.when(commandBus.execute(Mockito.any(PatchUserCommand.class)))
-        .thenThrow(new DomainException(errorMessage));
+        .thenThrow(new DomainException(errorMessage, FailureType.NON_RETRYABLE));
 
     AssertionsForClassTypes.assertThatThrownBy(
             () ->
@@ -569,7 +570,7 @@ class UserControllerImplTest {
     final String errorMessage = HttpStatus.NOT_FOUND.getReasonPhrase();
 
     Mockito.when(queryBus.execute(Mockito.any(UserExistsQuery.class)))
-        .thenThrow(new ResourceNotFoundException(errorMessage));
+        .thenThrow(new ResourceNotFoundException(errorMessage, FailureType.NON_RETRYABLE));
 
     AssertionsForClassTypes.assertThatThrownBy(
             () -> userControllerImpl.headUserByUuid(user.getId()))
@@ -586,7 +587,7 @@ class UserControllerImplTest {
     final String errorMessage = "domain exception";
 
     Mockito.when(queryBus.execute(Mockito.any(UserExistsQuery.class)))
-        .thenThrow(new DomainException(errorMessage));
+        .thenThrow(new DomainException(errorMessage, FailureType.NON_RETRYABLE));
 
     AssertionsForClassTypes.assertThatThrownBy(
             () -> userControllerImpl.headUserByUuid(user.getId()))
@@ -664,7 +665,7 @@ class UserControllerImplTest {
     final String errorMessage = ExceptionMessage.EMAIL_NO_ALLOWED_MESSAGE + "blocked@banned.com";
 
     Mockito.when(queryBus.execute(Mockito.any(GetUsersFilteredQuery.class)))
-        .thenThrow(new InvalidValueException(errorMessage));
+        .thenThrow(new InvalidValueException(errorMessage, FailureType.NON_RETRYABLE));
 
     AssertionsForClassTypes.assertThatThrownBy(
             () -> userControllerImpl.getAllUsers(null, null, 0, 100))

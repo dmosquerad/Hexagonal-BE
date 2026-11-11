@@ -8,6 +8,7 @@ import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.InvalidValueException;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.domain.model.vo.email.factory.EmailVoFactory;
+import com.architecture.hexagonal.domain.model.vo.exception.FailureType;
 import com.architecture.hexagonal.domain.port.in.bus.command.CommandHandler;
 import com.architecture.hexagonal.domain.port.in.transaction.TransactionWriteBoundary;
 import java.util.Objects;
@@ -36,7 +37,8 @@ public class PatchUserUseCaseImpl implements CommandHandler<PatchUserCommand, Us
         () -> {
           if (Objects.nonNull(patch.email()) && emailService.isEmailBlocked(patch.email())) {
             throw new InvalidValueException(
-                ExceptionMessage.EMAIL_NO_ALLOWED_MESSAGE + patch.email().getEmail());
+                ExceptionMessage.EMAIL_NO_ALLOWED_MESSAGE + patch.email().getEmail(),
+                FailureType.NON_RETRYABLE);
           }
           return userService.patchUser(patch);
         });
