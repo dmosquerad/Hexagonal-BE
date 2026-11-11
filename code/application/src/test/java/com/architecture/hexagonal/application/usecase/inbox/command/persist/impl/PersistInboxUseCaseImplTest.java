@@ -1,11 +1,11 @@
 package com.architecture.hexagonal.application.usecase.inbox.command.persist.impl;
 
-import com.architecture.hexagonal.application.port.out.transaction.TransactionWriteBoundary;
 import com.architecture.hexagonal.application.service.inbox.InboxService;
 import com.architecture.hexagonal.application.transaction.SpyTransactionWriteBoundary;
 import com.architecture.hexagonal.application.usecase.inbox.command.RegisterInboxInputTestDataBuilder;
 import com.architecture.hexagonal.contract.bus.model.inbox.command.RegisterInboxCommand;
 import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
+import com.architecture.hexagonal.domain.port.in.transaction.TransactionWriteBoundary;
 import java.util.function.Supplier;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;

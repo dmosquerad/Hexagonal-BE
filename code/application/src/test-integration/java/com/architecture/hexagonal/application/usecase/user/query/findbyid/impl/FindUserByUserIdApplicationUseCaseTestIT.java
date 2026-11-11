@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.application.usecase.user.query.findbyid.impl;
 
-import com.architecture.hexagonal.application.port.out.user.UserRepositoryReadPort;
-import com.architecture.hexagonal.application.port.out.user.UserRepositoryWritePort;
-import com.architecture.hexagonal.application.port.out.bus.event.EventBus;
+import com.architecture.hexagonal.domain.port.out.repository.user.UserRepositoryReadPort;
+import com.architecture.hexagonal.domain.port.out.repository.user.UserRepositoryWritePort;
+import com.architecture.hexagonal.domain.port.out.bus.event.EventBus;
 import com.architecture.hexagonal.application.service.user.UserService;
 import com.architecture.hexagonal.application.service.user.impl.UserServiceImpl;
 import com.architecture.hexagonal.contract.bus.model.user.query.FindUserByUserIdQuery;

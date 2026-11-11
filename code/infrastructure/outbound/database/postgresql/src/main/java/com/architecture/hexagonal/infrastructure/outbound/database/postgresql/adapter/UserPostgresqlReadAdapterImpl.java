@@ -1,10 +1,10 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.postgresql.adapter;
 
-import com.architecture.hexagonal.application.port.out.user.UserRepositoryReadPort;
-import com.architecture.hexagonal.application.projector.user.UserEmailProjector;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResultVo;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationVo;
+import com.architecture.hexagonal.domain.model.vo.projector.user.UserEmailProjector;
+import com.architecture.hexagonal.domain.port.out.repository.user.UserRepositoryReadPort;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.data.UserDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.mapper.user.UserFromPostgresqlMapper;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.repository.UserPostgresqlReadRepository;

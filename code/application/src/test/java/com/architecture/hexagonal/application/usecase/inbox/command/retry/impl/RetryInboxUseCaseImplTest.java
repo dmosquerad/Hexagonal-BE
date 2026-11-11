@@ -1,12 +1,12 @@
 package com.architecture.hexagonal.application.usecase.inbox.command.retry.impl;
 
-import com.architecture.hexagonal.application.port.out.transaction.TransactionReadBoundary;
 import com.architecture.hexagonal.application.service.inbox.InboxService;
 import com.architecture.hexagonal.application.transaction.SpyTransactionReadBoundary;
 import com.architecture.hexagonal.contract.bus.model.retry.command.RetryInboxeventCommand;
 import com.architecture.hexagonal.domain.data.model.entity.inbox.InboxTestDataBuilder;
 import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
+import com.architecture.hexagonal.domain.port.in.transaction.TransactionReadBoundary;
 import java.util.List;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;

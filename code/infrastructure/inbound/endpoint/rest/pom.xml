@@ -16,15 +16,11 @@
         <!-- PROJECT MODULES -->
         <!-- ============================================ -->
         <dependency>
-            <groupId>com.architecture.hexagonal</groupId>
-            <artifactId>bus</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.architecture.hexagonal</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>inbound-user-rest-server</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.architecture.hexagonal</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>inbound-email-rest-server</artifactId>
         </dependency>
         <!-- ============================================ -->

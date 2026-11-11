@@ -10,8 +10,8 @@ import com.architecture.hexagonal.contract.inbound.endpoint.rest.user.server.dto
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResultVo;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationVo;
-import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
-import com.architecture.hexagonal.infrastructure.bus.query.QueryBus;
+import com.architecture.hexagonal.domain.port.in.bus.command.CommandBus;
+import com.architecture.hexagonal.domain.port.in.bus.query.QueryBus;
 import com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.mapper.user.*;
 import com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.mapper.user.FindUserByUserIdQueryDtoMapper;
 import java.time.Clock;
@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserControllerImpl implements UsersApi {
 
   private final CommandBus commandBus;
+
   private final QueryBus queryBus;
 
   private final UserReadDtoMapper userReadDtoMapper;

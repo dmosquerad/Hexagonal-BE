@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.bus.middleware.impl;
 
-import com.architecture.hexagonal.infrastructure.bus.middleware.BusMiddleware;
+import com.architecture.hexagonal.domain.port.in.bus.middleware.BusMiddleware;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;

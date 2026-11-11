@@ -1,9 +1,9 @@
 package com.architecture.hexagonal.application.service.user;
 
-import com.architecture.hexagonal.application.projector.user.UserEmailProjector;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResultVo;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationVo;
+import com.architecture.hexagonal.domain.model.vo.projector.user.UserEmailProjector;
 import java.util.UUID;
 import lombok.NonNull;
 

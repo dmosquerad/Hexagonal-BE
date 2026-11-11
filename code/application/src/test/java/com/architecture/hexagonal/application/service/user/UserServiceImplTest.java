@@ -1,10 +1,5 @@
 package com.architecture.hexagonal.application.service.user;
 
-import com.architecture.hexagonal.application.port.out.bus.event.EventBus;
-import com.architecture.hexagonal.application.port.out.user.UserRepositoryReadPort;
-import com.architecture.hexagonal.application.port.out.user.UserRepositoryWritePort;
-import com.architecture.hexagonal.application.projector.user.UserEmailProjector;
-import com.architecture.hexagonal.application.projector.user.UserEmailProjectorTestDataBuilder;
 import com.architecture.hexagonal.application.service.user.impl.UserServiceImpl;
 import com.architecture.hexagonal.contract.bus.model.user.event.UserCreatedEvent;
 import com.architecture.hexagonal.contract.bus.model.user.event.UserDeletedEvent;
@@ -13,12 +8,17 @@ import com.architecture.hexagonal.domain.data.model.entity.user.UserTestDataBuil
 import com.architecture.hexagonal.domain.data.model.vo.email.EmailBlockRulesVoTestDataBuilder;
 import com.architecture.hexagonal.domain.data.model.vo.pagination.PaginationResultVoTestDataBuilder;
 import com.architecture.hexagonal.domain.data.model.vo.pagination.PaginationVoTestDataBuilder;
+import com.architecture.hexagonal.domain.data.model.vo.projector.user.UserEmailProjectorTestDataBuilder;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResultVo;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationVo;
+import com.architecture.hexagonal.domain.model.vo.projector.user.UserEmailProjector;
+import com.architecture.hexagonal.domain.port.out.bus.event.EventBus;
+import com.architecture.hexagonal.domain.port.out.repository.user.UserRepositoryReadPort;
+import com.architecture.hexagonal.domain.port.out.repository.user.UserRepositoryWritePort;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;

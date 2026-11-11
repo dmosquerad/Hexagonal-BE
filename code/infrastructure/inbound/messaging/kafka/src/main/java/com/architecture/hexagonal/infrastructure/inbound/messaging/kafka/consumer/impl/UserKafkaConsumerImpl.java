@@ -5,7 +5,7 @@ import com.architecture.hexagonal.contract.inbound.messaging.kafka.client.consum
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserCreatedPayload;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserDeletedPayload;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserUpdatedPayload;
-import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
+import com.architecture.hexagonal.domain.port.in.bus.command.CommandBus;
 import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.mapper.UserKafkaMessageMapper;
 import java.time.Clock;
 import java.time.OffsetDateTime;

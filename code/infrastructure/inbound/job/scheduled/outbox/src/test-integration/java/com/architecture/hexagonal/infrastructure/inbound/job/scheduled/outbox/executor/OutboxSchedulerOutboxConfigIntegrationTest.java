@@ -1,12 +1,12 @@
 package com.architecture.hexagonal.infrastructure.inbound.job.scheduled.outbox.executor;
 
-import com.architecture.hexagonal.application.port.out.scheduler.SchedulerConfigurationPort;
+import com.architecture.hexagonal.domain.port.out.configuration.SchedulerConfigurationPort;
 import com.architecture.hexagonal.domain.model.vo.outbox.SchedulerOutboxConfigurationVo;
 import com.architecture.hexagonal.contract.bus.model.retry.command.RetryOutboxeventCommand;
 import com.architecture.hexagonal.domain.data.model.vo.outbox.SchedulerOutboxConfigurationVoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.job.scheduled.outbox.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.inbound.job.scheduled.outbox.executor.impl.OutboxSchedulerImpl;
-import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
+import com.architecture.hexagonal.domain.port.in.bus.command.CommandBus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;

@@ -1,8 +1,5 @@
 package com.architecture.hexagonal.application.usecase.outbox.command.retry.impl;
 
-import com.architecture.hexagonal.application.port.out.transaction.TransactionReadBoundary;
-import com.architecture.hexagonal.application.port.out.transaction.TransactionWriteBoundary;
-import com.architecture.hexagonal.application.projector.outbox.OutboxStatusAndAggregateProjector;
 import com.architecture.hexagonal.application.service.outbox.OutboxService;
 import com.architecture.hexagonal.application.transaction.SpyTransactionReadBoundary;
 import com.architecture.hexagonal.application.transaction.SpyTransactionWriteBoundary;
@@ -10,6 +7,9 @@ import com.architecture.hexagonal.contract.bus.model.retry.command.RetryOutboxev
 import com.architecture.hexagonal.domain.data.model.entity.outbox.OutboxTestDataBuilder;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
+import com.architecture.hexagonal.domain.model.vo.projector.outbox.OutboxStatusAndAggregateProjector;
+import com.architecture.hexagonal.domain.port.in.transaction.TransactionReadBoundary;
+import com.architecture.hexagonal.domain.port.in.transaction.TransactionWriteBoundary;
 import java.util.List;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;

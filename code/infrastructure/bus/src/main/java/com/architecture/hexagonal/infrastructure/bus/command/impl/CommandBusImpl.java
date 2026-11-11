@@ -1,9 +1,9 @@
 package com.architecture.hexagonal.infrastructure.bus.command.impl;
 
-import com.architecture.hexagonal.application.port.in.bus.command.CommandHandler;
+import com.architecture.hexagonal.domain.port.in.bus.command.CommandBus;
+import com.architecture.hexagonal.domain.port.in.bus.command.CommandHandler;
+import com.architecture.hexagonal.domain.port.in.bus.middleware.BusMiddleware;
 import com.architecture.hexagonal.infrastructure.bus.BusHandlerFinder;
-import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
-import com.architecture.hexagonal.infrastructure.bus.middleware.BusMiddleware;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

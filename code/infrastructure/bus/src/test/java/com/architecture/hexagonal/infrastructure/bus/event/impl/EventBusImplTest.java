@@ -1,9 +1,9 @@
 package com.architecture.hexagonal.infrastructure.bus.event.impl;
 
-import com.architecture.hexagonal.application.port.in.bus.event.EventHandler;
 import com.architecture.hexagonal.contract.bus.model.user.event.UserCreatedEvent;
+import com.architecture.hexagonal.domain.port.in.bus.middleware.BusMiddleware;
+import com.architecture.hexagonal.domain.port.out.bus.event.EventPublisher;
 import com.architecture.hexagonal.infrastructure.bus.BusHandlerFinder;
-import com.architecture.hexagonal.infrastructure.bus.middleware.BusMiddleware;
 import com.architecture.hexagonal.infrastructure.bus.middleware.impl.BusLoggingMiddleware;
 import java.time.Clock;
 import java.util.List;
@@ -27,33 +27,33 @@ class EventBusImplTest {
 
   @InjectMocks private EventBusImpl eventBus;
 
-  @Mock private EventHandler<UserCreatedEvent> firstHandler;
+  @Mock private EventPublisher<UserCreatedEvent> firstHandler;
 
-  @Mock private EventHandler<UserCreatedEvent> secondHandler;
+  @Mock private EventPublisher<UserCreatedEvent> secondHandler;
 
-  @Mock private EventHandler<UserCreatedEvent> failingHandler;
+  @Mock private EventPublisher<UserCreatedEvent> failingHandler;
 
-  @Mock private EventHandler<UserCreatedEvent> recordingHandler;
+  @Mock private EventPublisher<UserCreatedEvent> recordingHandler;
 
-  @Mock private EventHandler<UserCreatedEvent> secondFailingHandler;
+  @Mock private EventPublisher<UserCreatedEvent> secondFailingHandler;
 
   @Test
   void publishShouldDeliverEventToAllHandlers() {
     final UserCreatedEvent event = new UserCreatedEvent();
     Mockito.doReturn(List.of(firstHandler, secondHandler))
         .when(handlerFinder)
-        .findAll(event, EventHandler.class);
+        .findAll(event, EventPublisher.class);
 
     eventBus.publish(event);
 
-    Mockito.verify(firstHandler).handle(event);
-    Mockito.verify(secondHandler).handle(event);
+    Mockito.verify(firstHandler).publish(event);
+    Mockito.verify(secondHandler).publish(event);
   }
 
   @Test
   void publishShouldNotFailWhenNoHandlerIsRegistered() {
     final UserCreatedEvent event = new UserCreatedEvent();
-    Mockito.doReturn(List.of()).when(handlerFinder).findAll(event, EventHandler.class);
+    Mockito.doReturn(List.of()).when(handlerFinder).findAll(event, EventPublisher.class);
 
     Assertions.assertThatCode(() -> eventBus.publish(event)).doesNotThrowAnyException();
   }
@@ -62,15 +62,15 @@ class EventBusImplTest {
   void publishShouldNotPropagateHandlerFailuresAndInvokeRemainingHandlers(
       final CapturedOutput output) {
     final UserCreatedEvent event = new UserCreatedEvent();
-    Mockito.doThrow(new IllegalStateException("sensitive")).when(failingHandler).handle(event);
-    Mockito.doThrow(new IllegalStateException("other")).when(secondFailingHandler).handle(event);
+    Mockito.doThrow(new IllegalStateException("sensitive")).when(failingHandler).publish(event);
+    Mockito.doThrow(new IllegalStateException("other")).when(secondFailingHandler).publish(event);
     Mockito.doReturn(List.of(failingHandler, recordingHandler, secondFailingHandler))
         .when(handlerFinder)
-        .findAll(event, EventHandler.class);
+        .findAll(event, EventPublisher.class);
 
     Assertions.assertThatCode(() -> eventBus.publish(event)).doesNotThrowAnyException();
 
-    Mockito.verify(recordingHandler).handle(event);
+    Mockito.verify(recordingHandler).publish(event);
     Assertions.assertThat(output)
         .contains("failed handling UserCreatedEvent (IllegalStateException)")
         .doesNotContain("sensitive");

@@ -1,13 +1,13 @@
 package com.architecture.hexagonal.infrastructure.inbox.service;
 
-import com.architecture.hexagonal.application.port.out.inbox.InboxProcess;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserCreatedData;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserDeletedData;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserUpdatedData;
 import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
 import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
-import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
+import com.architecture.hexagonal.domain.port.in.bus.command.CommandBus;
+import com.architecture.hexagonal.domain.port.out.inbox.InboxProcess;
 import com.architecture.hexagonal.infrastructure.inbox.mapper.UserCommandFromInboxMapper;
 import com.architecture.hexagonal.infrastructure.inbox.naming.InboxNaming;
 import jakarta.annotation.PostConstruct;

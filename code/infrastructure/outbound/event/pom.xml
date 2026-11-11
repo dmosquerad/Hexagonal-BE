@@ -15,4 +15,18 @@
         <module>rabbitmq</module>
     </modules>
 
+    <dependencies>
+        <!-- ============================================ -->
+        <!-- PROJECT MODULES -->
+        <!-- ============================================ -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>bus</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>contract-bus</artifactId>
+        </dependency>
+    </dependencies>
+
 </project>

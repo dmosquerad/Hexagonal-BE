@@ -34,8 +34,8 @@ class InfrastructureArchTest {
           .haveSimpleNameEndingWith("AdapterImpl")
           .and()
           .resideInAnyPackage("..infrastructure.outbound..")
-          .should().implement(Predicates.resideInAPackage("..application.port.."))
-          .because("Outbound classes named *AdapterImpl must implement an application port");
+          .should().implement(Predicates.resideInAnyPackage("..application.port..", "..domain.port.out.."))
+          .because("Outbound classes named *AdapterImpl must implement an outbound port");
 
   @ArchTest
   static final ArchRule inbound_entry_points_should_dispatch_through_application_bus =
@@ -52,7 +52,7 @@ class InfrastructureArchTest {
           .areNotInterfaces()
           .should()
           .dependOnClassesThat()
-          .resideInAnyPackage("..infrastructure.bus.command..", "..infrastructure.bus.query..")
+          .resideInAnyPackage("..domain.port.in.bus.command..", "..domain.port.in.bus.query..")
           .because("REST controllers, Kafka consumer classes in the consumer package, and outbox SchedulingConfigurer implementations must depend on CommandBus or QueryBus");
 
 }

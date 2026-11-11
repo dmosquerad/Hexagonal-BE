@@ -17,4 +17,18 @@
         <module>messaging</module>
     </modules>
 
+    <dependencies>
+        <!-- ============================================ -->
+        <!-- PROJECT MODULES -->
+        <!-- ============================================ -->
+        <dependency>
+            <groupId>com.architecture.hexagonal</groupId>
+            <artifactId>bus</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.architecture.hexagonal</groupId>
+            <artifactId>contract-bus</artifactId>
+        </dependency>
+    </dependencies>
+
 </project>

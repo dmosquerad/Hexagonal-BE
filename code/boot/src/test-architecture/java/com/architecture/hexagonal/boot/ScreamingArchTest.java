@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.boot;
 
-import com.architecture.hexagonal.application.annotation.ApplicationUseCase;
+import com.architecture.hexagonal.domain.annotation.ApplicationUseCase;
 import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;

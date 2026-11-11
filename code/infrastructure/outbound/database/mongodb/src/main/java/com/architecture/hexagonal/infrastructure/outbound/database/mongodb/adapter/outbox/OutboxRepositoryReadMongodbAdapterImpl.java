@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.adapter.outbox;
 
-import com.architecture.hexagonal.application.port.out.outbox.OutboxRepositoryReadPort;
-import com.architecture.hexagonal.application.projector.outbox.OutboxStatusAndAggregateProjector;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
+import com.architecture.hexagonal.domain.model.vo.projector.outbox.OutboxStatusAndAggregateProjector;
+import com.architecture.hexagonal.domain.port.out.repository.outbox.OutboxRepositoryReadPort;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.mapper.outbox.OutboxDoFromMongodbMapper;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.repository.outbox.OutboxReadMongodbRepository;
 import java.util.List;

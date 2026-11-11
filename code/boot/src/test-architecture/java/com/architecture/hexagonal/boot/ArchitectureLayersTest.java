@@ -23,15 +23,15 @@ class ArchitectureLayersTest {
           .because("Package slices must not form dependency cycles");
 
   @ArchTest
-  static final ArchRule application_ports_should_be_grouped_by_direction =
+  static final ArchRule ports_should_be_grouped_by_direction =
       ArchRuleDefinition.classes()
           .that()
-          .resideInAPackage("..application.port..")
+          .resideInAPackage("..domain.port..")
           .should()
           .resideInAnyPackage(
-              "..application.port.in..",
-              "..application.port.out..")
-          .because("Application ports must be classified by direction: inbound or outbound");
+              "..domain.port.in..",
+              "..domain.port.out..")
+          .because("Domain ports must be classified by direction: inbound or outbound");
 
   @ArchTest
   static final ArchRule only_declared_adapters_should_exist =
@@ -59,9 +59,9 @@ class ArchitectureLayersTest {
           .layer("Infrastructure").definedBy("com.architecture.hexagonal.infrastructure..")
           .layer("Boot").definedBy("com.architecture.hexagonal.boot..")
           .layer("Contract").definedBy("com.architecture.hexagonal.contract..")
-          .whereLayer("Domain").mayOnlyBeAccessedByLayers("Application", "Infrastructure")
-          .whereLayer("Application").mayOnlyBeAccessedByLayers("Infrastructure", "Boot")
+          .whereLayer("Domain").mayOnlyBeAccessedByLayers("Application", "Infrastructure", "Boot")
           .whereLayer("Contract").mayOnlyBeAccessedByLayers("Application", "Infrastructure")
+          .whereLayer("Application").mayOnlyBeAccessedByLayers("Boot")
           .whereLayer("Infrastructure").mayOnlyBeAccessedByLayers("Boot")
           .whereLayer("Boot").mayNotBeAccessedByAnyLayer()
           .because("Dependencies point inward from Boot to Infrastructure, Application, and Domain;"

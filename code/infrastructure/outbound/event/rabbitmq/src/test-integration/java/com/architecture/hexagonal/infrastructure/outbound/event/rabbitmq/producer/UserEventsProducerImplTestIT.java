@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.producer;
 
-import com.architecture.hexagonal.application.port.out.outbox.OutboxRepositoryWritePort;
+import com.architecture.hexagonal.domain.port.out.repository.outbox.OutboxRepositoryWritePort;
 import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.UserCreated;
 import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.UserDeleted;
 import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.UserUpdated;

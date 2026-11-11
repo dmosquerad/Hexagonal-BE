@@ -1,9 +1,9 @@
 package com.architecture.hexagonal.application.usecase.user.command.update.impl;
 
-import com.architecture.hexagonal.application.port.out.email.EmailConfigurationPort;
-import com.architecture.hexagonal.application.port.out.user.UserRepositoryReadPort;
-import com.architecture.hexagonal.application.port.out.user.UserRepositoryWritePort;
-import com.architecture.hexagonal.application.port.out.bus.event.EventBus;
+import com.architecture.hexagonal.domain.port.out.configuration.EmailConfigurationPort;
+import com.architecture.hexagonal.domain.port.out.repository.user.UserRepositoryReadPort;
+import com.architecture.hexagonal.domain.port.out.repository.user.UserRepositoryWritePort;
+import com.architecture.hexagonal.domain.port.out.bus.event.EventBus;
 import com.architecture.hexagonal.application.service.email.EmailService;
 import com.architecture.hexagonal.application.service.email.impl.EmailServiceImpl;
 import com.architecture.hexagonal.application.service.user.UserService;

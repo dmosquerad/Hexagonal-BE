@@ -1,14 +1,14 @@
 package com.architecture.hexagonal.application.service.inbox.impl;
 
-import com.architecture.hexagonal.application.annotation.ApplicationService;
-import com.architecture.hexagonal.application.port.out.inbox.InboxProcess;
-import com.architecture.hexagonal.application.port.out.inbox.InboxRepositoryReadPort;
-import com.architecture.hexagonal.application.port.out.inbox.InboxRepositoryWritePort;
-import com.architecture.hexagonal.application.port.out.scheduler.SchedulerConfigurationPort;
 import com.architecture.hexagonal.application.service.inbox.InboxService;
+import com.architecture.hexagonal.domain.annotation.ApplicationService;
 import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
+import com.architecture.hexagonal.domain.port.out.configuration.SchedulerConfigurationPort;
+import com.architecture.hexagonal.domain.port.out.inbox.InboxProcess;
+import com.architecture.hexagonal.domain.port.out.repository.inbox.InboxRepositoryReadPort;
+import com.architecture.hexagonal.domain.port.out.repository.inbox.InboxRepositoryWritePort;
 import java.time.Clock;
 import java.time.OffsetDateTime;
 import java.util.List;

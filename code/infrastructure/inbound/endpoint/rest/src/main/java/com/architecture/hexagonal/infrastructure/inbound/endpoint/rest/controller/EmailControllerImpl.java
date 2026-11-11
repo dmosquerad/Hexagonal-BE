@@ -4,7 +4,7 @@ import com.architecture.hexagonal.contract.bus.model.email.query.GetBlockedRules
 import com.architecture.hexagonal.contract.inbound.endpoint.rest.email.server.controller.EmailsApi;
 import com.architecture.hexagonal.contract.inbound.endpoint.rest.email.server.dto.EmailBlockRulesResponseDto;
 import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;
-import com.architecture.hexagonal.infrastructure.bus.query.QueryBus;
+import com.architecture.hexagonal.domain.port.in.bus.query.QueryBus;
 import com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.mapper.email.EmailBlockRulesDtoMapper;
 import java.time.Clock;
 import java.time.OffsetDateTime;

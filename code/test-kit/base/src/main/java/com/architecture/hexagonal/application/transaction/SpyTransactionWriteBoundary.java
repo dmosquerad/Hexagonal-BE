@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.application.transaction;
 
-import com.architecture.hexagonal.application.port.out.transaction.TransactionWriteBoundary;
+import com.architecture.hexagonal.domain.port.in.transaction.TransactionWriteBoundary;
 import java.util.function.Supplier;
 
 public final class SpyTransactionWriteBoundary implements TransactionWriteBoundary {

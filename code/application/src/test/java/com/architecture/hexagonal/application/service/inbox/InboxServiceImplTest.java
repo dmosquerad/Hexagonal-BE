@@ -1,9 +1,5 @@
 package com.architecture.hexagonal.application.service.inbox;
 
-import com.architecture.hexagonal.application.port.out.inbox.InboxProcess;
-import com.architecture.hexagonal.application.port.out.inbox.InboxRepositoryReadPort;
-import com.architecture.hexagonal.application.port.out.inbox.InboxRepositoryWritePort;
-import com.architecture.hexagonal.application.port.out.scheduler.SchedulerConfigurationPort;
 import com.architecture.hexagonal.application.service.inbox.impl.InboxServiceImpl;
 import com.architecture.hexagonal.domain.data.model.entity.inbox.InboxTestDataBuilder;
 import com.architecture.hexagonal.domain.data.model.vo.inbox.SchedulerInboxConfigurationVoTestDataBuilder;
@@ -12,6 +8,10 @@ import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
 import com.architecture.hexagonal.domain.model.vo.inbox.SchedulerInboxConfigurationVo;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
+import com.architecture.hexagonal.domain.port.out.configuration.SchedulerConfigurationPort;
+import com.architecture.hexagonal.domain.port.out.inbox.InboxProcess;
+import com.architecture.hexagonal.domain.port.out.repository.inbox.InboxRepositoryReadPort;
+import com.architecture.hexagonal.domain.port.out.repository.inbox.InboxRepositoryWritePort;
 import java.time.Clock;
 import java.time.ZoneOffset;
 import java.util.List;

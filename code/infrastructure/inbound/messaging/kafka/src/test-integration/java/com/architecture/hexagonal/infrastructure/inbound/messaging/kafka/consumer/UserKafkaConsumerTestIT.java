@@ -10,7 +10,7 @@ import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserDel
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserUpdatedPayload;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.naming.router.UserMessageConsumerBinding;
 import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
-import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
+import com.architecture.hexagonal.domain.port.in.bus.command.CommandBus;
 import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.consumer.impl.UserKafkaConsumerImpl;
 import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.testutils.command.RegisterInboxCommandTestDataBuilder;

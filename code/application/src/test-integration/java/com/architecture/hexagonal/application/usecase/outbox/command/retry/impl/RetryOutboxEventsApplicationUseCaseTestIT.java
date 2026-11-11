@@ -1,10 +1,10 @@
 package com.architecture.hexagonal.application.usecase.outbox.command.retry.impl;
 
-import com.architecture.hexagonal.application.port.out.scheduler.SchedulerConfigurationPort;
-import com.architecture.hexagonal.application.port.out.outbox.OutboxRepositoryReadPort;
-import com.architecture.hexagonal.application.port.out.outbox.OutboxRepositoryWritePort;
-import com.architecture.hexagonal.application.port.out.outbox.OutboxProcess;
-import com.architecture.hexagonal.application.projector.outbox.OutboxStatusAndAggregateProjector;
+import com.architecture.hexagonal.domain.port.out.configuration.SchedulerConfigurationPort;
+import com.architecture.hexagonal.domain.port.out.repository.outbox.OutboxRepositoryReadPort;
+import com.architecture.hexagonal.domain.port.out.repository.outbox.OutboxRepositoryWritePort;
+import com.architecture.hexagonal.domain.port.out.outbox.OutboxProcess;
+import com.architecture.hexagonal.domain.model.vo.projector.outbox.OutboxStatusAndAggregateProjector;
 import com.architecture.hexagonal.application.service.outbox.OutboxService;
 import com.architecture.hexagonal.application.service.outbox.impl.OutboxServiceImpl;
 import com.architecture.hexagonal.contract.bus.model.retry.command.RetryOutboxeventCommand;

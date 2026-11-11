@@ -1,13 +1,13 @@
 package com.architecture.hexagonal.infrastructure.bus.query.impl;
 
-import com.architecture.hexagonal.application.port.in.bus.query.QueryHandler;
 import com.architecture.hexagonal.application.usecase.user.query.getall.impl.GetAllUsersUseCaseImpl;
 import com.architecture.hexagonal.contract.bus.model.user.query.GetUsersFilteredQuery;
 import com.architecture.hexagonal.domain.data.time.TestClock;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResultVo;
+import com.architecture.hexagonal.domain.port.in.bus.middleware.BusMiddleware;
+import com.architecture.hexagonal.domain.port.in.bus.query.QueryHandler;
 import com.architecture.hexagonal.infrastructure.bus.BusHandlerFinder;
-import com.architecture.hexagonal.infrastructure.bus.middleware.BusMiddleware;
 import com.architecture.hexagonal.infrastructure.bus.middleware.impl.BusLoggingMiddleware;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;

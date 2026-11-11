@@ -1,12 +1,12 @@
 package com.architecture.hexagonal.application.usecase.user.command.delete.impl;
 
-import com.architecture.hexagonal.application.port.out.transaction.TransactionWriteBoundary;
 import com.architecture.hexagonal.application.service.user.UserService;
 import com.architecture.hexagonal.application.transaction.SpyTransactionWriteBoundary;
 import com.architecture.hexagonal.application.usecase.user.command.DeleteUserInputTestDataBuilder;
 import com.architecture.hexagonal.contract.bus.model.user.command.DeleteUserCommand;
 import com.architecture.hexagonal.domain.data.model.entity.user.UserTestDataBuilder;
 import com.architecture.hexagonal.domain.model.entity.user.User;
+import com.architecture.hexagonal.domain.port.in.transaction.TransactionWriteBoundary;
 import java.util.function.Supplier;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;

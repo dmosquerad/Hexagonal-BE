@@ -17,7 +17,7 @@
         <!-- ============================================ -->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>application</artifactId>
+            <artifactId>domain</artifactId>
         </dependency>
         <!-- ============================================ -->
         <!-- SPRINGBOOT -->
@@ -26,6 +26,9 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
+        <!-- ============================================ -->
+        <!-- TEST -->
+        <!-- ============================================ -->
         <dependency>
             <groupId>org.springframework.batch</groupId>
             <artifactId>spring-batch-test</artifactId>
