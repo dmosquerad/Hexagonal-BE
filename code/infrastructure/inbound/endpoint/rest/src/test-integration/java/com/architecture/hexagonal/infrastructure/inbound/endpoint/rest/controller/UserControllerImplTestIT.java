@@ -8,8 +8,8 @@ import com.architecture.hexagonal.contract.bus.model.user.query.GetUsersFiltered
 import com.architecture.hexagonal.contract.bus.model.user.command.PatchUserCommand;
 import com.architecture.hexagonal.contract.bus.model.user.command.UpdateUserCommand;
 import com.architecture.hexagonal.contract.bus.model.user.query.UserExistsQuery;
-import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
-import com.architecture.hexagonal.infrastructure.bus.query.QueryBus;
+import com.architecture.hexagonal.domain.port.in.bus.command.CommandBus;
+import com.architecture.hexagonal.domain.port.in.bus.query.QueryBus;
 import com.architecture.hexagonal.domain.data.time.TestClock;
 import com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.mapper.user.*;
 import com.architecture.hexagonal.domain.data.model.vo.pagination.PaginationVoTestDataBuilder;

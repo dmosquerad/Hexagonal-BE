@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.boot.config;
 
-import com.architecture.hexagonal.application.annotation.ApplicationUseCase;
+import com.architecture.hexagonal.domain.annotation.ApplicationUseCase;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.context.annotation.ComponentScan;

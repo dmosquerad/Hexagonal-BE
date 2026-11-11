@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.event;
 
-import com.architecture.hexagonal.application.port.out.outbox.OutboxRepositoryWritePort;
+import com.architecture.hexagonal.domain.port.out.repository.outbox.OutboxRepositoryWritePort;
 import com.architecture.hexagonal.contract.bus.model.user.event.UserCreatedEvent;
 import com.architecture.hexagonal.contract.bus.model.user.event.UserDeletedEvent;
 import com.architecture.hexagonal.contract.bus.model.user.event.UserUpdatedEvent;
@@ -26,11 +26,11 @@ class UserEventHandlersTestIT {
   private static final String USER_NAME = "Test User";
   private static final String USER_EMAIL = "test@example.com";
 
-  @Autowired private UserCreatedEventHandler userCreatedEventHandler;
+  @Autowired private UserCreatedEventPublisher userCreatedEventHandler;
 
-  @Autowired private UserUpdatedEventHandler userUpdatedEventHandler;
+  @Autowired private UserUpdatedEventPublisher userUpdatedEventHandler;
 
-  @Autowired private UserDeletedEventHandler userDeletedEventHandler;
+  @Autowired private UserDeletedEventPublisher userDeletedEventHandler;
 
   @Autowired private TransactionTemplate transactionTemplate;
 
@@ -52,7 +52,7 @@ class UserEventHandlersTestIT {
 
     transactionTemplate.execute(
         status -> {
-          userCreatedEventHandler.handle(event);
+          userCreatedEventHandler.publish(event);
           return null;
         });
 
@@ -77,7 +77,7 @@ class UserEventHandlersTestIT {
 
     transactionTemplate.execute(
         status -> {
-          userUpdatedEventHandler.handle(event);
+          userUpdatedEventHandler.publish(event);
           return null;
         });
 
@@ -102,7 +102,7 @@ class UserEventHandlersTestIT {
 
     transactionTemplate.execute(
         status -> {
-          userDeletedEventHandler.handle(event);
+          userDeletedEventHandler.publish(event);
           return null;
         });
 

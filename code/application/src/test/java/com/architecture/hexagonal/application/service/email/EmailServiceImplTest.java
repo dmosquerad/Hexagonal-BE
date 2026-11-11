@@ -1,10 +1,10 @@
 package com.architecture.hexagonal.application.service.email;
 
-import com.architecture.hexagonal.application.port.out.email.EmailConfigurationPort;
 import com.architecture.hexagonal.application.service.email.impl.EmailServiceImpl;
 import com.architecture.hexagonal.domain.data.model.vo.email.EmailBlockRulesVoTestDataBuilder;
 import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;
 import com.architecture.hexagonal.domain.model.vo.email.factory.EmailVoFactory;
+import com.architecture.hexagonal.domain.port.out.configuration.EmailConfigurationPort;
 import java.util.Set;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;

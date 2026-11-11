@@ -1,10 +1,5 @@
 package com.architecture.hexagonal.application.service.outbox;
 
-import com.architecture.hexagonal.application.port.out.outbox.OutboxProcess;
-import com.architecture.hexagonal.application.port.out.outbox.OutboxRepositoryReadPort;
-import com.architecture.hexagonal.application.port.out.outbox.OutboxRepositoryWritePort;
-import com.architecture.hexagonal.application.port.out.scheduler.SchedulerConfigurationPort;
-import com.architecture.hexagonal.application.projector.outbox.OutboxStatusAndAggregateProjector;
 import com.architecture.hexagonal.application.service.outbox.impl.OutboxServiceImpl;
 import com.architecture.hexagonal.domain.data.model.entity.outbox.OutboxTestDataBuilder;
 import com.architecture.hexagonal.domain.data.model.vo.outbox.SchedulerOutboxConfigurationVoTestDataBuilder;
@@ -13,6 +8,11 @@ import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
 import com.architecture.hexagonal.domain.model.vo.outbox.SchedulerOutboxConfigurationVo;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
+import com.architecture.hexagonal.domain.model.vo.projector.outbox.OutboxStatusAndAggregateProjector;
+import com.architecture.hexagonal.domain.port.out.configuration.SchedulerConfigurationPort;
+import com.architecture.hexagonal.domain.port.out.outbox.OutboxProcess;
+import com.architecture.hexagonal.domain.port.out.repository.outbox.OutboxRepositoryReadPort;
+import com.architecture.hexagonal.domain.port.out.repository.outbox.OutboxRepositoryWritePort;
 import java.time.Clock;
 import java.time.ZoneOffset;
 import java.util.List;

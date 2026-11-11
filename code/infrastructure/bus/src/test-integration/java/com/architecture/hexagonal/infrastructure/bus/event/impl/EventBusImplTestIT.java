@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.bus.event.impl;
 
-import com.architecture.hexagonal.application.port.out.bus.event.EventBus;
+import com.architecture.hexagonal.domain.port.out.bus.event.EventBus;
 import com.architecture.hexagonal.contract.bus.model.user.event.UserCreatedEvent;
 import com.architecture.hexagonal.infrastructure.bus.BusHandlerFinder;
 import com.architecture.hexagonal.infrastructure.bus.config.TestApplication;

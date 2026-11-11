@@ -1,9 +1,9 @@
 package com.architecture.hexagonal.infrastructure.bus.query.impl;
 
-import com.architecture.hexagonal.application.port.in.bus.query.QueryHandler;
+import com.architecture.hexagonal.domain.port.in.bus.middleware.BusMiddleware;
+import com.architecture.hexagonal.domain.port.in.bus.query.QueryBus;
+import com.architecture.hexagonal.domain.port.in.bus.query.QueryHandler;
 import com.architecture.hexagonal.infrastructure.bus.BusHandlerFinder;
-import com.architecture.hexagonal.infrastructure.bus.middleware.BusMiddleware;
-import com.architecture.hexagonal.infrastructure.bus.query.QueryBus;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

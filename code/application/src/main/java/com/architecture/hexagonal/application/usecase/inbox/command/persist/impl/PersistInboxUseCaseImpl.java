@@ -1,15 +1,15 @@
 package com.architecture.hexagonal.application.usecase.inbox.command.persist.impl;
 
-import com.architecture.hexagonal.application.annotation.ApplicationUseCase;
-import com.architecture.hexagonal.application.port.in.bus.command.CommandHandler;
-import com.architecture.hexagonal.application.port.out.transaction.TransactionWriteBoundary;
 import com.architecture.hexagonal.application.service.inbox.InboxService;
 import com.architecture.hexagonal.contract.bus.model.inbox.command.RegisterInboxCommand;
+import com.architecture.hexagonal.domain.annotation.ApplicationUseCase;
 import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.domain.model.vo.payload.MessageHeaderVo;
 import com.architecture.hexagonal.domain.model.vo.payload.PayloadVo;
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
+import com.architecture.hexagonal.domain.port.in.bus.command.CommandHandler;
+import com.architecture.hexagonal.domain.port.in.transaction.TransactionWriteBoundary;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 

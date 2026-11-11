@@ -1,10 +1,10 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.postgresql.adapter;
 
-import com.architecture.hexagonal.application.projector.user.UserEmailProjectorTestDataBuilder;
 import com.architecture.hexagonal.domain.data.model.entity.user.UserTestDataBuilder;
 import com.architecture.hexagonal.domain.data.model.vo.email.EmailBlockRulesVoTestDataBuilder;
 import com.architecture.hexagonal.domain.data.model.vo.pagination.PaginationResultVoTestDataBuilder;
 import com.architecture.hexagonal.domain.data.model.vo.pagination.PaginationVoTestDataBuilder;
+import com.architecture.hexagonal.domain.data.model.vo.projector.user.UserEmailProjectorTestDataBuilder;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResultVo;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationVo;

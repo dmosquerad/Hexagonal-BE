@@ -1,8 +1,5 @@
 package com.architecture.hexagonal.application.usecase.user.query.getall.impl;
 
-import com.architecture.hexagonal.application.port.out.transaction.TransactionReadBoundary;
-import com.architecture.hexagonal.application.projector.user.UserEmailProjector;
-import com.architecture.hexagonal.application.projector.user.UserEmailProjectorTestDataBuilder;
 import com.architecture.hexagonal.application.service.email.EmailService;
 import com.architecture.hexagonal.application.service.user.UserService;
 import com.architecture.hexagonal.application.transaction.SpyTransactionReadBoundary;
@@ -11,10 +8,13 @@ import com.architecture.hexagonal.contract.bus.model.user.query.GetUsersFiltered
 import com.architecture.hexagonal.domain.data.model.vo.email.EmailBlockRulesVoTestDataBuilder;
 import com.architecture.hexagonal.domain.data.model.vo.pagination.PaginationResultVoTestDataBuilder;
 import com.architecture.hexagonal.domain.data.model.vo.pagination.PaginationVoTestDataBuilder;
+import com.architecture.hexagonal.domain.data.model.vo.projector.user.UserEmailProjectorTestDataBuilder;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResultVo;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationVo;
+import com.architecture.hexagonal.domain.model.vo.projector.user.UserEmailProjector;
+import com.architecture.hexagonal.domain.port.in.transaction.TransactionReadBoundary;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -18,7 +18,7 @@
     <!-- JAVA & MVN -->
     <!-- ============================================ -->
     <java.version>25</java.version>
-    <mvn.version>3.9.16</mvn.version>
+    <mvn.version>3.9.15</mvn.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- ============================================ -->
     <!-- SPRING DOC -->
@@ -55,8 +55,8 @@
     <module>contract</module>
     <module>test-kit</module>
     <module>domain</module>
-    <module>application</module>
     <module>infrastructure</module>
+    <module>application</module>
     <module>boot</module>
   </modules>
 
@@ -65,30 +65,6 @@
       <!-- ============================================ -->
       <!-- PROJECT MODULES -->
       <!-- ============================================ -->
-      <!-- ============================================ -->
-      <!-- BOOT -->
-      <!-- ============================================ -->
-      <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>boot</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <!-- ============================================ -->
-      <!-- APPLICATION -->
-      <!-- ============================================ -->
-      <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>application</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <!-- ============================================ -->
-      <!-- DOMAIN -->
-      <!-- ============================================ -->
-      <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>domain</artifactId>
-        <version>${project.version}</version>
-      </dependency>
       <!-- ============================================ -->
       <!-- CONTRACT -->
       <!-- ============================================ -->
@@ -99,7 +75,12 @@
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>contract-inbound-rest</artifactId>
+        <artifactId>contract-inbound-user-rest-server</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>contract-inbound-email-rest-server</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -112,6 +93,34 @@
         <artifactId>contract-outbound-rabbitmq</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <!-- ============================================ -->
+      <!-- TEST KIT -->
+      <!-- ============================================ -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>test-kit-base</artifactId>
+        <version>${project.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <!-- ============================================ -->
+      <!-- DOMAIN -->
+      <!-- ============================================ -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>domain</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <!-- ============================================ -->
+      <!-- APPLICATION -->
+      <!-- ============================================ -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>application</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <!-- ============================================ -->
+      <!-- INFRASTRUCTURE -->
+      <!-- ============================================ -->
       <!-- ============================================ -->
       <!-- INFRASTRUCTURE INBOUND -->
       <!-- ============================================ -->
@@ -133,16 +142,6 @@
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>scheduled-inbox</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>inbound-user-rest-server</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>inbound-email-rest-server</artifactId>
         <version>${project.version}</version>
       </dependency>
       <!-- ============================================ -->
@@ -201,15 +200,6 @@
         <version>${project.version}</version>
       </dependency>
       <!-- ============================================ -->
-      <!-- TEST MOTHER CLASS -->
-      <!-- ============================================ -->
-      <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>test-kit-base</artifactId>
-        <version>${project.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <!-- ============================================ -->
       <!-- MAPSTRUCT -->
       <!-- ============================================ -->
       <dependency>
@@ -248,17 +238,6 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
-
-  <dependencies>
-    <!-- ============================================ -->
-    <!-- TESTING -->
-    <!-- ============================================ -->
-    <dependency>
-      <groupId>com.tngtech.archunit</groupId>
-      <artifactId>archunit-junit5</artifactId>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
 
   <build>
     <plugins>

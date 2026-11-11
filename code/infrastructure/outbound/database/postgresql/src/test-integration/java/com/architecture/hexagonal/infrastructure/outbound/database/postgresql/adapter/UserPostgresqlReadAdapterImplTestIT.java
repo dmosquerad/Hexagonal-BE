@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.postgresql.adapter;
 
-import com.architecture.hexagonal.application.projector.user.UserEmailProjectorTestDataBuilder;
+import com.architecture.hexagonal.domain.data.model.vo.projector.user.UserEmailProjectorTestDataBuilder;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationVo;
 import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.config.PostgresqlIT;

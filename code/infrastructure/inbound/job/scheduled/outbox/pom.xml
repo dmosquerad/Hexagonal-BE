@@ -16,11 +16,7 @@
         <!-- PROJECT MODULES -->
         <!-- ============================================ -->
         <dependency>
-            <groupId>com.architecture.hexagonal</groupId>
-            <artifactId>bus</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.architecture.hexagonal</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>configuration</artifactId>
         </dependency>
         <!-- ============================================ -->

@@ -10,7 +10,7 @@ import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
 import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
 import com.architecture.hexagonal.domain.data.model.entity.inbox.InboxTestDataBuilder;
 import com.architecture.hexagonal.domain.data.model.vo.payload.PayloadVoTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
+import com.architecture.hexagonal.domain.port.in.bus.command.CommandBus;
 import com.architecture.hexagonal.infrastructure.inbox.mapper.UserCommandFromInboxMapper;
 import com.architecture.hexagonal.infrastructure.inbox.naming.InboxNaming;
 import java.util.UUID;

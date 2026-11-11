@@ -1,6 +1,5 @@
 package com.architecture.hexagonal.boot.config;
 
-import com.architecture.hexagonal.application.annotation.ApplicationUseCase;
 import com.architecture.hexagonal.application.usecase.email.query.getblockedrules.impl.GetBlockedRulesUseCaseImpl;
 import com.architecture.hexagonal.application.usecase.inbox.command.persist.impl.PersistInboxUseCaseImpl;
 import com.architecture.hexagonal.application.usecase.inbox.command.retry.impl.RetryInboxUseCaseImpl;
@@ -12,6 +11,7 @@ import com.architecture.hexagonal.application.usecase.user.command.update.impl.U
 import com.architecture.hexagonal.application.usecase.user.query.exists.impl.UserExistsUseCaseImpl;
 import com.architecture.hexagonal.application.usecase.user.query.findbyid.impl.FindUserByUserIdUseCaseImpl;
 import com.architecture.hexagonal.application.usecase.user.query.getall.impl.GetAllUsersUseCaseImpl;
+import com.architecture.hexagonal.domain.annotation.ApplicationUseCase;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.config.BeanDefinition;

@@ -1,11 +1,11 @@
 package com.architecture.hexagonal.application.usecase.email.query.getblockedrules.impl;
 
-import com.architecture.hexagonal.application.annotation.ApplicationUseCase;
-import com.architecture.hexagonal.application.port.in.bus.query.QueryHandler;
-import com.architecture.hexagonal.application.port.out.transaction.TransactionReadBoundary;
 import com.architecture.hexagonal.application.service.email.EmailService;
 import com.architecture.hexagonal.contract.bus.model.email.query.GetBlockedRulesQuery;
+import com.architecture.hexagonal.domain.annotation.ApplicationUseCase;
 import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;
+import com.architecture.hexagonal.domain.port.in.bus.query.QueryHandler;
+import com.architecture.hexagonal.domain.port.in.transaction.TransactionReadBoundary;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 

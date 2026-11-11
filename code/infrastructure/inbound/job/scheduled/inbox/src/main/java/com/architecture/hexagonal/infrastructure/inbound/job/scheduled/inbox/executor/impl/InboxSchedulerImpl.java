@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.infrastructure.inbound.job.scheduled.inbox.executor.impl;
 
-import com.architecture.hexagonal.application.port.out.scheduler.SchedulerConfigurationPort;
 import com.architecture.hexagonal.contract.bus.model.retry.command.RetryInboxeventCommand;
-import com.architecture.hexagonal.infrastructure.bus.command.CommandBus;
+import com.architecture.hexagonal.domain.port.in.bus.command.CommandBus;
+import com.architecture.hexagonal.domain.port.out.configuration.SchedulerConfigurationPort;
 import com.architecture.hexagonal.infrastructure.inbound.job.scheduled.inbox.executor.InboxScheduler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;

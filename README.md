@@ -10,8 +10,8 @@ The goal is to keep the business core isolated from frameworks and infrastructur
 
 It is organized around these main Maven modules:
 
-- **Domain**: business model and core rules, framework-agnostic
-- **Application**: use cases, ports, and services that orchestrate the domain
+- **Domain**: business model, core rules, and ports, framework-agnostic
+- **Application**: use cases and services that orchestrate the domain
 - **Infrastructure**: inbound adapters (REST, Kafka, schedulers), outbound adapters (PostgreSQL, MongoDB, RabbitMQ, configuration), and the Outbox/Inbox processing components
 - **Contract**: OpenAPI and AsyncAPI contracts, plus the CQRS bus contracts
 - **Test-kit**: shared test builders and helpers
@@ -45,18 +45,18 @@ Hexagonal-BE/
 │   │       └── event/rabbitmq/              # AsyncAPI event payloads and UserEventsProducer port
 │   ├── domain/                              # Framework-agnostic domain model
 │   │   └── src/main/java/.../domain/
+│   │       ├── annotation/                  # Stereotypes (@ApplicationService, @ApplicationUseCase)
 │   │       ├── model/aggregate/             # Aggregate roots (e.g. Order)
 │   │       ├── model/entity/                # Entities (User, Inbox, Outbox, OrderLine)
-│   │       ├── model/vo/                    # Value objects (email, scheduler configuration)
+│   │       ├── model/vo/                    # Value objects (email, payload, pagination, scheduler configuration) and projectors (user email, outbox status/aggregate)
+│   │       ├── port/in/                     # Ports In: CQRS bus contracts (command, query, middleware) and transaction boundaries
+│   │       ├── port/out/                    # Ports Out: repositories (user, inbox, outbox), configuration, inbox/outbox processing, event bus and publishers
+│   │       ├── service/                     # Domain services (EmailBlockPolicy)
 │   │       └── exception/                   # Domain exceptions
-│   ├── application/                         # Use cases, ports, services
+│   ├── application/                         # Use cases and application services
 │   │   └── src/main/java/.../application/
-│   │       ├── port/in/bus/                 # Ports In: command, query and event handler contracts
-│   │       ├── port/out/                    # Ports Out: user, email, inbox, outbox, scheduler, transaction, event bus
 │   │       ├── usecase/                     # Use case implementations (user, email, inbox, outbox)
-│   │       ├── service/                     # Application services (user, email, inbox, outbox)
-│   │       ├── projector/                   # Projectors (user email, outbox status/aggregate)
-│   │       └── annotation/                  # Stereotypes (@ApplicationService, @ApplicationUseCase)
+│   │       └── service/                     # Application services (user, email, inbox, outbox)
 │   ├── infrastructure/
 │   │   ├── bus/                             # CQRS CommandBus / QueryBus implementations
 │   │   ├── inbound/
@@ -88,46 +88,83 @@ Each Maven module follows the same source layout: `src/main/java`, `src/test/jav
 
 ```mermaid
 flowchart TB
-    COMP["Boot · Composition Root"]
+    BOOT["Boot · Composition Root<br/>(scans com.architecture.hexagonal)"]
     Client([HTTP Client])
     KafkaBroker([Kafka Broker])
 
     subgraph CONTRACT["Contract"]
-        OAS["OpenAPI stubs<br/>user / email"]
-        KDTO["Kafka consumer contracts"]
-        RDTO["RabbitMQ event DTOs"]
-        BPOJO["Command / Query POJOs<br/>(contract-bus)"]
+        OAS["REST server (OpenAPI)<br/>contract-inbound-user-rest-server<br/>contract-inbound-email-rest-server"]
+        KCON["Kafka consumer<br/>(AsyncAPI)"]
+        RCON["RabbitMQ events<br/>(AsyncAPI)"]
+        BCON["Bus<br/>(commands, queries, events)"]
     end
 
     subgraph INBOUND["Infrastructure · Inbound"]
-        REST[REST Controllers]
-        KAFKA[Kafka Consumer]
-        SCHED[Outbox / Inbox Schedulers]
-        PROC["Inbox / Outbox process services"]
+        REST["REST Controllers"]
+        KAFKA["Kafka Consumers"]
+        SCHED["Outbox / Inbox Schedulers"]
     end
 
     subgraph BUS["Infrastructure · Bus"]
-        CB["CommandBus / QueryBus"]
-        EVB["Event bus port<br/>(EventBusImpl)"]
+        CB["Command Bus"]
+        QB["Query Bus"]
+        EVB["Event Bus"]
+    end
+
+    subgraph DOMAIN["Domain"]
+        direction TB
+        MODEL["Domain Model"]
+        subgraph PIN["Ports In"]
+            direction TB
+            subgraph PIN_BUS["Bus"]
+                CBP["Command bus"]
+                CHP["Command handler"]
+                QBP["Query bus"]
+                QHP["Query handler"]
+            end
+            subgraph PIN_TX["Transaction"]
+                TXP["Transaction boundaries"]
+            end
+        end
+        subgraph POUT["Ports Out"]
+            direction TB
+            subgraph POUT_BUS["Bus"]
+                EVBP["Event bus"]
+                EVPP["Event publisher"]
+            end
+            subgraph POUT_PROC["Processing"]
+                OPP["Outbox process"]
+                IPP["Inbox process"]
+            end
+            subgraph POUT_REPO["Repositories"]
+                REPO["Repository ports"]
+            end
+            subgraph POUT_CFG["Configuration"]
+                CFGP["Configuration ports"]
+            end
+        end
     end
 
     subgraph APP["Application"]
-        direction LR
-        HANDLERS[Command / Query Handlers]
-        UC[Use Cases and Services]
-        subgraph DOMAIN["Domain"]
-            direction TB
-            MODEL[Domain Model]
-        end
-        PIN["Inbox / Outbox ports"]
-        POUT["Outbound ports"]
+        direction TB
+        UC["Use cases"]
+        SVC["Services"]
+    end
+
+    subgraph PROCESS["Infrastructure · Outbox / Inbox processing"]
+        OPS["Outbox processing"]
+        IPS["Inbox processing"]
+    end
+
+    subgraph TRANSACTION["Infrastructure · Transaction"]
+        TX["Spring transaction"]
     end
 
     subgraph OUTBOUND["Infrastructure · Outbound"]
         DB["Database adapters"]
-        MSG["RabbitMQ producer"]
-        CFG[Configuration adapter]
-        EVH["Domain event handlers"]
+        CFG["Configuration adapters"]
+        PUB["Event publishers"]
+        PROD["Event producer<br/>(after commit)"]
     end
 
     subgraph EXTERNAL["External systems"]
@@ -137,44 +174,63 @@ flowchart TB
         Config[(Configuration)]
     end
 
-    Client --> REST
-    KafkaBroker --> KAFKA
-    OAS -.implements.-> REST
-    KAFKA -.uses.-> KDTO
-    CB -.uses.-> BPOJO
-    MSG -.uses.-> RDTO
+    Client -- "calls" --> REST
+    KafkaBroker -- "consumes" --> KAFKA
+    REST -. "implements" .-> OAS
+    KAFKA -. "implements" .-> KCON
+    PROD -. "uses" .-> RCON
+    OPS -. "uses" .-> RCON
+    CB -. "uses" .-> BCON
+    QB -. "uses" .-> BCON
+    UC -. "uses" .-> BCON
+    IPS -. "uses" .-> BCON
+    REST -. "uses" .-> CBP
+    REST -. "uses" .-> QBP
+    KAFKA -. "uses" .-> CBP
+    SCHED -. "uses" .-> CBP
+    CB -. "implements" .-> CBP
+    QB -. "implements" .-> QBP
+    CB -- "dispatches to" --> UC
+    QB -- "dispatches to" --> UC
+    UC -. "implements" .-> CHP
+    UC -. "implements" .-> QHP
+    UC -. "uses" .-> TXP
+    TX -. "implements" .-> TXP
 
-    REST --> CB
-    KAFKA --> CB
-    SCHED --> CB
-    PROC --> CB
-    PROC -.implements.-> PIN
-    PROC -- "Outbox events" --> MSG
+    UC -- "calls" --> SVC
+    SVC -. "uses" .-> MODEL
+    SVC -. "uses" .-> REPO
+    SVC -. "uses" .-> OPP
+    SVC -. "uses" .-> IPP
+    SVC -. "uses" .-> EVBP
 
-    CB --> HANDLERS
-    HANDLERS --> UC
-    UC --> MODEL
-    UC --> PIN
-    UC --> POUT
-    UC -- "publish events" --> EVB
-    EVB --> EVH
-    EVH -- "Spring events" --> MSG
+    IPS -. "uses" .-> CBP
+    OPS -. "implements" .-> OPP
+    IPS -. "implements" .-> IPP
+    EVB -. "implements" .-> EVBP
+    EVB -. "uses" .-> EVPP
+    EVB -- "routes to" --> PUB
+    PUB -. "implements" .-> EVPP
+    PUB -- "Spring ApplicationEvent (no port)" --> PROD
+    OPS -- "Spring ApplicationEvent (no port)" --> PROD
 
-    POUT -.implemented by.-> DB
-    POUT -.implemented by.-> MSG
-    POUT -.implemented by.-> CFG
+    DB -. "implements" .-> REPO
+    CFG -. "implements" .-> CFGP
 
-    DB --> POSTGRES
-    DB --> MONGO
-    MSG --> RABBIT
-    CFG --> Config
+    DB -- "connects to" --> POSTGRES
+    DB -- "connects to" --> MONGO
+    PROD -- "publishes to" --> RABBIT
+    CFG -- "reads from" --> Config
 
-    COMP -.wires.-> INBOUND
-    COMP -.wires.-> BUS
-    COMP -.wires.-> OUTBOUND
+    BOOT -. "wires" .-> INBOUND
+    BOOT -. "wires" .-> BUS
+    BOOT -. "wires" .-> APP
+    BOOT -. "wires" .-> PROCESS
+    BOOT -. "wires" .-> TRANSACTION
+    BOOT -. "wires" .-> OUTBOUND
 ```
 
-> Read top to bottom: entry points → inbound adapters → bus → application → outbound adapters → external systems. &nbsp;&nbsp; `-->` runtime flow &nbsp;&nbsp; `-.->` implementation/wiring
+> Read top to bottom: entry points → inbound adapters → bus → application → outbound adapters → external systems. &nbsp;&nbsp; `-- calls -->` runtime flow &nbsp;&nbsp; `-. implements .->` implements a port &nbsp;&nbsp; `-. uses .->` depends on a port, model or contract
 
 ## 🚀 Quick Start
 
@@ -204,23 +260,24 @@ Application available at: **http://localhost:8080/api**
 ## 📚 Modules
 
 ### Domain
-Framework-agnostic module containing the core business model. Has no Spring dependency.
+Framework-agnostic module containing the core business model and the ports it defines. Has no Spring dependency.
 
 **Content:**
 - Entities (`User`, `Inbox`, `Outbox`, `OrderLine`) and aggregates (`Order`, `AggregateRoot`)
 - Email value objects (`EmailVo`, `EmailBlockRulesVo`) with factories and predicates
 - Scheduler configuration value objects for Outbox and Inbox
+- Projectors (e.g. `UserEmailProjector`, `OutboxStatusAndAggregateProjector`)
+- Ports In: `CommandBus`, `QueryBus`, `CommandHandler`, `QueryHandler`, `BusMiddleware`, and read/write transaction boundaries
+- Ports Out: user, inbox, and outbox repositories, email and scheduler configuration, Inbox/Outbox processing, and event bus/publisher
 - Domain exceptions (`DomainException`, `InvalidValueException`, `ResourceNotFoundException`)
 
 ### Application
-Orchestrates the domain through use cases and defines the port contracts consumed by infrastructure.
+Orchestrates the domain through use cases and services. It implements the Ports In and uses the Ports Out.
 
 **Content:**
 - Use cases for User CRUD (create, get all, find by id, exists, update, patch, delete) and email block-rules retrieval
 - Use cases for Outbox retry and Inbox persist/retry
-- Ports In: `CommandHandler`, `QueryHandler`, and `EventHandler` contracts for the CQRS buses
-- Ports Out: user, email configuration, outbox, inbox, scheduler configuration, event bus, and read/write transaction boundaries
-- Application services and projectors (e.g. `UserEmailProjector`, `OutboxStatusAndAggregateProjector`)
+- Application services for user, email, inbox, and outbox
 
 ### Infrastructure
 Adapters that connect the application ports to external technologies. Each concern is a separate Maven module.
@@ -233,8 +290,8 @@ Contracts are grouped by their consumer/direction under `code/contract`, indepen
 Holds the OpenAPI specifications and generates server-side stubs consumed by the inbound controllers.
 
 **Content:**
-- `inbound-user-rest-server`: OpenAPI spec for the User API
-- `inbound-email-rest-server`: OpenAPI spec for the Email rules API
+- `contract-inbound-user-rest-server`: OpenAPI spec for the User API
+- `contract-inbound-email-rest-server`: OpenAPI spec for the Email rules API
 - Generated Java interfaces implemented by REST controllers
 
 #### Inbound — Kafka (`code/contract/inbound/messaging/kafka`)
@@ -331,7 +388,7 @@ Application composition root that wires all modules and launches Spring Boot.
 ## 🔌 Ports and Adapters
 
 ### Ports (Interfaces)
-Ports are contracts defined in the application layer to decouple use cases from external technologies.
+Ports are contracts defined in the domain layer (`domain/port`) to decouple use cases from external technologies.
 
 - **Ports In**: define how the application is invoked (input boundary for use cases)
 - **Ports Out**: define what external capabilities the application needs (output boundary)

@@ -1,9 +1,9 @@
 package com.architecture.hexagonal.application;
 
-import com.architecture.hexagonal.application.annotation.ApplicationService;
-import com.architecture.hexagonal.application.annotation.ApplicationUseCase;
-import com.architecture.hexagonal.application.port.in.bus.command.CommandHandler;
-import com.architecture.hexagonal.application.port.in.bus.query.QueryHandler;
+import com.architecture.hexagonal.domain.annotation.ApplicationService;
+import com.architecture.hexagonal.domain.annotation.ApplicationUseCase;
+import com.architecture.hexagonal.domain.port.in.bus.command.CommandHandler;
+import com.architecture.hexagonal.domain.port.in.bus.query.QueryHandler;
 import com.tngtech.archunit.core.domain.JavaClass.Predicates;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -52,8 +52,8 @@ class ApplicationArchTest {
           .that()
           .resideInAPackage("..application.usecase..impl..")
           .should()
-          .dependOnClassesThat(Predicates.resideInAPackage("..application.port.out..")
-            .and(DescribedPredicate.not(Predicates.resideInAPackage("..application.port.out.transaction.."))))
+          .dependOnClassesThat(Predicates.resideInAnyPackage("..domain.port.out..")
+            .and(DescribedPredicate.not(Predicates.resideInAnyPackage("..domain.port.out.transaction.."))))
           .because("Use cases must access outbound ports through application services, except for transaction boundaries");
 
   @ArchTest
@@ -64,7 +64,7 @@ class ApplicationArchTest {
             .areAnnotatedWith(ApplicationUseCase.class)
             .should()
             .haveRawType(Predicates.resideInAPackage("..application.service..")
-                .or(Predicates.resideInAPackage("..application.port.out.transaction..")))
+                .or(Predicates.resideInAnyPackage("..domain.port.in.transaction..")))
             .because("Use case fields may reference application services or outbound transaction boundaries");
 
   @ArchTest
@@ -74,7 +74,7 @@ class ApplicationArchTest {
             .areDeclaredInClassesThat()
             .areAnnotatedWith(ApplicationService.class)
             .should()
-            .haveRawType(Predicates.resideInAPackage("..application.port.out..").or(Predicates.assignableTo(Clock.class)))
+            .haveRawType(Predicates.resideInAnyPackage("..domain.port.out..").or(Predicates.assignableTo(Clock.class)))
             .because("Application service fields may reference outbound ports or java.time.Clock");
 
 }

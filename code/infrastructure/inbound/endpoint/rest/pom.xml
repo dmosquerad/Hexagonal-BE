@@ -16,16 +16,12 @@
         <!-- PROJECT MODULES -->
         <!-- ============================================ -->
         <dependency>
-            <groupId>com.architecture.hexagonal</groupId>
-            <artifactId>bus</artifactId>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>contract-inbound-user-rest-server</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.architecture.hexagonal</groupId>
-            <artifactId>inbound-user-rest-server</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.architecture.hexagonal</groupId>
-            <artifactId>inbound-email-rest-server</artifactId>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>contract-inbound-email-rest-server</artifactId>
         </dependency>
         <!-- ============================================ -->
         <!-- SPRINGBOOT -->

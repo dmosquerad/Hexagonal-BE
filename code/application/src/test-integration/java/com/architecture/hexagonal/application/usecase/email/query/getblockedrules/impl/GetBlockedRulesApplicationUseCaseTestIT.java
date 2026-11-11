@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.application.usecase.email.query.getblockedrules.impl;
 
-import com.architecture.hexagonal.application.port.out.email.EmailConfigurationPort;
+import com.architecture.hexagonal.domain.port.out.configuration.EmailConfigurationPort;
 import com.architecture.hexagonal.application.service.email.EmailService;
 import com.architecture.hexagonal.application.service.email.impl.EmailServiceImpl;
 import com.architecture.hexagonal.application.usecase.email.query.GetBlockedRulesQueryTestDataBuilder;

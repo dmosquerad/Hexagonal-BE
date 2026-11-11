@@ -1,10 +1,10 @@
 package com.architecture.hexagonal.application.usecase.user.query.exists.impl;
 
-import com.architecture.hexagonal.application.port.out.transaction.TransactionReadBoundary;
 import com.architecture.hexagonal.application.service.user.UserService;
 import com.architecture.hexagonal.application.transaction.SpyTransactionReadBoundary;
 import com.architecture.hexagonal.application.usecase.user.query.UserExistsInputTestDataBuilder;
 import com.architecture.hexagonal.contract.bus.model.user.query.UserExistsQuery;
+import com.architecture.hexagonal.domain.port.in.transaction.TransactionReadBoundary;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

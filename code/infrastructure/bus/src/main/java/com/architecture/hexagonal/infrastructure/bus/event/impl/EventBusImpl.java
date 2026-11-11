@@ -1,9 +1,9 @@
 package com.architecture.hexagonal.infrastructure.bus.event.impl;
 
-import com.architecture.hexagonal.application.port.in.bus.event.EventHandler;
-import com.architecture.hexagonal.application.port.out.bus.event.EventBus;
+import com.architecture.hexagonal.domain.port.in.bus.middleware.BusMiddleware;
+import com.architecture.hexagonal.domain.port.out.bus.event.EventBus;
+import com.architecture.hexagonal.domain.port.out.bus.event.EventPublisher;
 import com.architecture.hexagonal.infrastructure.bus.BusHandlerFinder;
-import com.architecture.hexagonal.infrastructure.bus.middleware.BusMiddleware;
 import java.util.List;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -23,10 +23,10 @@ public class EventBusImpl implements EventBus {
     loggingMiddleware.execute(
         event,
         () -> {
-          final List<EventHandler> handlers = handlerFinder.findAll(event, EventHandler.class);
-          for (final EventHandler<E> handler : handlers) {
+          final List<EventPublisher> handlers = handlerFinder.findAll(event, EventPublisher.class);
+          for (final EventPublisher<E> handler : handlers) {
             try {
-              handler.handle(event);
+              handler.publish(event);
             } catch (final RuntimeException exception) {
               log.error(
                   "{} failed handling {} ({})",

@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.application.usecase.user.query.getall.impl;
 
-import com.architecture.hexagonal.application.port.out.email.EmailConfigurationPort;
-import com.architecture.hexagonal.application.port.out.user.UserRepositoryReadPort;
-import com.architecture.hexagonal.application.projector.user.UserEmailProjector;
+import com.architecture.hexagonal.domain.port.out.configuration.EmailConfigurationPort;
+import com.architecture.hexagonal.domain.port.out.repository.user.UserRepositoryReadPort;
+import com.architecture.hexagonal.domain.model.vo.projector.user.UserEmailProjector;
 import com.architecture.hexagonal.application.service.email.EmailService;
 import com.architecture.hexagonal.application.service.email.impl.EmailServiceImpl;
 import com.architecture.hexagonal.application.service.user.UserService;

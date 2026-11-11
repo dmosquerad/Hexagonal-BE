@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.transaction.impl;
 
-import com.architecture.hexagonal.application.port.out.transaction.TransactionWriteBoundary;
+import com.architecture.hexagonal.domain.port.in.transaction.TransactionWriteBoundary;
 import java.util.function.Supplier;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;

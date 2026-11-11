@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.infrastructure.bus;
 
-import com.architecture.hexagonal.application.port.in.bus.command.CommandHandler;
-import com.architecture.hexagonal.application.port.in.bus.event.EventHandler;
-import com.architecture.hexagonal.application.port.in.bus.query.QueryHandler;
+import com.architecture.hexagonal.domain.port.in.bus.command.CommandHandler;
+import com.architecture.hexagonal.domain.port.in.bus.query.QueryHandler;
+import com.architecture.hexagonal.domain.port.out.bus.event.EventPublisher;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,9 +34,9 @@ public final class BusHandlerFinder implements SmartInitializingSingleton {
         .values()
         .forEach(handler -> addHandler(mutableHandlersByMessage, handler, QueryHandler.class));
     beanFactory
-        .getBeansOfType(EventHandler.class)
+        .getBeansOfType(EventPublisher.class)
         .values()
-        .forEach(handler -> addHandler(mutableHandlersByMessage, handler, EventHandler.class));
+        .forEach(handler -> addHandler(mutableHandlersByMessage, handler, EventPublisher.class));
     mutableHandlersByMessage.replaceAll((messageType, handlers) -> List.copyOf(handlers));
     handlersByMessage = Map.copyOf(mutableHandlersByMessage);
   }
