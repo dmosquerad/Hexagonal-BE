@@ -18,7 +18,7 @@
     <!-- JAVA & MVN -->
     <!-- ============================================ -->
     <java.version>25</java.version>
-    <mvn.version>3.9.16</mvn.version>
+    <mvn.version>3.9.15</mvn.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- ============================================ -->
     <!-- SPRING DOC -->
@@ -75,7 +75,12 @@
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>contract-inbound-rest</artifactId>
+        <artifactId>contract-inbound-user-rest-server</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>contract-inbound-email-rest-server</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -139,16 +144,6 @@
         <artifactId>scheduled-inbox</artifactId>
         <version>${project.version}</version>
       </dependency>
-      <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>inbound-user-rest-server</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>inbound-email-rest-server</artifactId>
-        <version>${project.version}</version>
-      </dependency>
       <!-- ============================================ -->
       <!-- INFRASTRUCTURE OUTBOUND -->
       <!-- ============================================ -->
@@ -202,14 +197,6 @@
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>inbox</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <!-- ============================================ -->
-      <!-- BOOT -->
-      <!-- ============================================ -->
-      <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>boot</artifactId>
         <version>${project.version}</version>
       </dependency>
       <!-- ============================================ -->

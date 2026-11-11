@@ -19,9 +19,5 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>event-rabbitmq</artifactId>
         </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>contract-outbound-rabbitmq</artifactId>
-        </dependency>
     </dependencies>
 </project>

@@ -93,10 +93,10 @@ flowchart TB
     KafkaBroker([Kafka Broker])
 
     subgraph CONTRACT["Contract"]
-        OAS["REST server"]
-        KDTO["Kafka consumer"]
-        RDTO["RabbitMQ event"]
-        BPOJO["Command / Query"]
+        OAS["REST server (OpenAPI)<br/>contract-inbound-user-rest-server<br/>contract-inbound-email-rest-server"]
+        KCON["Kafka consumer<br/>(AsyncAPI)"]
+        RCON["RabbitMQ events<br/>(AsyncAPI)"]
+        BCON["Bus<br/>(commands, queries, events)"]
     end
 
     subgraph INBOUND["Infrastructure · Inbound"]
@@ -114,14 +114,41 @@ flowchart TB
     subgraph DOMAIN["Domain"]
         direction TB
         MODEL["Domain Model"]
-        PIN["Ports In<br/>(bus, transaction boundaries)"]
-        POUT["Ports Out<br/>(repositories, OutboxProcess, InboxProcess,<br/>bus, configuration)"]
+        subgraph PIN["Ports In"]
+            direction TB
+            subgraph PIN_BUS["Bus"]
+                CBP["Command bus"]
+                CHP["Command handler"]
+                QBP["Query bus"]
+                QHP["Query handler"]
+            end
+            subgraph PIN_TX["Transaction"]
+                TXP["Transaction boundaries"]
+            end
+        end
+        subgraph POUT["Ports Out"]
+            direction TB
+            subgraph POUT_BUS["Bus"]
+                EVBP["Event bus"]
+                EVPP["Event publisher"]
+            end
+            subgraph POUT_PROC["Processing"]
+                OPP["Outbox process"]
+                IPP["Inbox process"]
+            end
+            subgraph POUT_REPO["Repositories"]
+                REPO["Repository ports"]
+            end
+            subgraph POUT_CFG["Configuration"]
+                CFGP["Configuration ports"]
+            end
+        end
     end
 
     subgraph APP["Application"]
         direction TB
-        HANDLERS["Use cases"]
-        SVC["Application services"]
+        UC["Use cases"]
+        SVC["Services"]
     end
 
     subgraph PROCESS["Infrastructure · Outbox / Inbox processing"]
@@ -147,55 +174,63 @@ flowchart TB
         Config[(Configuration)]
     end
 
-    Client --> REST
-    KafkaBroker --> KAFKA
-    OAS -.implements.-> REST
-    KAFKA -.uses.-> KDTO
-    CB -.uses.-> BPOJO
-    PROD -.uses.-> RDTO
+    Client -- "calls" --> REST
+    KafkaBroker -- "consumes" --> KAFKA
+    REST -. "implements" .-> OAS
+    KAFKA -. "implements" .-> KCON
+    PROD -. "uses" .-> RCON
+    OPS -. "uses" .-> RCON
+    CB -. "uses" .-> BCON
+    QB -. "uses" .-> BCON
+    UC -. "uses" .-> BCON
+    IPS -. "uses" .-> BCON
+    REST -. "uses" .-> CBP
+    REST -. "uses" .-> QBP
+    KAFKA -. "uses" .-> CBP
+    SCHED -. "uses" .-> CBP
+    CB -. "implements" .-> CBP
+    QB -. "implements" .-> QBP
+    CB -- "dispatches to" --> UC
+    QB -- "dispatches to" --> UC
+    UC -. "implements" .-> CHP
+    UC -. "implements" .-> QHP
+    UC -. "uses" .-> TXP
+    TX -. "implements" .-> TXP
 
-    REST --> CB
-    REST --> QB
-    KAFKA --> CB
-    SCHED --> CB
-    CB --> HANDLERS
-    QB --> HANDLERS
-    HANDLERS -.implements.-> PIN
-    TX -.implements.-> PIN
+    UC -- "calls" --> SVC
+    SVC -. "uses" .-> MODEL
+    SVC -. "uses" .-> REPO
+    SVC -. "uses" .-> OPP
+    SVC -. "uses" .-> IPP
+    SVC -. "uses" .-> EVBP
 
-    HANDLERS --> SVC
-    SVC --> MODEL
-    SVC --> POUT
-    SVC --> OPS
-    SVC --> IPS
-    SVC -- "domain events" --> EVB
+    IPS -. "uses" .-> CBP
+    OPS -. "implements" .-> OPP
+    IPS -. "implements" .-> IPP
+    EVB -. "implements" .-> EVBP
+    EVB -. "uses" .-> EVPP
+    EVB -- "routes to" --> PUB
+    PUB -. "implements" .-> EVPP
+    PUB -- "Spring ApplicationEvent (no port)" --> PROD
+    OPS -- "Spring ApplicationEvent (no port)" --> PROD
 
-    IPS --> CB
-    OPS -.implements.-> POUT
-    IPS -.implements.-> POUT
-    EVB -.implements.-> POUT
-    EVB --> PUB
-    PUB -.implements.-> POUT
-    PUB -- "Spring ApplicationEvent" --> PROD
-    OPS -- "Spring ApplicationEvent" --> PROD
+    DB -. "implements" .-> REPO
+    CFG -. "implements" .-> CFGP
 
-    DB -.implements.-> POUT
-    CFG -.implements.-> POUT
+    DB -- "connects to" --> POSTGRES
+    DB -- "connects to" --> MONGO
+    PROD -- "publishes to" --> RABBIT
+    CFG -- "reads from" --> Config
 
-    DB --> POSTGRES
-    DB --> MONGO
-    PROD --> RABBIT
-    CFG --> Config
-
-    BOOT -.wires.-> INBOUND
-    BOOT -.wires.-> BUS
-    BOOT -.wires.-> APP
-    BOOT -.wires.-> PROCESS
-    BOOT -.wires.-> TRANSACTION
-    BOOT -.wires.-> OUTBOUND
+    BOOT -. "wires" .-> INBOUND
+    BOOT -. "wires" .-> BUS
+    BOOT -. "wires" .-> APP
+    BOOT -. "wires" .-> PROCESS
+    BOOT -. "wires" .-> TRANSACTION
+    BOOT -. "wires" .-> OUTBOUND
 ```
 
-> Read top to bottom: entry points → inbound adapters → bus → application → outbound adapters → external systems. &nbsp;&nbsp; `-->` runtime flow &nbsp;&nbsp; `-.->` implementation/wiring
+> Read top to bottom: entry points → inbound adapters → bus → application → outbound adapters → external systems. &nbsp;&nbsp; `-- calls -->` runtime flow &nbsp;&nbsp; `-. implements .->` implements a port &nbsp;&nbsp; `-. uses .->` depends on a port, model or contract
 
 ## 🚀 Quick Start
 
@@ -255,8 +290,8 @@ Contracts are grouped by their consumer/direction under `code/contract`, indepen
 Holds the OpenAPI specifications and generates server-side stubs consumed by the inbound controllers.
 
 **Content:**
-- `inbound-user-rest-server`: OpenAPI spec for the User API
-- `inbound-email-rest-server`: OpenAPI spec for the Email rules API
+- `contract-inbound-user-rest-server`: OpenAPI spec for the User API
+- `contract-inbound-email-rest-server`: OpenAPI spec for the Email rules API
 - Generated Java interfaces implemented by REST controllers
 
 #### Inbound — Kafka (`code/contract/inbound/messaging/kafka`)

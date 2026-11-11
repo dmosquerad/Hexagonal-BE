@@ -17,11 +17,11 @@
         <!-- ============================================ -->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>inbound-user-rest-server</artifactId>
+            <artifactId>contract-inbound-user-rest-server</artifactId>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>inbound-email-rest-server</artifactId>
+            <artifactId>contract-inbound-email-rest-server</artifactId>
         </dependency>
         <!-- ============================================ -->
         <!-- SPRINGBOOT -->

@@ -44,14 +44,6 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>scheduled-inbox</artifactId>
         </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>inbound-user-rest-server</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>inbound-email-rest-server</artifactId>
-        </dependency>
         <!-- ============================================ -->
         <!-- INFRASTRUCTURE OUTBOUND -->
         <!-- ============================================ -->
@@ -61,22 +53,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>database-mongodb</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>configuration</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>event-rabbitmq</artifactId>
-        </dependency>
-        <!-- ============================================ -->
-        <!-- INFRASTRUCTURE BUS -->
-        <!-- ============================================ -->
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>bus</artifactId>
         </dependency>
         <!-- ============================================ -->
         <!-- INFRASTRUCTURE TRANSACTION -->
@@ -102,21 +79,6 @@
         <!-- ============================================ -->
         <!-- TEST -->
         <!-- ============================================ -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
