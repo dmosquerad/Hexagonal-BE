@@ -14,6 +14,7 @@ import com.architecture.hexagonal.domain.data.time.TestClock;
 import com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.mapper.user.*;
 import com.architecture.hexagonal.domain.data.model.vo.pagination.PaginationVoTestDataBuilder;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
+import com.architecture.hexagonal.domain.model.vo.exception.FailureType;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.config.TestApplication;
@@ -385,7 +386,7 @@ class UserControllerImplTestIT {
     Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
     Mockito.when(queryBus.execute(Mockito.any(FindUserByUserIdQuery.class)))
         .thenThrow(new ResourceNotFoundException(
-            ExceptionMessage.NOT_FOUND_DATA_MESSAGE + user.getId()));
+            ExceptionMessage.NOT_FOUND_DATA_MESSAGE + user.getId(), FailureType.NON_RETRYABLE));
 
     mockMvc.perform(
             MockMvcRequestBuilders.get("/users/{userUuid}", user.getId())
@@ -413,7 +414,7 @@ class UserControllerImplTestIT {
     Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
     Mockito.when(commandBus.execute(Mockito.any(DeleteUserCommand.class)))
         .thenThrow(new ResourceNotFoundException(
-            ExceptionMessage.NOT_FOUND_DATA_MESSAGE + user.getId()));
+            ExceptionMessage.NOT_FOUND_DATA_MESSAGE + user.getId(), FailureType.NON_RETRYABLE));
 
     mockMvc.perform(
             MockMvcRequestBuilders.delete("/users/{userUuid}", user.getId())

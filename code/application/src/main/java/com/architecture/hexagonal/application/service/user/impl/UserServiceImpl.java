@@ -9,6 +9,7 @@ import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.domain.model.vo.email.EmailVo;
+import com.architecture.hexagonal.domain.model.vo.exception.FailureType;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResultVo;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationVo;
 import com.architecture.hexagonal.domain.model.vo.projector.user.UserEmailProjector;
@@ -48,7 +49,8 @@ public class UserServiceImpl implements UserService {
             .orElseThrow(
                 () ->
                     new ResourceNotFoundException(
-                        ExceptionMessage.NOT_FOUND_DATA_MESSAGE + userUuid));
+                        ExceptionMessage.NOT_FOUND_DATA_MESSAGE + userUuid,
+                        FailureType.NON_RETRYABLE));
 
     final UserDeletedEvent userDeletedEvent = new UserDeletedEvent();
     userDeletedEvent.setUserId(deletedUser.userId());
@@ -64,7 +66,8 @@ public class UserServiceImpl implements UserService {
         .findUserById(userUuid)
         .orElseThrow(
             () ->
-                new ResourceNotFoundException(ExceptionMessage.NOT_FOUND_DATA_MESSAGE + userUuid));
+                new ResourceNotFoundException(
+                    ExceptionMessage.NOT_FOUND_DATA_MESSAGE + userUuid, FailureType.NON_RETRYABLE));
   }
 
   @Override
@@ -73,7 +76,8 @@ public class UserServiceImpl implements UserService {
         .findUserById(userUuid)
         .orElseThrow(
             () ->
-                new ResourceNotFoundException(ExceptionMessage.NOT_FOUND_DATA_MESSAGE + userUuid));
+                new ResourceNotFoundException(
+                    ExceptionMessage.NOT_FOUND_DATA_MESSAGE + userUuid, FailureType.NON_RETRYABLE));
   }
 
   @Override
@@ -97,7 +101,8 @@ public class UserServiceImpl implements UserService {
             .findUserById(uuid)
             .orElseThrow(
                 () ->
-                    new ResourceNotFoundException(ExceptionMessage.NOT_FOUND_DATA_MESSAGE + uuid));
+                    new ResourceNotFoundException(
+                        ExceptionMessage.NOT_FOUND_DATA_MESSAGE + uuid, FailureType.NON_RETRYABLE));
 
     final EmailVo email = Objects.isNull(user.email()) ? currentUser.email() : user.email();
 
@@ -116,7 +121,9 @@ public class UserServiceImpl implements UserService {
     userRepositoryReadPort
         .findUserById(uuid)
         .orElseThrow(
-            () -> new ResourceNotFoundException(ExceptionMessage.NOT_FOUND_DATA_MESSAGE + uuid));
+            () ->
+                new ResourceNotFoundException(
+                    ExceptionMessage.NOT_FOUND_DATA_MESSAGE + uuid, FailureType.NON_RETRYABLE));
 
     final User updatedUser = userRepositoryWritePort.saveUser(user);
 

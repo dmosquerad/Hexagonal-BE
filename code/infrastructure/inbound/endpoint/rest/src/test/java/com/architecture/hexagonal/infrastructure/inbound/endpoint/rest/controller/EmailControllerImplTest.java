@@ -7,6 +7,7 @@ import com.architecture.hexagonal.domain.data.model.vo.email.EmailBlockRulesVoTe
 import com.architecture.hexagonal.domain.data.time.TestClock;
 import com.architecture.hexagonal.domain.exception.DomainException;
 import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;
+import com.architecture.hexagonal.domain.model.vo.exception.FailureType;
 import com.architecture.hexagonal.domain.port.in.bus.query.QueryBus;
 import com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.mapper.email.EmailBlockRulesDtoMapper;
 import com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.testutils.dto.EmailBlockRulesDtoTestDataBuilder;
@@ -69,7 +70,7 @@ class EmailControllerImplTest {
     final String errorMessage = "domain exception";
 
     Mockito.when(queryBus.execute(Mockito.any(GetBlockedRulesQuery.class)))
-        .thenThrow(new DomainException(errorMessage));
+        .thenThrow(new DomainException(errorMessage, FailureType.NON_RETRYABLE));
 
     AssertionsForClassTypes.assertThatThrownBy(() -> emailControllerImpl.getBlockedRules())
         .isInstanceOf(DomainException.class)
