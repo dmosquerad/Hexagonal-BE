@@ -1,24 +1,30 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.integration.adapter.inbox;
 
 import com.architecture.hexagonal.domain.databuilder.model.entity.inbox.InboxTestDataBuilder;
+import com.architecture.hexagonal.domain.databuilder.model.vo.date.DateVoTestDataBuilder;
 import com.architecture.hexagonal.domain.databuilder.model.vo.payload.MessageHeaderVoTestDataBuilder;
 import com.architecture.hexagonal.domain.databuilder.model.vo.payload.PayloadVoTestDataBuilder;
 import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
+import com.architecture.hexagonal.domain.model.vo.date.DateVo;
 import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
-import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.adapter.inbox.InboxRepositoryReadMongodbAdapterImpl;
-import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.config.MongodbIT;
-import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.config.MongodbTestApplication;
-import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.repository.inbox.InboxReadMongodbRepository;
-import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.repository.inbox.InboxWriteMongodbRepository;
-import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.databuilder.data.inbox.InboxDaoTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.databuilder.data.payload.MessageHeaderDaoTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.databuilder.data.payload.PayloadDaoTestDataBuilder;
-import java.time.OffsetDateTime;
+
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.adapter.inbox.InboxRepositoryReadMongodbAdapterImpl;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.config.MongodbIT;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.config.MongodbTestApplication;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.databuilder.data.date.DateVoDaoTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.databuilder.data.inbox.InboxDaoTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.databuilder.data.payload.MessageHeaderDaoTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.databuilder.data.payload.PayloadDaoTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.repository.inbox.InboxReadMongodbRepository;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.repository.inbox.InboxWriteMongodbRepository;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,7 +48,12 @@ class InboxRepositoryReadMongodbAdapterImplTestIT extends MongodbIT {
   @Test
   void findByStatusAndAggregateTypeShouldReturnPendingInboxOrderedByCreatedAt() {
     final UUID oldestMessageId = UUID.randomUUID();
-    final OffsetDateTime oldestCreatedAt = OffsetDateTime.parse("2026-10-13T10:15:30Z");
+    final DateVo oldestCreatedAt =
+        DateVoTestDataBuilder.builder()
+            .date(Instant.parse("2026-10-13T10:15:30Z"))
+            .zoneId(ZoneId.of("Europe/Madrid"))
+            .build()
+            .dateVo();
     final Inbox oldest =
         InboxTestDataBuilder.<Object>builder()
             .payload(
@@ -50,7 +61,12 @@ class InboxRepositoryReadMongodbAdapterImplTestIT extends MongodbIT {
                     .messageHeaderVo(
                         MessageHeaderVoTestDataBuilder.builder()
                             .messageId(oldestMessageId)
-                            .messageDate(oldestCreatedAt.minusMinutes(1))
+                            .messageDate(
+                                DateVoTestDataBuilder.builder()
+                                    .date(oldestCreatedAt.date().minusSeconds(60))
+                                    .zoneId(ZoneId.of("Europe/Madrid"))
+                                    .build()
+                                    .dateVo())
                             .build()
                             .messageHeaderVo())
                     .data(Map.of("userId", "user-123"))
@@ -63,7 +79,12 @@ class InboxRepositoryReadMongodbAdapterImplTestIT extends MongodbIT {
             .build()
             .inbox();
     final UUID newestMessageId = UUID.randomUUID();
-    final OffsetDateTime newestCreatedAt = OffsetDateTime.parse("2026-10-13T10:17:30Z");
+    final DateVo newestCreatedAt =
+        DateVoTestDataBuilder.builder()
+            .date(Instant.parse("2026-10-13T10:17:30Z"))
+            .zoneId(ZoneId.of("Europe/Madrid"))
+            .build()
+            .dateVo();
     final Inbox newest =
         InboxTestDataBuilder.<Object>builder()
             .payload(
@@ -71,7 +92,12 @@ class InboxRepositoryReadMongodbAdapterImplTestIT extends MongodbIT {
                     .messageHeaderVo(
                         MessageHeaderVoTestDataBuilder.builder()
                             .messageId(newestMessageId)
-                            .messageDate(newestCreatedAt.minusMinutes(1))
+                            .messageDate(
+                                DateVoTestDataBuilder.builder()
+                                    .date(newestCreatedAt.date().minusSeconds(60))
+                                    .zoneId(ZoneId.of("Europe/Madrid"))
+                                    .build()
+                                    .dateVo())
                             .build()
                             .messageHeaderVo())
                     .data(Map.of("userId", "user-123"))
@@ -84,7 +110,12 @@ class InboxRepositoryReadMongodbAdapterImplTestIT extends MongodbIT {
             .build()
             .inbox();
     final UUID processedMessageId = UUID.randomUUID();
-    final OffsetDateTime processedCreatedAt = OffsetDateTime.parse("2026-10-13T10:16:30Z");
+    final DateVo processedCreatedAt =
+        DateVoTestDataBuilder.builder()
+            .date(Instant.parse("2026-10-13T10:16:30Z"))
+            .zoneId(ZoneId.of("Europe/Madrid"))
+            .build()
+            .dateVo();
     final Inbox processed =
         InboxTestDataBuilder.<Object>builder()
             .payload(
@@ -92,7 +123,12 @@ class InboxRepositoryReadMongodbAdapterImplTestIT extends MongodbIT {
                     .messageHeaderVo(
                         MessageHeaderVoTestDataBuilder.builder()
                             .messageId(processedMessageId)
-                            .messageDate(processedCreatedAt.minusMinutes(1))
+                            .messageDate(
+                                DateVoTestDataBuilder.builder()
+                                    .date(processedCreatedAt.date().minusSeconds(60))
+                                    .zoneId(ZoneId.of("Europe/Madrid"))
+                                    .build()
+                                    .dateVo())
                             .build()
                             .messageHeaderVo())
                     .data(Map.of("userId", "user-123"))
@@ -110,15 +146,24 @@ class InboxRepositoryReadMongodbAdapterImplTestIT extends MongodbIT {
             .inboxId(UUID.randomUUID())
             .aggregateId("user-123")
             .action(newest.action())
-            .createdAt(newest.createdAt().toZonedDateTime())
+            .createdAt(
+                DateVoDaoTestDataBuilder.builder()
+                    .date(newest.createdAt().date())
+                    .zoneId(newest.createdAt().zoneId())
+                    .build()
+                    .dateVoDao())
             .processedAt(null)
             .payload(
                 PayloadDaoTestDataBuilder.builder()
                     .messageHeaderDao(
                         MessageHeaderDaoTestDataBuilder.builder()
                             .messageId(newest.payload().messageHeader().messageId())
-                            .messageDate(
-                                newest.payload().messageHeader().messageDate().toZonedDateTime())
+                            .dateVoDao(
+                                DateVoDaoTestDataBuilder.builder()
+                                    .date(newest.payload().messageHeader().messageDate().date())
+                                    .zoneId(newest.payload().messageHeader().messageDate().zoneId())
+                                    .build()
+                                    .dateVoDao())
                             .build()
                             .messageHeaderDao())
                     .data(newest.payload().data())
@@ -133,18 +178,24 @@ class InboxRepositoryReadMongodbAdapterImplTestIT extends MongodbIT {
             .aggregateId("user-123")
             .action(processed.action())
             .status(processed.status())
-            .createdAt(processed.createdAt().toZonedDateTime())
+            .createdAt(
+                DateVoDaoTestDataBuilder.builder()
+                    .date(processed.createdAt().date())
+                    .zoneId(processed.createdAt().zoneId())
+                    .build()
+                    .dateVoDao())
             .processedAt(null)
             .payload(
                 PayloadDaoTestDataBuilder.builder()
                     .messageHeaderDao(
                         MessageHeaderDaoTestDataBuilder.builder()
                             .messageId(processed.payload().messageHeader().messageId())
-                            .messageDate(
-                                processed.payload()
-                                    .messageHeader()
-                                    .messageDate()
-                                    .toZonedDateTime())
+                            .dateVoDao(
+                                DateVoDaoTestDataBuilder.builder()
+                                    .date(processed.payload().messageHeader().messageDate().date())
+                                    .zoneId(processed.payload().messageHeader().messageDate().zoneId())
+                                    .build()
+                                    .dateVoDao())
                             .build()
                             .messageHeaderDao())
                     .data(processed.payload().data())
@@ -158,15 +209,24 @@ class InboxRepositoryReadMongodbAdapterImplTestIT extends MongodbIT {
             .inboxId(UUID.randomUUID())
             .aggregateId("user-123")
             .action(oldest.action())
-            .createdAt(oldest.createdAt().toZonedDateTime())
+            .createdAt(
+                DateVoDaoTestDataBuilder.builder()
+                    .date(oldest.createdAt().date())
+                    .zoneId(oldest.createdAt().zoneId())
+                    .build()
+                    .dateVoDao())
             .processedAt(null)
             .payload(
                 PayloadDaoTestDataBuilder.builder()
                     .messageHeaderDao(
                         MessageHeaderDaoTestDataBuilder.builder()
                             .messageId(oldest.payload().messageHeader().messageId())
-                            .messageDate(
-                                oldest.payload().messageHeader().messageDate().toZonedDateTime())
+                            .dateVoDao(
+                                DateVoDaoTestDataBuilder.builder()
+                                    .date(oldest.payload().messageHeader().messageDate().date())
+                                    .zoneId(oldest.payload().messageHeader().messageDate().zoneId())
+                                    .build()
+                                    .dateVoDao())
                             .build()
                             .messageHeaderDao())
                     .data(oldest.payload().data())

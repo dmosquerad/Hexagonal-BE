@@ -3,24 +3,21 @@ package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.mapp
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.config.MapstructConfig;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.outbox.OutboxDao;
-import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.mapper.converter.OffsetDateTimeConverter;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.mapper.converter.DateVoMongoConverter;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.mapper.payload.MessageHeaderVoFromMongodbMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(config = MapstructConfig.class, uses = OffsetDateTimeConverter.class)
-public interface OutboxDoFromMongodbMapper {
+@Mapper(config = MapstructConfig.class, uses = DateVoMongoConverter.class)
+public interface OutboxDoFromMongodbMapper extends MessageHeaderVoFromMongodbMapper {
 
   @Mapping(
       source = "createdAt",
       target = "createdAt",
-      qualifiedByName = OffsetDateTimeConverter.TO_OFFSET_DATE_TIME)
+      qualifiedByName = DateVoMongoConverter.TO_DATE_VO)
   @Mapping(
       source = "processedAt",
       target = "processedAt",
-      qualifiedByName = OffsetDateTimeConverter.TO_OFFSET_DATE_TIME)
-  @Mapping(
-      source = "payload.messageHeader.messageDate",
-      target = "payload.messageHeader.messageDate",
-      qualifiedByName = OffsetDateTimeConverter.TO_OFFSET_DATE_TIME)
+      qualifiedByName = DateVoMongoConverter.TO_DATE_VO)
   Outbox toOutbox(OutboxDao outboxDao);
 }

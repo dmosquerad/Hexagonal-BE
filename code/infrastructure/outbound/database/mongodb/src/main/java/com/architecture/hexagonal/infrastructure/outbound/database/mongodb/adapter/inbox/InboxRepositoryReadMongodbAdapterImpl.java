@@ -21,7 +21,7 @@ public class InboxRepositoryReadMongodbAdapterImpl implements InboxRepositoryRea
   public List<Inbox> findByStatusAndAggregateType(
       final StatusVo status, final AggregateTypeVo aggregateType) {
     return inboxReadMongodbRepository
-        .findByStatusAndAggregateTypeOrderByCreatedAtAsc(status, aggregateType)
+        .findByStatusAndAggregateTypeOrderByCreatedAt_DateAsc(status, aggregateType)
         .stream()
         .map(inboxDoFromMongodbMapper::toInbox)
         .toList();

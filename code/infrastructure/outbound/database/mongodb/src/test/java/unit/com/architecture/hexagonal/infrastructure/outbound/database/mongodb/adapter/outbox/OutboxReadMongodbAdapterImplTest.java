@@ -54,7 +54,7 @@ class OutboxReadMongodbAdapterImplTest {
     final OutboxDao outboxDao = OutboxDaoTestDataBuilder.builder().build().outboxDao();
 
     Mockito.when(
-            outboxReadMongodbRepository.findByStatusAndAggregateTypeOrderByCreatedAtAsc(
+            outboxReadMongodbRepository.findByStatusAndAggregateTypeOrderByCreatedAt_DateAsc(
                 StatusVo.PENDING, outbox.aggregateType()))
         .thenReturn(List.of(outboxDao));
 
@@ -67,7 +67,8 @@ class OutboxReadMongodbAdapterImplTest {
         .isEqualTo(List.of(outbox));
 
     Mockito.verify(outboxReadMongodbRepository)
-        .findByStatusAndAggregateTypeOrderByCreatedAtAsc(StatusVo.PENDING, outbox.aggregateType());
+        .findByStatusAndAggregateTypeOrderByCreatedAt_DateAsc(
+            StatusVo.PENDING, outbox.aggregateType());
     Mockito.verify(outboxDoFromMongodbMapper).toOutbox(Mockito.any(OutboxDao.class));
   }
 }

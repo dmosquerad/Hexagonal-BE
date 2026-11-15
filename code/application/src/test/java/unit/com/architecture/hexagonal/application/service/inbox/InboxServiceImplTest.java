@@ -3,6 +3,7 @@ package com.architecture.hexagonal.application.service.inbox;
 import com.architecture.hexagonal.application.service.inbox.impl.InboxServiceImpl;
 import com.architecture.hexagonal.domain.databuilder.model.entity.inbox.InboxTestDataBuilder;
 import com.architecture.hexagonal.domain.databuilder.model.time.TestClock;
+import com.architecture.hexagonal.domain.databuilder.model.vo.date.DateVoTestDataBuilder;
 import com.architecture.hexagonal.domain.databuilder.model.vo.inbox.SchedulerInboxConfigurationVoTestDataBuilder;
 import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
 import com.architecture.hexagonal.domain.model.vo.inbox.SchedulerInboxConfigurationVo;
@@ -13,7 +14,6 @@ import com.architecture.hexagonal.domain.port.out.inbox.InboxProcess;
 import com.architecture.hexagonal.domain.port.out.repository.inbox.InboxRepositoryReadPort;
 import com.architecture.hexagonal.domain.port.out.repository.inbox.InboxRepositoryWritePort;
 import java.time.Clock;
-import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 import org.assertj.core.api.AssertionsForClassTypes;
@@ -72,7 +72,7 @@ class InboxServiceImplTest {
         inbox.toBuilder()
             .status(StatusVo.PROCESSING)
             .retryCount(1)
-            .processedAt(TestClock.FIXED_INSTANT.atOffset(ZoneOffset.UTC))
+            .processedAt(DateVoTestDataBuilder.builder().build().dateVo())
             .build();
     final Inbox processed = processing.toBuilder().status(StatusVo.PROCESSED).build();
     Mockito.when(inboxRepositoryWritePort.claimPendingForProcessing(Mockito.any(Inbox.class)))
@@ -101,7 +101,7 @@ class InboxServiceImplTest {
         inbox.toBuilder()
             .status(StatusVo.PROCESSING)
             .retryCount(1)
-            .processedAt(TestClock.FIXED_INSTANT.atOffset(ZoneOffset.UTC))
+            .processedAt(DateVoTestDataBuilder.builder().build().dateVo())
             .build();
     final Inbox pending = processing.toBuilder().status(StatusVo.PENDING).build();
     Mockito.when(inboxRepositoryWritePort.claimPendingForProcessing(Mockito.any(Inbox.class)))
@@ -132,7 +132,7 @@ class InboxServiceImplTest {
         inbox.toBuilder()
             .status(StatusVo.PROCESSING)
             .retryCount(5)
-            .processedAt(TestClock.FIXED_INSTANT.atOffset(ZoneOffset.UTC))
+            .processedAt(DateVoTestDataBuilder.builder().build().dateVo())
             .build();
     final Inbox failed = processing.toBuilder().status(StatusVo.FAILED).build();
     final SchedulerInboxConfigurationVo schedulerConfiguration =

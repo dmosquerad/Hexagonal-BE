@@ -9,6 +9,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface OutboxReadMongodbRepository extends MongoRepository<OutboxDao, UUID> {
 
-  List<OutboxDao> findByStatusAndAggregateTypeOrderByCreatedAtAsc(
+  List<OutboxDao> findByStatusAndAggregateTypeOrderByCreatedAt_DateAsc(
       StatusVo status, AggregateTypeVo aggregateType);
 }

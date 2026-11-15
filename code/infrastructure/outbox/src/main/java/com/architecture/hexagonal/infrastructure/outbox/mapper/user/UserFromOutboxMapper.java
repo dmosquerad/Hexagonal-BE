@@ -16,6 +16,10 @@ public interface UserFromOutboxMapper {
       source = "payload.data",
       target = "userData",
       qualifiedByName = UserMessageDaoConverter.TO_USER_DATA)
+  @Mapping(
+      source = "payload.messageHeader.messageDate",
+      target = "messageHeader.messageDate",
+      qualifiedByName = UserMessageDaoConverter.TO_OFFSET_DATE_TIME)
   @Mapping(source = "payload.messageHeader", target = "messageHeader")
   UserCreated toUserCreated(PayloadVo payload);
 
@@ -23,6 +27,10 @@ public interface UserFromOutboxMapper {
       source = "payload.data",
       target = "userData",
       qualifiedByName = UserMessageDaoConverter.TO_USER_DATA)
+  @Mapping(
+      source = "payload.messageHeader.messageDate",
+      target = "messageHeader.messageDate",
+      qualifiedByName = UserMessageDaoConverter.TO_OFFSET_DATE_TIME)
   @Mapping(source = "payload.messageHeader", target = "messageHeader")
   UserUpdated toUserUpdated(PayloadVo payload);
 
@@ -30,6 +38,10 @@ public interface UserFromOutboxMapper {
       source = "payload.data",
       target = "userData",
       qualifiedByName = UserMessageDaoConverter.TO_USER_DATA)
+  @Mapping(
+      source = "payload.messageHeader.messageDate",
+      target = "messageHeader.messageDate",
+      qualifiedByName = UserMessageDaoConverter.TO_OFFSET_DATE_TIME)
   @Mapping(source = "payload.messageHeader", target = "messageHeader")
   UserDeleted toUserDeleted(PayloadVo payload);
 }

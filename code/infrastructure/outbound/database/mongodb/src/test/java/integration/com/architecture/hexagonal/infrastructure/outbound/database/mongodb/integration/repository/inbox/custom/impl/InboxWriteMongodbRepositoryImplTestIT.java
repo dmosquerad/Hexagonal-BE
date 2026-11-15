@@ -6,11 +6,12 @@ import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.confi
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.config.MongodbTestApplication;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.inbox.InboxDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.payload.MessageHeaderDao;
-import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.repository.inbox.InboxReadMongodbRepository;
-import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.repository.inbox.InboxWriteMongodbRepository;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.databuilder.data.date.DateVoDaoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.databuilder.data.inbox.InboxDaoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.databuilder.data.payload.MessageHeaderDaoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.databuilder.data.payload.PayloadDaoTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.repository.inbox.InboxReadMongodbRepository;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.repository.inbox.InboxWriteMongodbRepository;
 import java.time.ZoneOffset;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -55,7 +56,12 @@ class InboxWriteMongodbRepositoryImplTestIT extends MongodbIT {
 
     final MessageHeaderDao nextHeader =
         MessageHeaderDaoTestDataBuilder.builder()
-            .messageDate(TestClock.FIXED_INSTANT.plusMillis(1).atZone(ZoneOffset.UTC))
+            .dateVoDao(
+                DateVoDaoTestDataBuilder.builder()
+                    .date(TestClock.FIXED_INSTANT.plusMillis(1))
+                    .zoneId(ZoneOffset.UTC)
+                    .build()
+                    .dateVoDao())
             .build()
             .messageHeaderDao();
     inboxWriteMongodbRepository.save(
@@ -80,7 +86,12 @@ class InboxWriteMongodbRepositoryImplTestIT extends MongodbIT {
             .inboxId(pending.getInboxId())
             .status(StatusVo.PROCESSING)
             .retryCount(1)
-            .processedAt(TestClock.FIXED_INSTANT.plusSeconds(30).atZone(ZoneOffset.UTC))
+            .processedAt(
+                DateVoDaoTestDataBuilder.builder()
+                    .date(TestClock.FIXED_INSTANT.plusSeconds(30))
+                    .zoneId(ZoneOffset.UTC)
+                    .build()
+                    .dateVoDao())
             .build()
             .inboxDao();
 

@@ -8,6 +8,6 @@ import java.util.UUID;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface InboxReadMongodbRepository extends MongoRepository<InboxDao, UUID> {
-  List<InboxDao> findByStatusAndAggregateTypeOrderByCreatedAtAsc(
+  List<InboxDao> findByStatusAndAggregateTypeOrderByCreatedAt_DateAsc(
       StatusVo status, AggregateTypeVo aggregateType);
 }

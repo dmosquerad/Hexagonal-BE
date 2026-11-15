@@ -1,13 +1,13 @@
 package com.architecture.hexagonal.domain.databuilder.model.entity.outbox;
 
-import com.architecture.hexagonal.domain.databuilder.model.time.TestClock;
+import com.architecture.hexagonal.domain.databuilder.model.vo.date.DateVoTestDataBuilder;
 import com.architecture.hexagonal.domain.databuilder.model.vo.payload.PayloadVoTestDataBuilder;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
+import com.architecture.hexagonal.domain.model.vo.date.DateVo;
 import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.domain.model.vo.payload.PayloadVo;
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
-import java.time.OffsetDateTime;
 import java.util.UUID;
 import lombok.Builder;
 
@@ -24,8 +24,10 @@ public class OutboxTestDataBuilder<T> {
 
   @Builder.Default private StatusVo status = StatusVo.PENDING;
   @Builder.Default private int retryCount = 0;
-  @Builder.Default private OffsetDateTime createdAt = OffsetDateTime.now(TestClock.FIXED_CLOCK);
-  @Builder.Default private OffsetDateTime processedAt = OffsetDateTime.now(TestClock.FIXED_CLOCK);
+
+  @Builder.Default private DateVo createdAt = DateVoTestDataBuilder.builder().build().dateVo();
+
+  @Builder.Default private DateVo processedAt = DateVoTestDataBuilder.builder().build().dateVo();
 
   public Outbox outbox() {
     return Outbox.builder()

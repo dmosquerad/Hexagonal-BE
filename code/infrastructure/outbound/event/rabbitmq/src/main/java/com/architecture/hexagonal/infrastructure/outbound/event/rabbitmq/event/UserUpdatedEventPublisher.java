@@ -1,11 +1,12 @@
 package com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.event;
 
 import com.architecture.hexagonal.contract.bus.model.user.event.UserUpdatedEvent;
+import com.architecture.hexagonal.domain.model.vo.date.DateVo;
 import com.architecture.hexagonal.domain.model.vo.payload.MessageHeaderVo;
 import com.architecture.hexagonal.domain.port.out.bus.event.EventPublisher;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.mapper.user.UserEventMessageMapper;
 import java.time.Clock;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.UUID;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class UserUpdatedEventPublisher implements EventPublisher<UserUpdatedEven
   public void publish(final @NonNull UserUpdatedEvent userUpdatedEvent) {
     final MessageHeaderVo messageHeaderVo =
         MessageHeaderVo.builder()
-            .messageDate(OffsetDateTime.now(clock))
+            .messageDate(DateVo.builder().date(Instant.now(clock)).zoneId(clock.getZone()).build())
             .messageId(UUID.randomUUID())
             .build();
     applicationEventPublisher.publishEvent(
