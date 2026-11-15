@@ -1,8 +1,10 @@
 package com.architecture.hexagonal.domain.model.vo.email.factory;
 
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
+import com.architecture.hexagonal.domain.exception.InvalidValueException;
 import com.architecture.hexagonal.domain.model.vo.email.EmailVo;
 import com.architecture.hexagonal.domain.model.vo.email.predicate.EmailVoPredicate;
+import com.architecture.hexagonal.domain.model.vo.exception.FailureType;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 
@@ -11,7 +13,8 @@ public class EmailVoFactory {
 
   public static EmailVo from(@NonNull final String email) {
     if (!EmailVoPredicate.IS_VALID_MAIL.test(email)) {
-      throw new IllegalArgumentException(ExceptionMessage.INVALID_EMAIL_FORMAT + email);
+      throw new InvalidValueException(
+          ExceptionMessage.INVALID_EMAIL_FORMAT + email, FailureType.NON_RETRYABLE);
     }
 
     final String atSign = "@";
