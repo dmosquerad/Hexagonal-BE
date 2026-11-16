@@ -9,6 +9,7 @@ import com.architecture.hexagonal.domain.port.out.repository.user.UserRepository
 import com.architecture.hexagonal.domain.port.out.bus.event.EventBus;
 import com.architecture.hexagonal.application.service.email.EmailService;
 import com.architecture.hexagonal.application.service.email.impl.EmailServiceImpl;
+import com.architecture.hexagonal.application.mapper.user.UserEventMapper;
 import com.architecture.hexagonal.application.service.user.UserService;
 import com.architecture.hexagonal.application.service.user.impl.UserServiceImpl;
 import com.architecture.hexagonal.contract.bus.model.user.command.UpdateUserCommand;
@@ -28,6 +29,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mapstruct.factory.Mappers;
 
 @ExtendWith(MockitoExtension.class)
 class UpdateUserUseCaseImplTestIT {
@@ -41,6 +43,8 @@ class UpdateUserUseCaseImplTestIT {
 
   @Spy private SpyTransactionWriteBoundary transactionWriteBoundary =
       new SpyTransactionWriteBoundary();
+
+  @Spy private UserEventMapper userEventMapper = Mappers.getMapper(UserEventMapper.class);
 
   @InjectMocks private UserServiceImpl userServiceImpl;
   @InjectMocks private EmailServiceImpl emailServiceImpl;

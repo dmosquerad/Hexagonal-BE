@@ -2,6 +2,8 @@ package com.architecture.hexagonal.boot.architecture;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import com.tngtech.archunit.base.DescribedPredicate;
+import com.tngtech.archunit.core.domain.JavaClass.Predicates;
 import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
@@ -27,10 +29,29 @@ class SpringArchTest {
       ArchRuleDefinition.noClasses()
           .that()
           .resideOutsideOfPackages("..boot..", "..infrastructure..", "..contract..")
+          .and(
+              DescribedPredicate.not(
+                  Predicates.resideInAPackage("..application.mapper..")
+                      .and(Predicates.simpleNameEndingWith("MapperImpl"))))
           .should()
           .dependOnClassesThat()
           .resideInAPackage("org.springframework..")
-          .because("Spring may only be used in boot, infrastructure, and generated contract packages");
+          .because(
+              "Spring may only be used in boot, infrastructure, generated contracts, and generated application mappers");
+
+  @ArchTest
+  static final ArchRule application_mapper_implementations_should_only_depend_on_spring_component =
+      ArchRuleDefinition.noClasses()
+          .that()
+          .resideInAPackage("..application.mapper..")
+          .and()
+          .haveSimpleNameEndingWith("MapperImpl")
+          .should()
+          .dependOnClassesThat(
+              Predicates.resideInAPackage("org.springframework..")
+                  .and(DescribedPredicate.not(Predicates.type(Component.class))))
+          .because("Generated application mappers may only depend on Spring's @Component")
+          .allowEmptyShould(true);
 
   @ArchTest
   static final ArchRule application_and_domain_should_not_depend_on_spring_boot =

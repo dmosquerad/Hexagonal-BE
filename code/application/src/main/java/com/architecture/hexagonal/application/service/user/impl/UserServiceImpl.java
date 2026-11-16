@@ -1,9 +1,7 @@
 package com.architecture.hexagonal.application.service.user.impl;
 
+import com.architecture.hexagonal.application.mapper.user.UserEventMapper;
 import com.architecture.hexagonal.application.service.user.UserService;
-import com.architecture.hexagonal.contract.bus.model.user.event.UserCreatedEvent;
-import com.architecture.hexagonal.contract.bus.model.user.event.UserDeletedEvent;
-import com.architecture.hexagonal.contract.bus.model.user.event.UserUpdatedEvent;
 import com.architecture.hexagonal.domain.annotation.ApplicationService;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
@@ -28,16 +26,13 @@ public class UserServiceImpl implements UserService {
   private final UserRepositoryReadPort userRepositoryReadPort;
   private final UserRepositoryWritePort userRepositoryWritePort;
   private final EventBus eventBus;
+  private final UserEventMapper userEventMapper;
 
   @Override
   public User createUser(final @NonNull User user) {
     final User createdUser = userRepositoryWritePort.saveUser(user);
 
-    final UserCreatedEvent userCreatedEvent = new UserCreatedEvent();
-    userCreatedEvent.setUserId(createdUser.userId());
-    userCreatedEvent.setName(createdUser.name());
-    userCreatedEvent.setEmail(createdUser.email().getEmail());
-    eventBus.publish(userCreatedEvent);
+    eventBus.publish(userEventMapper.toUserCreatedEvent(createdUser));
     return createdUser;
   }
 
@@ -52,11 +47,7 @@ public class UserServiceImpl implements UserService {
                         ExceptionMessage.NOT_FOUND_DATA_MESSAGE + userUuid,
                         FailureType.NON_RETRYABLE));
 
-    final UserDeletedEvent userDeletedEvent = new UserDeletedEvent();
-    userDeletedEvent.setUserId(deletedUser.userId());
-    userDeletedEvent.setName(deletedUser.name());
-    userDeletedEvent.setEmail(deletedUser.email().getEmail());
-    eventBus.publish(userDeletedEvent);
+    eventBus.publish(userEventMapper.toUserDeletedEvent(deletedUser));
     return deletedUser;
   }
 
@@ -132,10 +123,6 @@ public class UserServiceImpl implements UserService {
   }
 
   private void publishUserUpdated(final User updatedUser) {
-    final UserUpdatedEvent userUpdatedEvent = new UserUpdatedEvent();
-    userUpdatedEvent.setUserId(updatedUser.userId());
-    userUpdatedEvent.setName(updatedUser.name());
-    userUpdatedEvent.setEmail(updatedUser.email().getEmail());
-    eventBus.publish(userUpdatedEvent);
+    eventBus.publish(userEventMapper.toUserUpdatedEvent(updatedUser));
   }
 }

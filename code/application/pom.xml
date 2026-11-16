@@ -24,6 +24,13 @@
             <artifactId>contract-bus</artifactId>
         </dependency>
         <!-- ============================================ -->
+        <!-- MAPSTRUCT -->
+        <!-- ============================================ -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+        </dependency>
+        <!-- ============================================ -->
         <!-- MOTHER TEST -->
         <!-- ============================================ -->
         <dependency>
@@ -31,7 +38,6 @@
             <artifactId>domain</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
-        </dependency>
         <!-- ============================================ -->
         <!-- TEST -->
         <!-- ============================================ -->

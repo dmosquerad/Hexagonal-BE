@@ -7,6 +7,7 @@ import com.architecture.hexagonal.domain.port.out.repository.user.UserRepository
 import com.architecture.hexagonal.domain.port.out.repository.user.UserRepositoryWritePort;
 import com.architecture.hexagonal.domain.port.out.bus.event.EventBus;
 import com.architecture.hexagonal.application.service.user.UserService;
+import com.architecture.hexagonal.application.mapper.user.UserEventMapper;
 import com.architecture.hexagonal.application.service.user.impl.UserServiceImpl;
 import com.architecture.hexagonal.contract.bus.model.user.query.UserExistsQuery;
 import com.architecture.hexagonal.domain.databuilder.model.entity.user.UserTestDataBuilder;
@@ -22,6 +23,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mapstruct.factory.Mappers;
 
 @ExtendWith(MockitoExtension.class)
 class UserExistsUseCaseImplTestIT {
@@ -33,6 +35,8 @@ class UserExistsUseCaseImplTestIT {
 
   @Spy private SpyTransactionReadBoundary transactionReadBoundary =
       new SpyTransactionReadBoundary();
+
+  @Spy private UserEventMapper userEventMapper = Mappers.getMapper(UserEventMapper.class);
 
   @InjectMocks private UserServiceImpl userServiceImpl;
   @InjectMocks private UserExistsUseCaseImpl userExistsUseCase;

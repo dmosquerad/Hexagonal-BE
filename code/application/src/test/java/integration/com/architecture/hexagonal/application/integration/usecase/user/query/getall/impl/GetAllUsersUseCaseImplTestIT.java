@@ -8,6 +8,7 @@ import com.architecture.hexagonal.domain.port.out.repository.user.UserRepository
 import com.architecture.hexagonal.domain.model.projector.user.UserEmailProjector;
 import com.architecture.hexagonal.application.service.email.EmailService;
 import com.architecture.hexagonal.application.service.email.impl.EmailServiceImpl;
+import com.architecture.hexagonal.application.mapper.user.UserEventMapper;
 import com.architecture.hexagonal.application.service.user.UserService;
 import com.architecture.hexagonal.application.service.user.impl.UserServiceImpl;
 import com.architecture.hexagonal.domain.databuilder.model.vo.pagination.PaginationResultVoTestDataBuilder;
@@ -27,6 +28,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mapstruct.factory.Mappers;
 
 @ExtendWith(MockitoExtension.class)
 class GetAllUsersUseCaseImplTestIT {
@@ -38,6 +40,8 @@ class GetAllUsersUseCaseImplTestIT {
 
   @Spy private SpyTransactionReadBoundary transactionReadBoundary =
       new SpyTransactionReadBoundary();
+
+  @Spy private UserEventMapper userEventMapper = Mappers.getMapper(UserEventMapper.class);
 
   @InjectMocks private EmailServiceImpl emailServiceImpl;
   @InjectMocks private UserServiceImpl userServiceImpl;
