@@ -38,6 +38,7 @@
             <artifactId>domain</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
+        </dependency>
         <!-- ============================================ -->
         <!-- TEST -->
         <!-- ============================================ -->

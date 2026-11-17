@@ -1,6 +1,8 @@
 package com.architecture.hexagonal.application.service.user.impl;
 
-import com.architecture.hexagonal.application.mapper.user.UserEventMapper;
+import com.architecture.hexagonal.application.mapper.user.UserCreatedEventMapper;
+import com.architecture.hexagonal.application.mapper.user.UserDeletedEventMapper;
+import com.architecture.hexagonal.application.mapper.user.UserUpdatedEventMapper;
 import com.architecture.hexagonal.application.service.user.UserService;
 import com.architecture.hexagonal.domain.annotation.ApplicationService;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
@@ -26,13 +28,12 @@ public class UserServiceImpl implements UserService {
   private final UserRepositoryReadPort userRepositoryReadPort;
   private final UserRepositoryWritePort userRepositoryWritePort;
   private final EventBus eventBus;
-  private final UserEventMapper userEventMapper;
 
   @Override
   public User createUser(final @NonNull User user) {
     final User createdUser = userRepositoryWritePort.saveUser(user);
 
-    eventBus.publish(userEventMapper.toUserCreatedEvent(createdUser));
+    eventBus.publish(UserCreatedEventMapper.INSTANCE.toUserCreatedEvent(createdUser));
     return createdUser;
   }
 
@@ -47,7 +48,7 @@ public class UserServiceImpl implements UserService {
                         ExceptionMessage.NOT_FOUND_DATA_MESSAGE + userUuid,
                         FailureType.NON_RETRYABLE));
 
-    eventBus.publish(userEventMapper.toUserDeletedEvent(deletedUser));
+    eventBus.publish(UserDeletedEventMapper.INSTANCE.toUserDeletedEvent(deletedUser));
     return deletedUser;
   }
 
@@ -123,6 +124,6 @@ public class UserServiceImpl implements UserService {
   }
 
   private void publishUserUpdated(final User updatedUser) {
-    eventBus.publish(userEventMapper.toUserUpdatedEvent(updatedUser));
+    eventBus.publish(UserUpdatedEventMapper.INSTANCE.toUserUpdatedEvent(updatedUser));
   }
 }

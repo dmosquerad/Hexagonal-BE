@@ -74,10 +74,6 @@ class ApplicationArchTest {
             .areDeclaredInClassesThat()
             .areAnnotatedWith(ApplicationService.class)
             .should()
-            .haveRawType(
-                Predicates.resideInAnyPackage("..domain.port.out..", "..application.mapper..")
-                    .or(Predicates.assignableTo(Clock.class)))
-            .because(
-                "Application service fields may reference outbound ports, application mappers or java.time.Clock");
-
+            .haveRawType(Predicates.resideInAnyPackage("..domain.port.out..").or(Predicates.assignableTo(Clock.class)))
+            .because("Application service fields may reference outbound ports or java.time.Clock");
 }

@@ -1,6 +1,5 @@
 package com.architecture.hexagonal.application.service.user;
 
-import com.architecture.hexagonal.application.mapper.user.UserEventMapper;
 import com.architecture.hexagonal.application.service.user.impl.UserServiceImpl;
 import com.architecture.hexagonal.contract.bus.model.user.event.UserCreatedEvent;
 import com.architecture.hexagonal.contract.bus.model.user.event.UserDeletedEvent;
@@ -45,8 +44,6 @@ class UserServiceImplTest {
 
   @Mock EventBus eventBus;
 
-  @Mock UserEventMapper userEventMapper;
-
   @Test
   void createShouldCreateUserUserWhenEmailIsAllowed() {
     final User user = UserTestDataBuilder.builder().build().user();
@@ -61,8 +58,6 @@ class UserServiceImplTest {
     expectedEvent.setEmail(savedUser.email().getEmail());
 
     Mockito.when(userRepositoryWritePort.saveUser(user)).thenReturn(savedUser);
-    Mockito.when(userEventMapper.toUserCreatedEvent(savedUser)).thenReturn(expectedEvent);
-
     final User result = userService.createUser(user);
 
     AssertionsForClassTypes.assertThat(result).usingRecursiveComparison().isEqualTo(savedUser);
@@ -85,8 +80,6 @@ class UserServiceImplTest {
     expectedEvent.setEmail(user.email().getEmail());
 
     Mockito.when(userRepositoryWritePort.deleteUser(user.userId())).thenReturn(Optional.of(user));
-    Mockito.when(userEventMapper.toUserDeletedEvent(user)).thenReturn(expectedEvent);
-
     final User result = userService.deleteUser(user.userId());
 
     AssertionsForClassTypes.assertThat(result).usingRecursiveComparison().isEqualTo(user);
@@ -248,8 +241,6 @@ class UserServiceImplTest {
 
     Mockito.when(userRepositoryReadPort.findUserById(user.userId())).thenReturn(Optional.of(user));
     Mockito.when(userRepositoryWritePort.saveUser(user)).thenReturn(user);
-    Mockito.when(userEventMapper.toUserUpdatedEvent(user)).thenReturn(expectedEvent);
-
     final User result = userService.patchUser(user);
 
     AssertionsForClassTypes.assertThat(result).usingRecursiveComparison().isEqualTo(user);
@@ -284,8 +275,6 @@ class UserServiceImplTest {
 
     Mockito.when(userRepositoryReadPort.findUserById(user.userId())).thenReturn(Optional.of(user));
     Mockito.when(userRepositoryWritePort.saveUser(user)).thenReturn(user);
-    Mockito.when(userEventMapper.toUserUpdatedEvent(user)).thenReturn(expectedEvent);
-
     final User result = userService.updateUser(user);
 
     AssertionsForClassTypes.assertThat(result).usingRecursiveComparison().isEqualTo(user);

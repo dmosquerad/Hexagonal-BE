@@ -29,29 +29,10 @@ class SpringArchTest {
       ArchRuleDefinition.noClasses()
           .that()
           .resideOutsideOfPackages("..boot..", "..infrastructure..", "..contract..")
-          .and(
-              DescribedPredicate.not(
-                  Predicates.resideInAPackage("..application.mapper..")
-                      .and(Predicates.simpleNameEndingWith("MapperImpl"))))
           .should()
           .dependOnClassesThat()
           .resideInAPackage("org.springframework..")
-          .because(
-              "Spring may only be used in boot, infrastructure, generated contracts, and generated application mappers");
-
-  @ArchTest
-  static final ArchRule application_mapper_implementations_should_only_depend_on_spring_component =
-      ArchRuleDefinition.noClasses()
-          .that()
-          .resideInAPackage("..application.mapper..")
-          .and()
-          .haveSimpleNameEndingWith("MapperImpl")
-          .should()
-          .dependOnClassesThat(
-              Predicates.resideInAPackage("org.springframework..")
-                  .and(DescribedPredicate.not(Predicates.type(Component.class))))
-          .because("Generated application mappers may only depend on Spring's @Component")
-          .allowEmptyShould(true);
+          .because("Spring may only be used in boot, infrastructure, and generated contract packages");
 
   @ArchTest
   static final ArchRule application_and_domain_should_not_depend_on_spring_boot =
