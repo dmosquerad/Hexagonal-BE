@@ -34,5 +34,10 @@
             <artifactId>spring-batch-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.architecture.hexagonal</groupId>
+            <artifactId>application</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>

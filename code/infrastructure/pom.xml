@@ -22,19 +22,20 @@
 
     <dependencies>
         <!-- ============================================ -->
-        <!-- PROJECT MODULES -->
-        <!-- ============================================ -->
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>test-kit-base</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <!-- ============================================ -->
         <!-- MAPSTRUCT -->
         <!-- ============================================ -->
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
+        </dependency>
+        <!-- ============================================ -->
+        <!-- MOTHER TEST -->
+        <!-- ============================================ -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>domain</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
         </dependency>
         <!-- ============================================ -->
         <!-- TEST -->
