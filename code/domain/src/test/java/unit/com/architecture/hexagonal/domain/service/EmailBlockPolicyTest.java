@@ -1,0 +1,120 @@
+package com.architecture.hexagonal.domain.service;
+
+import com.architecture.hexagonal.domain.databuilder.model.vo.email.EmailBlockRulesVoTestDataBuilder;
+import com.architecture.hexagonal.domain.databuilder.model.vo.email.EmailVoTestDataBuilder;
+import java.util.Set;
+import org.assertj.core.api.AssertionsForClassTypes;
+import org.junit.jupiter.api.Test;
+
+class EmailBlockPolicyTest {
+
+  @Test
+  void isBlockedShouldReturnFalseWhenRulesAreEmpty() {
+    AssertionsForClassTypes.assertThat(
+            EmailBlockPolicy.isBlocked(
+                EmailVoTestDataBuilder.builder().build().emailVo(),
+                EmailBlockRulesVoTestDataBuilder.builder().build().emailBlockRulesVo()))
+        .isFalse();
+  }
+
+  @Test
+  void isBlockedShouldReturnTrueWhenEmailMatchesBlockedEmail() {
+    AssertionsForClassTypes.assertThat(
+            EmailBlockPolicy.isBlocked(
+                EmailVoTestDataBuilder.builder().build().emailVo(),
+                EmailBlockRulesVoTestDataBuilder.builder()
+                    .email(Set.of("test@example.com"))
+                    .build()
+                    .emailBlockRulesVo()))
+        .isTrue();
+  }
+
+  @Test
+  void isBlockedShouldReturnTrueWhenUsernameMatchesBlockedUsername() {
+    AssertionsForClassTypes.assertThat(
+            EmailBlockPolicy.isBlocked(
+                EmailVoTestDataBuilder.builder().build().emailVo(),
+                EmailBlockRulesVoTestDataBuilder.builder()
+                    .username(Set.of("test"))
+                    .build()
+                    .emailBlockRulesVo()))
+        .isTrue();
+  }
+
+  @Test
+  void isBlockedShouldReturnTrueWhenHostMatchesBlockedHost() {
+    AssertionsForClassTypes.assertThat(
+            EmailBlockPolicy.isBlocked(
+                EmailVoTestDataBuilder.builder().build().emailVo(),
+                EmailBlockRulesVoTestDataBuilder.builder()
+                    .host(Set.of("example"))
+                    .build()
+                    .emailBlockRulesVo()))
+        .isTrue();
+  }
+
+  @Test
+  void isBlockedShouldReturnTrueWhenTldMatchesBlockedTld() {
+    AssertionsForClassTypes.assertThat(
+            EmailBlockPolicy.isBlocked(
+                EmailVoTestDataBuilder.builder().build().emailVo(),
+                EmailBlockRulesVoTestDataBuilder.builder()
+                    .tld(Set.of("com"))
+                    .build()
+                    .emailBlockRulesVo()))
+        .isTrue();
+  }
+
+  @Test
+  void isBlockedShouldReturnTrueWhenDomainMatchesBlockedDomain() {
+    AssertionsForClassTypes.assertThat(
+            EmailBlockPolicy.isBlocked(
+                EmailVoTestDataBuilder.builder().build().emailVo(),
+                EmailBlockRulesVoTestDataBuilder.builder()
+                    .domain(Set.of("example.com"))
+                    .build()
+                    .emailBlockRulesVo()))
+        .isTrue();
+  }
+
+  @Test
+  void isBlockedShouldReturnFalseWhenUsernameCannotFormEmail() {
+    AssertionsForClassTypes.assertThat(
+            EmailBlockPolicy.isBlocked(
+                EmailVoTestDataBuilder.builder().username("").build().emailVo(),
+                EmailBlockRulesVoTestDataBuilder.builder()
+                    .email(Set.of("test@example.com"))
+                    .build()
+                    .emailBlockRulesVo()))
+        .isFalse();
+  }
+
+  @Test
+  void isBlockedShouldReturnFalseWhenHostCannotFormDomain() {
+    AssertionsForClassTypes.assertThat(
+            EmailBlockPolicy.isBlocked(
+                EmailVoTestDataBuilder.builder().host("").build().emailVo(),
+                EmailBlockRulesVoTestDataBuilder.builder()
+                    .host(Set.of("example"))
+                    .build()
+                    .emailBlockRulesVo()))
+        .isFalse();
+  }
+
+  @Test
+  void isBlockedShouldReturnTrueWhenBlockedEmailMatchesCaseInsensitively() {
+    AssertionsForClassTypes.assertThat(
+            EmailBlockPolicy.isBlocked(
+                EmailVoTestDataBuilder.builder()
+                    .username("Test")
+                    .host("Example")
+                    .tld("Com")
+                    .build()
+                    .emailVo(),
+                EmailBlockRulesVoTestDataBuilder.builder()
+                    .email(Set.of("test@example.com"))
+                    .build()
+                    .emailBlockRulesVo()))
+        .isTrue();
+  }
+}

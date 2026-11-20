@@ -24,6 +24,15 @@
             <artifactId>contract-bus</artifactId>
         </dependency>
         <!-- ============================================ -->
+        <!-- MOTHER TEST -->
+        <!-- ============================================ -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>domain</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <!-- ============================================ -->
         <!-- TEST -->
         <!-- ============================================ -->
         <dependency>
@@ -51,24 +60,16 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>add-test-kit-sources</id>
-                        <phase>generate-test-sources</phase>
                         <goals>
-                            <goal>add-test-source</goal>
+                            <goal>test-jar</goal>
                         </goals>
-                        <configuration>
-                            <sources>
-                                <source>../test-kit/base/src/main/java</source>
-                            </sources>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
-
 </project>

@@ -53,7 +53,6 @@
 
   <modules>
     <module>contract</module>
-    <module>test-kit</module>
     <module>domain</module>
     <module>infrastructure</module>
     <module>application</module>
@@ -92,15 +91,6 @@
         <groupId>${project.groupId}</groupId>
         <artifactId>contract-outbound-rabbitmq</artifactId>
         <version>${project.version}</version>
-      </dependency>
-      <!-- ============================================ -->
-      <!-- TEST KIT -->
-      <!-- ============================================ -->
-      <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>test-kit-base</artifactId>
-        <version>${project.version}</version>
-        <scope>test</scope>
       </dependency>
       <!-- ============================================ -->
       <!-- DOMAIN -->
@@ -228,7 +218,24 @@
         <scope>import</scope>
       </dependency>
       <!-- ============================================ -->
-      <!-- TESTING -->
+      <!-- MOTHER TEST -->
+      <!-- ============================================ -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>application</artifactId>
+        <version>${project.version}</version>
+        <type>test-jar</type>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>domain</artifactId>
+        <version>${project.version}</version>
+        <type>test-jar</type>
+        <scope>test</scope>
+      </dependency>
+      <!-- ============================================ -->
+      <!-- TEST -->
       <!-- ============================================ -->
       <dependency>
         <groupId>com.tngtech.archunit</groupId>
@@ -240,6 +247,7 @@
   </dependencyManagement>
 
   <build>
+    <testSourceDirectory>src/test/java/unit</testSourceDirectory>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -266,23 +274,21 @@
           </annotationProcessorPaths>
         </configuration>
       </plugin>
-      <!-- ============================================ -->
-      <!-- SOURCE TEST -->
-      <!-- ============================================ -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
         <executions>
           <execution>
-            <id>add-test-sources</id>
+            <id>add-test-categories</id>
             <phase>generate-test-sources</phase>
             <goals>
               <goal>add-test-source</goal>
             </goals>
             <configuration>
               <sources>
-                <source>src/test-architecture/java</source>
-                <source>src/test-utils/java</source>
+                <source>src/test/java/integration</source>
+                <source>src/test/java/architecture</source>
+                <source>src/test/java/databuilder</source>
               </sources>
             </configuration>
           </execution>
@@ -377,15 +383,9 @@
                   <goal>verify</goal>
                 </goals>
                 <configuration>
-                  <testSourceDirectory>${project.basedir}/src/test-integration/java</testSourceDirectory>
-                  <additionalClasspathElements>
-                    <additionalClasspathElement>${project.basedir}/src/test-integration/resources</additionalClasspathElement>
-                  </additionalClasspathElements>
+                  <testSourceDirectory>${project.basedir}/src/test/java/integration</testSourceDirectory>
                   <includes>
-                    <include>**/IT*.java</include>
-                    <include>**/*IT.java</include>
-                    <include>**/*ITCase.java</include>
-                    <include>**/*IntegrationTest.java</include>
+                    <include>**/*TestIT.java</include>
                   </includes>
                 </configuration>
               </execution>
@@ -418,38 +418,6 @@
                       </limits>
                     </rule>
                   </rules>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>build-helper-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>add-integration-test-sources</id>
-                <phase>generate-test-sources</phase>
-                <goals>
-                  <goal>add-test-source</goal>
-                </goals>
-                <configuration>
-                  <sources>
-                    <source>src/test-integration/java</source>
-                  </sources>
-                </configuration>
-              </execution>
-              <execution>
-                <id>add-integration-test-resources</id>
-                <phase>generate-test-resources</phase>
-                <goals>
-                  <goal>add-test-resource</goal>
-                </goals>
-                <configuration>
-                  <resources>
-                    <resource>
-                      <directory>src/test-integration/resources</directory>
-                    </resource>
-                  </resources>
                 </configuration>
               </execution>
             </executions>

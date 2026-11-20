@@ -1,0 +1,203 @@
+package com.architecture.hexagonal.infrastructure.outbound.database.postgresql.repository.specification;
+
+import com.architecture.hexagonal.domain.databuilder.model.vo.email.EmailBlockRulesVoTestDataBuilder;
+import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;
+import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.data.UserDao;
+import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.repository.custom.predicate.UserPredicates;
+import com.architecture.hexagonal.infrastructure.outbound.database.postgresql.repository.custom.specification.UserSpecifications;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Path;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+import java.util.List;
+import java.util.Set;
+import org.assertj.core.api.AssertionsForClassTypes;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.jpa.domain.Specification;
+
+@ExtendWith(MockitoExtension.class)
+class UserSpecificationsTest {
+
+  private static MockedStatic<UserPredicates> predicates;
+
+  @Mock Root<UserDao> root;
+
+  @Mock CriteriaQuery<?> criteriaQuery;
+
+  @Mock CriteriaBuilder criteriaBuilder;
+
+  @Mock Path<String> emailExpression;
+
+  @Mock Predicate expectedPredicate;
+
+  @Mock Predicate blockedPredicate;
+
+  @Mock Predicate negatedPredicate;
+
+  @BeforeAll
+  static void setUpStaticMocks() {
+    predicates = Mockito.mockStatic(UserPredicates.class);
+  }
+
+  @AfterAll
+  static void closeStaticMocks() {
+    predicates.close();
+  }
+
+  @Test
+  void hostEqualsShouldReturnNullWhenHostIsBlank() {
+    final Specification<UserDao> specification = UserSpecifications.hostEquals("");
+
+    AssertionsForClassTypes.assertThat(
+            specification.toPredicate(root, criteriaQuery, criteriaBuilder))
+        .isNull();
+  }
+
+  @Test
+  void hostEqualsShouldBuildPredicateWhenHostIsNotBlank() {
+    final String host = "example";
+
+    Mockito.when(root.get(UserDao.Fields.email)).thenReturn((Path) emailExpression);
+    Mockito.when(criteriaBuilder.lower(emailExpression)).thenReturn(emailExpression);
+
+    predicates
+        .when(
+            () ->
+                UserPredicates.emailBelongsToHost(criteriaBuilder, emailExpression, List.of(host)))
+        .thenReturn(List.of(expectedPredicate));
+
+    final Specification<UserDao> specification = UserSpecifications.hostEquals(host);
+    final Predicate actual = specification.toPredicate(root, criteriaQuery, criteriaBuilder);
+
+    AssertionsForClassTypes.assertThat(actual).isSameAs(expectedPredicate);
+  }
+
+  @Test
+  void blockedEmailShouldReturnNullWhenNoRulesArePresent() {
+    final EmailBlockRulesVo rules =
+        EmailBlockRulesVoTestDataBuilder.builder().build().emailBlockRulesVo();
+
+    Mockito.when(root.get(UserDao.Fields.email)).thenReturn((Path) emailExpression);
+    Mockito.when(criteriaBuilder.lower(emailExpression)).thenReturn(emailExpression);
+
+    predicates
+        .when(
+            () -> UserPredicates.emailMatchesExact(criteriaBuilder, emailExpression, rules.email()))
+        .thenReturn(List.of());
+    predicates
+        .when(
+            () ->
+                UserPredicates.emailEndsWithDomain(
+                    criteriaBuilder, emailExpression, rules.domain()))
+        .thenReturn(List.of());
+    predicates
+        .when(
+            () -> UserPredicates.emailContainsHost(criteriaBuilder, emailExpression, rules.host()))
+        .thenReturn(List.of());
+    predicates
+        .when(() -> UserPredicates.emailEndsWithTld(criteriaBuilder, emailExpression, rules.tld()))
+        .thenReturn(List.of());
+    predicates
+        .when(
+            () ->
+                UserPredicates.emailStartsWithUsername(
+                    criteriaBuilder, emailExpression, rules.username()))
+        .thenReturn(List.of());
+
+    final Specification<UserDao> specification = UserSpecifications.blockedEmail(true, rules);
+    AssertionsForClassTypes.assertThat(
+            specification.toPredicate(root, criteriaQuery, criteriaBuilder))
+        .isNull();
+  }
+
+  @Test
+  void blockedEmailShouldReturnPredicateWhenBlockEmailIsTrue() {
+    final EmailBlockRulesVo rules =
+        EmailBlockRulesVoTestDataBuilder.builder()
+            .email(Set.of("blocked@example.com"))
+            .build()
+            .emailBlockRulesVo();
+
+    Mockito.when(root.get(UserDao.Fields.email)).thenReturn((Path) emailExpression);
+    Mockito.when(criteriaBuilder.lower(emailExpression)).thenReturn(emailExpression);
+
+    predicates
+        .when(
+            () -> UserPredicates.emailMatchesExact(criteriaBuilder, emailExpression, rules.email()))
+        .thenReturn(List.of(blockedPredicate));
+    predicates
+        .when(
+            () ->
+                UserPredicates.emailEndsWithDomain(
+                    criteriaBuilder, emailExpression, rules.domain()))
+        .thenReturn(List.of());
+    predicates
+        .when(
+            () -> UserPredicates.emailContainsHost(criteriaBuilder, emailExpression, rules.host()))
+        .thenReturn(List.of());
+    predicates
+        .when(() -> UserPredicates.emailEndsWithTld(criteriaBuilder, emailExpression, rules.tld()))
+        .thenReturn(List.of());
+    predicates
+        .when(
+            () ->
+                UserPredicates.emailStartsWithUsername(
+                    criteriaBuilder, emailExpression, rules.username()))
+        .thenReturn(List.of());
+
+    final Specification<UserDao> specification = UserSpecifications.blockedEmail(true, rules);
+    final Predicate actual = specification.toPredicate(root, criteriaQuery, criteriaBuilder);
+
+    AssertionsForClassTypes.assertThat(actual).isSameAs(blockedPredicate);
+  }
+
+  @Test
+  void blockedEmailShouldReturnNegatedPredicateWhenBlockEmailIsFalse() {
+    final EmailBlockRulesVo rules =
+        EmailBlockRulesVoTestDataBuilder.builder()
+            .email(Set.of("blocked@example.com"))
+            .build()
+            .emailBlockRulesVo();
+
+    Mockito.when(root.get(UserDao.Fields.email)).thenReturn((Path) emailExpression);
+    Mockito.when(criteriaBuilder.lower(emailExpression)).thenReturn(emailExpression);
+    Mockito.when(criteriaBuilder.not(blockedPredicate)).thenReturn(negatedPredicate);
+
+    predicates
+        .when(
+            () -> UserPredicates.emailMatchesExact(criteriaBuilder, emailExpression, rules.email()))
+        .thenReturn(List.of(blockedPredicate));
+    predicates
+        .when(
+            () ->
+                UserPredicates.emailEndsWithDomain(
+                    criteriaBuilder, emailExpression, rules.domain()))
+        .thenReturn(List.of());
+    predicates
+        .when(
+            () -> UserPredicates.emailContainsHost(criteriaBuilder, emailExpression, rules.host()))
+        .thenReturn(List.of());
+    predicates
+        .when(() -> UserPredicates.emailEndsWithTld(criteriaBuilder, emailExpression, rules.tld()))
+        .thenReturn(List.of());
+    predicates
+        .when(
+            () ->
+                UserPredicates.emailStartsWithUsername(
+                    criteriaBuilder, emailExpression, rules.username()))
+        .thenReturn(List.of());
+
+    final Specification<UserDao> specification = UserSpecifications.blockedEmail(false, rules);
+    final Predicate actual = specification.toPredicate(root, criteriaQuery, criteriaBuilder);
+
+    AssertionsForClassTypes.assertThat(actual).isSameAs(negatedPredicate);
+  }
+}

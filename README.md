@@ -82,7 +82,7 @@ Hexagonal-BE/
     └── docker/                              # Docker Compose and init scripts (PostgreSQL, MongoDB, Kafka)
 ```
 
-Each Maven module follows the same source layout: `src/main/java`, `src/test/java` (unit tests), `src/test-architecture/java` (ArchUnit tests), and `src/test-integration/java` (integration tests, run with the `integration-tests` profile).
+Each Maven module uses `src/main/java` for production code and a unified `src/test/java` tree for tests, separated into `unit`, `integration`, `architecture`, and `databuilder` source roots. Integration tests use the `*TestIT` naming convention and run with the `integration-tests` profile.
 
 ## 🔄 Module Communication
 
@@ -426,6 +426,8 @@ mvn clean install
 This runs the unit and architecture tests. Integration tests and the 80% JaCoCo coverage gate are compiled and run separately with the `integration-tests` profile:
 
 ### Integration Tests
+Name each integration test class and file after the class under test, followed by `TestIT` (for example, `InboxSchedulerImplTestIT`).
+
 ```bash
 cd code
 mvn clean install -Pintegration-tests
@@ -433,9 +435,9 @@ mvn clean install -Pintegration-tests
 
 The project includes:
 - **Unit Tests** (`src/test/java`): Fast, isolated business logic tests
-- **Architecture Tests** (`src/test-architecture/java`): Enforce architectural boundaries and dependencies
-- **Integration Tests** (`src/test-integration/java`): Database, messaging and API layer integration tests
-- **Test Utils** (`src/test-utils/java`): Shared builders and reusable test helpers, registered as test sources by the parent POM
+- **Architecture Tests** (`src/test/java`): Enforce architectural boundaries and dependencies
+- **Integration Tests** (`src/test/java`, `*TestIT`): Database, messaging and API layer integration tests
+- **Test Utils** (`src/test/java`): Builders and reusable test helpers, packaged in test JARs when shared across modules
 - **Test Kit** (`code/test-kit/base`): Shared test-kit module used by the test suites
 
 ### E2E Tests (Karate)

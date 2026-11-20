@@ -1,0 +1,26 @@
+package com.architecture.hexagonal.infrastructure.outbound.database.postgresql.mapper.converter;
+
+import com.architecture.hexagonal.domain.databuilder.model.vo.email.EmailVoTestDataBuilder;
+import com.architecture.hexagonal.domain.model.vo.email.EmailVo;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+class EmailVoConverterTest {
+
+  @Test
+  void toEmailVoShouldReturnEmailVoWhenEmailIsValid() {
+    final EmailVo result = EmailVoConverter.toEmailVo("test@example.com");
+    final EmailVo expected = EmailVoTestDataBuilder.builder().build().emailVo();
+
+    Assertions.assertThat(result).isEqualTo(expected);
+  }
+
+  @Test
+  void toEmailVoShouldReturnEmptyWhenInputIsNull() {
+    final EmailVo result = EmailVoConverter.toEmailVo(null);
+
+    Assertions.assertThat(result)
+        .isEqualTo(
+            EmailVoTestDataBuilder.builder().username(null).host(null).tld(null).build().emailVo());
+  }
+}
