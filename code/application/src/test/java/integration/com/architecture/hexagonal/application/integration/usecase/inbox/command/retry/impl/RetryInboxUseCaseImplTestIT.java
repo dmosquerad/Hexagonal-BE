@@ -2,13 +2,14 @@ package com.architecture.hexagonal.application.integration.usecase.inbox.command
 
 import com.architecture.hexagonal.application.databuilder.transaction.SpyTransactionReadBoundary;
 import com.architecture.hexagonal.application.usecase.inbox.command.retry.impl.RetryInboxUseCaseImpl;
+import com.architecture.hexagonal.domain.databuilder.model.time.TestClock;
+import com.architecture.hexagonal.domain.databuilder.model.vo.date.DateVoTestDataBuilder;
 import com.architecture.hexagonal.domain.port.out.inbox.InboxProcess;
 import com.architecture.hexagonal.domain.port.out.repository.inbox.InboxRepositoryReadPort;
 import com.architecture.hexagonal.domain.port.out.repository.inbox.InboxRepositoryWritePort;
 import com.architecture.hexagonal.domain.port.out.configuration.SchedulerConfigurationPort;
 import com.architecture.hexagonal.application.service.inbox.InboxService;
 import com.architecture.hexagonal.application.service.inbox.impl.InboxServiceImpl;
-import com.architecture.hexagonal.domain.databuilder.model.time.TestClock;
 import com.architecture.hexagonal.contract.bus.model.retry.command.RetryInboxeventCommand;
 import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
@@ -16,7 +17,6 @@ import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
 import com.architecture.hexagonal.domain.databuilder.model.entity.inbox.InboxTestDataBuilder;
 import com.architecture.hexagonal.domain.databuilder.model.vo.inbox.SchedulerInboxConfigurationVoTestDataBuilder;
 import java.time.Clock;
-import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 import org.assertj.core.api.AssertionsForClassTypes;
@@ -52,7 +52,7 @@ class RetryInboxUseCaseImplTestIT {
         inbox.toBuilder()
             .status(StatusVo.PROCESSING)
             .retryCount(1)
-            .processedAt(TestClock.FIXED_INSTANT.atOffset(ZoneOffset.UTC))
+            .processedAt(DateVoTestDataBuilder.builder().build().dateVo())
             .build();
     final Inbox processedInbox = processingInbox.toBuilder().status(StatusVo.PROCESSED).build();
 

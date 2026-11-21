@@ -1,6 +1,7 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.repository.inbox.custom.impl;
 
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.date.DateVoDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.inbox.InboxDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.payload.MessageHeaderDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.payload.PayloadDao;
@@ -61,7 +62,17 @@ public class InboxWriteMongodbRepositoryImpl implements InboxWriteMongodbReposit
     return new Query(
         Criteria.where(payloadMessageHeader + MessageHeaderDao.Fields.messageId)
             .is(inboxDao.getPayload().getMessageHeader().getMessageId())
-            .and(payloadMessageHeader + MessageHeaderDao.Fields.messageDate)
-            .is(inboxDao.getPayload().getMessageHeader().getMessageDate()));
+            .and(
+                payloadMessageHeader
+                    + MessageHeaderDao.Fields.messageDate
+                    + "."
+                    + DateVoDao.Fields.date)
+            .is(inboxDao.getPayload().getMessageHeader().getMessageDate().getDate())
+            .and(
+                payloadMessageHeader
+                    + MessageHeaderDao.Fields.messageDate
+                    + "."
+                    + DateVoDao.Fields.zoneId)
+            .is(inboxDao.getPayload().getMessageHeader().getMessageDate().getZoneId()));
   }
 }

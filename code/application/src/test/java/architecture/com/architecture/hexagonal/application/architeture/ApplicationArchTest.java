@@ -76,5 +76,4 @@ class ApplicationArchTest {
             .should()
             .haveRawType(Predicates.resideInAnyPackage("..domain.port.out..").or(Predicates.assignableTo(Clock.class)))
             .because("Application service fields may reference outbound ports or java.time.Clock");
-
 }

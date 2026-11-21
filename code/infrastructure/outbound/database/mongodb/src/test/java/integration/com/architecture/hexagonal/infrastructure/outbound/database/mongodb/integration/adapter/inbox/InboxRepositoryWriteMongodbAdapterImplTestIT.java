@@ -1,14 +1,19 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.integration.adapter.inbox;
 
 import com.architecture.hexagonal.domain.databuilder.model.entity.inbox.InboxTestDataBuilder;
+import com.architecture.hexagonal.domain.databuilder.model.time.TestClock;
+import com.architecture.hexagonal.domain.databuilder.model.vo.date.DateVoTestDataBuilder;
+import com.architecture.hexagonal.domain.databuilder.model.vo.payload.MessageHeaderVoTestDataBuilder;
 import com.architecture.hexagonal.domain.databuilder.model.vo.payload.PayloadVoTestDataBuilder;
 import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
+import com.architecture.hexagonal.domain.model.vo.date.DateVo;
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.adapter.inbox.InboxRepositoryWriteMongodbAdapterImpl;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.config.MongodbIT;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.config.MongodbTestApplication;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.repository.inbox.InboxWriteMongodbRepository;
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.Optional;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,8 +36,28 @@ class InboxRepositoryWriteMongodbAdapterImplTestIT extends MongodbIT {
 
   @Test
   void saveShouldPersistInboxAndReturnMappedEntity() {
+    final ZoneId zoneId = ZoneId.of("Europe/Madrid");
+    final DateVo date =
+        DateVoTestDataBuilder.builder()
+            .date(TestClock.FIXED_INSTANT)
+            .zoneId(zoneId)
+            .build()
+            .dateVo();
     final Inbox inbox =
-        InboxTestDataBuilder.<Object>builder().build().inbox();
+        InboxTestDataBuilder.<Object>builder()
+            .createdAt(date)
+            .processedAt(date)
+            .payload(
+                PayloadVoTestDataBuilder.<Object>builder()
+                    .messageHeaderVo(
+                        MessageHeaderVoTestDataBuilder.builder()
+                            .messageDate(date)
+                            .build()
+                            .messageHeaderVo())
+                    .build()
+                    .payloadVo())
+            .build()
+            .inbox();
 
     final Inbox result = inboxWriteMongodbAdapter.save(inbox);
 
@@ -68,7 +93,12 @@ class InboxRepositoryWriteMongodbAdapterImplTestIT extends MongodbIT {
         pending.toBuilder()
             .status(StatusVo.PROCESSING)
             .retryCount(1)
-            .processedAt(pending.createdAt().plusSeconds(30))
+            .processedAt(
+                DateVoTestDataBuilder.builder()
+                    .date(pending.createdAt().date().plusSeconds(30))
+                    .zoneId(pending.createdAt().zoneId())
+                    .build()
+                    .dateVo())
             .build();
 
     final Optional<Inbox> result =
@@ -101,7 +131,12 @@ class InboxRepositoryWriteMongodbAdapterImplTestIT extends MongodbIT {
         pending.toBuilder()
             .status(StatusVo.PROCESSED)
             .retryCount(1)
-            .processedAt(pending.createdAt().plusSeconds(30))
+            .processedAt(
+                DateVoTestDataBuilder.builder()
+                    .date(pending.createdAt().date().plusSeconds(30))
+                    .zoneId(pending.createdAt().zoneId())
+                    .build()
+                    .dateVo())
             .build();
 
     final Inbox result = inboxWriteMongodbAdapter.upsertByMessageIdentity(processed);

@@ -3,15 +3,14 @@ package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.date.DateVoDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.outbox.OutboxDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.payload.PayloadDao;
-import com.architecture.hexagonal.domain.databuilder.model.time.TestClock;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.util.UUID;
-
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.databuilder.data.date.DateVoDaoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.databuilder.data.payload.PayloadDaoTestDataBuilder;
 import lombok.Builder;
+
+import java.util.UUID;
 
 @Builder
 public class OutboxDaoTestDataBuilder {
@@ -38,10 +37,10 @@ public class OutboxDaoTestDataBuilder {
   private int retryCount = 0;
 
   @Builder.Default
-  private ZonedDateTime createdAt = TestClock.FIXED_INSTANT.atZone(ZoneOffset.UTC);
+  private DateVoDao createdAt = DateVoDaoTestDataBuilder.builder().build().dateVoDao();
 
   @Builder.Default
-  private ZonedDateTime processedAt = TestClock.FIXED_INSTANT.atZone(ZoneOffset.UTC);
+  private DateVoDao processedAt = DateVoDaoTestDataBuilder.builder().build().dateVoDao();
 
   public OutboxDao outboxDao() {
     final OutboxDao outboxDao = new OutboxDao();

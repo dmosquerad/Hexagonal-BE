@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.domain.model.vo.payload;
 
-import java.time.OffsetDateTime;
+import com.architecture.hexagonal.domain.model.vo.date.DateVo;
 import java.util.UUID;
 import lombok.Builder;
 
 @Builder
-public record MessageHeaderVo(UUID messageId, OffsetDateTime messageDate) {}
+public record MessageHeaderVo(UUID messageId, DateVo messageDate) {}

@@ -3,15 +3,17 @@ package com.architecture.hexagonal.application.integration.usecase.inbox.command
 import com.architecture.hexagonal.application.databuilder.transaction.SpyTransactionWriteBoundary;
 import com.architecture.hexagonal.application.databuilder.usecase.inbox.command.RegisterInboxInputTestDataBuilder;
 import com.architecture.hexagonal.application.usecase.inbox.command.persist.impl.PersistInboxUseCaseImpl;
+import com.architecture.hexagonal.domain.databuilder.model.time.TestClock;
+import com.architecture.hexagonal.domain.databuilder.model.vo.date.DateVoTestDataBuilder;
 import com.architecture.hexagonal.domain.port.out.inbox.InboxProcess;
 import com.architecture.hexagonal.domain.port.out.repository.inbox.InboxRepositoryReadPort;
 import com.architecture.hexagonal.domain.port.out.repository.inbox.InboxRepositoryWritePort;
 import com.architecture.hexagonal.domain.port.out.configuration.SchedulerConfigurationPort;
 import com.architecture.hexagonal.application.service.inbox.InboxService;
 import com.architecture.hexagonal.application.service.inbox.impl.InboxServiceImpl;
-import com.architecture.hexagonal.domain.databuilder.model.time.TestClock;
 import com.architecture.hexagonal.contract.bus.model.inbox.command.RegisterInboxCommand;
 import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
+import com.architecture.hexagonal.domain.model.vo.date.DateVo;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.domain.model.vo.payload.MessageHeaderVo;
 import com.architecture.hexagonal.domain.model.vo.payload.PayloadVo;
@@ -56,7 +58,7 @@ class PersistInboxUseCaseImplTestIT {
                     .messageHeader(
                         MessageHeaderVo.builder()
                             .messageId(command.getMessageHeader().getMessageId())
-                            .messageDate(command.getMessageHeader().getMessageDate())
+                            .messageDate(toDateVo(command.getMessageHeader().getMessageDate()))
                             .build())
                     .data(command.getData())
                     .build())
@@ -64,7 +66,7 @@ class PersistInboxUseCaseImplTestIT {
             .aggregateId(command.getAggregateId())
             .action(command.getAction())
             .status(StatusVo.PENDING)
-            .createdAt(command.getCreatedAt())
+            .createdAt(toDateVo(command.getCreatedAt()))
             .build();
     Mockito.when(inboxRepositoryWritePort.save(Mockito.any(Inbox.class)))
         .thenAnswer(AdditionalAnswers.returnsFirstArg());
@@ -83,5 +85,13 @@ class PersistInboxUseCaseImplTestIT {
         .isEqualTo(expectedInbox);
     Mockito.verify(transactionWriteBoundary).execute(Mockito.<Supplier<Inbox>>any());
     Mockito.verify(inboxRepositoryWritePort).save(savedInbox);
+  }
+
+  private DateVo toDateVo(final java.time.OffsetDateTime offsetDateTime) {
+    return DateVoTestDataBuilder.builder()
+        .date(offsetDateTime.toInstant())
+        .zoneId(offsetDateTime.getOffset())
+        .build()
+        .dateVo();
   }
 }

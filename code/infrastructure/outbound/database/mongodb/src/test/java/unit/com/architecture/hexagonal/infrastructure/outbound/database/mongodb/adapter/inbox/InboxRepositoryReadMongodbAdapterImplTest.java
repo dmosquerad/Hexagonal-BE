@@ -34,7 +34,7 @@ class InboxRepositoryReadMongodbAdapterImplTest {
     final Inbox inbox = InboxTestDataBuilder.builder().build().inbox();
     final InboxDao inboxDao = InboxDaoTestDataBuilder.builder().build().inboxDao();
     Mockito.when(
-            repository.findByStatusAndAggregateTypeOrderByCreatedAtAsc(
+            repository.findByStatusAndAggregateTypeOrderByCreatedAt_DateAsc(
                 StatusVo.PENDING, inbox.aggregateType()))
         .thenReturn(List.of(inboxDao));
 
@@ -43,7 +43,8 @@ class InboxRepositoryReadMongodbAdapterImplTest {
 
     Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(List.of(inbox));
     Mockito.verify(repository)
-        .findByStatusAndAggregateTypeOrderByCreatedAtAsc(StatusVo.PENDING, inbox.aggregateType());
+        .findByStatusAndAggregateTypeOrderByCreatedAt_DateAsc(
+            StatusVo.PENDING, inbox.aggregateType());
     Mockito.verify(inboxDoFromMongodbMapper).toInbox(inboxDao);
   }
 }

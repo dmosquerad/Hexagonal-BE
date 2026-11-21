@@ -20,7 +20,7 @@ public class OutboxRepositoryReadMongodbAdapterImpl implements OutboxRepositoryR
   public List<Outbox> findByStatusAndAggregateType(
       final OutboxStatusAndAggregateProjector outboxStatusAndAggregateProjector) {
     return outboxReadMongodbRepository
-        .findByStatusAndAggregateTypeOrderByCreatedAtAsc(
+        .findByStatusAndAggregateTypeOrderByCreatedAt_DateAsc(
             outboxStatusAndAggregateProjector.status(),
             outboxStatusAndAggregateProjector.aggregateType())
         .stream()

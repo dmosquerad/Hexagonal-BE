@@ -1,12 +1,11 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.databuilder.data.payload;
 
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.date.DateVoDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.payload.MessageHeaderDao;
-import com.architecture.hexagonal.domain.databuilder.model.time.TestClock;
-import lombok.Builder;
-
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.UUID;
+
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.databuilder.data.date.DateVoDaoTestDataBuilder;
+import lombok.Builder;
 
 @Builder
 public class MessageHeaderDaoTestDataBuilder {
@@ -15,13 +14,13 @@ public class MessageHeaderDaoTestDataBuilder {
     private UUID messageId = UUID.fromString("4059510b-ceb3-4d4c-913e-1759acbd63b1");
 
     @Builder.Default
-    private ZonedDateTime messageDate = TestClock.FIXED_INSTANT.atZone(ZoneOffset.UTC);
+    private DateVoDao dateVoDao = DateVoDaoTestDataBuilder.builder().build().dateVoDao();
 
     public MessageHeaderDao messageHeaderDao() {
         final MessageHeaderDao messageHeaderDao = new MessageHeaderDao();
 
         messageHeaderDao.setMessageId(messageId);
-        messageHeaderDao.setMessageDate(messageDate);
+        messageHeaderDao.setMessageDate(dateVoDao);
 
         return messageHeaderDao;
     }

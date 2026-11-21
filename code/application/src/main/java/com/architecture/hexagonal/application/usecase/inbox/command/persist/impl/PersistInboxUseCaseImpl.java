@@ -4,12 +4,14 @@ import com.architecture.hexagonal.application.service.inbox.InboxService;
 import com.architecture.hexagonal.contract.bus.model.inbox.command.RegisterInboxCommand;
 import com.architecture.hexagonal.domain.annotation.ApplicationUseCase;
 import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
+import com.architecture.hexagonal.domain.model.vo.date.DateVo;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.domain.model.vo.payload.MessageHeaderVo;
 import com.architecture.hexagonal.domain.model.vo.payload.PayloadVo;
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
 import com.architecture.hexagonal.domain.port.in.bus.command.CommandHandler;
 import com.architecture.hexagonal.domain.port.in.transaction.TransactionWriteBoundary;
+import java.time.OffsetDateTime;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
@@ -28,7 +30,7 @@ public class PersistInboxUseCaseImpl implements CommandHandler<RegisterInboxComm
                     .messageHeader(
                         MessageHeaderVo.builder()
                             .messageId(command.getMessageHeader().getMessageId())
-                            .messageDate(command.getMessageHeader().getMessageDate())
+                            .messageDate(toDateVo(command.getMessageHeader().getMessageDate()))
                             .build())
                     .data(command.getData())
                     .build())
@@ -36,9 +38,20 @@ public class PersistInboxUseCaseImpl implements CommandHandler<RegisterInboxComm
             .aggregateId(command.getAggregateId())
             .action(command.getAction())
             .status(StatusVo.PENDING)
-            .createdAt(command.getCreatedAt())
+            .createdAt(toDateVo(command.getCreatedAt()))
             .build();
 
     return transactionWriteBoundary.execute(() -> inboxService.save(inbox));
+  }
+
+  private DateVo toDateVo(final OffsetDateTime offsetDateTime) {
+    if (offsetDateTime == null) {
+      return null;
+    }
+
+    return DateVo.builder()
+        .date(offsetDateTime.toInstant())
+        .zoneId(offsetDateTime.getOffset())
+        .build();
   }
 }

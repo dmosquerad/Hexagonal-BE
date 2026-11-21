@@ -3,6 +3,7 @@ package com.architecture.hexagonal.application.service.inbox.impl;
 import com.architecture.hexagonal.application.service.inbox.InboxService;
 import com.architecture.hexagonal.domain.annotation.ApplicationService;
 import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
+import com.architecture.hexagonal.domain.model.vo.date.DateVo;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
 import com.architecture.hexagonal.domain.port.out.configuration.SchedulerConfigurationPort;
@@ -10,7 +11,7 @@ import com.architecture.hexagonal.domain.port.out.inbox.InboxProcess;
 import com.architecture.hexagonal.domain.port.out.repository.inbox.InboxRepositoryReadPort;
 import com.architecture.hexagonal.domain.port.out.repository.inbox.InboxRepositoryWritePort;
 import java.time.Clock;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import lombok.NonNull;
@@ -41,7 +42,7 @@ public class InboxServiceImpl implements InboxService {
         inbox.toBuilder()
             .status(StatusVo.PROCESSING)
             .retryCount(inbox.retryCount() + 1)
-            .processedAt(OffsetDateTime.now(clock))
+            .processedAt(DateVo.builder().date(Instant.now(clock)).zoneId(clock.getZone()).build())
             .build();
 
     final Optional<Inbox> claimedInbox =
@@ -55,7 +56,8 @@ public class InboxServiceImpl implements InboxService {
       return inboxRepositoryWritePort.upsertByMessageIdentity(
           claimedInbox.get().toBuilder()
               .status(StatusVo.FAILED)
-              .processedAt(OffsetDateTime.now(clock))
+              .processedAt(
+                  DateVo.builder().date(Instant.now(clock)).zoneId(clock.getZone()).build())
               .build());
     }
 

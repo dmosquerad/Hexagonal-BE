@@ -1,10 +1,10 @@
 package com.architecture.hexagonal.domain.model.entity.inbox;
 
 import com.architecture.hexagonal.domain.model.entity.EntityId;
+import com.architecture.hexagonal.domain.model.vo.date.DateVo;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.domain.model.vo.payload.PayloadVo;
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
-import java.time.OffsetDateTime;
 import java.util.UUID;
 import lombok.Builder;
 
@@ -16,8 +16,8 @@ public record Inbox(
     String action,
     StatusVo status,
     int retryCount,
-    OffsetDateTime createdAt,
-    OffsetDateTime processedAt)
+    DateVo createdAt,
+    DateVo processedAt)
     implements EntityId<Inbox.InboxKey> {
 
   @Override
@@ -29,5 +29,5 @@ public record Inbox(
   }
 
   @Builder
-  public record InboxKey(UUID messageId, OffsetDateTime messageDate) {}
+  public record InboxKey(UUID messageId, DateVo messageDate) {}
 }

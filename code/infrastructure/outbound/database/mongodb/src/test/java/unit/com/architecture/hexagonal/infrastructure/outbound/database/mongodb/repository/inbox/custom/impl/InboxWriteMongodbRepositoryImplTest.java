@@ -60,8 +60,10 @@ class InboxWriteMongodbRepositoryImplTest {
     final Document query = queryCaptor.getValue().getQueryObject();
     Assertions.assertThat(query.get("payload.messageHeader.messageId"))
         .isEqualTo(inboxDao.getPayload().getMessageHeader().getMessageId());
-    Assertions.assertThat(query.get("payload.messageHeader.messageDate"))
-        .isEqualTo(inboxDao.getPayload().getMessageHeader().getMessageDate());
+    Assertions.assertThat(query.get("payload.messageHeader.messageDate.date"))
+        .isEqualTo(inboxDao.getPayload().getMessageHeader().getMessageDate().getDate());
+    Assertions.assertThat(query.get("payload.messageHeader.messageDate.zoneId"))
+        .isEqualTo(inboxDao.getPayload().getMessageHeader().getMessageDate().getZoneId());
     Assertions.assertThat(query.get(InboxDao.Fields.status)).isEqualTo(StatusVo.PENDING);
     Assertions.assertThat(updateCaptor.getValue().getUpdateObject().get("$set", Document.class))
         .containsEntry(InboxDao.Fields.status, StatusVo.PROCESSING)
@@ -97,8 +99,10 @@ class InboxWriteMongodbRepositoryImplTest {
     final Document query = queryCaptor.getValue().getQueryObject();
     Assertions.assertThat(query.get("payload.messageHeader.messageId"))
         .isEqualTo(inboxDao.getPayload().getMessageHeader().getMessageId());
-    Assertions.assertThat(query.get("payload.messageHeader.messageDate"))
-        .isEqualTo(inboxDao.getPayload().getMessageHeader().getMessageDate());
+    Assertions.assertThat(query.get("payload.messageHeader.messageDate.date"))
+        .isEqualTo(inboxDao.getPayload().getMessageHeader().getMessageDate().getDate());
+    Assertions.assertThat(query.get("payload.messageHeader.messageDate.zoneId"))
+        .isEqualTo(inboxDao.getPayload().getMessageHeader().getMessageDate().getZoneId());
     Assertions.assertThat(query).doesNotContainKey(InboxDao.Fields.status);
     Assertions.assertThat(updateCaptor.getValue().getUpdateObject().get("$set", Document.class))
         .containsEntry(InboxDao.Fields.status, inboxDao.getStatus())

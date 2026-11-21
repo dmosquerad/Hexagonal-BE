@@ -9,7 +9,10 @@ db.outbox.insertOne({
     payload: {
         messageHeader: {
             _id: UUID("4059510b-ceb3-4d4c-913e-1759acbd63b1"),
-            messageDate: ISODate("2026-01-01T00:00:00Z")
+            messageDate: {
+                date: ISODate("2026-01-01T00:00:00Z"),
+                zoneId: "Z"
+            }
         },
         data: {
             userId: UUID("4059510b-ceb3-4d4c-913e-1759acbd62a4"),
@@ -25,6 +28,9 @@ db.outbox.insertOne({
     },
     status: "PENDING",
     retryCount: 0,
-    createdAt: ISODate("2026-01-01T00:00:00Z"),
+    createdAt: {
+        date: ISODate("2026-01-01T00:00:00Z"),
+        zoneId: "Z"
+    },
     processedAt: null
 });

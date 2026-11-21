@@ -52,18 +52,17 @@ class UserServiceImplTest {
             .userId(UUID.fromString("9a3cc2bd-e1b4-451c-b807-637c0b927817"))
             .build()
             .user();
+    final UserCreatedEvent expectedEvent = new UserCreatedEvent();
+    expectedEvent.setUserId(savedUser.userId());
+    expectedEvent.setName(savedUser.name());
+    expectedEvent.setEmail(savedUser.email().getEmail());
 
     Mockito.when(userRepositoryWritePort.saveUser(user)).thenReturn(savedUser);
-
     final User result = userService.createUser(user);
 
     AssertionsForClassTypes.assertThat(result).usingRecursiveComparison().isEqualTo(savedUser);
 
     Mockito.verify(userRepositoryWritePort).saveUser(user);
-    final UserCreatedEvent expectedEvent = new UserCreatedEvent();
-    expectedEvent.setUserId(savedUser.userId());
-    expectedEvent.setName(savedUser.name());
-    expectedEvent.setEmail(savedUser.email().getEmail());
     final ArgumentCaptor<UserCreatedEvent> eventCaptor =
         ArgumentCaptor.forClass(UserCreatedEvent.class);
     Mockito.verify(eventBus).publish(eventCaptor.capture());
@@ -75,18 +74,17 @@ class UserServiceImplTest {
   @Test
   void deleteShouldDeleteUserUserWhenUserExistsUser() {
     final User user = UserTestDataBuilder.builder().build().user();
+    final UserDeletedEvent expectedEvent = new UserDeletedEvent();
+    expectedEvent.setUserId(user.userId());
+    expectedEvent.setName(user.name());
+    expectedEvent.setEmail(user.email().getEmail());
 
     Mockito.when(userRepositoryWritePort.deleteUser(user.userId())).thenReturn(Optional.of(user));
-
     final User result = userService.deleteUser(user.userId());
 
     AssertionsForClassTypes.assertThat(result).usingRecursiveComparison().isEqualTo(user);
 
     Mockito.verify(userRepositoryWritePort).deleteUser(user.userId());
-    final UserDeletedEvent expectedEvent = new UserDeletedEvent();
-    expectedEvent.setUserId(user.userId());
-    expectedEvent.setName(user.name());
-    expectedEvent.setEmail(user.email().getEmail());
     Mockito.verify(eventBus).publish(expectedEvent);
   }
 
@@ -236,20 +234,19 @@ class UserServiceImplTest {
   @Test
   void patchShouldPatchUserUserNameWhenRequestIsValid() {
     final User user = UserTestDataBuilder.builder().build().user();
+    final UserUpdatedEvent expectedEvent = new UserUpdatedEvent();
+    expectedEvent.setUserId(user.userId());
+    expectedEvent.setName(user.name());
+    expectedEvent.setEmail(user.email().getEmail());
 
     Mockito.when(userRepositoryReadPort.findUserById(user.userId())).thenReturn(Optional.of(user));
     Mockito.when(userRepositoryWritePort.saveUser(user)).thenReturn(user);
-
     final User result = userService.patchUser(user);
 
     AssertionsForClassTypes.assertThat(result).usingRecursiveComparison().isEqualTo(user);
 
     Mockito.verify(userRepositoryReadPort).findUserById(user.userId());
     Mockito.verify(userRepositoryWritePort).saveUser(user);
-    final UserUpdatedEvent expectedEvent = new UserUpdatedEvent();
-    expectedEvent.setUserId(user.userId());
-    expectedEvent.setName(user.name());
-    expectedEvent.setEmail(user.email().getEmail());
     Mockito.verify(eventBus).publish(expectedEvent);
   }
 
@@ -271,20 +268,19 @@ class UserServiceImplTest {
   @Test
   void updateShouldUpdateUserUserWhenUserExistsUser() {
     final User user = UserTestDataBuilder.builder().build().user();
+    final UserUpdatedEvent expectedEvent = new UserUpdatedEvent();
+    expectedEvent.setUserId(user.userId());
+    expectedEvent.setName(user.name());
+    expectedEvent.setEmail(user.email().getEmail());
 
     Mockito.when(userRepositoryReadPort.findUserById(user.userId())).thenReturn(Optional.of(user));
     Mockito.when(userRepositoryWritePort.saveUser(user)).thenReturn(user);
-
     final User result = userService.updateUser(user);
 
     AssertionsForClassTypes.assertThat(result).usingRecursiveComparison().isEqualTo(user);
 
     Mockito.verify(userRepositoryReadPort).findUserById(user.userId());
     Mockito.verify(userRepositoryWritePort).saveUser(user);
-    final UserUpdatedEvent expectedEvent = new UserUpdatedEvent();
-    expectedEvent.setUserId(user.userId());
-    expectedEvent.setName(user.name());
-    expectedEvent.setEmail(user.email().getEmail());
     Mockito.verify(eventBus).publish(expectedEvent);
   }
 
