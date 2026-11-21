@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "date",
+  "title": "Date",
+  "type": "object",
+  "properties": {
+    "date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Instant represented by the date."
+    },
+    "zoneId": {
+      "type": "string",
+      "description": "Time zone identifier associated with the date."
+    }
+  },
+  "required": [
+    "date",
+    "zoneId"
+  ],
+  "additionalProperties": false
+}

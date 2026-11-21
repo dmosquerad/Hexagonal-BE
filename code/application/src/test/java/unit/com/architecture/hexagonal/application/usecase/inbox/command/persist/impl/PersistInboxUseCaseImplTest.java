@@ -6,6 +6,7 @@ import com.architecture.hexagonal.application.service.inbox.InboxService;
 import com.architecture.hexagonal.contract.bus.model.inbox.command.RegisterInboxCommand;
 import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
 import com.architecture.hexagonal.domain.port.in.transaction.TransactionWriteBoundary;
+import java.time.ZoneId;
 import java.util.function.Supplier;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
@@ -43,6 +44,14 @@ class PersistInboxUseCaseImplTest {
     final Inbox savedInbox = inboxCaptor.getValue();
 
     AssertionsForClassTypes.assertThat(result).isSameAs(savedInbox);
+    AssertionsForClassTypes.assertThat(savedInbox.createdAt().date())
+        .isEqualTo(command.getCreatedAt().getDate());
+    AssertionsForClassTypes.assertThat(savedInbox.createdAt().zoneId())
+        .isEqualTo(ZoneId.of(command.getCreatedAt().getZoneId()));
+    AssertionsForClassTypes.assertThat(savedInbox.payload().messageHeader().messageDate().date())
+        .isEqualTo(command.getMessageHeader().getMessageDate().getDate());
+    AssertionsForClassTypes.assertThat(savedInbox.payload().messageHeader().messageDate().zoneId())
+        .isEqualTo(ZoneId.of(command.getMessageHeader().getMessageDate().getZoneId()));
     Mockito.verify(transactionWriteBoundary).execute(Mockito.<Supplier<Inbox>>any());
   }
 }

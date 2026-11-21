@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.repository.inbox.custom.impl;
 
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
-import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.date.DateVoDao;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.date.DateDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.inbox.InboxDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.payload.MessageHeaderDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.payload.PayloadDao;
@@ -66,13 +66,13 @@ public class InboxWriteMongodbRepositoryImpl implements InboxWriteMongodbReposit
                 payloadMessageHeader
                     + MessageHeaderDao.Fields.messageDate
                     + "."
-                    + DateVoDao.Fields.date)
+                    + DateDao.Fields.date)
             .is(inboxDao.getPayload().getMessageHeader().getMessageDate().getDate())
             .and(
                 payloadMessageHeader
                     + MessageHeaderDao.Fields.messageDate
                     + "."
-                    + DateVoDao.Fields.zoneId)
+                    + DateDao.Fields.zoneId)
             .is(inboxDao.getPayload().getMessageHeader().getMessageDate().getZoneId()));
   }
 }

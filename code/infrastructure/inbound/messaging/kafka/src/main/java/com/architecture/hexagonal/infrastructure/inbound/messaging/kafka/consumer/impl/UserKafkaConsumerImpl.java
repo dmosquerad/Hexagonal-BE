@@ -35,7 +35,7 @@ public class UserKafkaConsumerImpl implements UserEventsConsumer {
     } catch (final Exception _) {
       final RegisterInboxCommand registerInboxCommand =
           userKafkaMessageMapper.toRegisterInboxCommand(userCreatedMessage);
-      registerInboxCommand.setCreatedAt(currentDateTime);
+      registerInboxCommand.setCreatedAt(userKafkaMessageMapper.toDate(currentDateTime));
 
       commandBus.execute(registerInboxCommand);
     }
@@ -57,7 +57,7 @@ public class UserKafkaConsumerImpl implements UserEventsConsumer {
     } catch (final Exception _) {
       final RegisterInboxCommand registerInboxCommand =
           userKafkaMessageMapper.toRegisterInboxCommand(userUpdatedMessage);
-      registerInboxCommand.setCreatedAt(currentDateTime);
+      registerInboxCommand.setCreatedAt(userKafkaMessageMapper.toDate(currentDateTime));
 
       commandBus.execute(registerInboxCommand);
     }
@@ -79,7 +79,7 @@ public class UserKafkaConsumerImpl implements UserEventsConsumer {
     } catch (final Exception _) {
       final RegisterInboxCommand registerInboxCommand =
           userKafkaMessageMapper.toRegisterInboxCommand(userDeletedMessage);
-      registerInboxCommand.setCreatedAt(currentDateTime);
+      registerInboxCommand.setCreatedAt(userKafkaMessageMapper.toDate(currentDateTime));
 
       commandBus.execute(registerInboxCommand);
     }

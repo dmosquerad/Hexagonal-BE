@@ -19,6 +19,7 @@ import com.architecture.hexagonal.domain.model.vo.payload.MessageHeaderVo;
 import com.architecture.hexagonal.domain.model.vo.payload.PayloadVo;
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
 import java.time.Clock;
+import java.time.ZoneId;
 import java.util.function.Supplier;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -58,7 +59,7 @@ class PersistInboxUseCaseImplTestIT {
                     .messageHeader(
                         MessageHeaderVo.builder()
                             .messageId(command.getMessageHeader().getMessageId())
-                            .messageDate(toDateVo(command.getMessageHeader().getMessageDate()))
+                            .messageDate(DateVoTestDataBuilder.builder().build().dateVo())
                             .build())
                     .data(command.getData())
                     .build())
@@ -66,7 +67,7 @@ class PersistInboxUseCaseImplTestIT {
             .aggregateId(command.getAggregateId())
             .action(command.getAction())
             .status(StatusVo.PENDING)
-            .createdAt(toDateVo(command.getCreatedAt()))
+            .createdAt(DateVoTestDataBuilder.builder().build().dateVo())
             .build();
     Mockito.when(inboxRepositoryWritePort.save(Mockito.any(Inbox.class)))
         .thenAnswer(AdditionalAnswers.returnsFirstArg());
@@ -85,13 +86,5 @@ class PersistInboxUseCaseImplTestIT {
         .isEqualTo(expectedInbox);
     Mockito.verify(transactionWriteBoundary).execute(Mockito.<Supplier<Inbox>>any());
     Mockito.verify(inboxRepositoryWritePort).save(savedInbox);
-  }
-
-  private DateVo toDateVo(final java.time.OffsetDateTime offsetDateTime) {
-    return DateVoTestDataBuilder.builder()
-        .date(offsetDateTime.toInstant())
-        .zoneId(offsetDateTime.getOffset())
-        .build()
-        .dateVo();
   }
 }

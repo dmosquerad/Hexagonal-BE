@@ -27,6 +27,15 @@
             <artifactId>spring-cloud-stream-binder-kafka</artifactId>
         </dependency>
         <!-- ============================================ -->
+        <!-- MOTHER TEST -->
+        <!-- ============================================ -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>application</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <!-- ============================================ -->
         <!-- TEST -->
         <!-- ============================================ -->
         <dependency>

@@ -19,7 +19,7 @@ import java.util.UUID;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.adapter.inbox.InboxRepositoryReadMongodbAdapterImpl;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.config.MongodbIT;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.config.MongodbTestApplication;
-import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.databuilder.data.date.DateVoDaoTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.databuilder.data.date.DateDaoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.databuilder.data.inbox.InboxDaoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.databuilder.data.payload.MessageHeaderDaoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.databuilder.data.payload.PayloadDaoTestDataBuilder;
@@ -147,23 +147,23 @@ class InboxRepositoryReadMongodbAdapterImplTestIT extends MongodbIT {
             .aggregateId("user-123")
             .action(newest.action())
             .createdAt(
-                DateVoDaoTestDataBuilder.builder()
+                DateDaoTestDataBuilder.builder()
                     .date(newest.createdAt().date())
                     .zoneId(newest.createdAt().zoneId())
                     .build()
-                    .dateVoDao())
+                    .dateDao())
             .processedAt(null)
             .payload(
                 PayloadDaoTestDataBuilder.builder()
                     .messageHeaderDao(
                         MessageHeaderDaoTestDataBuilder.builder()
                             .messageId(newest.payload().messageHeader().messageId())
-                            .dateVoDao(
-                                DateVoDaoTestDataBuilder.builder()
+                            .dateDao(
+                                DateDaoTestDataBuilder.builder()
                                     .date(newest.payload().messageHeader().messageDate().date())
                                     .zoneId(newest.payload().messageHeader().messageDate().zoneId())
                                     .build()
-                                    .dateVoDao())
+                                    .dateDao())
                             .build()
                             .messageHeaderDao())
                     .data(newest.payload().data())
@@ -179,23 +179,23 @@ class InboxRepositoryReadMongodbAdapterImplTestIT extends MongodbIT {
             .action(processed.action())
             .status(processed.status())
             .createdAt(
-                DateVoDaoTestDataBuilder.builder()
+                DateDaoTestDataBuilder.builder()
                     .date(processed.createdAt().date())
                     .zoneId(processed.createdAt().zoneId())
                     .build()
-                    .dateVoDao())
+                    .dateDao())
             .processedAt(null)
             .payload(
                 PayloadDaoTestDataBuilder.builder()
                     .messageHeaderDao(
                         MessageHeaderDaoTestDataBuilder.builder()
                             .messageId(processed.payload().messageHeader().messageId())
-                            .dateVoDao(
-                                DateVoDaoTestDataBuilder.builder()
+                            .dateDao(
+                                DateDaoTestDataBuilder.builder()
                                     .date(processed.payload().messageHeader().messageDate().date())
                                     .zoneId(processed.payload().messageHeader().messageDate().zoneId())
                                     .build()
-                                    .dateVoDao())
+                                    .dateDao())
                             .build()
                             .messageHeaderDao())
                     .data(processed.payload().data())
@@ -210,23 +210,23 @@ class InboxRepositoryReadMongodbAdapterImplTestIT extends MongodbIT {
             .aggregateId("user-123")
             .action(oldest.action())
             .createdAt(
-                DateVoDaoTestDataBuilder.builder()
+                DateDaoTestDataBuilder.builder()
                     .date(oldest.createdAt().date())
                     .zoneId(oldest.createdAt().zoneId())
                     .build()
-                    .dateVoDao())
+                    .dateDao())
             .processedAt(null)
             .payload(
                 PayloadDaoTestDataBuilder.builder()
                     .messageHeaderDao(
                         MessageHeaderDaoTestDataBuilder.builder()
                             .messageId(oldest.payload().messageHeader().messageId())
-                            .dateVoDao(
-                                DateVoDaoTestDataBuilder.builder()
+                            .dateDao(
+                                DateDaoTestDataBuilder.builder()
                                     .date(oldest.payload().messageHeader().messageDate().date())
                                     .zoneId(oldest.payload().messageHeader().messageDate().zoneId())
                                     .build()
-                                    .dateVoDao())
+                                    .dateDao())
                             .build()
                             .messageHeaderDao())
                     .data(oldest.payload().data())

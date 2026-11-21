@@ -42,7 +42,7 @@
                             <targetPackage>com.architecture.hexagonal.contract.bus.model</targetPackage>
                             <outputDirectory>${project.build.directory}/generated-sources/jsonschema2pojo</outputDirectory>
                             <removeOldOutput>true</removeOldOutput>
-                            <dateTimeType>java.time.OffsetDateTime</dateTimeType>
+                            <dateTimeType>java.time.Instant</dateTimeType>
                             <includeJsr303Annotations>true</includeJsr303Annotations>
                             <useJakartaValidation>true</useJakartaValidation>
                         </configuration>

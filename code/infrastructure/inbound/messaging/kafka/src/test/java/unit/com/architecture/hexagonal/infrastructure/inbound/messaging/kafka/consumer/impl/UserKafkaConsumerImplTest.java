@@ -18,7 +18,6 @@ import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.databui
 import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.databuilder.message.UserUpdatedPayloadTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.mapper.UserKafkaMessageMapper;
 import java.time.Clock;
-import java.time.OffsetDateTime;
 import java.util.UUID;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -88,7 +87,6 @@ class UserKafkaConsumerImplTest {
     final RegisterInboxCommand expected =
         RegisterInboxCommandTestDataBuilder.builder()
             .data(message.getData_())
-            .createdAt(OffsetDateTime.now(clock))
             .build()
             .registerInboxCommand();
     Assertions.assertThat(inboxCaptor.getValue()).usingRecursiveComparison().isEqualTo(expected);
@@ -143,7 +141,6 @@ class UserKafkaConsumerImplTest {
             .data(message.getData_())
             .aggregateId(message.getData_().getUserId())
             .action(ActionType.UserActionType.USER_UPDATED.getActionType())
-            .createdAt(OffsetDateTime.now(clock))
             .build()
             .registerInboxCommand();
     Assertions.assertThat(inboxCaptor.getValue()).usingRecursiveComparison().isEqualTo(expected);
@@ -196,7 +193,6 @@ class UserKafkaConsumerImplTest {
             .data(message.getData_())
             .aggregateId(message.getData_().getUserId())
             .action(ActionType.UserActionType.USER_DELETED.getActionType())
-            .createdAt(OffsetDateTime.now(clock))
             .build()
             .registerInboxCommand();
     Assertions.assertThat(inboxCaptor.getValue()).usingRecursiveComparison().isEqualTo(expected);

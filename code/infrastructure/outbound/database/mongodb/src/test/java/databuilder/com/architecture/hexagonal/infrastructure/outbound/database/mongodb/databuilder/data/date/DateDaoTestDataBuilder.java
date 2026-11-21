@@ -1,24 +1,24 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.databuilder.data.date;
 
 import com.architecture.hexagonal.domain.databuilder.model.time.TestClock;
-import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.date.DateVoDao;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.date.DateDao;
 import lombok.Builder;
 import java.time.Instant;
 import java.time.ZoneId;
 
 @Builder
-public class DateVoDaoTestDataBuilder {
+public class DateDaoTestDataBuilder {
 
     @Builder.Default private Instant date = TestClock.FIXED_INSTANT;
 
     @Builder.Default private ZoneId zoneId = TestClock.FIXED_CLOCK.getZone();
 
-    public DateVoDao dateVoDao() {
-        final DateVoDao dateVoDao = new DateVoDao();
-        dateVoDao.setDate(date);
-        dateVoDao.setZoneId(zoneId.getId());
+    public DateDao dateDao() {
+        final DateDao dateDao = new DateDao();
+        dateDao.setDate(date);
+        dateDao.setZoneId(zoneId.getId());
 
-        return dateVoDao;
+        return dateDao;
     }
 
 }

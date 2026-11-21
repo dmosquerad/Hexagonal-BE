@@ -3,10 +3,10 @@ package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
-import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.date.DateVoDao;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.date.DateDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.outbox.OutboxDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.payload.PayloadDao;
-import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.databuilder.data.date.DateVoDaoTestDataBuilder;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.databuilder.data.date.DateDaoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.databuilder.data.payload.PayloadDaoTestDataBuilder;
 import lombok.Builder;
 
@@ -37,10 +37,10 @@ public class OutboxDaoTestDataBuilder {
   private int retryCount = 0;
 
   @Builder.Default
-  private DateVoDao createdAt = DateVoDaoTestDataBuilder.builder().build().dateVoDao();
+  private DateDao createdAt = DateDaoTestDataBuilder.builder().build().dateDao();
 
   @Builder.Default
-  private DateVoDao processedAt = DateVoDaoTestDataBuilder.builder().build().dateVoDao();
+  private DateDao processedAt = DateDaoTestDataBuilder.builder().build().dateDao();
 
   public OutboxDao outboxDao() {
     final OutboxDao outboxDao = new OutboxDao();

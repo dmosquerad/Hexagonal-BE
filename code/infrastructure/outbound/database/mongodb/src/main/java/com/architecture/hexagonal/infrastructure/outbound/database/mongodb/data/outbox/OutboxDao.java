@@ -2,7 +2,7 @@ package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data
 
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
-import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.date.DateVoDao;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.date.DateDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.payload.PayloadDao;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -40,7 +40,7 @@ public class OutboxDao {
 
   @PositiveOrZero private int retryCount;
 
-  private DateVoDao createdAt;
+  private DateDao createdAt;
 
-  private DateVoDao processedAt;
+  private DateDao processedAt;
 }

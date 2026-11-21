@@ -1,5 +1,6 @@
 package com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.mapper;
 
+import com.architecture.hexagonal.contract.bus.model.common.Date;
 import com.architecture.hexagonal.contract.bus.model.inbox.command.RegisterInboxCommand;
 import com.architecture.hexagonal.contract.bus.model.user.command.CreateUserCommand;
 import com.architecture.hexagonal.contract.bus.model.user.command.DeleteUserCommand;
@@ -10,11 +11,16 @@ import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserUpd
 import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.config.MapstructConfig;
+import java.time.OffsetDateTime;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(config = MapstructConfig.class)
 public interface UserKafkaMessageMapper {
+
+  @Mapping(target = "date", expression = "java(offsetDateTime.toInstant())")
+  @Mapping(target = "zoneId", expression = "java(offsetDateTime.getOffset().getId())")
+  Date toDate(OffsetDateTime offsetDateTime);
 
   @Mapping(target = ".", source = "data_")
   CreateUserCommand toCreateUserCommand(UserCreatedPayload userCreated);

@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.repository.outbox.custom.impl;
 
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
-import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.date.DateVoDao;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.date.DateDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.outbox.OutboxDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.payload.MessageHeaderDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.payload.PayloadDao;
@@ -47,7 +47,7 @@ public class OutboxWriteMongodbRepositoryImpl implements OutboxWriteMongodbRepos
                         + "."
                         + MessageHeaderDao.Fields.messageDate
                         + "."
-                        + DateVoDao.Fields.date)
+                        + DateDao.Fields.date)
                 .is(outboxDao.getPayload().getMessageHeader().getMessageDate().getDate())
                 .and(
                     OutboxDao.Fields.payload
@@ -56,7 +56,7 @@ public class OutboxWriteMongodbRepositoryImpl implements OutboxWriteMongodbRepos
                         + "."
                         + MessageHeaderDao.Fields.messageDate
                         + "."
-                        + DateVoDao.Fields.zoneId)
+                        + DateDao.Fields.zoneId)
                 .is(outboxDao.getPayload().getMessageHeader().getMessageDate().getZoneId()));
 
     final Update update = new Update();
@@ -69,7 +69,7 @@ public class OutboxWriteMongodbRepositoryImpl implements OutboxWriteMongodbRepos
             + "."
             + MessageHeaderDao.Fields.messageDate
             + "."
-            + DateVoDao.Fields.zoneId,
+            + DateDao.Fields.zoneId,
         outboxDao.getPayload().getMessageHeader().getMessageDate().getZoneId());
     update.set(OutboxDao.Fields.status, outboxDao.getStatus());
 
@@ -116,7 +116,7 @@ public class OutboxWriteMongodbRepositoryImpl implements OutboxWriteMongodbRepos
                         + "."
                         + MessageHeaderDao.Fields.messageDate
                         + "."
-                        + DateVoDao.Fields.date)
+                        + DateDao.Fields.date)
                 .is(outboxDao.getPayload().getMessageHeader().getMessageDate().getDate())
                 .and(
                     OutboxDao.Fields.payload
@@ -125,7 +125,7 @@ public class OutboxWriteMongodbRepositoryImpl implements OutboxWriteMongodbRepos
                         + "."
                         + MessageHeaderDao.Fields.messageDate
                         + "."
-                        + DateVoDao.Fields.zoneId)
+                        + DateDao.Fields.zoneId)
                 .is(outboxDao.getPayload().getMessageHeader().getMessageDate().getZoneId())
                 .and(OutboxDao.Fields.status)
                 .is(StatusVo.PENDING));

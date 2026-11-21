@@ -8,7 +8,7 @@ import lombok.experimental.FieldNameConstants;
 
 @Data
 @FieldNameConstants
-public class DateVoDao {
+public class DateDao {
   @NotNull private Instant date;
   @NotBlank private String zoneId;
 }
