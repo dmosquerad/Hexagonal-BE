@@ -4,14 +4,14 @@ import com.architecture.hexagonal.contract.inbound.endpoint.rest.user.server.dto
 import com.architecture.hexagonal.contract.inbound.endpoint.rest.user.server.dto.UserResponseDto;
 import java.time.OffsetDateTime;
 
-import com.architecture.hexagonal.domain.databuilder.model.time.TestClock;
+import com.architecture.hexagonal.domain.databuilder.model.vo.time.TestTime;
 import lombok.Builder;
 
 @Builder
 public class UserResponseDtoTestDataBuilder {
 
   @Builder.Default
-  private OffsetDateTime date = OffsetDateTime.now(TestClock.FIXED_CLOCK);
+  private OffsetDateTime date = OffsetDateTime.now(TestTime.FIXED_CLOCK);
 
   @Builder.Default
   private Integer status = 200;

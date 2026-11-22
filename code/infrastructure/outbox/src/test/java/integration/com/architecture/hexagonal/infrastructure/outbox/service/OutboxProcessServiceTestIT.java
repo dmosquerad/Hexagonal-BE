@@ -9,7 +9,9 @@ import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
 import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.infrastructure.outbox.config.TestApplication;
-import com.architecture.hexagonal.infrastructure.outbox.mapper.user.UserFromOutboxMapper;
+import com.architecture.hexagonal.infrastructure.outbox.mapper.user.UserCreatedFromOutboxMapper;
+import com.architecture.hexagonal.infrastructure.outbox.mapper.user.UserDeletedFromOutboxMapper;
+import com.architecture.hexagonal.infrastructure.outbox.mapper.user.UserUpdatedFromOutboxMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +29,9 @@ class OutboxProcessServiceTestIT {
 
   @Autowired @MockitoBean private ApplicationEventPublisher applicationEventPublisher;
 
-  @MockitoSpyBean private UserFromOutboxMapper userFromOutboxMapper;
+  @MockitoSpyBean private UserCreatedFromOutboxMapper userCreatedFromOutboxMapper;
+  @MockitoSpyBean private UserUpdatedFromOutboxMapper userUpdatedFromOutboxMapper;
+  @MockitoSpyBean private UserDeletedFromOutboxMapper userDeletedFromOutboxMapper;
 
   @Test
   void processShouldPublishCreatedEvent() {
@@ -36,7 +40,7 @@ class OutboxProcessServiceTestIT {
 
     outboxProcessService.process(outbox);
 
-    Mockito.verify(userFromOutboxMapper).toUserCreated(outbox.payload());
+    Mockito.verify(userCreatedFromOutboxMapper).toUserCreated(outbox.payload());
     Mockito.verify(applicationEventPublisher).publishEvent(Mockito.any(UserCreated.class));
   }
 
@@ -47,7 +51,7 @@ class OutboxProcessServiceTestIT {
 
     outboxProcessService.process(outbox);
 
-    Mockito.verify(userFromOutboxMapper).toUserUpdated(outbox.payload());
+    Mockito.verify(userUpdatedFromOutboxMapper).toUserUpdated(outbox.payload());
     Mockito.verify(applicationEventPublisher).publishEvent(Mockito.any(UserUpdated.class));
   }
 
@@ -58,7 +62,7 @@ class OutboxProcessServiceTestIT {
 
     outboxProcessService.process(outbox);
 
-    Mockito.verify(userFromOutboxMapper).toUserDeleted(outbox.payload());
+    Mockito.verify(userDeletedFromOutboxMapper).toUserDeleted(outbox.payload());
     Mockito.verify(applicationEventPublisher).publishEvent(Mockito.any(UserDeleted.class));
   }
 

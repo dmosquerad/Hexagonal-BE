@@ -1,9 +1,7 @@
 package com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.config;
 
-import java.time.Clock;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.cloud.stream.binder.test.TestChannelBinderConfiguration;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 
@@ -15,8 +13,4 @@ import org.springframework.context.annotation.Import;
 })
 public class TestApplication {
 
-  @Bean
-  Clock clock() {
-    return Clock.systemUTC();
-  }
 }

@@ -3,11 +3,11 @@ package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.payload.PayloadDao;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.time.DateDao;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
-import java.time.ZonedDateTime;
 import java.util.UUID;
 import lombok.Data;
 import lombok.experimental.FieldNameConstants;
@@ -40,7 +40,7 @@ public class InboxDao {
 
   @PositiveOrZero private int retryCount;
 
-  @CreatedDate private ZonedDateTime createdAt;
+  @CreatedDate private DateDao createdAt;
 
-  private ZonedDateTime processedAt;
+  private DateDao processedAt;
 }

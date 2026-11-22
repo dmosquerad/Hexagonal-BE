@@ -13,8 +13,7 @@
           "format": "uuid"
         },
         "messageDate": {
-          "type": "string",
-          "format": "date-time"
+          "$ref": "../../common/date.json"
         }
       },
       "required": [
@@ -32,8 +31,7 @@
       "type": "string"
     },
     "createdAt": {
-      "type": "string",
-      "format": "date-time"
+      "$ref": "../../common/date.json"
     }
   },
   "required": [

@@ -1,21 +1,21 @@
 package com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.controller;
 
 import com.architecture.hexagonal.contract.bus.model.email.query.GetBlockedRulesQuery;
-import com.architecture.hexagonal.contract.inbound.endpoint.rest.email.server.dto.EmailBlockRulesDto;
 import com.architecture.hexagonal.contract.inbound.endpoint.rest.email.server.dto.EmailBlockRulesResponseDto;
-import com.architecture.hexagonal.domain.databuilder.model.time.TestClock;
 import com.architecture.hexagonal.domain.databuilder.model.vo.email.EmailBlockRulesVoTestDataBuilder;
+import com.architecture.hexagonal.domain.databuilder.model.vo.time.TestTime;
 import com.architecture.hexagonal.domain.exception.DomainException;
 import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;
 import com.architecture.hexagonal.domain.model.vo.exception.FailureType;
 import com.architecture.hexagonal.domain.port.in.bus.query.QueryBus;
-import com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.databuilder.dto.EmailBlockRulesDtoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.databuilder.dto.EmailBlockRulesResponseDtoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.mapper.email.EmailBlockRulesDtoMapper;
 import java.time.Clock;
+import java.util.Set;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -30,17 +30,23 @@ class EmailControllerImplTest {
 
   @Mock QueryBus queryBus;
 
-  @Mock EmailBlockRulesDtoMapper emailBlockRulesDtoMapper;
+  @Spy
+  EmailBlockRulesDtoMapper emailBlockRulesDtoMapper =
+      Mappers.getMapper(EmailBlockRulesDtoMapper.class);
 
-  @Spy Clock clock = TestClock.FIXED_CLOCK;
+  @Spy Clock clock = TestTime.FIXED_CLOCK;
 
   @Test
   void getBlockedRulesShouldReturnOkBlockRulesResponseWhenBlockedRulesExist() {
     final EmailBlockRulesVo emailBlockRulesVo =
-        EmailBlockRulesVoTestDataBuilder.builder().build().emailBlockRulesVo();
-
-    final EmailBlockRulesDto expectedData =
-        EmailBlockRulesDtoTestDataBuilder.builder().build().emailBlockRulesDto();
+        EmailBlockRulesVoTestDataBuilder.builder()
+            .email(Set.of("test@example.com"))
+            .host(Set.of("example"))
+            .tld(Set.of("com"))
+            .domain(Set.of("example.com"))
+            .username(Set.of("test"))
+            .build()
+            .emailBlockRulesVo();
 
     final ResponseEntity<EmailBlockRulesResponseDto> expectedResponse =
         ResponseEntity.ok(
@@ -50,8 +56,6 @@ class EmailControllerImplTest {
 
     Mockito.when(queryBus.execute(Mockito.any(GetBlockedRulesQuery.class)))
         .thenReturn(emailBlockRulesVo);
-    Mockito.when(emailBlockRulesDtoMapper.toEmailBlockRulesDto(emailBlockRulesVo))
-        .thenReturn(expectedData);
 
     final ResponseEntity<EmailBlockRulesResponseDto> actualResponse =
         emailControllerImpl.getBlockedRules();

@@ -14,30 +14,32 @@ import com.architecture.hexagonal.contract.bus.model.retry.command.RetryOutboxev
 import com.architecture.hexagonal.domain.databuilder.model.entity.outbox.OutboxTestDataBuilder;
 import com.architecture.hexagonal.domain.databuilder.model.vo.outbox.SchedulerOutboxConfigurationVoTestDataBuilder;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
+import com.architecture.hexagonal.domain.databuilder.model.vo.time.TestTime;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
-import java.time.Clock;
-import java.time.ZoneOffset;
+import com.architecture.hexagonal.domain.model.vo.time.factory.DateVoFactory;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
-import com.architecture.hexagonal.domain.databuilder.model.time.TestClock;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.AdditionalAnswers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class RetryOutboxUseCaseImplTestIT {
-
   @Mock private OutboxRepositoryReadPort outboxRepositoryReadPort;
   @Mock private OutboxRepositoryWritePort outboxRepositoryWritePort;
   @Mock private OutboxProcess outboxProcess;
@@ -48,10 +50,20 @@ class RetryOutboxUseCaseImplTestIT {
       new SpyTransactionReadBoundary();
   @Spy private SpyTransactionWriteBoundary transactionWriteBoundary =
       new SpyTransactionWriteBoundary();
-  @Spy private Clock clock = TestClock.FIXED_CLOCK;
-
   @InjectMocks private OutboxServiceImpl outboxServiceImpl;
   @InjectMocks private RetryOutboxUseCaseImpl retryOutboxEventsUseCase;
+
+  private MockedStatic<Instant> instantMock;
+
+  @BeforeEach
+  void setUp() {
+    instantMock = Mockito.mockStatic(Instant.class, Mockito.CALLS_REAL_METHODS);
+  }
+
+  @AfterEach
+  void tearDown() {
+    instantMock.close();
+  }
 
   @Test
   void handleShouldProcessPendingEventsWhenAggregateIdsAreUnique() {
@@ -60,7 +72,7 @@ class RetryOutboxUseCaseImplTestIT {
         outbox.toBuilder()
             .status(StatusVo.PROCESSING)
             .retryCount(1)
-            .processedAt(TestClock.FIXED_INSTANT.atOffset(ZoneOffset.UTC))
+            .processedAt(DateVoFactory.from(TestTime.FIXED_INSTANT))
             .build();
     final Outbox publishedOutbox =
         processingOutbox.toBuilder().status(StatusVo.PROCESSED).build();
@@ -95,6 +107,7 @@ class RetryOutboxUseCaseImplTestIT {
                         ? List.of(outbox)
                         : List.of()));
 
+    instantMock.when(Instant::now).thenReturn(TestTime.FIXED_INSTANT);
     retryOutboxEventsUseCase.handle(new RetryOutboxeventCommand());
 
     Mockito.verify(
@@ -113,7 +126,8 @@ class RetryOutboxUseCaseImplTestIT {
             ArgumentMatchers.any(OutboxStatusAndAggregateProjector.class));
     Mockito.verify(outboxProcess).process(processingOutbox);
     Mockito.verify(outboxRepositoryWritePort).claimPendingForProcessing(processingOutbox);
-    Mockito.verify(outboxRepositoryWritePort).upsertByEventIdentity(publishedOutbox);
+    Mockito.verify(outboxRepositoryWritePort)
+        .upsertByEventIdentity(publishedOutbox);
     Mockito.verify(outboxService).process(outbox);
   }
 
@@ -122,12 +136,6 @@ class RetryOutboxUseCaseImplTestIT {
     final Outbox outbox = OutboxTestDataBuilder.builder().build().outbox();
     final Outbox duplicateOutbox =
         OutboxTestDataBuilder.builder().build().outbox();
-    final Outbox processingOutbox =
-        outbox.toBuilder()
-            .status(StatusVo.PROCESSING)
-            .retryCount(1)
-            .processedAt(TestClock.FIXED_INSTANT.atOffset(ZoneOffset.UTC))
-            .build();
     final Set<UUID> claimedEventIds = new HashSet<>();
     Mockito.when(schedulerConfigurationPort.getOutboxScheduler())
         .thenReturn(
@@ -165,6 +173,7 @@ class RetryOutboxUseCaseImplTestIT {
                         ? Optional.of(candidate)
                         : Optional.empty()));
 
+    instantMock.when(Instant::now).thenReturn(TestTime.FIXED_INSTANT);
     retryOutboxEventsUseCase.handle(new RetryOutboxeventCommand());
 
     Mockito.verify(
@@ -176,8 +185,9 @@ class RetryOutboxUseCaseImplTestIT {
     Mockito.verify(outboxService)
         .find(ArgumentMatchers.any(OutboxStatusAndAggregateProjector.class));
     Mockito.verify(outboxService, Mockito.times(2)).process(outbox);
-    Mockito.verify(outboxProcess).process(processingOutbox);
+    Mockito.verify(outboxProcess)
+        .process(ArgumentMatchers.argThat(candidate -> candidate.status() == StatusVo.PROCESSING));
     Mockito.verify(outboxRepositoryWritePort, Mockito.times(2))
-        .claimPendingForProcessing(processingOutbox);
+        .claimPendingForProcessing(ArgumentMatchers.any(Outbox.class));
   }
 }

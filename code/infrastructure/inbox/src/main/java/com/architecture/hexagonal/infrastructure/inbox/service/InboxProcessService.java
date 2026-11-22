@@ -8,7 +8,9 @@ import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.domain.port.in.bus.command.CommandBus;
 import com.architecture.hexagonal.domain.port.out.inbox.InboxProcess;
-import com.architecture.hexagonal.infrastructure.inbox.mapper.UserCommandFromInboxMapper;
+import com.architecture.hexagonal.infrastructure.inbox.mapper.CreateUserCommandFromInboxMapper;
+import com.architecture.hexagonal.infrastructure.inbox.mapper.DeleteUserCommandFromInboxMapper;
+import com.architecture.hexagonal.infrastructure.inbox.mapper.UpdateUserCommandFromInboxMapper;
 import com.architecture.hexagonal.infrastructure.inbox.naming.InboxNaming;
 import jakarta.annotation.PostConstruct;
 import java.util.Arrays;
@@ -27,7 +29,9 @@ import org.springframework.util.CollectionUtils;
 public class InboxProcessService implements InboxProcess {
 
   private final CommandBus commandBus;
-  private final UserCommandFromInboxMapper userCommandFromInboxMapper;
+  private final CreateUserCommandFromInboxMapper createUserCommandFromInboxMapper;
+  private final UpdateUserCommandFromInboxMapper updateUserCommandFromInboxMapper;
+  private final DeleteUserCommandFromInboxMapper deleteUserCommandFromInboxMapper;
 
   @PostConstruct
   void validateAggregateHandlers() {
@@ -69,19 +73,22 @@ public class InboxProcessService implements InboxProcess {
         ActionType.UserActionType.USER_CREATED.getActionType(),
             inbox -> {
               if (inbox.payload().data() instanceof UserCreatedData userCreatedData) {
-                commandBus.execute(userCommandFromInboxMapper.toCreateUserCommand(userCreatedData));
+                commandBus.execute(
+                    createUserCommandFromInboxMapper.toCreateUserCommand(userCreatedData));
               }
             },
         ActionType.UserActionType.USER_UPDATED.getActionType(),
             inbox -> {
               if (inbox.payload().data() instanceof UserUpdatedData userUpdatedData) {
-                commandBus.execute(userCommandFromInboxMapper.toUpdateUserCommand(userUpdatedData));
+                commandBus.execute(
+                    updateUserCommandFromInboxMapper.toUpdateUserCommand(userUpdatedData));
               }
             },
         ActionType.UserActionType.USER_DELETED.getActionType(),
             inbox -> {
               if (inbox.payload().data() instanceof UserDeletedData userDeletedData) {
-                commandBus.execute(userCommandFromInboxMapper.toDeleteUserCommand(userDeletedData));
+                commandBus.execute(
+                    deleteUserCommandFromInboxMapper.toDeleteUserCommand(userDeletedData));
               }
             });
   }

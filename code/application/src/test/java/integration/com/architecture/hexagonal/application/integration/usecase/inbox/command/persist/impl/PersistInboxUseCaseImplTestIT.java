@@ -9,14 +9,13 @@ import com.architecture.hexagonal.domain.port.out.repository.inbox.InboxReposito
 import com.architecture.hexagonal.domain.port.out.configuration.SchedulerConfigurationPort;
 import com.architecture.hexagonal.application.service.inbox.InboxService;
 import com.architecture.hexagonal.application.service.inbox.impl.InboxServiceImpl;
-import com.architecture.hexagonal.domain.databuilder.model.time.TestClock;
 import com.architecture.hexagonal.contract.bus.model.inbox.command.RegisterInboxCommand;
+import com.architecture.hexagonal.domain.databuilder.model.vo.time.DateVoTestDataBuilder;
 import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.domain.model.vo.payload.MessageHeaderVo;
 import com.architecture.hexagonal.domain.model.vo.payload.PayloadVo;
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
-import java.time.Clock;
 import java.util.function.Supplier;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -38,7 +37,6 @@ class PersistInboxUseCaseImplTestIT {
   @Mock private SchedulerConfigurationPort schedulerConfigurationPort;
   @Mock private InboxService inboxService;
 
-  @Spy private Clock clock = TestClock.FIXED_CLOCK;
   @Spy private SpyTransactionWriteBoundary transactionWriteBoundary =
       new SpyTransactionWriteBoundary();
 
@@ -56,7 +54,7 @@ class PersistInboxUseCaseImplTestIT {
                     .messageHeader(
                         MessageHeaderVo.builder()
                             .messageId(command.getMessageHeader().getMessageId())
-                            .messageDate(command.getMessageHeader().getMessageDate())
+                            .messageDate(DateVoTestDataBuilder.builder().build().dateVo())
                             .build())
                     .data(command.getData())
                     .build())
@@ -64,7 +62,7 @@ class PersistInboxUseCaseImplTestIT {
             .aggregateId(command.getAggregateId())
             .action(command.getAction())
             .status(StatusVo.PENDING)
-            .createdAt(command.getCreatedAt())
+            .createdAt(DateVoTestDataBuilder.builder().build().dateVo())
             .build();
     Mockito.when(inboxRepositoryWritePort.save(Mockito.any(Inbox.class)))
         .thenAnswer(AdditionalAnswers.returnsFirstArg());

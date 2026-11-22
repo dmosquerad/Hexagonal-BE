@@ -12,8 +12,8 @@ import com.architecture.hexagonal.contract.inbound.endpoint.rest.user.server.dto
 import com.architecture.hexagonal.contract.inbound.endpoint.rest.user.server.dto.UserResponseDto;
 import com.architecture.hexagonal.contract.inbound.endpoint.rest.user.server.dto.UsersResponseDto;
 import com.architecture.hexagonal.domain.databuilder.model.entity.user.UserTestDataBuilder;
-import com.architecture.hexagonal.domain.databuilder.model.time.TestClock;
 import com.architecture.hexagonal.domain.databuilder.model.vo.pagination.PaginationVoTestDataBuilder;
+import com.architecture.hexagonal.domain.databuilder.model.vo.time.TestTime;
 import com.architecture.hexagonal.domain.exception.DomainException;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.InvalidValueException;
@@ -85,7 +85,7 @@ class UserControllerImplTest {
   GetAllUserQueryDtoMapper getAllUserQueryDtoMapper =
       Mappers.getMapper(GetAllUserQueryDtoMapper.class);
 
-  @Spy Clock clock = TestClock.FIXED_CLOCK;
+  @Spy Clock clock = TestTime.FIXED_CLOCK;
 
   @Test
   void getAllUsersShouldReturnOkWhenUsersExist() {

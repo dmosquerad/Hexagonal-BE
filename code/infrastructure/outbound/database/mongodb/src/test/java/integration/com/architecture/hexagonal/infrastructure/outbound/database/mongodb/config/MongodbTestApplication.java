@@ -1,8 +1,6 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.config;
 
-import java.time.Clock;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
@@ -16,8 +14,4 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 })
 public class MongodbTestApplication {
 
-  @Bean
-  public Clock clock() {
-    return Clock.systemUTC();
-  }
 }

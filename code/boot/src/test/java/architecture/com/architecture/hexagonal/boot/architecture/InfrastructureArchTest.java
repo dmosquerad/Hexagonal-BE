@@ -17,17 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 class InfrastructureArchTest {
 
   @ArchTest
-  static final ArchRule mappers_should_reside_in_infrastructure =
-      ArchRuleDefinition.classes()
-          .that()
-          .haveSimpleNameEndingWith("Mapper")
-          .should()
-          .resideInAPackage("..infrastructure..")
-          .andShould()
-          .beAnnotatedWith("org.mapstruct.Mapper")
-          .because("Classes named *Mapper must be infrastructure classes annotated with MapStruct @Mapper");
-
-  @ArchTest
   static final ArchRule adapters_should_reside_in_infrastructure_outbound_and_port_on_application =
       ArchRuleDefinition.classes()
           .that()

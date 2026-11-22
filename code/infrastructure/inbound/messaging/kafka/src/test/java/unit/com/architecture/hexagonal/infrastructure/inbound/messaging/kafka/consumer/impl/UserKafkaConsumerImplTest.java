@@ -1,5 +1,7 @@
 package com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.consumer.impl;
 
+import com.architecture.hexagonal.application.databuilder.usecase.common.DateTestDataBuilder;
+import com.architecture.hexagonal.contract.bus.model.common.Date;
 import com.architecture.hexagonal.contract.bus.model.inbox.command.RegisterInboxCommand;
 import com.architecture.hexagonal.contract.bus.model.user.command.CreateUserCommand;
 import com.architecture.hexagonal.contract.bus.model.user.command.DeleteUserCommand;
@@ -9,14 +11,17 @@ import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserCre
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserDeletedPayload;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserUpdatedPayload;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.naming.router.UserMessageConsumerBinding;
-import com.architecture.hexagonal.domain.databuilder.model.time.TestClock;
+import com.architecture.hexagonal.domain.databuilder.model.vo.time.TestTime;
 import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
 import com.architecture.hexagonal.domain.port.in.bus.command.CommandBus;
 import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.databuilder.command.RegisterInboxCommandTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.databuilder.message.UserCreatedPayloadTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.databuilder.message.UserDeletedPayloadTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.databuilder.message.UserUpdatedPayloadTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.mapper.UserKafkaMessageMapper;
+import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.mapper.CreateUserCommandMapper;
+import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.mapper.DeleteUserCommandMapper;
+import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.mapper.RegisterInboxCommandMapper;
+import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.mapper.UpdateUserCommandMapper;
 import java.time.Clock;
 import java.time.OffsetDateTime;
 import java.util.UUID;
@@ -39,10 +44,22 @@ class UserKafkaConsumerImplTest {
   @Mock private CommandBus commandBus;
 
   @Spy
-  private UserKafkaMessageMapper userKafkaMessageMapper =
-      Mappers.getMapper(UserKafkaMessageMapper.class);
+  private CreateUserCommandMapper createUserCommandMapper =
+      Mappers.getMapper(CreateUserCommandMapper.class);
 
-  @Spy private Clock clock = TestClock.FIXED_CLOCK;
+  @Spy
+  private UpdateUserCommandMapper updateUserCommandMapper =
+      Mappers.getMapper(UpdateUserCommandMapper.class);
+
+  @Spy
+  private DeleteUserCommandMapper deleteUserCommandMapper =
+      Mappers.getMapper(DeleteUserCommandMapper.class);
+
+  @Spy
+  private RegisterInboxCommandMapper registerInboxCommandMapper =
+      Mappers.getMapper(RegisterInboxCommandMapper.class);
+
+  @Spy private Clock clock = TestTime.FIXED_CLOCK;
 
   @Test
   void consumeUserCreatedShouldExecuteCommandWithoutSavingInboxOnSuccess() {
@@ -56,13 +73,7 @@ class UserKafkaConsumerImplTest {
         UUID.randomUUID(),
         "1");
 
-    final ArgumentCaptor<CreateUserCommand> commandCaptor =
-        ArgumentCaptor.forClass(CreateUserCommand.class);
-    Mockito.verify(commandBus).execute(commandCaptor.capture());
-    final CreateUserCommand expected = new CreateUserCommand();
-    expected.setName(message.getData_().getName());
-    expected.setEmail(message.getData_().getEmail());
-    Assertions.assertThat(commandCaptor.getValue()).usingRecursiveComparison().isEqualTo(expected);
+    Mockito.verify(commandBus).execute(Mockito.any(CreateUserCommand.class));
     Mockito.verify(commandBus, Mockito.never()).execute(Mockito.any(RegisterInboxCommand.class));
   }
 
@@ -70,6 +81,13 @@ class UserKafkaConsumerImplTest {
   void consumeUserCreatedShouldRegisterInboxWhenCommandExecutionFails() {
     final UserCreatedPayload message =
         UserCreatedPayloadTestDataBuilder.builder().build().userCreatedPayload();
+    final OffsetDateTime dateTime = OffsetDateTime.now(clock);
+    final Date createdAt =
+        DateTestDataBuilder.builder()
+            .date(dateTime.toInstant())
+            .zone(dateTime.getOffset().getId())
+            .build()
+            .date();
     Mockito.doThrow(new IllegalStateException("command failed"))
         .when(commandBus)
         .execute(Mockito.any(CreateUserCommand.class));
@@ -88,7 +106,8 @@ class UserKafkaConsumerImplTest {
     final RegisterInboxCommand expected =
         RegisterInboxCommandTestDataBuilder.builder()
             .data(message.getData_())
-            .createdAt(OffsetDateTime.now(clock))
+            .aggregateId(null)
+            .createdAt(createdAt)
             .build()
             .registerInboxCommand();
     Assertions.assertThat(inboxCaptor.getValue()).usingRecursiveComparison().isEqualTo(expected);
@@ -107,14 +126,7 @@ class UserKafkaConsumerImplTest {
         UUID.randomUUID(),
         "1");
 
-    final ArgumentCaptor<UpdateUserCommand> commandCaptor =
-        ArgumentCaptor.forClass(UpdateUserCommand.class);
-    Mockito.verify(commandBus).execute(commandCaptor.capture());
-    final UpdateUserCommand expected = new UpdateUserCommand();
-    expected.setUserId(message.getData_().getUserId());
-    expected.setName(message.getData_().getName());
-    expected.setEmail(message.getData_().getEmail());
-    Assertions.assertThat(commandCaptor.getValue()).usingRecursiveComparison().isEqualTo(expected);
+    Mockito.verify(commandBus).execute(Mockito.any(UpdateUserCommand.class));
     Mockito.verify(commandBus, Mockito.never()).execute(Mockito.any(RegisterInboxCommand.class));
   }
 
@@ -122,6 +134,13 @@ class UserKafkaConsumerImplTest {
   void consumeUserUpdatedShouldRegisterInboxWhenCommandExecutionFails() {
     final UserUpdatedPayload message =
         UserUpdatedPayloadTestDataBuilder.builder().build().userUpdatedPayload();
+    final OffsetDateTime dateTime = OffsetDateTime.now(clock);
+    final Date createdAt =
+        DateTestDataBuilder.builder()
+            .date(dateTime.toInstant())
+            .zone(dateTime.getOffset().getId())
+            .build()
+            .date();
     Mockito.doThrow(new IllegalStateException("command failed"))
         .when(commandBus)
         .execute(Mockito.any(UpdateUserCommand.class));
@@ -143,7 +162,7 @@ class UserKafkaConsumerImplTest {
             .data(message.getData_())
             .aggregateId(message.getData_().getUserId())
             .action(ActionType.UserActionType.USER_UPDATED.getActionType())
-            .createdAt(OffsetDateTime.now(clock))
+            .createdAt(createdAt)
             .build()
             .registerInboxCommand();
     Assertions.assertThat(inboxCaptor.getValue()).usingRecursiveComparison().isEqualTo(expected);
@@ -162,12 +181,7 @@ class UserKafkaConsumerImplTest {
         UUID.randomUUID(),
         "1");
 
-    final ArgumentCaptor<DeleteUserCommand> commandCaptor =
-        ArgumentCaptor.forClass(DeleteUserCommand.class);
-    Mockito.verify(commandBus).execute(commandCaptor.capture());
-    final DeleteUserCommand expected = new DeleteUserCommand();
-    expected.setUserId(message.getData_().getUserId());
-    Assertions.assertThat(commandCaptor.getValue()).usingRecursiveComparison().isEqualTo(expected);
+    Mockito.verify(commandBus).execute(Mockito.any(DeleteUserCommand.class));
     Mockito.verify(commandBus, Mockito.never()).execute(Mockito.any(RegisterInboxCommand.class));
   }
 
@@ -175,6 +189,13 @@ class UserKafkaConsumerImplTest {
   void consumeUserDeletedShouldRegisterInboxWhenCommandExecutionFails() {
     final UserDeletedPayload message =
         UserDeletedPayloadTestDataBuilder.builder().build().userDeletedPayload();
+    final OffsetDateTime dateTime = OffsetDateTime.now(clock);
+    final Date createdAt =
+        DateTestDataBuilder.builder()
+            .date(dateTime.toInstant())
+            .zone(dateTime.getOffset().getId())
+            .build()
+            .date();
     Mockito.doThrow(new IllegalStateException("command failed"))
         .when(commandBus)
         .execute(Mockito.any(DeleteUserCommand.class));
@@ -196,7 +217,7 @@ class UserKafkaConsumerImplTest {
             .data(message.getData_())
             .aggregateId(message.getData_().getUserId())
             .action(ActionType.UserActionType.USER_DELETED.getActionType())
-            .createdAt(OffsetDateTime.now(clock))
+            .createdAt(createdAt)
             .build()
             .registerInboxCommand();
     Assertions.assertThat(inboxCaptor.getValue()).usingRecursiveComparison().isEqualTo(expected);

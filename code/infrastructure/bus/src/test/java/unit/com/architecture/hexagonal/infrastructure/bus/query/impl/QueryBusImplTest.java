@@ -2,7 +2,6 @@ package com.architecture.hexagonal.infrastructure.bus.query.impl;
 
 import com.architecture.hexagonal.application.usecase.user.query.getall.impl.GetAllUsersUseCaseImpl;
 import com.architecture.hexagonal.contract.bus.model.user.query.GetUsersFilteredQuery;
-import com.architecture.hexagonal.domain.databuilder.model.time.TestClock;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResultVo;
 import com.architecture.hexagonal.domain.port.in.bus.middleware.BusMiddleware;
@@ -23,7 +22,7 @@ class QueryBusImplTest {
 
   @Mock private BusHandlerFinder handlerFinder;
 
-  @Spy private BusMiddleware loggingMiddleware = new BusLoggingMiddleware(TestClock.FIXED_CLOCK);
+  @Spy private BusMiddleware loggingMiddleware = new BusLoggingMiddleware();
 
   @InjectMocks private QueryBusImpl queryBus;
 

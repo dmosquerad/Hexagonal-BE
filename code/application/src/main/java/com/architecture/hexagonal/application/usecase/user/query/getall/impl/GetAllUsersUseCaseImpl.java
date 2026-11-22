@@ -1,5 +1,6 @@
 package com.architecture.hexagonal.application.usecase.user.query.getall.impl;
 
+import com.architecture.hexagonal.application.mapper.pagination.PaginationVoMapper;
 import com.architecture.hexagonal.application.service.email.EmailService;
 import com.architecture.hexagonal.application.service.user.UserService;
 import com.architecture.hexagonal.contract.bus.model.common.Pagination;
@@ -33,10 +34,7 @@ public class GetAllUsersUseCaseImpl
     final PaginationVo paginationVo =
         Objects.isNull(contractPagination)
             ? null
-            : PaginationVo.builder()
-                .page(contractPagination.getPage())
-                .size(contractPagination.getSize())
-                .build();
+            : PaginationVoMapper.INSTANCE.toPaginationVo(contractPagination);
     final EmailBlockRulesVo blockedRules =
         Objects.nonNull(blockEmail)
             ? transactionReadBoundary.execute(emailService::getBlockedRules)

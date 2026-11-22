@@ -5,7 +5,6 @@ import com.architecture.hexagonal.domain.port.in.bus.middleware.BusMiddleware;
 import com.architecture.hexagonal.domain.port.out.bus.event.EventPublisher;
 import com.architecture.hexagonal.infrastructure.bus.BusHandlerFinder;
 import com.architecture.hexagonal.infrastructure.bus.middleware.impl.BusLoggingMiddleware;
-import java.time.Clock;
 import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -23,7 +22,7 @@ class EventBusImplTest {
 
   @Mock private BusHandlerFinder handlerFinder;
 
-  @Spy private BusMiddleware loggingMiddleware = new BusLoggingMiddleware(Clock.systemUTC());
+  @Spy private BusMiddleware loggingMiddleware = new BusLoggingMiddleware();
 
   @InjectMocks private EventBusImpl eventBus;
 

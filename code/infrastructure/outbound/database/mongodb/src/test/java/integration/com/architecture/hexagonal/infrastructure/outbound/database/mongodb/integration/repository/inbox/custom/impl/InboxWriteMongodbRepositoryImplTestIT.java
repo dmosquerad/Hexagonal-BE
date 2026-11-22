@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.integration.repository.inbox.custom.impl;
 
-import com.architecture.hexagonal.domain.databuilder.model.time.TestClock;
+import com.architecture.hexagonal.domain.databuilder.model.vo.time.TestTime;
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.config.MongodbIT;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.config.MongodbTestApplication;
@@ -11,7 +11,7 @@ import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.repos
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.databuilder.data.inbox.InboxDaoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.databuilder.data.payload.MessageHeaderDaoTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.databuilder.data.payload.PayloadDaoTestDataBuilder;
-import java.time.ZoneOffset;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.databuilder.data.time.DateDaoTestDataBuilder;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,7 +55,11 @@ class InboxWriteMongodbRepositoryImplTestIT extends MongodbIT {
 
     final MessageHeaderDao nextHeader =
         MessageHeaderDaoTestDataBuilder.builder()
-            .messageDate(TestClock.FIXED_INSTANT.plusMillis(1).atZone(ZoneOffset.UTC))
+            .messageDate(
+                DateDaoTestDataBuilder.builder()
+                    .date(TestTime.FIXED_INSTANT.plusMillis(1))
+                    .build()
+                    .dateDao())
             .build()
             .messageHeaderDao();
     inboxWriteMongodbRepository.save(
@@ -80,7 +84,11 @@ class InboxWriteMongodbRepositoryImplTestIT extends MongodbIT {
             .inboxId(pending.getInboxId())
             .status(StatusVo.PROCESSING)
             .retryCount(1)
-            .processedAt(TestClock.FIXED_INSTANT.plusSeconds(30).atZone(ZoneOffset.UTC))
+            .processedAt(
+                DateDaoTestDataBuilder.builder()
+                    .date(TestTime.FIXED_INSTANT.plusSeconds(30))
+                    .build()
+                    .dateDao())
             .build()
             .inboxDao();
 

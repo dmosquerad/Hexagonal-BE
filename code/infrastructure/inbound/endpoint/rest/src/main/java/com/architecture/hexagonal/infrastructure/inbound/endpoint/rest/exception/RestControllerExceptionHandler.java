@@ -3,11 +3,13 @@ package com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.exceptio
 import com.architecture.hexagonal.contract.inbound.endpoint.rest.user.server.dto.ResponseErrorDto;
 import com.architecture.hexagonal.domain.exception.DomainException;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
+import com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.config.RestClockConfig;
 import jakarta.validation.ConstraintViolationException;
 import java.time.Clock;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -23,6 +25,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RequiredArgsConstructor
 public class RestControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
+  @Qualifier(RestClockConfig.REST_CLOCK)
   private final Clock clock;
 
   @Override

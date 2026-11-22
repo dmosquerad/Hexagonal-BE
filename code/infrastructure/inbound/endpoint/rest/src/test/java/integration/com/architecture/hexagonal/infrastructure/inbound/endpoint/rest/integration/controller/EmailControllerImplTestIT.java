@@ -1,12 +1,13 @@
 package com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.integration.controller;
 
-import com.architecture.hexagonal.domain.databuilder.model.time.TestClock;
+import com.architecture.hexagonal.domain.databuilder.model.vo.time.TestTime;
 import com.architecture.hexagonal.domain.databuilder.model.vo.email.EmailBlockRulesVoTestDataBuilder;
 import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;
 import com.architecture.hexagonal.contract.bus.model.email.query.GetBlockedRulesQuery;
 import com.architecture.hexagonal.contract.inbound.endpoint.rest.email.server.dto.EmailBlockRulesResponseDto;
 import com.architecture.hexagonal.domain.port.in.bus.query.QueryBus;
 import com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.config.TestApplication;
+import com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.config.RestClockConfig;
 import com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.controller.EmailControllerImpl;
 import com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.integration.resources.email.EmailResponseResource;
 import com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.mapper.email.EmailBlockRulesDtoMapper;
@@ -15,6 +16,7 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
@@ -54,6 +56,7 @@ class EmailControllerImplTestIT {
   EmailBlockRulesDtoMapper emailBlockRulesDtoMapper;
 
   @MockitoSpyBean
+  @Qualifier(RestClockConfig.REST_CLOCK)
   Clock clock;
 
   @Test
@@ -72,7 +75,7 @@ class EmailControllerImplTestIT {
     final EmailBlockRulesResponseDto expectedResponse = emailBlockRulesResponseDtoJson
         .readObject(emailResponseResource.getBlockedRules);
 
-    Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
+    Mockito.when(clock.instant()).thenReturn(TestTime.FIXED_INSTANT);
     Mockito.when(queryBus.execute(Mockito.any(GetBlockedRulesQuery.class)))
         .thenReturn(emailBlockRulesVo);
 

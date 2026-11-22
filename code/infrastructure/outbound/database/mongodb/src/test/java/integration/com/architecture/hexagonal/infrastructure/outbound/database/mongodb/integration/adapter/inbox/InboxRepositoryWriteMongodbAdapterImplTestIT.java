@@ -4,9 +4,11 @@ import com.architecture.hexagonal.domain.databuilder.model.entity.inbox.InboxTes
 import com.architecture.hexagonal.domain.databuilder.model.vo.payload.PayloadVoTestDataBuilder;
 import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
+import com.architecture.hexagonal.domain.model.vo.time.factory.DateVoFactory;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.adapter.inbox.InboxRepositoryWriteMongodbAdapterImpl;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.config.MongodbIT;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.config.MongodbTestApplication;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.inbox.InboxDao;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.repository.inbox.InboxWriteMongodbRepository;
 import java.time.OffsetDateTime;
 import java.util.Optional;
@@ -45,11 +47,12 @@ class InboxRepositoryWriteMongodbAdapterImplTestIT extends MongodbIT {
   @Test
   void saveShouldPersistPayloadContainingOffsetDateTime() {
     final Inbox inbox = InboxTestDataBuilder.<Object>builder().build().inbox();
+    final OffsetDateTime timestamp = OffsetDateTime.parse("2026-10-13T10:14:30Z");
     final Inbox inboxWithTimestampPayload =
         inbox.toBuilder()
             .payload(
                 PayloadVoTestDataBuilder.<Object>builder()
-                    .data(OffsetDateTime.parse("2026-10-13T10:14:30Z"))
+                    .data(timestamp)
                     .build()
                     .payloadVo())
             .build();
@@ -57,6 +60,9 @@ class InboxRepositoryWriteMongodbAdapterImplTestIT extends MongodbIT {
     inboxWriteMongodbAdapter.save(inboxWithTimestampPayload);
 
     AssertionsForClassTypes.assertThat(inboxWriteMongodbRepository.count()).isEqualTo(1);
+    final InboxDao savedInbox = inboxWriteMongodbRepository.findAll().getFirst();
+    AssertionsForClassTypes.assertThat(savedInbox.getPayload().getData())
+        .isEqualTo(timestamp.toString());
   }
 
   @Test
@@ -68,7 +74,14 @@ class InboxRepositoryWriteMongodbAdapterImplTestIT extends MongodbIT {
         pending.toBuilder()
             .status(StatusVo.PROCESSING)
             .retryCount(1)
-            .processedAt(pending.createdAt().plusSeconds(30))
+            .processedAt(
+                DateVoFactory.from(
+                    pending
+                        .createdAt()
+                        .date()
+                        .plusSeconds(30)
+                        .atZone(pending.createdAt().zone())
+                        .toOffsetDateTime()))
             .build();
 
     final Optional<Inbox> result =
@@ -101,7 +114,14 @@ class InboxRepositoryWriteMongodbAdapterImplTestIT extends MongodbIT {
         pending.toBuilder()
             .status(StatusVo.PROCESSED)
             .retryCount(1)
-            .processedAt(pending.createdAt().plusSeconds(30))
+            .processedAt(
+                DateVoFactory.from(
+                    pending
+                        .createdAt()
+                        .date()
+                        .plusSeconds(30)
+                        .atZone(pending.createdAt().zone())
+                        .toOffsetDateTime()))
             .build();
 
     final Inbox result = inboxWriteMongodbAdapter.upsertByMessageIdentity(processed);

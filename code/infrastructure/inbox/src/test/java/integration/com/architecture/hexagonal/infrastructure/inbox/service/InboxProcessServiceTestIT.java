@@ -11,7 +11,9 @@ import com.architecture.hexagonal.domain.databuilder.model.vo.payload.PayloadVoT
 import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
 import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
 import com.architecture.hexagonal.domain.port.in.bus.command.CommandBus;
-import com.architecture.hexagonal.infrastructure.inbox.mapper.UserCommandFromInboxMapper;
+import com.architecture.hexagonal.infrastructure.inbox.mapper.CreateUserCommandFromInboxMapper;
+import com.architecture.hexagonal.infrastructure.inbox.mapper.DeleteUserCommandFromInboxMapper;
+import com.architecture.hexagonal.infrastructure.inbox.mapper.UpdateUserCommandFromInboxMapper;
 import com.architecture.hexagonal.infrastructure.inbox.naming.InboxNaming;
 import java.util.UUID;
 import org.assertj.core.api.Assertions;
@@ -33,8 +35,16 @@ class InboxProcessServiceTestIT {
   @Mock private CommandBus commandBus;
 
   @Spy
-  private UserCommandFromInboxMapper userCommandFromInboxMapper =
-      Mappers.getMapper(UserCommandFromInboxMapper.class);
+  private CreateUserCommandFromInboxMapper createUserCommandFromInboxMapper =
+      Mappers.getMapper(CreateUserCommandFromInboxMapper.class);
+
+  @Spy
+  private UpdateUserCommandFromInboxMapper updateUserCommandFromInboxMapper =
+      Mappers.getMapper(UpdateUserCommandFromInboxMapper.class);
+
+  @Spy
+  private DeleteUserCommandFromInboxMapper deleteUserCommandFromInboxMapper =
+      Mappers.getMapper(DeleteUserCommandFromInboxMapper.class);
 
   @Test
   void processShouldDispatchCreateCommandFromStoredPayload() {

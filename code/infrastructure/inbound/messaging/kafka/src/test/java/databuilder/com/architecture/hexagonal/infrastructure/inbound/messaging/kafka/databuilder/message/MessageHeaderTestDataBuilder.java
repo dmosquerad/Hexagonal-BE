@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.databuilder.message;
 
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.MessageHeader;
-import com.architecture.hexagonal.domain.databuilder.model.time.TestClock;
+import com.architecture.hexagonal.domain.databuilder.model.vo.time.TestTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.UUID;
@@ -14,7 +14,7 @@ public class MessageHeaderTestDataBuilder {
   private final UUID messageId = UUID.fromString("4059510b-ceb3-4d4c-913e-1759acbd63b1");
 
   @Builder.Default
-  private final OffsetDateTime messageDate = TestClock.FIXED_INSTANT.atOffset(ZoneOffset.UTC);
+  private final OffsetDateTime messageDate = TestTime.FIXED_INSTANT.atOffset(ZoneOffset.UTC);
 
   public MessageHeader messageHeader() {
     final MessageHeader header = new MessageHeader();

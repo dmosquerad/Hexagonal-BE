@@ -6,11 +6,17 @@ import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserCre
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserDeletedPayload;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserUpdatedPayload;
 import com.architecture.hexagonal.domain.port.in.bus.command.CommandBus;
-import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.mapper.UserKafkaMessageMapper;
+import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.config.KafkaClockConfig;
+import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.mapper.CreateUserCommandMapper;
+import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.mapper.DeleteUserCommandMapper;
+import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.mapper.RegisterInboxCommandMapper;
+import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.mapper.UpdateUserCommandMapper;
+import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.mapper.converter.DateConverter;
 import java.time.Clock;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,7 +24,12 @@ import org.springframework.stereotype.Component;
 public class UserKafkaConsumerImpl implements UserEventsConsumer {
 
   private final CommandBus commandBus;
-  private final UserKafkaMessageMapper userKafkaMessageMapper;
+  private final CreateUserCommandMapper createUserCommandMapper;
+  private final UpdateUserCommandMapper updateUserCommandMapper;
+  private final DeleteUserCommandMapper deleteUserCommandMapper;
+  private final RegisterInboxCommandMapper registerInboxCommandMapper;
+
+  @Qualifier(KafkaClockConfig.KAFKA_CLOCK)
   private final Clock clock;
 
   @Override
@@ -31,11 +42,11 @@ public class UserKafkaConsumerImpl implements UserEventsConsumer {
     final OffsetDateTime currentDateTime = OffsetDateTime.now(clock);
 
     try {
-      commandBus.execute(userKafkaMessageMapper.toCreateUserCommand(userCreatedMessage));
+      commandBus.execute(createUserCommandMapper.toCreateUserCommand(userCreatedMessage));
     } catch (final Exception _) {
       final RegisterInboxCommand registerInboxCommand =
-          userKafkaMessageMapper.toRegisterInboxCommand(userCreatedMessage);
-      registerInboxCommand.setCreatedAt(currentDateTime);
+          registerInboxCommandMapper.toRegisterInboxCommand(userCreatedMessage);
+      registerInboxCommand.setCreatedAt(DateConverter.toDate(currentDateTime));
 
       commandBus.execute(registerInboxCommand);
     }
@@ -53,11 +64,11 @@ public class UserKafkaConsumerImpl implements UserEventsConsumer {
     final OffsetDateTime currentDateTime = OffsetDateTime.now(clock);
 
     try {
-      commandBus.execute(userKafkaMessageMapper.toUpdateUserCommand(userUpdatedMessage));
+      commandBus.execute(updateUserCommandMapper.toUpdateUserCommand(userUpdatedMessage));
     } catch (final Exception _) {
       final RegisterInboxCommand registerInboxCommand =
-          userKafkaMessageMapper.toRegisterInboxCommand(userUpdatedMessage);
-      registerInboxCommand.setCreatedAt(currentDateTime);
+          registerInboxCommandMapper.toRegisterInboxCommand(userUpdatedMessage);
+      registerInboxCommand.setCreatedAt(DateConverter.toDate(currentDateTime));
 
       commandBus.execute(registerInboxCommand);
     }
@@ -75,11 +86,11 @@ public class UserKafkaConsumerImpl implements UserEventsConsumer {
     final OffsetDateTime currentDateTime = OffsetDateTime.now(clock);
 
     try {
-      commandBus.execute(userKafkaMessageMapper.toDeleteUserCommand(userDeletedMessage));
+      commandBus.execute(deleteUserCommandMapper.toDeleteUserCommand(userDeletedMessage));
     } catch (final Exception _) {
       final RegisterInboxCommand registerInboxCommand =
-          userKafkaMessageMapper.toRegisterInboxCommand(userDeletedMessage);
-      registerInboxCommand.setCreatedAt(currentDateTime);
+          registerInboxCommandMapper.toRegisterInboxCommand(userDeletedMessage);
+      registerInboxCommand.setCreatedAt(DateConverter.toDate(currentDateTime));
 
       commandBus.execute(registerInboxCommand);
     }

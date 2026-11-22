@@ -1,28 +1,37 @@
 package com.architecture.hexagonal.infrastructure.bus.middleware;
 
 import com.architecture.hexagonal.infrastructure.bus.middleware.impl.BusLoggingMiddleware;
-import java.time.Clock;
 import java.time.Instant;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.system.CapturedOutput;
 import org.springframework.boot.test.system.OutputCaptureExtension;
 
-@ExtendWith({OutputCaptureExtension.class, MockitoExtension.class})
+@ExtendWith(OutputCaptureExtension.class)
 class BusLoggingMiddlewareTest {
 
-  @Mock private Clock clock;
+  private final BusLoggingMiddleware loggingMiddleware = new BusLoggingMiddleware();
+  private MockedStatic<Instant> instantMock;
 
-  @InjectMocks private BusLoggingMiddleware loggingMiddleware;
+  @BeforeEach
+  void setUp() {
+    instantMock = Mockito.mockStatic(Instant.class, Mockito.CALLS_REAL_METHODS);
+  }
+
+  @AfterEach
+  void tearDown() {
+    instantMock.close();
+  }
 
   @Test
   void shouldLogCompletionWithoutLoggingMessageContents(final CapturedOutput output) {
-    Mockito.when(clock.instant()).thenReturn(Instant.EPOCH, Instant.EPOCH.plusMillis(42));
+    final Instant endTime = Instant.EPOCH.plusMillis(42);
+    instantMock.when(Instant::now).thenReturn(Instant.EPOCH, endTime);
 
     final String result = loggingMiddleware.execute("sensitive", () -> "result");
 
@@ -32,7 +41,8 @@ class BusLoggingMiddlewareTest {
 
   @Test
   void shouldLogFailureAndRethrowWithoutLoggingMessageContents(final CapturedOutput output) {
-    Mockito.when(clock.instant()).thenReturn(Instant.EPOCH, Instant.EPOCH.plusMillis(42));
+    final Instant endTime = Instant.EPOCH.plusMillis(42);
+    instantMock.when(Instant::now).thenReturn(Instant.EPOCH, endTime);
 
     final IllegalArgumentException exception = new IllegalArgumentException("failure");
 
