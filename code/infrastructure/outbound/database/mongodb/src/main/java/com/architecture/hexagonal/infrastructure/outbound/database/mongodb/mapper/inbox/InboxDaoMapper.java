@@ -10,7 +10,7 @@ import org.mapstruct.Mapping;
 @Mapper(config = MapstructConfig.class, uses = DateVoMongoConverter.class)
 public interface InboxDaoMapper {
 
-  @Mapping(target = "inboxId", ignore = true)
+  @Mapping(target = "inboxId", expression = "java(java.util.UUID.randomUUID())")
   @Mapping(
       source = "createdAt",
       target = "createdAt",
