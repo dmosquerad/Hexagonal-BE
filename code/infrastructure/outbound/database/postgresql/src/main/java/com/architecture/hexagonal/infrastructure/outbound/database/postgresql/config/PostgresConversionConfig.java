@@ -3,6 +3,7 @@ package com.architecture.hexagonal.infrastructure.outbound.database.postgresql.c
 import java.time.Clock;
 import java.util.TimeZone;
 import org.hibernate.cfg.JdbcSettings;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.hibernate.autoconfigure.HibernatePropertiesCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +12,8 @@ import org.springframework.context.annotation.Configuration;
 public class PostgresConversionConfig {
 
   @Bean
-  public HibernatePropertiesCustomizer hibernateTimeZoneCustomizer(final Clock clock) {
+  public HibernatePropertiesCustomizer hibernateTimeZoneCustomizer(
+      @Qualifier(PostgresqlClockConfig.POSTGRESQL_CLOCK) final Clock clock) {
     return hibernateProperties ->
         hibernateProperties.put(JdbcSettings.JDBC_TIME_ZONE, TimeZone.getTimeZone(clock.getZone()));
   }

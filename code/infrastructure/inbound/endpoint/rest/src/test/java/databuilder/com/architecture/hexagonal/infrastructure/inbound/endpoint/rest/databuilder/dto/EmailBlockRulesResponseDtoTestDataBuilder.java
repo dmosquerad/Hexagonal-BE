@@ -3,14 +3,14 @@ package com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.databuil
 import com.architecture.hexagonal.contract.inbound.endpoint.rest.email.server.dto.EmailBlockRulesResponseDto;
 import java.time.OffsetDateTime;
 
-import com.architecture.hexagonal.domain.databuilder.model.time.TestClock;
+import com.architecture.hexagonal.domain.databuilder.model.vo.time.TestTime;
 import lombok.Builder;
 
 @Builder
 public class EmailBlockRulesResponseDtoTestDataBuilder {
 
   @Builder.Default
-  private OffsetDateTime date = OffsetDateTime.now(TestClock.FIXED_CLOCK);
+  private OffsetDateTime date = OffsetDateTime.now(TestTime.FIXED_CLOCK);
 
   @Builder.Default
   private Integer status = 200;

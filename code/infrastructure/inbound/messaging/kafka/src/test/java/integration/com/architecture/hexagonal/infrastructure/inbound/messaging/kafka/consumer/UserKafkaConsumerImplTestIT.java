@@ -79,7 +79,10 @@ class UserKafkaConsumerImplTestIT {
         ArgumentCaptor.forClass(RegisterInboxCommand.class);
     Mockito.verify(commandBus).execute(inboxCaptor.capture());
     final RegisterInboxCommand expected =
-        RegisterInboxCommandTestDataBuilder.builder().build().registerInboxCommand();
+        RegisterInboxCommandTestDataBuilder.builder()
+            .aggregateId(null)
+            .build()
+            .registerInboxCommand();
     Assertions.assertThat(inboxCaptor.getValue())
         .usingRecursiveComparison()
         .ignoringFields("createdAt")

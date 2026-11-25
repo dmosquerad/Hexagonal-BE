@@ -8,42 +8,55 @@ import com.architecture.hexagonal.domain.port.out.repository.inbox.InboxReposito
 import com.architecture.hexagonal.domain.port.out.configuration.SchedulerConfigurationPort;
 import com.architecture.hexagonal.application.service.inbox.InboxService;
 import com.architecture.hexagonal.application.service.inbox.impl.InboxServiceImpl;
-import com.architecture.hexagonal.domain.databuilder.model.time.TestClock;
 import com.architecture.hexagonal.contract.bus.model.retry.command.RetryInboxeventCommand;
 import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
+import com.architecture.hexagonal.domain.databuilder.model.vo.time.TestTime;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
+import com.architecture.hexagonal.domain.model.vo.time.factory.DateVoFactory;
 import com.architecture.hexagonal.domain.databuilder.model.entity.inbox.InboxTestDataBuilder;
 import com.architecture.hexagonal.domain.databuilder.model.vo.inbox.SchedulerInboxConfigurationVoTestDataBuilder;
-import java.time.Clock;
-import java.time.ZoneOffset;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import org.assertj.core.api.AssertionsForClassTypes;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.AdditionalAnswers;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class RetryInboxUseCaseImplTestIT {
-
   @Mock private InboxRepositoryReadPort inboxRepositoryReadPort;
   @Mock private InboxRepositoryWritePort inboxRepositoryWritePort;
   @Mock private InboxProcess inboxProcess;
   @Mock private SchedulerConfigurationPort schedulerConfigurationPort;
   @Mock private InboxService inboxService;
 
-  @Spy private Clock clock = TestClock.FIXED_CLOCK;
   @Spy private SpyTransactionReadBoundary transactionReadBoundary = new SpyTransactionReadBoundary();
 
   @InjectMocks private InboxServiceImpl inboxServiceImpl;
   @InjectMocks private RetryInboxUseCaseImpl retryInboxUseCase;
+
+  private MockedStatic<Instant> instantMock;
+
+  @BeforeEach
+  void setUp() {
+    instantMock = Mockito.mockStatic(Instant.class, Mockito.CALLS_REAL_METHODS);
+  }
+
+  @AfterEach
+  void tearDown() {
+    instantMock.close();
+  }
 
   @Test
   void handleShouldProcessPendingEventsForUserAggregateType() {
@@ -52,10 +65,9 @@ class RetryInboxUseCaseImplTestIT {
         inbox.toBuilder()
             .status(StatusVo.PROCESSING)
             .retryCount(1)
-            .processedAt(TestClock.FIXED_INSTANT.atOffset(ZoneOffset.UTC))
+            .processedAt(DateVoFactory.from(TestTime.FIXED_INSTANT))
             .build();
     final Inbox processedInbox = processingInbox.toBuilder().status(StatusVo.PROCESSED).build();
-
     Mockito.when(
             inboxRepositoryReadPort.findByStatusAndAggregateType(
                 ArgumentMatchers.eq(StatusVo.PENDING),
@@ -83,9 +95,9 @@ class RetryInboxUseCaseImplTestIT {
     Mockito.when(inboxService.process(ArgumentMatchers.any(Inbox.class)))
         .thenAnswer(AdditionalAnswers.answer((Inbox event) -> inboxServiceImpl.process(event)));
 
-    final Void result = retryInboxUseCase.handle(new RetryInboxeventCommand());
-
-    AssertionsForClassTypes.assertThat(result).isNull();
+    instantMock.when(Instant::now).thenReturn(TestTime.FIXED_INSTANT);
+    AssertionsForClassTypes.assertThat(retryInboxUseCase.handle(new RetryInboxeventCommand()))
+        .isNull();
     Mockito.verify(transactionReadBoundary, Mockito.times(AggregateTypeVo.values().length))
         .execute(ArgumentMatchers.any());
     Mockito.verify(inboxService).findPending(ArgumentMatchers.any(AggregateTypeVo.class));
@@ -97,6 +109,7 @@ class RetryInboxUseCaseImplTestIT {
     Mockito.verify(inboxRepositoryWritePort).claimPendingForProcessing(processingInbox);
     Mockito.verify(schedulerConfigurationPort).getInboxScheduler();
     Mockito.verify(inboxProcess).process(processingInbox);
-    Mockito.verify(inboxRepositoryWritePort).upsertByMessageIdentity(processedInbox);
+    Mockito.verify(inboxRepositoryWritePort)
+        .upsertByMessageIdentity(processedInbox);
   }
 }

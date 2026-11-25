@@ -6,14 +6,14 @@ import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.List;
 
-import com.architecture.hexagonal.domain.databuilder.model.time.TestClock;
+import com.architecture.hexagonal.domain.databuilder.model.vo.time.TestTime;
 import lombok.Builder;
 
 @Builder
 public class UsersResponseDtoTestDataBuilder {
 
   @Builder.Default
-  private OffsetDateTime date = OffsetDateTime.now(TestClock.FIXED_CLOCK);
+  private OffsetDateTime date = OffsetDateTime.now(TestTime.FIXED_CLOCK);
 
   @Builder.Default
   private Integer status = 200;

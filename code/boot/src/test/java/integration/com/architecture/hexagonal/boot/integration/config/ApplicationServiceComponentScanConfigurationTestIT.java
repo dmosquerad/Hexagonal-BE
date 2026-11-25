@@ -2,7 +2,6 @@ package com.architecture.hexagonal.boot.integration.config;
 
 import com.architecture.hexagonal.boot.config.ApplicationServiceComponentScanConfiguration;
 import com.architecture.hexagonal.boot.config.ApplicationUseCaseComponentScanConfiguration;
-import com.architecture.hexagonal.boot.config.TimeConfig;
 import com.architecture.hexagonal.domain.port.out.configuration.EmailConfigurationPort;
 import com.architecture.hexagonal.domain.port.out.inbox.InboxProcess;
 import com.architecture.hexagonal.domain.port.out.repository.inbox.InboxRepositoryReadPort;
@@ -31,7 +30,6 @@ import com.architecture.hexagonal.application.usecase.user.query.getall.impl.Get
 import com.architecture.hexagonal.application.usecase.user.command.patch.impl.PatchUserUseCaseImpl;
 import com.architecture.hexagonal.application.usecase.user.command.update.impl.UpdateUserUseCaseImpl;
 import com.architecture.hexagonal.application.usecase.outbox.command.retry.impl.RetryOutboxUseCaseImpl;
-import java.time.Clock;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,12 +39,9 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 @SpringBootTest(
     classes = {
       ApplicationServiceComponentScanConfiguration.class,
-      ApplicationUseCaseComponentScanConfiguration.class,
-      TimeConfig.class
+      ApplicationUseCaseComponentScanConfiguration.class
     })
 class ApplicationServiceComponentScanConfigurationTestIT {
-
-  @Autowired private Clock clock;
 
   @Autowired private EmailServiceImpl emailService;
 
@@ -105,8 +100,7 @@ class ApplicationServiceComponentScanConfigurationTestIT {
   @MockitoBean private TransactionWriteBoundary transactionWriteBoundary;
 
   @Test
-  void shouldRegisterApplicationServicesUseCasesAndUtcClock() {
-    Assertions.assertThat(clock.getZone()).isEqualTo(Clock.systemUTC().getZone());
+  void shouldRegisterApplicationServicesAndUseCases() {
     Assertions.assertThat(emailService).isNotNull();
     Assertions.assertThat(userService).isNotNull();
     Assertions.assertThat(outboxService).isNotNull();

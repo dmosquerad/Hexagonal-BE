@@ -5,7 +5,7 @@ import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.domain.model.vo.payload.MessageHeaderVo;
 import com.architecture.hexagonal.domain.model.vo.payload.PayloadVo;
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
-import java.time.OffsetDateTime;
+import com.architecture.hexagonal.domain.model.vo.time.DateVo;
 import java.util.UUID;
 import lombok.Builder;
 
@@ -18,8 +18,8 @@ public record Outbox(
     PayloadVo payload,
     StatusVo status,
     Integer retryCount,
-    OffsetDateTime createdAt,
-    OffsetDateTime processedAt)
+    DateVo createdAt,
+    DateVo processedAt)
     implements EntityId<Outbox.OutboxKey> {
 
   @Override

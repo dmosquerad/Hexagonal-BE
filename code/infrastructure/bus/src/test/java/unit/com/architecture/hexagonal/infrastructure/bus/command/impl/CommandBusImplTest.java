@@ -2,7 +2,6 @@ package com.architecture.hexagonal.infrastructure.bus.command.impl;
 
 import com.architecture.hexagonal.application.usecase.user.command.delete.impl.DeleteUserUseCaseImpl;
 import com.architecture.hexagonal.contract.bus.model.user.command.DeleteUserCommand;
-import com.architecture.hexagonal.domain.databuilder.model.time.TestClock;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.domain.port.in.bus.command.CommandHandler;
 import com.architecture.hexagonal.domain.port.in.bus.middleware.BusMiddleware;
@@ -22,7 +21,7 @@ class CommandBusImplTest {
 
   @Mock private BusHandlerFinder handlerFinder;
 
-  @Spy private BusMiddleware loggingMiddleware = new BusLoggingMiddleware(TestClock.FIXED_CLOCK);
+  @Spy private BusMiddleware loggingMiddleware = new BusLoggingMiddleware();
 
   @InjectMocks private CommandBusImpl commandBus;
 

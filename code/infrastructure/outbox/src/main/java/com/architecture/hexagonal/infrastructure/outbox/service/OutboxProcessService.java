@@ -4,7 +4,9 @@ import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
 import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.domain.port.out.outbox.OutboxProcess;
-import com.architecture.hexagonal.infrastructure.outbox.mapper.user.UserFromOutboxMapper;
+import com.architecture.hexagonal.infrastructure.outbox.mapper.user.UserCreatedFromOutboxMapper;
+import com.architecture.hexagonal.infrastructure.outbox.mapper.user.UserDeletedFromOutboxMapper;
+import com.architecture.hexagonal.infrastructure.outbox.mapper.user.UserUpdatedFromOutboxMapper;
 import com.architecture.hexagonal.infrastructure.outbox.naming.OutboxNaming;
 import jakarta.annotation.PostConstruct;
 import java.util.Arrays;
@@ -23,7 +25,9 @@ import org.springframework.util.CollectionUtils;
 public class OutboxProcessService implements OutboxProcess {
 
   private final ApplicationEventPublisher applicationEventPublisher;
-  private final UserFromOutboxMapper userFromOutboxMapper;
+  private final UserCreatedFromOutboxMapper userCreatedFromOutboxMapper;
+  private final UserUpdatedFromOutboxMapper userUpdatedFromOutboxMapper;
+  private final UserDeletedFromOutboxMapper userDeletedFromOutboxMapper;
 
   @PostConstruct
   void validateAggregateHandlers() {
@@ -65,14 +69,14 @@ public class OutboxProcessService implements OutboxProcess {
         ActionType.UserActionType.USER_CREATED.getActionType(),
             outbox ->
                 applicationEventPublisher.publishEvent(
-                    userFromOutboxMapper.toUserCreated(outbox.payload())),
+                    userCreatedFromOutboxMapper.toUserCreated(outbox.payload())),
         ActionType.UserActionType.USER_UPDATED.getActionType(),
             outbox ->
                 applicationEventPublisher.publishEvent(
-                    userFromOutboxMapper.toUserUpdated(outbox.payload())),
+                    userUpdatedFromOutboxMapper.toUserUpdated(outbox.payload())),
         ActionType.UserActionType.USER_DELETED.getActionType(),
             outbox ->
                 applicationEventPublisher.publishEvent(
-                    userFromOutboxMapper.toUserDeleted(outbox.payload())));
+                    userDeletedFromOutboxMapper.toUserDeleted(outbox.payload())));
   }
 }

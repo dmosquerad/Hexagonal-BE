@@ -14,10 +14,12 @@ import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.mapper.
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.messaging.Message;
@@ -28,7 +30,7 @@ class UserEventsProducerTest {
   @InjectMocks private UserEventsProducerImpl publisher;
 
   @Mock private StreamBridge streamBridge;
-  @Mock private PayloadMapper payloadMapper;
+  @Spy private PayloadMapper payloadMapper = Mappers.getMapper(PayloadMapper.class);
   @Mock private OutboxRepositoryWritePort outboxRepositoryWritePort;
 
   @Test

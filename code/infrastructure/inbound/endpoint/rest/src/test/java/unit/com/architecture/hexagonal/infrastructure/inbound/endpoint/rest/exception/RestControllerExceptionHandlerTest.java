@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.exception;
 
 import com.architecture.hexagonal.contract.inbound.endpoint.rest.user.server.dto.ResponseErrorDto;
-import com.architecture.hexagonal.domain.databuilder.model.time.TestClock;
+import com.architecture.hexagonal.domain.databuilder.model.vo.time.TestTime;
 import com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.databuilder.dto.ResponseErrorDtoTestDataBuilder;
 import jakarta.validation.ConstraintViolationException;
 import java.time.Clock;
@@ -25,7 +25,7 @@ class RestControllerExceptionHandlerTest {
 
   @InjectMocks RestControllerExceptionHandler restControllerExceptionHandler;
 
-  @Spy Clock clock = TestClock.FIXED_CLOCK;
+  @Spy Clock clock = TestTime.FIXED_CLOCK;
 
   @Test
   void createResponseEntityShouldReturnResponseEntityWhenProblemDetailProvided() {
@@ -65,7 +65,7 @@ class RestControllerExceptionHandlerTest {
             .status(HttpStatus.BAD_REQUEST.value())
             .title(HttpStatus.BAD_REQUEST.getReasonPhrase())
             .detail(ex.getMessage())
-            .date(OffsetDateTime.now(TestClock.FIXED_CLOCK))
+            .date(OffsetDateTime.now(TestTime.FIXED_CLOCK))
             .build()
             .responseErrorDto();
 
@@ -91,7 +91,7 @@ class RestControllerExceptionHandlerTest {
             .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
             .title(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
             .detail(ex.getMessage())
-            .date(OffsetDateTime.now(TestClock.FIXED_CLOCK))
+            .date(OffsetDateTime.now(TestTime.FIXED_CLOCK))
             .build()
             .responseErrorDto();
 

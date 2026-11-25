@@ -1,5 +1,6 @@
 package com.architecture.hexagonal.application.usecase.user.command.update.impl;
 
+import com.architecture.hexagonal.application.mapper.user.UserCommandMapper;
 import com.architecture.hexagonal.application.service.email.EmailService;
 import com.architecture.hexagonal.application.service.user.UserService;
 import com.architecture.hexagonal.contract.bus.model.user.command.UpdateUserCommand;
@@ -7,7 +8,6 @@ import com.architecture.hexagonal.domain.annotation.ApplicationUseCase;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.InvalidValueException;
 import com.architecture.hexagonal.domain.model.entity.user.User;
-import com.architecture.hexagonal.domain.model.vo.email.factory.EmailVoFactory;
 import com.architecture.hexagonal.domain.model.vo.exception.FailureType;
 import com.architecture.hexagonal.domain.port.in.bus.command.CommandHandler;
 import com.architecture.hexagonal.domain.port.in.transaction.TransactionWriteBoundary;
@@ -24,12 +24,7 @@ public class UpdateUserUseCaseImpl implements CommandHandler<UpdateUserCommand, 
 
   @Override
   public User handle(final @NonNull UpdateUserCommand updateUserCommand) {
-    final User user =
-        User.builder()
-            .userId(updateUserCommand.getUserId())
-            .name(updateUserCommand.getName())
-            .email(EmailVoFactory.from(updateUserCommand.getEmail()))
-            .build();
+    final User user = UserCommandMapper.INSTANCE.toUser(updateUserCommand);
     return transactionWriteBoundary.execute(
         () -> {
           if (emailService.isEmailBlocked(user.email())) {

@@ -9,6 +9,7 @@ import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
 import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
+import com.architecture.hexagonal.domain.model.vo.time.factory.DateVoFactory;
 import com.architecture.hexagonal.domain.port.out.repository.outbox.OutboxRepositoryWritePort;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.mapper.user.PayloadMapper;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +41,7 @@ public class UserEventsProducerImpl implements UserEventsProducer {
             .action(ActionType.UserActionType.USER_CREATED.getActionType())
             .status(StatusVo.PENDING)
             .payload(payloadMapper.toPayload(payload))
-            .createdAt(payload.getMessageHeader().getMessageDate())
+            .createdAt(DateVoFactory.from(payload.getMessageHeader().getMessageDate()))
             .build());
     return false;
   }
@@ -69,7 +70,7 @@ public class UserEventsProducerImpl implements UserEventsProducer {
             .action(ActionType.UserActionType.USER_UPDATED.getActionType())
             .status(StatusVo.PENDING)
             .payload(payloadMapper.toPayload(payload))
-            .createdAt(payload.getMessageHeader().getMessageDate())
+            .createdAt(DateVoFactory.from(payload.getMessageHeader().getMessageDate()))
             .build());
     return false;
   }
@@ -98,7 +99,7 @@ public class UserEventsProducerImpl implements UserEventsProducer {
             .action(ActionType.UserActionType.USER_DELETED.getActionType())
             .status(StatusVo.PENDING)
             .payload(payloadMapper.toPayload(payload))
-            .createdAt(payload.getMessageHeader().getMessageDate())
+            .createdAt(DateVoFactory.from(payload.getMessageHeader().getMessageDate()))
             .build());
     return false;
   }

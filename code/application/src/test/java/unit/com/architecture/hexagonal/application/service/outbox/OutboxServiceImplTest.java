@@ -2,35 +2,36 @@ package com.architecture.hexagonal.application.service.outbox;
 
 import com.architecture.hexagonal.application.service.outbox.impl.OutboxServiceImpl;
 import com.architecture.hexagonal.domain.databuilder.model.entity.outbox.OutboxTestDataBuilder;
-import com.architecture.hexagonal.domain.databuilder.model.time.TestClock;
 import com.architecture.hexagonal.domain.databuilder.model.vo.outbox.SchedulerOutboxConfigurationVoTestDataBuilder;
+import com.architecture.hexagonal.domain.databuilder.model.vo.time.TestTime;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
 import com.architecture.hexagonal.domain.model.projector.outbox.OutboxStatusAndAggregateProjector;
 import com.architecture.hexagonal.domain.model.vo.outbox.SchedulerOutboxConfigurationVo;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
+import com.architecture.hexagonal.domain.model.vo.time.factory.DateVoFactory;
 import com.architecture.hexagonal.domain.port.out.configuration.SchedulerConfigurationPort;
 import com.architecture.hexagonal.domain.port.out.outbox.OutboxProcess;
 import com.architecture.hexagonal.domain.port.out.repository.outbox.OutboxRepositoryReadPort;
 import com.architecture.hexagonal.domain.port.out.repository.outbox.OutboxRepositoryWritePort;
-import java.time.Clock;
-import java.time.ZoneOffset;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.assertj.core.api.AssertionsForInterfaceTypes;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.AdditionalAnswers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class OutboxServiceImplTest {
-
   @Mock private OutboxRepositoryReadPort outboxRepositoryReadPort;
 
   @Mock private OutboxRepositoryWritePort outboxRepositoryWritePort;
@@ -39,9 +40,19 @@ class OutboxServiceImplTest {
 
   @Mock private SchedulerConfigurationPort schedulerConfigurationPort;
 
-  @Spy private Clock clock = TestClock.FIXED_CLOCK;
-
   @InjectMocks private OutboxServiceImpl outboxService;
+
+  private MockedStatic<Instant> instantMock;
+
+  @BeforeEach
+  void setUp() {
+    instantMock = Mockito.mockStatic(Instant.class, Mockito.CALLS_REAL_METHODS);
+  }
+
+  @AfterEach
+  void tearDown() {
+    instantMock.close();
+  }
 
   @Test
   void findShouldReturnPendingEvents() {
@@ -68,7 +79,7 @@ class OutboxServiceImplTest {
         outbox.toBuilder()
             .status(StatusVo.PROCESSING)
             .retryCount(1)
-            .processedAt(TestClock.FIXED_INSTANT.atOffset(ZoneOffset.UTC))
+            .processedAt(DateVoFactory.from(TestTime.FIXED_INSTANT))
             .build();
     final Outbox published = processing.toBuilder().status(StatusVo.PROCESSED).build();
     final SchedulerOutboxConfigurationVo schedulerConfig =
@@ -81,13 +92,13 @@ class OutboxServiceImplTest {
     Mockito.when(outboxRepositoryWritePort.upsertByEventIdentity(Mockito.any(Outbox.class)))
         .thenAnswer(AdditionalAnswers.returnsFirstArg());
 
+    instantMock.when(Instant::now).thenReturn(TestTime.FIXED_INSTANT);
     final Outbox result = outboxService.process(outbox);
 
     AssertionsForClassTypes.assertThat(result).usingRecursiveComparison().isEqualTo(published);
     Mockito.verify(schedulerConfigurationPort).getOutboxScheduler();
     Mockito.verify(outboxRepositoryWritePort).claimPendingForProcessing(processing);
     Mockito.verify(outboxProcess).process(processing);
-    Mockito.verify(clock).instant();
     Mockito.verify(outboxRepositoryWritePort).upsertByEventIdentity(published);
   }
 
@@ -97,6 +108,7 @@ class OutboxServiceImplTest {
     Mockito.when(outboxRepositoryWritePort.claimPendingForProcessing(Mockito.any(Outbox.class)))
         .thenReturn(Optional.empty());
 
+    instantMock.when(Instant::now).thenReturn(TestTime.FIXED_INSTANT);
     final Outbox result = outboxService.process(outbox);
 
     AssertionsForClassTypes.assertThat(result).usingRecursiveComparison().isEqualTo(outbox);
@@ -113,7 +125,7 @@ class OutboxServiceImplTest {
         outbox.toBuilder()
             .status(StatusVo.PROCESSING)
             .retryCount(1)
-            .processedAt(TestClock.FIXED_INSTANT.atOffset(ZoneOffset.UTC))
+            .processedAt(DateVoFactory.from(TestTime.FIXED_INSTANT))
             .build();
     final Outbox pending = processing.toBuilder().status(StatusVo.PENDING).build();
     final SchedulerOutboxConfigurationVo schedulerConfig =
@@ -130,6 +142,7 @@ class OutboxServiceImplTest {
         .when(outboxProcess)
         .process(Mockito.any(Outbox.class));
 
+    instantMock.when(Instant::now).thenReturn(TestTime.FIXED_INSTANT);
     final Outbox result = outboxService.process(outbox);
 
     AssertionsForClassTypes.assertThat(result).usingRecursiveComparison().isEqualTo(pending);
@@ -146,14 +159,14 @@ class OutboxServiceImplTest {
         outbox.toBuilder()
             .status(StatusVo.PROCESSING)
             .retryCount(1)
-            .processedAt(TestClock.FIXED_INSTANT.atOffset(ZoneOffset.UTC))
+            .processedAt(DateVoFactory.from(TestTime.FIXED_INSTANT))
             .build();
     final Outbox pendingRetry = firstProcessing.toBuilder().status(StatusVo.PENDING).build();
     final Outbox secondProcessing =
         pendingRetry.toBuilder()
             .status(StatusVo.PROCESSING)
             .retryCount(2)
-            .processedAt(TestClock.FIXED_INSTANT.atOffset(ZoneOffset.UTC))
+            .processedAt(DateVoFactory.from(TestTime.FIXED_INSTANT))
             .build();
     final Outbox published = secondProcessing.toBuilder().status(StatusVo.PROCESSED).build();
     final SchedulerOutboxConfigurationVo schedulerConfig =
@@ -171,6 +184,7 @@ class OutboxServiceImplTest {
         .when(outboxProcess)
         .process(Mockito.any(Outbox.class));
 
+    instantMock.when(Instant::now).thenReturn(TestTime.FIXED_INSTANT);
     final Outbox firstAttempt = outboxService.process(outbox);
     final Outbox secondAttempt = outboxService.process(firstAttempt);
 
@@ -196,7 +210,7 @@ class OutboxServiceImplTest {
         outbox.toBuilder()
             .status(StatusVo.PROCESSING)
             .retryCount(6)
-            .processedAt(TestClock.FIXED_INSTANT.atOffset(ZoneOffset.UTC))
+            .processedAt(DateVoFactory.from(TestTime.FIXED_INSTANT))
             .build();
     final Outbox expectedFailed = processing.toBuilder().status(StatusVo.FAILED).build();
     final SchedulerOutboxConfigurationVo schedulerConfig =
@@ -210,6 +224,7 @@ class OutboxServiceImplTest {
     Mockito.when(outboxRepositoryWritePort.upsertByEventIdentity(Mockito.any(Outbox.class)))
         .thenAnswer(AdditionalAnswers.returnsFirstArg());
 
+    instantMock.when(Instant::now).thenReturn(TestTime.FIXED_INSTANT);
     final Outbox result = outboxService.process(outbox);
 
     AssertionsForClassTypes.assertThat(result).usingRecursiveComparison().isEqualTo(expectedFailed);
@@ -217,6 +232,5 @@ class OutboxServiceImplTest {
     Mockito.verify(outboxRepositoryWritePort).claimPendingForProcessing(processing);
     Mockito.verify(outboxRepositoryWritePort).upsertByEventIdentity(expectedFailed);
     Mockito.verify(outboxProcess, Mockito.never()).process(Mockito.any(Outbox.class));
-    Mockito.verify(clock, Mockito.times(2)).instant();
   }
 }

@@ -8,15 +8,17 @@ import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.domain.model.projector.outbox.OutboxStatusAndAggregateProjector;
 import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
+import com.architecture.hexagonal.domain.model.vo.time.DateVo;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.adapter.outbox.OutboxRepositoryReadMongodbAdapterImpl;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.config.MongodbIT;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.config.MongodbTestApplication;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.outbox.OutboxDao;
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.mapper.outbox.OutboxDaoMapper;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.mapper.outbox.OutboxDoFromMongodbMapper;
-
+import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.repository.outbox.OutboxWriteMongodbRepository;
 import java.util.List;
-
 import org.assertj.core.api.AssertionsForClassTypes;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +32,16 @@ class OutboxRepositoryReadMongodbAdapterImplTestIT extends MongodbIT {
 
   @Autowired private OutboxRepositoryReadMongodbAdapterImpl outboxReadMongodbAdapterImpl;
 
+  @Autowired private OutboxWriteMongodbRepository outboxWriteMongodbRepository;
+
+  @MockitoSpyBean private OutboxDaoMapper outboxDaoMapper;
+
   @MockitoSpyBean private OutboxDoFromMongodbMapper outboxDoFromMongodbMapper;
+
+  @BeforeEach
+  void cleanOutboxCollection() {
+    outboxWriteMongodbRepository.deleteAll();
+  }
 
   @Test
   void findPendingEventsShouldReturnPendingEventsOrderedByCreatedAt() {
@@ -45,14 +56,19 @@ class OutboxRepositoryReadMongodbAdapterImplTestIT extends MongodbIT {
             .processedAt(null)
             .build()
             .outbox();
-    final OutboxStatusAndAggregateProjector outboxStatusAndAggregateProjector = OutboxStatusAndAggregateProjectorTestDataBuilder.builder().build().outboxStatusAndAggregateProjector();
+    outboxWriteMongodbRepository.save(outboxDaoMapper.toOutboxDao(outbox));
 
-    final List<Outbox> result = outboxReadMongodbAdapterImpl.findByStatusAndAggregateType(outboxStatusAndAggregateProjector);
+    final OutboxStatusAndAggregateProjector projector =
+        OutboxStatusAndAggregateProjectorTestDataBuilder.builder()
+            .build()
+            .outboxStatusAndAggregateProjector();
+    final List<Outbox> result =
+        outboxReadMongodbAdapterImpl.findByStatusAndAggregateType(projector);
 
     Mockito.verify(outboxDoFromMongodbMapper).toOutbox(Mockito.any(OutboxDao.class));
 
     AssertionsForClassTypes.assertThat(result)
         .usingRecursiveComparison()
-        .isEqualTo(List.of(outbox));
+        .isEqualTo(List.of(outbox.toBuilder().processedAt(DateVo.builder().build()).build()));
   }
 }

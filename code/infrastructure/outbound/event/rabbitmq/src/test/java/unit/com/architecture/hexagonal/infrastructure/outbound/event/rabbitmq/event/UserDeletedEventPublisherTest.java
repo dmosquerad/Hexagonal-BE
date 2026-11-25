@@ -2,12 +2,12 @@ package com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.event;
 
 import com.architecture.hexagonal.contract.bus.model.user.event.UserDeletedEvent;
 import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.UserDeleted;
-import com.architecture.hexagonal.domain.databuilder.model.time.TestClock;
+import com.architecture.hexagonal.domain.databuilder.model.vo.time.TestTime;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.databuilder.event.UserDeletedEventTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.databuilder.message.MessageHeaderTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.databuilder.message.UserDataTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.databuilder.message.UserDeletedTestDataBuilder;
-import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.mapper.user.UserEventMessageMapper;
+import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.mapper.user.UserDeletedEventMessageMapper;
 import java.time.Clock;
 import java.time.OffsetDateTime;
 import org.assertj.core.api.Assertions;
@@ -29,9 +29,11 @@ class UserDeletedEventPublisherTest {
 
   @Mock private ApplicationEventPublisher publisher;
 
-  @Spy private UserEventMessageMapper mapper = Mappers.getMapper(UserEventMessageMapper.class);
+  @Spy
+  private UserDeletedEventMessageMapper mapper =
+      Mappers.getMapper(UserDeletedEventMessageMapper.class);
 
-  @Spy private Clock clock = TestClock.FIXED_CLOCK;
+  @Spy private Clock clock = TestTime.FIXED_CLOCK;
 
   @Test
   void deletedHandlerShouldPublishUserDeletedMessage() {
@@ -48,7 +50,7 @@ class UserDeletedEventPublisherTest {
             .messageHeader(
                 MessageHeaderTestDataBuilder.builder()
                     .messageId(captor.getValue().getMessageHeader().getMessageId())
-                    .messageDate(OffsetDateTime.now(TestClock.FIXED_CLOCK))
+                    .messageDate(OffsetDateTime.now(TestTime.FIXED_CLOCK))
                     .build()
                     .messageHeader())
             .userData(

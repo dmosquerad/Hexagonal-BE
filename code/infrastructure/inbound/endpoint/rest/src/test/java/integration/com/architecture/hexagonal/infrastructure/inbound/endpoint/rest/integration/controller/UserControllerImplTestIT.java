@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.integration.controller;
 
 import com.architecture.hexagonal.domain.databuilder.model.entity.user.UserTestDataBuilder;
-import com.architecture.hexagonal.domain.databuilder.model.time.TestClock;
+import com.architecture.hexagonal.domain.databuilder.model.vo.time.TestTime;
 import com.architecture.hexagonal.domain.databuilder.model.vo.pagination.PaginationVoTestDataBuilder;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResultVo;
 import com.architecture.hexagonal.contract.bus.model.user.command.CreateUserCommand;
@@ -14,6 +14,7 @@ import com.architecture.hexagonal.contract.bus.model.user.query.UserExistsQuery;
 import com.architecture.hexagonal.domain.port.in.bus.command.CommandBus;
 import com.architecture.hexagonal.domain.port.in.bus.query.QueryBus;
 import com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.controller.UserControllerImpl;
+import com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.config.RestClockConfig;
 import com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.integration.resources.user.UserRequestResource;
 import com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.mapper.user.*;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
@@ -38,6 +39,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.json.JacksonTester;
@@ -120,6 +122,7 @@ class UserControllerImplTestIT {
   GetAllUserQueryDtoMapper getAllUserQueryDtoMapper;
 
   @MockitoSpyBean
+  @Qualifier(RestClockConfig.REST_CLOCK)
   Clock clock;
 
   @Test
@@ -132,7 +135,7 @@ class UserControllerImplTestIT {
 
     final User user = UserTestDataBuilder.builder().build().user();
 
-    Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
+    Mockito.when(clock.instant()).thenReturn(TestTime.FIXED_INSTANT);
     Mockito.when(queryBus.execute(Mockito.any(GetUsersFilteredQuery.class)))
         .thenReturn(PaginationResultVo.<User>builder()
             .data(Collections.singletonList(user))
@@ -166,7 +169,7 @@ class UserControllerImplTestIT {
         .readObject(userResponseResource.createUser);
     final User user = UserTestDataBuilder.builder().build().user();
 
-    Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
+    Mockito.when(clock.instant()).thenReturn(TestTime.FIXED_INSTANT);
     Mockito.when(commandBus.execute(Mockito.any(CreateUserCommand.class)))
         .thenReturn(user);
 
@@ -195,7 +198,7 @@ class UserControllerImplTestIT {
 
     final User user = UserTestDataBuilder.builder().build().user();
 
-    Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
+    Mockito.when(clock.instant()).thenReturn(TestTime.FIXED_INSTANT);
     Mockito.when(queryBus.execute(Mockito.any(GetUsersFilteredQuery.class)))
         .thenReturn(PaginationResultVo.<User>builder()
             .data(Collections.singletonList(user))
@@ -237,7 +240,7 @@ class UserControllerImplTestIT {
         .build()
         .user();
 
-    Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
+    Mockito.when(clock.instant()).thenReturn(TestTime.FIXED_INSTANT);
     Mockito.when(
         queryBus.execute(Mockito.any(FindUserByUserIdQuery.class)))
         .thenReturn(user);
@@ -268,7 +271,7 @@ class UserControllerImplTestIT {
         .build()
         .user();
 
-    Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
+    Mockito.when(clock.instant()).thenReturn(TestTime.FIXED_INSTANT);
     Mockito.when(commandBus.execute(Mockito.any(DeleteUserCommand.class)))
         .thenReturn(user);
 
@@ -299,7 +302,7 @@ class UserControllerImplTestIT {
         .build()
         .user();
 
-    Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
+    Mockito.when(clock.instant()).thenReturn(TestTime.FIXED_INSTANT);
     Mockito.when(commandBus.execute(Mockito.any(UpdateUserCommand.class)))
         .thenReturn(user);
 
@@ -332,7 +335,7 @@ class UserControllerImplTestIT {
         .build()
         .user();
 
-    Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
+    Mockito.when(clock.instant()).thenReturn(TestTime.FIXED_INSTANT);
     Mockito.when(commandBus.execute(Mockito.any(PatchUserCommand.class)))
         .thenReturn(user);
 
@@ -384,7 +387,7 @@ class UserControllerImplTestIT {
         .build()
         .responseErrorDto();
 
-    Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
+    Mockito.when(clock.instant()).thenReturn(TestTime.FIXED_INSTANT);
     Mockito.when(queryBus.execute(Mockito.any(FindUserByUserIdQuery.class)))
         .thenThrow(new ResourceNotFoundException(
             ExceptionMessage.NOT_FOUND_DATA_MESSAGE + user.getId(), FailureType.NON_RETRYABLE));
@@ -412,7 +415,7 @@ class UserControllerImplTestIT {
         .build()
         .responseErrorDto();
 
-    Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
+    Mockito.when(clock.instant()).thenReturn(TestTime.FIXED_INSTANT);
     Mockito.when(commandBus.execute(Mockito.any(DeleteUserCommand.class)))
         .thenThrow(new ResourceNotFoundException(
             ExceptionMessage.NOT_FOUND_DATA_MESSAGE + user.getId(), FailureType.NON_RETRYABLE));
@@ -441,7 +444,7 @@ class UserControllerImplTestIT {
         .build()
         .responseErrorDto();
 
-    Mockito.when(clock.instant()).thenReturn(TestClock.FIXED_INSTANT);
+    Mockito.when(clock.instant()).thenReturn(TestTime.FIXED_INSTANT);
     Mockito.when(commandBus.execute(Mockito.any(CreateUserCommand.class)))
         .thenThrow(new IllegalArgumentException(ExceptionMessage.INVALID_EMAIL_FORMAT));
 

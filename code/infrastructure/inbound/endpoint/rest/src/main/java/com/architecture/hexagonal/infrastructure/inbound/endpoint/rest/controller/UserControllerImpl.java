@@ -12,12 +12,14 @@ import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResultVo;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationVo;
 import com.architecture.hexagonal.domain.port.in.bus.command.CommandBus;
 import com.architecture.hexagonal.domain.port.in.bus.query.QueryBus;
+import com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.config.RestClockConfig;
 import com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.mapper.user.*;
 import com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.mapper.user.FindUserByUserIdQueryDtoMapper;
 import java.time.Clock;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,6 +47,8 @@ public class UserControllerImpl implements UsersApi {
   private final UserExistsQueryDtoMapper userExistsQueryDtoMapper;
 
   private final GetAllUserQueryDtoMapper getAllUserQueryDtoMapper;
+
+  @Qualifier(RestClockConfig.REST_CLOCK)
   private final Clock clock;
 
   @Override

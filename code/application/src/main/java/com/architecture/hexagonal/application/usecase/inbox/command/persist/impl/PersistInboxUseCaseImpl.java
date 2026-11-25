@@ -1,5 +1,6 @@
 package com.architecture.hexagonal.application.usecase.inbox.command.persist.impl;
 
+import com.architecture.hexagonal.application.mapper.date.DateVoMapper;
 import com.architecture.hexagonal.application.service.inbox.InboxService;
 import com.architecture.hexagonal.contract.bus.model.inbox.command.RegisterInboxCommand;
 import com.architecture.hexagonal.domain.annotation.ApplicationUseCase;
@@ -28,7 +29,9 @@ public class PersistInboxUseCaseImpl implements CommandHandler<RegisterInboxComm
                     .messageHeader(
                         MessageHeaderVo.builder()
                             .messageId(command.getMessageHeader().getMessageId())
-                            .messageDate(command.getMessageHeader().getMessageDate())
+                            .messageDate(
+                                DateVoMapper.INSTANCE.toDateVo(
+                                    command.getMessageHeader().getMessageDate()))
                             .build())
                     .data(command.getData())
                     .build())
@@ -36,7 +39,7 @@ public class PersistInboxUseCaseImpl implements CommandHandler<RegisterInboxComm
             .aggregateId(command.getAggregateId())
             .action(command.getAction())
             .status(StatusVo.PENDING)
-            .createdAt(command.getCreatedAt())
+            .createdAt(DateVoMapper.INSTANCE.toDateVo(command.getCreatedAt()))
             .build();
 
     return transactionWriteBoundary.execute(() -> inboxService.save(inbox));

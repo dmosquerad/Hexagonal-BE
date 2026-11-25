@@ -5,12 +5,11 @@ import com.architecture.hexagonal.domain.annotation.ApplicationService;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
 import com.architecture.hexagonal.domain.model.projector.outbox.OutboxStatusAndAggregateProjector;
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
+import com.architecture.hexagonal.domain.model.vo.time.factory.DateVoFactory;
 import com.architecture.hexagonal.domain.port.out.configuration.SchedulerConfigurationPort;
 import com.architecture.hexagonal.domain.port.out.outbox.OutboxProcess;
 import com.architecture.hexagonal.domain.port.out.repository.outbox.OutboxRepositoryReadPort;
 import com.architecture.hexagonal.domain.port.out.repository.outbox.OutboxRepositoryWritePort;
-import java.time.Clock;
-import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.NonNull;
@@ -23,7 +22,6 @@ public class OutboxServiceImpl implements OutboxService {
   private final OutboxRepositoryWritePort outboxRepositoryWritePort;
   private final OutboxProcess outboxProcess;
   private final SchedulerConfigurationPort schedulerConfigurationPort;
-  private final Clock clock;
 
   @Override
   public List<Outbox> find(
@@ -37,7 +35,7 @@ public class OutboxServiceImpl implements OutboxService {
         outbox.toBuilder()
             .status(StatusVo.PROCESSING)
             .retryCount(outbox.retryCount() + 1)
-            .processedAt(OffsetDateTime.now(clock))
+            .processedAt(DateVoFactory.now())
             .build();
 
     final Optional<Outbox> claimedOutbox =
@@ -50,7 +48,7 @@ public class OutboxServiceImpl implements OutboxService {
       return outboxRepositoryWritePort.upsertByEventIdentity(
           claimedOutbox.get().toBuilder()
               .status(StatusVo.FAILED)
-              .processedAt(OffsetDateTime.now(clock))
+              .processedAt(DateVoFactory.now())
               .build());
     }
 

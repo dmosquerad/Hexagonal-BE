@@ -12,7 +12,7 @@ public class MessageHeaderTestDataBuilder {
     private String messageId = "4059510b-ceb3-4d4c-913e-1759acbd63b1";
 
     @Builder.Default
-    private OffsetDateTime messageDate = null;
+    private OffsetDateTime messageDate = OffsetDateTime.parse("2024-07-15T14:30:00+02:00");
 
     public MessageHeader messageHeader() {
         final MessageHeader messageHeader = new MessageHeader();

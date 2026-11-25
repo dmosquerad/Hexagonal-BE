@@ -5,10 +5,12 @@ import com.architecture.hexagonal.contract.inbound.endpoint.rest.email.server.co
 import com.architecture.hexagonal.contract.inbound.endpoint.rest.email.server.dto.EmailBlockRulesResponseDto;
 import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;
 import com.architecture.hexagonal.domain.port.in.bus.query.QueryBus;
+import com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.config.RestClockConfig;
 import com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.mapper.email.EmailBlockRulesDtoMapper;
 import java.time.Clock;
 import java.time.OffsetDateTime;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +21,8 @@ public class EmailControllerImpl implements EmailsApi {
 
   private final QueryBus queryBus;
   private final EmailBlockRulesDtoMapper emailBlockRulesDtoMapper;
+
+  @Qualifier(RestClockConfig.REST_CLOCK)
   private final Clock clock;
 
   @Override
