@@ -1,6 +1,7 @@
 package com.architecture.hexagonal.infrastructure.outbound.configuration.config;
 
 import jakarta.validation.constraints.Email;
+import java.util.HashSet;
 import java.util.Set;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -9,13 +10,13 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "email.block")
 public class EmailBlockConfig {
 
-  private Set<@Email String> email = Set.of();
+  private final Set<@Email String> email = new HashSet<>();
 
-  private Set<String> host = Set.of();
+  private final Set<String> host = new HashSet<>();
 
-  private Set<String> tld = Set.of();
+  private final Set<String> tld = new HashSet<>();
 
-  private Set<String> domain = Set.of();
+  private final Set<String> domain = new HashSet<>();
 
-  private Set<String> username = Set.of();
+  private final Set<String> username = new HashSet<>();
 }

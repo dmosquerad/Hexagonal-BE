@@ -109,12 +109,12 @@ class DomainArchTest {
               "Domain factories must reside in a factory package nested under the model concept they create");
 
   @ArchTest
-  static final ArchRule predicates_should_reside_under_their_domain_model_concept =
+  static final ArchRule validators_should_reside_under_their_domain_model_concept =
       ArchRuleDefinition.classes()
           .that()
-          .haveSimpleNameEndingWith("Predicate")
+          .haveSimpleNameEndingWith("Validator")
           .should()
-          .resideInAPackage("..domain.model.*.*..predicate..")
+          .resideInAPackage("..domain.model.*.*..validation..")
           .because(
-              "Domain predicates must reside in a predicate package nested under the model concepts they validate");
+              "Domain validators must reside in a validation package nested under the model concepts they validate");
 }

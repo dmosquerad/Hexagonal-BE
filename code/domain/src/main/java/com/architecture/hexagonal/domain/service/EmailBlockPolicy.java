@@ -2,7 +2,6 @@ package com.architecture.hexagonal.domain.service;
 
 import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;
 import com.architecture.hexagonal.domain.model.vo.email.EmailVo;
-import com.architecture.hexagonal.domain.model.vo.email.predicate.EmailVoPredicate;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 
@@ -11,8 +10,7 @@ public class EmailBlockPolicy {
 
   public static boolean isBlocked(
       @NonNull final EmailVo emailVo, @NonNull final EmailBlockRulesVo rules) {
-    if (!EmailVoPredicate.CAN_FORM_EMAIL.test(emailVo)
-        || !EmailVoPredicate.CAN_FORM_DOMAIN.test(emailVo)) {
+    if (!emailVo.canFormEmail()) {
       return false;
     }
 
