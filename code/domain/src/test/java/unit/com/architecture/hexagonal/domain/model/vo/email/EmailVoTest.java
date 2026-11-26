@@ -42,4 +42,32 @@ class EmailVoTest {
 
     Assertions.assertThat(result).isEmpty();
   }
+
+  @Test
+  void canFormEmailShouldReturnTrueWhenAllFieldsArePresent() {
+    final EmailVo emailVo = EmailVoTestDataBuilder.builder().build().emailVo();
+
+    Assertions.assertThat(emailVo.canFormEmail()).isTrue();
+  }
+
+  @Test
+  void canFormEmailShouldReturnFalseWhenAFieldIsMissing() {
+    final EmailVo emailVo = EmailVoTestDataBuilder.builder().username(null).build().emailVo();
+
+    Assertions.assertThat(emailVo.canFormEmail()).isFalse();
+  }
+
+  @Test
+  void canFormDomainShouldReturnTrueWhenHostAndTldArePresent() {
+    final EmailVo emailVo = EmailVoTestDataBuilder.builder().build().emailVo();
+
+    Assertions.assertThat(emailVo.canFormDomain()).isTrue();
+  }
+
+  @Test
+  void canFormDomainShouldReturnFalseWhenHostIsMissing() {
+    final EmailVo emailVo = EmailVoTestDataBuilder.builder().host(null).build().emailVo();
+
+    Assertions.assertThat(emailVo.canFormDomain()).isFalse();
+  }
 }
