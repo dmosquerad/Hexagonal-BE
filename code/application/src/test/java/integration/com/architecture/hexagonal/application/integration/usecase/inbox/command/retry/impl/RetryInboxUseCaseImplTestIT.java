@@ -8,7 +8,7 @@ import com.architecture.hexagonal.domain.port.out.repository.inbox.InboxReposito
 import com.architecture.hexagonal.domain.port.out.configuration.SchedulerConfigurationPort;
 import com.architecture.hexagonal.application.service.inbox.InboxService;
 import com.architecture.hexagonal.application.service.inbox.impl.InboxServiceImpl;
-import com.architecture.hexagonal.contract.bus.model.retry.command.RetryInboxeventCommand;
+import com.architecture.hexagonal.application.model.command.retry.RetryInboxeventCommand;
 import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
 import com.architecture.hexagonal.domain.databuilder.model.vo.time.TestTime;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;

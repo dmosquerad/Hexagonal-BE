@@ -1,6 +1,7 @@
 package com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.event;
 
-import com.architecture.hexagonal.contract.bus.model.user.event.UserUpdatedEvent;
+import com.architecture.hexagonal.domain.model.event.user.UserUpdatedEvent;
+import com.architecture.hexagonal.domain.databuilder.model.event.user.UserUpdatedEventTestDataBuilder;
 import com.architecture.hexagonal.contract.outbound.event.rabbitmq.naming.router.UserEventsProducerBinding;
 import com.architecture.hexagonal.domain.port.out.repository.outbox.OutboxRepositoryWritePort;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.config.TestApplication;
@@ -27,10 +28,11 @@ class UserUpdatedEventPublisherTestIT {
 
   @Test
   void updatedHandlerShouldPublishUserUpdatedMessageAfterCommit() {
-    final UserUpdatedEvent event = new UserUpdatedEvent();
-    event.setUserId(UUID.fromString("f47ac10b-58cc-4372-a567-0e02b2c3d479"));
-    event.setName("Test User");
-    event.setEmail("test@example.com");
+    final UserUpdatedEvent event =
+        UserUpdatedEventTestDataBuilder.builder()
+            .userId(UUID.fromString("f47ac10b-58cc-4372-a567-0e02b2c3d479"))
+            .build()
+            .userUpdatedEvent();
     Mockito.when(
             streamBridge.send(
                 Mockito.eq(UserEventsProducerBinding.PUBLISH_USER_UPDATED_OUT_0.getBindingName()),

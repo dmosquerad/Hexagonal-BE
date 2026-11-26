@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.config;
 
-import com.architecture.hexagonal.contract.bus.model.user.command.CreateUserCommand;
-import com.architecture.hexagonal.contract.bus.model.user.command.DeleteUserCommand;
-import com.architecture.hexagonal.contract.bus.model.user.command.UpdateUserCommand;
+import com.architecture.hexagonal.application.model.command.user.CreateUserCommand;
+import com.architecture.hexagonal.application.model.command.user.DeleteUserCommand;
+import com.architecture.hexagonal.application.model.command.user.UpdateUserCommand;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.naming.header.HeaderNaming;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserCreatedPayload;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserDeletedPayload;
@@ -48,7 +48,7 @@ class UserKafkaStreamConfigTestIT {
     final ArgumentCaptor<CreateUserCommand> commandCaptor =
         ArgumentCaptor.forClass(CreateUserCommand.class);
     Mockito.verify(commandBus).execute(commandCaptor.capture());
-    Assertions.assertThat(commandCaptor.getValue().getEmail())
+    Assertions.assertThat(commandCaptor.getValue().email())
         .isEqualTo(message.getData_().getEmail());
   }
 
@@ -67,7 +67,7 @@ class UserKafkaStreamConfigTestIT {
     final ArgumentCaptor<UpdateUserCommand> commandCaptor =
         ArgumentCaptor.forClass(UpdateUserCommand.class);
     Mockito.verify(commandBus).execute(commandCaptor.capture());
-    Assertions.assertThat(commandCaptor.getValue().getUserId())
+    Assertions.assertThat(commandCaptor.getValue().userId())
         .isEqualTo(message.getData_().getUserId());
   }
 
@@ -86,7 +86,7 @@ class UserKafkaStreamConfigTestIT {
     final ArgumentCaptor<DeleteUserCommand> commandCaptor =
         ArgumentCaptor.forClass(DeleteUserCommand.class);
     Mockito.verify(commandBus).execute(commandCaptor.capture());
-    Assertions.assertThat(commandCaptor.getValue().getUserId())
+    Assertions.assertThat(commandCaptor.getValue().userId())
         .isEqualTo(message.getData_().getUserId());
   }
 }

@@ -1,9 +1,9 @@
 package com.architecture.hexagonal.application.usecase.user.query.findbyid.impl;
 
+import com.architecture.hexagonal.application.databuilder.model.query.user.FindUserByUserIdInputTestDataBuilder;
 import com.architecture.hexagonal.application.databuilder.transaction.SpyTransactionReadBoundary;
-import com.architecture.hexagonal.application.databuilder.usecase.user.query.FindUserByUserIdInputTestDataBuilder;
+import com.architecture.hexagonal.application.model.query.user.FindUserByUserIdQuery;
 import com.architecture.hexagonal.application.service.user.UserService;
-import com.architecture.hexagonal.contract.bus.model.user.query.FindUserByUserIdQuery;
 import com.architecture.hexagonal.domain.databuilder.model.entity.user.UserTestDataBuilder;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.domain.port.in.transaction.TransactionReadBoundary;
@@ -30,12 +30,12 @@ class FindUserByUserIdUseCaseImplTest {
     final FindUserByUserIdQuery query =
         FindUserByUserIdInputTestDataBuilder.builder().build().findUserByUserIdInput();
     final User user = UserTestDataBuilder.builder().build().user();
-    Mockito.when(userService.findUserById(query.getUserId())).thenReturn(user);
+    Mockito.when(userService.findUserById(query.userId())).thenReturn(user);
 
     final User result = useCase.handle(query);
 
     AssertionsForClassTypes.assertThat(result).isSameAs(user);
-    Mockito.verify(userService).findUserById(query.getUserId());
+    Mockito.verify(userService).findUserById(query.userId());
     Mockito.verify(transactionBoundary).execute(Mockito.any());
   }
 }

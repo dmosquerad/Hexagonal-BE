@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.mapper.user;
 
-import com.architecture.hexagonal.contract.bus.model.user.event.UserDeletedEvent;
 import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.UserDeleted;
+import com.architecture.hexagonal.domain.model.event.user.UserDeletedEvent;
 import com.architecture.hexagonal.domain.model.vo.payload.MessageHeaderVo;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.config.MapstructConfig;
 import org.mapstruct.Mapper;

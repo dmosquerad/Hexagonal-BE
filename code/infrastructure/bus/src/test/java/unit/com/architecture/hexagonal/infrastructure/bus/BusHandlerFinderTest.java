@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.bus;
 
+import com.architecture.hexagonal.application.model.command.user.DeleteUserCommand;
 import com.architecture.hexagonal.application.usecase.user.command.delete.impl.DeleteUserUseCaseImpl;
-import com.architecture.hexagonal.contract.bus.model.user.command.DeleteUserCommand;
 import com.architecture.hexagonal.domain.port.in.bus.command.CommandHandler;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
@@ -24,7 +24,10 @@ class BusHandlerFinderTest {
     handlerFinder.afterSingletonsInstantiated();
 
     AssertionsForClassTypes.assertThatThrownBy(
-            () -> handlerFinder.find(new DeleteUserCommand(), CommandHandler.class))
+            () ->
+                handlerFinder.find(
+                    DeleteUserCommand.builder().userId(java.util.UUID.randomUUID()).build(),
+                    CommandHandler.class))
         .isInstanceOf(IllegalStateException.class)
         .hasMessageContaining("Expected one CommandHandler")
         .hasMessageContaining("found 2");

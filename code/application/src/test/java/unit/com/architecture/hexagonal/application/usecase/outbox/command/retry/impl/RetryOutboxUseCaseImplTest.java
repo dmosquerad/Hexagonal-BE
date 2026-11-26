@@ -2,11 +2,11 @@ package com.architecture.hexagonal.application.usecase.outbox.command.retry.impl
 
 import com.architecture.hexagonal.application.databuilder.transaction.SpyTransactionReadBoundary;
 import com.architecture.hexagonal.application.databuilder.transaction.SpyTransactionWriteBoundary;
+import com.architecture.hexagonal.application.model.command.retry.RetryOutboxeventCommand;
 import com.architecture.hexagonal.application.service.outbox.OutboxService;
-import com.architecture.hexagonal.contract.bus.model.retry.command.RetryOutboxeventCommand;
 import com.architecture.hexagonal.domain.databuilder.model.entity.outbox.OutboxTestDataBuilder;
+import com.architecture.hexagonal.domain.model.criteria.outbox.OutboxStatusAndAggregateCriteria;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
-import com.architecture.hexagonal.domain.model.projector.outbox.OutboxStatusAndAggregateProjector;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.domain.port.in.transaction.TransactionReadBoundary;
 import com.architecture.hexagonal.domain.port.in.transaction.TransactionWriteBoundary;
@@ -36,14 +36,14 @@ class RetryOutboxUseCaseImplTest {
   void handleShouldProcessPendingEventsForEachAggregateType() {
     final int aggregateTypes = AggregateTypeVo.values().length;
     final Outbox outbox = OutboxTestDataBuilder.builder().build().outbox();
-    Mockito.when(outboxService.find(Mockito.any(OutboxStatusAndAggregateProjector.class)))
+    Mockito.when(outboxService.find(Mockito.any(OutboxStatusAndAggregateCriteria.class)))
         .thenReturn(List.of(outbox));
 
     final Void result = useCase.handle(new RetryOutboxeventCommand());
 
     AssertionsForClassTypes.assertThat(result).isNull();
     Mockito.verify(outboxService, Mockito.times(aggregateTypes))
-        .find(Mockito.any(OutboxStatusAndAggregateProjector.class));
+        .find(Mockito.any(OutboxStatusAndAggregateCriteria.class));
     Mockito.verify(transactionReadBoundary, Mockito.times(aggregateTypes)).execute(Mockito.any());
     Mockito.verify(outboxService, Mockito.times(aggregateTypes)).process(outbox);
     Mockito.verify(transactionWriteBoundary, Mockito.times(aggregateTypes))

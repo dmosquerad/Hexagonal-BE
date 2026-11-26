@@ -1,9 +1,9 @@
 package com.architecture.hexagonal.application.usecase.user.query.exists.impl;
 
+import com.architecture.hexagonal.application.databuilder.model.query.user.UserExistsInputTestDataBuilder;
 import com.architecture.hexagonal.application.databuilder.transaction.SpyTransactionReadBoundary;
-import com.architecture.hexagonal.application.databuilder.usecase.user.query.UserExistsInputTestDataBuilder;
+import com.architecture.hexagonal.application.model.query.user.UserExistsQuery;
 import com.architecture.hexagonal.application.service.user.UserService;
-import com.architecture.hexagonal.contract.bus.model.user.query.UserExistsQuery;
 import com.architecture.hexagonal.domain.port.in.transaction.TransactionReadBoundary;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ class UserExistsUseCaseImplTest {
     final Void result = useCase.handle(query);
 
     AssertionsForClassTypes.assertThat(result).isNull();
-    Mockito.verify(userService).existsUser(query.getUserId());
+    Mockito.verify(userService).existsUser(query.userId());
     Mockito.verifyNoMoreInteractions(userService);
     Mockito.verify(transactionBoundary).execute(Mockito.any());
   }

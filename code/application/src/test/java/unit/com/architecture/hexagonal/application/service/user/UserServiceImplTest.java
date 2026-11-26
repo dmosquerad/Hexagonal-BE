@@ -1,18 +1,21 @@
 package com.architecture.hexagonal.application.service.user;
 
 import com.architecture.hexagonal.application.service.user.impl.UserServiceImpl;
-import com.architecture.hexagonal.contract.bus.model.user.event.UserCreatedEvent;
-import com.architecture.hexagonal.contract.bus.model.user.event.UserDeletedEvent;
-import com.architecture.hexagonal.contract.bus.model.user.event.UserUpdatedEvent;
+import com.architecture.hexagonal.domain.databuilder.model.criteria.user.UserEmailCriteriaTestDataBuilder;
 import com.architecture.hexagonal.domain.databuilder.model.entity.user.UserTestDataBuilder;
-import com.architecture.hexagonal.domain.databuilder.model.projector.user.UserEmailProjectorTestDataBuilder;
+import com.architecture.hexagonal.domain.databuilder.model.event.user.UserCreatedEventTestDataBuilder;
+import com.architecture.hexagonal.domain.databuilder.model.event.user.UserDeletedEventTestDataBuilder;
+import com.architecture.hexagonal.domain.databuilder.model.event.user.UserUpdatedEventTestDataBuilder;
 import com.architecture.hexagonal.domain.databuilder.model.vo.email.EmailBlockRulesVoTestDataBuilder;
 import com.architecture.hexagonal.domain.databuilder.model.vo.pagination.PaginationResultVoTestDataBuilder;
 import com.architecture.hexagonal.domain.databuilder.model.vo.pagination.PaginationVoTestDataBuilder;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
+import com.architecture.hexagonal.domain.model.criteria.user.UserEmailCriteria;
 import com.architecture.hexagonal.domain.model.entity.user.User;
-import com.architecture.hexagonal.domain.model.projector.user.UserEmailProjector;
+import com.architecture.hexagonal.domain.model.event.user.UserCreatedEvent;
+import com.architecture.hexagonal.domain.model.event.user.UserDeletedEvent;
+import com.architecture.hexagonal.domain.model.event.user.UserUpdatedEvent;
 import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResultVo;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationVo;
@@ -60,10 +63,13 @@ class UserServiceImplTest {
     AssertionsForClassTypes.assertThat(result).usingRecursiveComparison().isEqualTo(savedUser);
 
     Mockito.verify(userRepositoryWritePort).saveUser(user);
-    final UserCreatedEvent expectedEvent = new UserCreatedEvent();
-    expectedEvent.setUserId(savedUser.userId());
-    expectedEvent.setName(savedUser.name());
-    expectedEvent.setEmail(savedUser.email().getEmail());
+    final UserCreatedEvent expectedEvent =
+        UserCreatedEventTestDataBuilder.builder()
+            .userId(savedUser.userId())
+            .name(savedUser.name())
+            .email(savedUser.email().getEmail())
+            .build()
+            .userCreatedEvent();
     final ArgumentCaptor<UserCreatedEvent> eventCaptor =
         ArgumentCaptor.forClass(UserCreatedEvent.class);
     Mockito.verify(eventBus).publish(eventCaptor.capture());
@@ -83,10 +89,13 @@ class UserServiceImplTest {
     AssertionsForClassTypes.assertThat(result).usingRecursiveComparison().isEqualTo(user);
 
     Mockito.verify(userRepositoryWritePort).deleteUser(user.userId());
-    final UserDeletedEvent expectedEvent = new UserDeletedEvent();
-    expectedEvent.setUserId(user.userId());
-    expectedEvent.setName(user.name());
-    expectedEvent.setEmail(user.email().getEmail());
+    final UserDeletedEvent expectedEvent =
+        UserDeletedEventTestDataBuilder.builder()
+            .userId(user.userId())
+            .name(user.name())
+            .email(user.email().getEmail())
+            .build()
+            .userDeletedEvent();
     Mockito.verify(eventBus).publish(expectedEvent);
   }
 
@@ -158,26 +167,26 @@ class UserServiceImplTest {
   void getAllUsersShouldCallUnpaginatedRepositoryWhenPaginationIsNotProvided() {
     final List<User> users =
         Collections.singletonList(UserTestDataBuilder.builder().build().user());
-    final UserEmailProjector projector =
-        UserEmailProjectorTestDataBuilder.builder().build().userEmailProjector();
+    final UserEmailCriteria criteria =
+        UserEmailCriteriaTestDataBuilder.builder().build().userEmailCriteria();
     final PaginationResultVo<User> expectedResult =
         PaginationResultVoTestDataBuilder.<User>builder().data(users).build().paginationResult();
 
-    Mockito.when(userRepositoryReadPort.getAllUsers(projector)).thenReturn(expectedResult);
+    Mockito.when(userRepositoryReadPort.getAllUsers(criteria)).thenReturn(expectedResult);
 
-    final PaginationResultVo<User> result = userService.getAllUsers(projector);
+    final PaginationResultVo<User> result = userService.getAllUsers(criteria);
 
     AssertionsForClassTypes.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
 
-    Mockito.verify(userRepositoryReadPort).getAllUsers(projector);
+    Mockito.verify(userRepositoryReadPort).getAllUsers(criteria);
   }
 
   @Test
   void getAllUsersShouldRejectNullPaginationInPaginatedOverload() {
-    final UserEmailProjector projector =
-        UserEmailProjectorTestDataBuilder.builder().build().userEmailProjector();
+    final UserEmailCriteria criteria =
+        UserEmailCriteriaTestDataBuilder.builder().build().userEmailCriteria();
 
-    AssertionsForClassTypes.assertThatThrownBy(() -> userService.getAllUsers(projector, null))
+    AssertionsForClassTypes.assertThatThrownBy(() -> userService.getAllUsers(criteria, null))
         .isInstanceOf(NullPointerException.class);
 
     Mockito.verifyNoInteractions(userRepositoryReadPort);
@@ -193,24 +202,24 @@ class UserServiceImplTest {
             .host(Set.of("example"))
             .build()
             .emailBlockRulesVo();
-    final UserEmailProjector projector =
-        UserEmailProjectorTestDataBuilder.builder()
+    final UserEmailCriteria criteria =
+        UserEmailCriteriaTestDataBuilder.builder()
             .host("")
             .blockEmail(true)
             .blockedRules(blockedRules)
             .build()
-            .userEmailProjector();
+            .userEmailCriteria();
     final PaginationResultVo<User> expectedResult =
         PaginationResultVoTestDataBuilder.<User>builder().data(users).build().paginationResult();
 
-    Mockito.when(userRepositoryReadPort.getAllUsers(projector, paginationVo))
+    Mockito.when(userRepositoryReadPort.getAllUsers(criteria, paginationVo))
         .thenReturn(expectedResult);
 
-    final PaginationResultVo<User> result = userService.getAllUsers(projector, paginationVo);
+    final PaginationResultVo<User> result = userService.getAllUsers(criteria, paginationVo);
 
     AssertionsForClassTypes.assertThat(result.data()).usingRecursiveComparison().isEqualTo(users);
 
-    Mockito.verify(userRepositoryReadPort).getAllUsers(projector, paginationVo);
+    Mockito.verify(userRepositoryReadPort).getAllUsers(criteria, paginationVo);
   }
 
   @Test
@@ -218,19 +227,19 @@ class UserServiceImplTest {
     final User user = UserTestDataBuilder.builder().build().user();
     final List<User> users = Collections.singletonList(user);
     final PaginationVo paginationVo = PaginationVoTestDataBuilder.builder().build().paginationVo();
-    final UserEmailProjector projector =
-        UserEmailProjectorTestDataBuilder.builder().host("").build().userEmailProjector();
+    final UserEmailCriteria criteria =
+        UserEmailCriteriaTestDataBuilder.builder().host("").build().userEmailCriteria();
     final PaginationResultVo<User> expectedResult =
         PaginationResultVoTestDataBuilder.<User>builder().data(users).build().paginationResult();
 
-    Mockito.when(userRepositoryReadPort.getAllUsers(projector, paginationVo))
+    Mockito.when(userRepositoryReadPort.getAllUsers(criteria, paginationVo))
         .thenReturn(expectedResult);
 
-    final PaginationResultVo<User> result = userService.getAllUsers(projector, paginationVo);
+    final PaginationResultVo<User> result = userService.getAllUsers(criteria, paginationVo);
 
     AssertionsForClassTypes.assertThat(result.data()).usingRecursiveComparison().isEqualTo(users);
 
-    Mockito.verify(userRepositoryReadPort).getAllUsers(projector, paginationVo);
+    Mockito.verify(userRepositoryReadPort).getAllUsers(criteria, paginationVo);
   }
 
   @Test
@@ -246,10 +255,13 @@ class UserServiceImplTest {
 
     Mockito.verify(userRepositoryReadPort).findUserById(user.userId());
     Mockito.verify(userRepositoryWritePort).saveUser(user);
-    final UserUpdatedEvent expectedEvent = new UserUpdatedEvent();
-    expectedEvent.setUserId(user.userId());
-    expectedEvent.setName(user.name());
-    expectedEvent.setEmail(user.email().getEmail());
+    final UserUpdatedEvent expectedEvent =
+        UserUpdatedEventTestDataBuilder.builder()
+            .userId(user.userId())
+            .name(user.name())
+            .email(user.email().getEmail())
+            .build()
+            .userUpdatedEvent();
     Mockito.verify(eventBus).publish(expectedEvent);
   }
 
@@ -281,10 +293,13 @@ class UserServiceImplTest {
 
     Mockito.verify(userRepositoryReadPort).findUserById(user.userId());
     Mockito.verify(userRepositoryWritePort).saveUser(user);
-    final UserUpdatedEvent expectedEvent = new UserUpdatedEvent();
-    expectedEvent.setUserId(user.userId());
-    expectedEvent.setName(user.name());
-    expectedEvent.setEmail(user.email().getEmail());
+    final UserUpdatedEvent expectedEvent =
+        UserUpdatedEventTestDataBuilder.builder()
+            .userId(user.userId())
+            .name(user.name())
+            .email(user.email().getEmail())
+            .build()
+            .userUpdatedEvent();
     Mockito.verify(eventBus).publish(expectedEvent);
   }
 

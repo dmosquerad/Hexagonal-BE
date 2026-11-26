@@ -3,7 +3,7 @@ package com.architecture.hexagonal.infrastructure.inbound.job.scheduled.outbox.i
 import com.architecture.hexagonal.domain.databuilder.model.vo.outbox.SchedulerOutboxConfigurationVoTestDataBuilder;
 import com.architecture.hexagonal.domain.port.out.configuration.SchedulerConfigurationPort;
 import com.architecture.hexagonal.domain.model.vo.outbox.SchedulerOutboxConfigurationVo;
-import com.architecture.hexagonal.contract.bus.model.retry.command.RetryOutboxeventCommand;
+import com.architecture.hexagonal.application.model.command.retry.RetryOutboxeventCommand;
 import com.architecture.hexagonal.infrastructure.inbound.job.scheduled.outbox.config.TestApplication;
 import com.architecture.hexagonal.infrastructure.inbound.job.scheduled.outbox.executor.impl.OutboxSchedulerImpl;
 import com.architecture.hexagonal.domain.port.in.bus.command.CommandBus;

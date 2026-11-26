@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.application.usecase.inbox.command.retry.impl;
 
 import com.architecture.hexagonal.application.databuilder.transaction.SpyTransactionReadBoundary;
+import com.architecture.hexagonal.application.model.command.retry.RetryInboxeventCommand;
 import com.architecture.hexagonal.application.service.inbox.InboxService;
-import com.architecture.hexagonal.contract.bus.model.retry.command.RetryInboxeventCommand;
 import com.architecture.hexagonal.domain.databuilder.model.entity.inbox.InboxTestDataBuilder;
 import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;

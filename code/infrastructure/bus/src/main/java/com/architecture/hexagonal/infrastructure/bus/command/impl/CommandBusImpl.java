@@ -4,6 +4,7 @@ import com.architecture.hexagonal.domain.port.in.bus.command.CommandBus;
 import com.architecture.hexagonal.domain.port.in.bus.command.CommandHandler;
 import com.architecture.hexagonal.domain.port.in.bus.middleware.BusMiddleware;
 import com.architecture.hexagonal.infrastructure.bus.BusHandlerFinder;
+import com.architecture.hexagonal.infrastructure.bus.BusMessageValidator;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
 public class CommandBusImpl implements CommandBus {
 
   private final BusHandlerFinder handlerFinder;
+  private final BusMessageValidator messageValidator;
   private final BusMiddleware loggingMiddleware;
 
   @Override
@@ -20,6 +22,7 @@ public class CommandBusImpl implements CommandBus {
     return loggingMiddleware.execute(
         command,
         () -> {
+          messageValidator.validate(command);
           final CommandHandler<C, R> handler = handlerFinder.find(command, CommandHandler.class);
           return handler.handle(command);
         });

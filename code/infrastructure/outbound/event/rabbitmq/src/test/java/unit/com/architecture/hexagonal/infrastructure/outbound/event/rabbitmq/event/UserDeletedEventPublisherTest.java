@@ -1,9 +1,9 @@
 package com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.event;
 
-import com.architecture.hexagonal.contract.bus.model.user.event.UserDeletedEvent;
 import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.UserDeleted;
+import com.architecture.hexagonal.domain.databuilder.model.event.user.UserDeletedEventTestDataBuilder;
 import com.architecture.hexagonal.domain.databuilder.model.vo.time.TestTime;
-import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.databuilder.event.UserDeletedEventTestDataBuilder;
+import com.architecture.hexagonal.domain.model.event.user.UserDeletedEvent;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.databuilder.message.MessageHeaderTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.databuilder.message.UserDataTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.databuilder.message.UserDeletedTestDataBuilder;
@@ -55,7 +55,7 @@ class UserDeletedEventPublisherTest {
                     .messageHeader())
             .userData(
                 UserDataTestDataBuilder.builder()
-                    .userId(event.getUserId().toString())
+                    .userId(event.userId().toString())
                     .build()
                     .userData())
             .build()

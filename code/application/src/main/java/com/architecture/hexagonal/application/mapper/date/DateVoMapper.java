@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.application.mapper.date;
 
 import com.architecture.hexagonal.application.mapper.converter.ZoneIdConverter;
-import com.architecture.hexagonal.contract.bus.model.common.Date;
+import com.architecture.hexagonal.application.model.vo.time.Date;
 import com.architecture.hexagonal.domain.model.vo.time.DateVo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

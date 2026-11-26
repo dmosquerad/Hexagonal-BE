@@ -2,11 +2,11 @@ package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.inte
 
 import com.architecture.hexagonal.domain.databuilder.model.entity.outbox.OutboxTestDataBuilder;
 import com.architecture.hexagonal.domain.databuilder.model.entity.user.UserTestDataBuilder;
-import com.architecture.hexagonal.domain.databuilder.model.projector.outbox.OutboxStatusAndAggregateProjectorTestDataBuilder;
+import com.architecture.hexagonal.domain.databuilder.model.criteria.outbox.OutboxStatusAndAggregateCriteriaTestDataBuilder;
 import com.architecture.hexagonal.domain.databuilder.model.vo.payload.PayloadVoTestDataBuilder;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
 import com.architecture.hexagonal.domain.model.entity.user.User;
-import com.architecture.hexagonal.domain.model.projector.outbox.OutboxStatusAndAggregateProjector;
+import com.architecture.hexagonal.domain.model.criteria.outbox.OutboxStatusAndAggregateCriteria;
 import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
 import com.architecture.hexagonal.domain.model.vo.time.DateVo;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.adapter.outbox.OutboxRepositoryReadMongodbAdapterImpl;
@@ -58,12 +58,12 @@ class OutboxRepositoryReadMongodbAdapterImplTestIT extends MongodbIT {
             .outbox();
     outboxWriteMongodbRepository.save(outboxDaoMapper.toOutboxDao(outbox));
 
-    final OutboxStatusAndAggregateProjector projector =
-        OutboxStatusAndAggregateProjectorTestDataBuilder.builder()
+    final OutboxStatusAndAggregateCriteria criteria =
+        OutboxStatusAndAggregateCriteriaTestDataBuilder.builder()
             .build()
-            .outboxStatusAndAggregateProjector();
+            .outboxStatusAndAggregateCriteria();
     final List<Outbox> result =
-        outboxReadMongodbAdapterImpl.findByStatusAndAggregateType(projector);
+        outboxReadMongodbAdapterImpl.findByStatusAndAggregateType(criteria);
 
     Mockito.verify(outboxDoFromMongodbMapper).toOutbox(Mockito.any(OutboxDao.class));
 

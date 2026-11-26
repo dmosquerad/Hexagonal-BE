@@ -48,7 +48,7 @@ class DomainArchTest {
           .because("Domain must not expose setter methods");
 
   @ArchTest
-  static final ArchRule domain_data_should_reside_in_aggregate_entity_or_vo_packages =
+  static final ArchRule domain_data_should_reside_in_domain_model_packages =
       ArchRuleDefinition.classes()
           .that()
           .resideInAPackage("..domain.model..")
@@ -57,9 +57,10 @@ class DomainArchTest {
               "..domain.model.aggregate..",
               "..domain.model.entity..",
               "..domain.model.vo..",
-              "..domain.model.projector..")
+              "..domain.model.criteria..",
+              "..domain.model.event..")
           .because(
-              "Domain model classes must reside in aggregate, entity, VO or projector packages");
+              "Domain model classes must reside in aggregate, entity, VO, criteria or event packages");
 
   @ArchTest
   static final ArchRule value_objects_should_reside_in_domain_data_vo_package =

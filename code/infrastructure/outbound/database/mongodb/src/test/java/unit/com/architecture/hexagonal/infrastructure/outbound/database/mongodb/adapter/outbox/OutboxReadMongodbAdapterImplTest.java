@@ -1,12 +1,12 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.mongodb.adapter.outbox;
 
+import com.architecture.hexagonal.domain.databuilder.model.criteria.outbox.OutboxStatusAndAggregateCriteriaTestDataBuilder;
 import com.architecture.hexagonal.domain.databuilder.model.entity.outbox.OutboxTestDataBuilder;
 import com.architecture.hexagonal.domain.databuilder.model.entity.user.UserTestDataBuilder;
-import com.architecture.hexagonal.domain.databuilder.model.projector.outbox.OutboxStatusAndAggregateProjectorTestDataBuilder;
 import com.architecture.hexagonal.domain.databuilder.model.vo.payload.PayloadVoTestDataBuilder;
+import com.architecture.hexagonal.domain.model.criteria.outbox.OutboxStatusAndAggregateCriteria;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
 import com.architecture.hexagonal.domain.model.entity.user.User;
-import com.architecture.hexagonal.domain.model.projector.outbox.OutboxStatusAndAggregateProjector;
 import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
 import com.architecture.hexagonal.infrastructure.outbound.database.mongodb.data.outbox.OutboxDao;
@@ -47,10 +47,10 @@ class OutboxReadMongodbAdapterImplTest {
                     .payloadVo())
             .build()
             .outbox();
-    final OutboxStatusAndAggregateProjector outboxStatusAndAggregateProjector =
-        OutboxStatusAndAggregateProjectorTestDataBuilder.builder()
+    final OutboxStatusAndAggregateCriteria outboxStatusAndAggregateCriteria =
+        OutboxStatusAndAggregateCriteriaTestDataBuilder.builder()
             .build()
-            .outboxStatusAndAggregateProjector();
+            .outboxStatusAndAggregateCriteria();
     final OutboxDao outboxDao = OutboxDaoTestDataBuilder.builder().build().outboxDao();
 
     Mockito.when(
@@ -59,8 +59,7 @@ class OutboxReadMongodbAdapterImplTest {
         .thenReturn(List.of(outboxDao));
 
     final List<Outbox> result =
-        outboxReadMongodbAdapterImpl.findByStatusAndAggregateType(
-            outboxStatusAndAggregateProjector);
+        outboxReadMongodbAdapterImpl.findByStatusAndAggregateType(outboxStatusAndAggregateCriteria);
 
     AssertionsForClassTypes.assertThat(result)
         .usingRecursiveComparison()

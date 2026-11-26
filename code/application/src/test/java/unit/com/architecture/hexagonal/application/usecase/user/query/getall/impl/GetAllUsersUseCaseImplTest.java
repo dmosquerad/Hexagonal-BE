@@ -1,16 +1,16 @@
 package com.architecture.hexagonal.application.usecase.user.query.getall.impl;
 
+import com.architecture.hexagonal.application.databuilder.model.query.user.GetUsersInputTestDataBuilder;
 import com.architecture.hexagonal.application.databuilder.transaction.SpyTransactionReadBoundary;
-import com.architecture.hexagonal.application.databuilder.usecase.user.query.GetUsersInputTestDataBuilder;
+import com.architecture.hexagonal.application.model.query.user.GetUsersFilteredQuery;
 import com.architecture.hexagonal.application.service.email.EmailService;
 import com.architecture.hexagonal.application.service.user.UserService;
-import com.architecture.hexagonal.contract.bus.model.user.query.GetUsersFilteredQuery;
-import com.architecture.hexagonal.domain.databuilder.model.projector.user.UserEmailProjectorTestDataBuilder;
+import com.architecture.hexagonal.domain.databuilder.model.criteria.user.UserEmailCriteriaTestDataBuilder;
 import com.architecture.hexagonal.domain.databuilder.model.vo.email.EmailBlockRulesVoTestDataBuilder;
 import com.architecture.hexagonal.domain.databuilder.model.vo.pagination.PaginationResultVoTestDataBuilder;
 import com.architecture.hexagonal.domain.databuilder.model.vo.pagination.PaginationVoTestDataBuilder;
+import com.architecture.hexagonal.domain.model.criteria.user.UserEmailCriteria;
 import com.architecture.hexagonal.domain.model.entity.user.User;
-import com.architecture.hexagonal.domain.model.projector.user.UserEmailProjector;
 import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResultVo;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationVo;
@@ -39,49 +39,48 @@ class GetAllUsersUseCaseImplTest {
   void handleShouldNotFetchBlockedRulesWhenBlockEmailIsNull() {
     final GetUsersFilteredQuery query =
         GetUsersInputTestDataBuilder.builder().build().getUsersInput();
-    final UserEmailProjector projector =
-        UserEmailProjectorTestDataBuilder.builder()
+    final UserEmailCriteria criteria =
+        UserEmailCriteriaTestDataBuilder.builder()
             .blockEmail(null)
             .blockedRules(null)
             .build()
-            .userEmailProjector();
+            .userEmailCriteria();
     final PaginationVo paginationVo =
         PaginationVoTestDataBuilder.builder()
-            .page(query.getPagination().getPage())
-            .size(query.getPagination().getSize())
+            .page(query.pagination().page())
+            .size(query.pagination().size())
             .build()
             .paginationVo();
     final PaginationResultVo<User> expectedResult =
         PaginationResultVoTestDataBuilder.<User>builder().build().paginationResult();
-    Mockito.when(userService.getAllUsers(projector, paginationVo)).thenReturn(expectedResult);
+    Mockito.when(userService.getAllUsers(criteria, paginationVo)).thenReturn(expectedResult);
 
     final PaginationResultVo<User> result = useCase.handle(query);
 
     AssertionsForClassTypes.assertThat(result).isSameAs(expectedResult);
     Mockito.verify(emailService, Mockito.never()).getBlockedRules();
-    Mockito.verify(userService).getAllUsers(projector, paginationVo);
+    Mockito.verify(userService).getAllUsers(criteria, paginationVo);
     Mockito.verify(transactionBoundary).execute(Mockito.any());
   }
 
   @Test
   void handleShouldUseUnpaginatedServiceOverloadWhenPaginationIsNotProvided() {
     final GetUsersFilteredQuery query =
-        GetUsersInputTestDataBuilder.builder().build().getUsersInput();
-    query.setPagination(null);
-    final UserEmailProjector projector =
-        UserEmailProjectorTestDataBuilder.builder()
+        GetUsersInputTestDataBuilder.builder().pagination(null).build().getUsersInput();
+    final UserEmailCriteria criteria =
+        UserEmailCriteriaTestDataBuilder.builder()
             .blockEmail(null)
             .blockedRules(null)
             .build()
-            .userEmailProjector();
+            .userEmailCriteria();
     final PaginationResultVo<User> expectedResult =
         PaginationResultVoTestDataBuilder.<User>builder().build().paginationResult();
-    Mockito.when(userService.getAllUsers(projector)).thenReturn(expectedResult);
+    Mockito.when(userService.getAllUsers(criteria)).thenReturn(expectedResult);
 
     final PaginationResultVo<User> result = useCase.handle(query);
 
     AssertionsForClassTypes.assertThat(result).isSameAs(expectedResult);
-    Mockito.verify(userService).getAllUsers(projector);
+    Mockito.verify(userService).getAllUsers(criteria);
     Mockito.verify(transactionBoundary).execute(Mockito.any());
   }
 
@@ -91,27 +90,27 @@ class GetAllUsersUseCaseImplTest {
         GetUsersInputTestDataBuilder.builder().blockEmail(true).build().getUsersInput();
     final EmailBlockRulesVo blockedRules =
         EmailBlockRulesVoTestDataBuilder.builder().build().emailBlockRulesVo();
-    final UserEmailProjector projector =
-        UserEmailProjectorTestDataBuilder.builder()
-            .blockEmail(query.getBlockEmail())
+    final UserEmailCriteria criteria =
+        UserEmailCriteriaTestDataBuilder.builder()
+            .blockEmail(query.blockEmail())
             .build()
-            .userEmailProjector();
+            .userEmailCriteria();
     final PaginationVo paginationVo =
         PaginationVoTestDataBuilder.builder()
-            .page(query.getPagination().getPage())
-            .size(query.getPagination().getSize())
+            .page(query.pagination().page())
+            .size(query.pagination().size())
             .build()
             .paginationVo();
     final PaginationResultVo<User> expectedResult =
         PaginationResultVoTestDataBuilder.<User>builder().build().paginationResult();
     Mockito.when(emailService.getBlockedRules()).thenReturn(blockedRules);
-    Mockito.when(userService.getAllUsers(projector, paginationVo)).thenReturn(expectedResult);
+    Mockito.when(userService.getAllUsers(criteria, paginationVo)).thenReturn(expectedResult);
 
     final PaginationResultVo<User> result = useCase.handle(query);
 
     AssertionsForClassTypes.assertThat(result).isSameAs(expectedResult);
     Mockito.verify(emailService).getBlockedRules();
-    Mockito.verify(userService).getAllUsers(projector, paginationVo);
+    Mockito.verify(userService).getAllUsers(criteria, paginationVo);
     Mockito.verify(transactionBoundary, Mockito.times(2)).execute(Mockito.any());
   }
 
@@ -121,27 +120,27 @@ class GetAllUsersUseCaseImplTest {
         GetUsersInputTestDataBuilder.builder().blockEmail(false).build().getUsersInput();
     final EmailBlockRulesVo blockedRules =
         EmailBlockRulesVoTestDataBuilder.builder().build().emailBlockRulesVo();
-    final UserEmailProjector projector =
-        UserEmailProjectorTestDataBuilder.builder()
-            .blockEmail(query.getBlockEmail())
+    final UserEmailCriteria criteria =
+        UserEmailCriteriaTestDataBuilder.builder()
+            .blockEmail(query.blockEmail())
             .build()
-            .userEmailProjector();
+            .userEmailCriteria();
     final PaginationVo paginationVo =
         PaginationVoTestDataBuilder.builder()
-            .page(query.getPagination().getPage())
-            .size(query.getPagination().getSize())
+            .page(query.pagination().page())
+            .size(query.pagination().size())
             .build()
             .paginationVo();
     final PaginationResultVo<User> expectedResult =
         PaginationResultVoTestDataBuilder.<User>builder().build().paginationResult();
     Mockito.when(emailService.getBlockedRules()).thenReturn(blockedRules);
-    Mockito.when(userService.getAllUsers(projector, paginationVo)).thenReturn(expectedResult);
+    Mockito.when(userService.getAllUsers(criteria, paginationVo)).thenReturn(expectedResult);
 
     final PaginationResultVo<User> result = useCase.handle(query);
 
     AssertionsForClassTypes.assertThat(result).isSameAs(expectedResult);
     Mockito.verify(emailService).getBlockedRules();
-    Mockito.verify(userService).getAllUsers(projector, paginationVo);
+    Mockito.verify(userService).getAllUsers(criteria, paginationVo);
     Mockito.verify(transactionBoundary, Mockito.times(2)).execute(Mockito.any());
   }
 }

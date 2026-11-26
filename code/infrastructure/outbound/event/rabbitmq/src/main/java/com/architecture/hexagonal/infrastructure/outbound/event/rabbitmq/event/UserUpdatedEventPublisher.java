@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.event;
 
-import com.architecture.hexagonal.contract.bus.model.user.event.UserUpdatedEvent;
+import com.architecture.hexagonal.domain.model.event.user.UserUpdatedEvent;
 import com.architecture.hexagonal.domain.model.vo.payload.MessageHeaderVo;
 import com.architecture.hexagonal.domain.model.vo.time.factory.DateVoFactory;
 import com.architecture.hexagonal.domain.port.out.bus.event.EventPublisher;

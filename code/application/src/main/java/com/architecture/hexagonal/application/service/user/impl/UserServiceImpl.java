@@ -1,12 +1,14 @@
 package com.architecture.hexagonal.application.service.user.impl;
 
-import com.architecture.hexagonal.application.mapper.user.UserEventMapper;
+import com.architecture.hexagonal.application.mapper.user.UserCreatedEventMapper;
+import com.architecture.hexagonal.application.mapper.user.UserDeletedEventMapper;
+import com.architecture.hexagonal.application.mapper.user.UserUpdatedEventMapper;
 import com.architecture.hexagonal.application.service.user.UserService;
 import com.architecture.hexagonal.domain.annotation.ApplicationService;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.ResourceNotFoundException;
+import com.architecture.hexagonal.domain.model.criteria.user.UserEmailCriteria;
 import com.architecture.hexagonal.domain.model.entity.user.User;
-import com.architecture.hexagonal.domain.model.projector.user.UserEmailProjector;
 import com.architecture.hexagonal.domain.model.vo.email.EmailVo;
 import com.architecture.hexagonal.domain.model.vo.exception.FailureType;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResultVo;
@@ -31,7 +33,7 @@ public class UserServiceImpl implements UserService {
   public User createUser(final @NonNull User user) {
     final User createdUser = userRepositoryWritePort.saveUser(user);
 
-    eventBus.publish(UserEventMapper.INSTANCE.toUserCreatedEvent(createdUser));
+    eventBus.publish(UserCreatedEventMapper.INSTANCE.toUserCreatedEvent(createdUser));
     return createdUser;
   }
 
@@ -46,7 +48,7 @@ public class UserServiceImpl implements UserService {
                         ExceptionMessage.NOT_FOUND_DATA_MESSAGE + userUuid,
                         FailureType.NON_RETRYABLE));
 
-    eventBus.publish(UserEventMapper.INSTANCE.toUserDeletedEvent(deletedUser));
+    eventBus.publish(UserDeletedEventMapper.INSTANCE.toUserDeletedEvent(deletedUser));
     return deletedUser;
   }
 
@@ -71,16 +73,15 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public PaginationResultVo<User> getAllUsers(
-      final @NonNull UserEmailProjector userEmailProjector) {
-    return userRepositoryReadPort.getAllUsers(userEmailProjector);
+  public PaginationResultVo<User> getAllUsers(final @NonNull UserEmailCriteria userEmailCriteria) {
+    return userRepositoryReadPort.getAllUsers(userEmailCriteria);
   }
 
   @Override
   public PaginationResultVo<User> getAllUsers(
-      final @NonNull UserEmailProjector userEmailProjector,
+      final @NonNull UserEmailCriteria userEmailCriteria,
       final @NonNull PaginationVo paginationVo) {
-    return userRepositoryReadPort.getAllUsers(userEmailProjector, paginationVo);
+    return userRepositoryReadPort.getAllUsers(userEmailCriteria, paginationVo);
   }
 
   @Override
@@ -122,6 +123,6 @@ public class UserServiceImpl implements UserService {
   }
 
   private void publishUserUpdated(final User updatedUser) {
-    eventBus.publish(UserEventMapper.INSTANCE.toUserUpdatedEvent(updatedUser));
+    eventBus.publish(UserUpdatedEventMapper.INSTANCE.toUserUpdatedEvent(updatedUser));
   }
 }

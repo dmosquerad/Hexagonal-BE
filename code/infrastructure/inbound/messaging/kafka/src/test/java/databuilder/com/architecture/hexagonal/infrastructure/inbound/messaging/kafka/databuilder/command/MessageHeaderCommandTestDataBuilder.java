@@ -1,9 +1,8 @@
 package com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.databuilder.command;
 
-import com.architecture.hexagonal.application.databuilder.usecase.common.DateTestDataBuilder;
-import com.architecture.hexagonal.contract.bus.model.common.Date;
-import com.architecture.hexagonal.contract.bus.model.inbox.command.MessageHeader;
-import java.time.ZoneOffset;
+import com.architecture.hexagonal.application.databuilder.model.vo.time.DateTestDataBuilder;
+import com.architecture.hexagonal.application.model.vo.payload.MessageHeader;
+import com.architecture.hexagonal.application.model.vo.time.Date;
 import java.util.UUID;
 import lombok.Builder;
 
@@ -18,10 +17,7 @@ public class MessageHeaderCommandTestDataBuilder {
       DateTestDataBuilder.builder().build().date();
 
   public MessageHeader messageHeader() {
-    final MessageHeader header = new MessageHeader();
-    header.setMessageId(messageId);
-    header.setMessageDate(date);
-    return header;
+    return MessageHeader.builder().messageId(messageId).messageDate(date).build();
   }
 
 }

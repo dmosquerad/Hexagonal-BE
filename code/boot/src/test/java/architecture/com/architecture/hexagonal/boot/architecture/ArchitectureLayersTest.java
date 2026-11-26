@@ -60,12 +60,12 @@ class ArchitectureLayersTest {
           .layer("Boot").definedBy("com.architecture.hexagonal.boot..")
           .layer("Contract").definedBy("com.architecture.hexagonal.contract..")
           .whereLayer("Domain").mayOnlyBeAccessedByLayers("Application", "Infrastructure", "Boot")
-          .whereLayer("Contract").mayOnlyBeAccessedByLayers("Application", "Infrastructure")
-          .whereLayer("Application").mayOnlyBeAccessedByLayers("Boot")
+          .whereLayer("Contract").mayOnlyBeAccessedByLayers("Infrastructure")
+          .whereLayer("Application").mayOnlyBeAccessedByLayers("Infrastructure", "Boot")
           .whereLayer("Infrastructure").mayOnlyBeAccessedByLayers("Boot")
           .whereLayer("Boot").mayNotBeAccessedByAnyLayer()
-          .because("Dependencies point inward from Boot to Infrastructure, Application, and Domain;"
-              + " Application and Infrastructure may also depend on Contract");
+          .because("Dependencies point inward from Boot through Infrastructure and Application to Domain;"
+              + " Infrastructure may depend on Application and Contract");
 
   @ArchTest
   static final ArchRule onion_architecture_layers_check =

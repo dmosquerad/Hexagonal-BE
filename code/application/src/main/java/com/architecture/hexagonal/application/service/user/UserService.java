@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.application.service.user;
 
+import com.architecture.hexagonal.domain.model.criteria.user.UserEmailCriteria;
 import com.architecture.hexagonal.domain.model.entity.user.User;
-import com.architecture.hexagonal.domain.model.projector.user.UserEmailProjector;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResultVo;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationVo;
 import java.util.UUID;
@@ -16,10 +16,10 @@ public interface UserService {
 
   User findUserById(@NonNull UUID userUuid);
 
-  PaginationResultVo<User> getAllUsers(@NonNull UserEmailProjector userEmailProjector);
+  PaginationResultVo<User> getAllUsers(@NonNull UserEmailCriteria userEmailCriteria);
 
   PaginationResultVo<User> getAllUsers(
-      @NonNull UserEmailProjector userEmailProjector, @NonNull PaginationVo paginationVo);
+      @NonNull UserEmailCriteria userEmailCriteria, @NonNull PaginationVo paginationVo);
 
   User patchUser(@NonNull User user);
 

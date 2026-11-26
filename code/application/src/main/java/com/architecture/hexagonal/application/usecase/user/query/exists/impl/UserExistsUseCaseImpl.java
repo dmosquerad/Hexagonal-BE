@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.application.usecase.user.query.exists.impl;
 
+import com.architecture.hexagonal.application.model.query.user.UserExistsQuery;
 import com.architecture.hexagonal.application.service.user.UserService;
-import com.architecture.hexagonal.contract.bus.model.user.query.UserExistsQuery;
 import com.architecture.hexagonal.domain.annotation.ApplicationUseCase;
 import com.architecture.hexagonal.domain.port.in.bus.query.QueryHandler;
 import com.architecture.hexagonal.domain.port.in.transaction.TransactionReadBoundary;
@@ -19,7 +19,7 @@ public class UserExistsUseCaseImpl implements QueryHandler<UserExistsQuery, Void
   public Void handle(final @NonNull UserExistsQuery userExistsQuery) {
     return transactionReadBoundary.execute(
         () -> {
-          userService.existsUser(userExistsQuery.getUserId());
+          userService.existsUser(userExistsQuery.userId());
           return null;
         });
   }

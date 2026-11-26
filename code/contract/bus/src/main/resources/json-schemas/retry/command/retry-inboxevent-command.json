@@ -1,8 +1,0 @@
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "retry-inboxevent.command",
-  "title": "RetryInboxEventCommand",
-  "type": "object",
-  "properties": {},
-  "additionalProperties": false
-}

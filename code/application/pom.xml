@@ -19,9 +19,12 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>domain</artifactId>
         </dependency>
+        <!-- ============================================ -->
+        <!-- JAKARTA -->
+        <!-- ============================================ -->
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>contract-bus</artifactId>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
         </dependency>
         <!-- ============================================ -->
         <!-- MAPSTRUCT -->

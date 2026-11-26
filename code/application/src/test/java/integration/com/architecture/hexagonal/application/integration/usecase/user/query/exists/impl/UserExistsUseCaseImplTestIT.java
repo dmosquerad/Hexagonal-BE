@@ -1,14 +1,14 @@
 package com.architecture.hexagonal.application.integration.usecase.user.query.exists.impl;
 
 import com.architecture.hexagonal.application.databuilder.transaction.SpyTransactionReadBoundary;
-import com.architecture.hexagonal.application.databuilder.usecase.user.query.UserExistsInputTestDataBuilder;
+import com.architecture.hexagonal.application.databuilder.model.query.user.UserExistsInputTestDataBuilder;
 import com.architecture.hexagonal.application.usecase.user.query.exists.impl.UserExistsUseCaseImpl;
 import com.architecture.hexagonal.domain.port.out.repository.user.UserRepositoryReadPort;
 import com.architecture.hexagonal.domain.port.out.repository.user.UserRepositoryWritePort;
 import com.architecture.hexagonal.domain.port.out.bus.event.EventBus;
 import com.architecture.hexagonal.application.service.user.UserService;
 import com.architecture.hexagonal.application.service.user.impl.UserServiceImpl;
-import com.architecture.hexagonal.contract.bus.model.user.query.UserExistsQuery;
+import com.architecture.hexagonal.application.model.query.user.UserExistsQuery;
 import com.architecture.hexagonal.domain.databuilder.model.entity.user.UserTestDataBuilder;
 import java.util.Optional;
 import java.util.UUID;
@@ -41,21 +41,21 @@ class UserExistsUseCaseImplTestIT {
   void userExistsUseCaseShouldExecuteQueryWhenQueryIsExecuted() {
     final UserExistsQuery query =
         UserExistsInputTestDataBuilder.builder().build().userExistsInput();
-    Mockito.when(userRepositoryReadPort.findUserById(query.getUserId()))
+    Mockito.when(userRepositoryReadPort.findUserById(query.userId()))
         .thenReturn(
             Optional.of(
-                UserTestDataBuilder.builder().userId(query.getUserId()).build().user()));
+                UserTestDataBuilder.builder().userId(query.userId()).build().user()));
     Mockito.doAnswer(
             AdditionalAnswers.answerVoid(
                 (UUID userId) -> userServiceImpl.existsUser(userId)))
         .when(userService)
-        .existsUser(query.getUserId());
+        .existsUser(query.userId());
 
     final Void result = userExistsUseCase.handle(query);
 
     AssertionsForClassTypes.assertThat(result).isNull();
     Mockito.verify(transactionReadBoundary).execute(ArgumentMatchers.any());
-    Mockito.verify(userService).existsUser(query.getUserId());
-    Mockito.verify(userRepositoryReadPort).findUserById(query.getUserId());
+    Mockito.verify(userService).existsUser(query.userId());
+    Mockito.verify(userRepositoryReadPort).findUserById(query.userId());
   }
 }

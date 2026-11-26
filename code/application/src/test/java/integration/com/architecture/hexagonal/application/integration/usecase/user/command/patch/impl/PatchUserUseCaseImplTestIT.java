@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.application.integration.usecase.user.command.patch.impl;
 
 import com.architecture.hexagonal.application.databuilder.transaction.SpyTransactionWriteBoundary;
-import com.architecture.hexagonal.application.databuilder.usecase.user.command.PatchUserInputTestDataBuilder;
+import com.architecture.hexagonal.application.databuilder.model.command.user.PatchUserInputTestDataBuilder;
 import com.architecture.hexagonal.application.usecase.user.command.patch.impl.PatchUserUseCaseImpl;
 import com.architecture.hexagonal.domain.port.out.configuration.EmailConfigurationPort;
 import com.architecture.hexagonal.domain.port.out.repository.user.UserRepositoryReadPort;
@@ -11,8 +11,8 @@ import com.architecture.hexagonal.application.service.email.EmailService;
 import com.architecture.hexagonal.application.service.email.impl.EmailServiceImpl;
 import com.architecture.hexagonal.application.service.user.UserService;
 import com.architecture.hexagonal.application.service.user.impl.UserServiceImpl;
-import com.architecture.hexagonal.contract.bus.model.user.command.PatchUserCommand;
-import com.architecture.hexagonal.contract.bus.model.user.event.UserUpdatedEvent;
+import com.architecture.hexagonal.application.model.command.user.PatchUserCommand;
+import com.architecture.hexagonal.domain.model.event.user.UserUpdatedEvent;
 import com.architecture.hexagonal.domain.databuilder.model.entity.user.UserTestDataBuilder;
 import com.architecture.hexagonal.domain.databuilder.model.vo.email.EmailBlockRulesVoTestDataBuilder;
 import com.architecture.hexagonal.domain.model.entity.user.User;
@@ -65,22 +65,22 @@ class PatchUserUseCaseImplTestIT {
         .thenAnswer(AdditionalAnswers.returnsFirstArg());
     final User existingUser =
         UserTestDataBuilder.builder()
-            .userId(command.getUserId())
+            .userId(command.userId())
             .build()
             .user();
-    Mockito.when(userRepositoryReadPort.findUserById(command.getUserId()))
+    Mockito.when(userRepositoryReadPort.findUserById(command.userId()))
         .thenReturn(Optional.of(existingUser));
 
     final User result = patchUserUseCase.handle(command);
 
-    AssertionsForClassTypes.assertThat(result.userId()).isEqualTo(command.getUserId());
+    AssertionsForClassTypes.assertThat(result.userId()).isEqualTo(command.userId());
     Mockito.verify(transactionWriteBoundary).execute(ArgumentMatchers.any());
-    AssertionsForClassTypes.assertThat(result.name()).isEqualTo(command.getName());
-    AssertionsForClassTypes.assertThat(result.email().getEmail()).isEqualTo(command.getEmail());
+    AssertionsForClassTypes.assertThat(result.name()).isEqualTo(command.name());
+    AssertionsForClassTypes.assertThat(result.email().getEmail()).isEqualTo(command.email());
     Mockito.verify(emailService)
         .isEmailBlocked(ArgumentMatchers.any(EmailVo.class));
     Mockito.verify(userService).patchUser(ArgumentMatchers.any(User.class));
-    Mockito.verify(userRepositoryReadPort).findUserById(command.getUserId());
+    Mockito.verify(userRepositoryReadPort).findUserById(command.userId());
     Mockito.verify(userRepositoryWritePort).saveUser(ArgumentMatchers.any(User.class));
     Mockito.verify(eventBus)
         .publish(ArgumentMatchers.any(UserUpdatedEvent.class));

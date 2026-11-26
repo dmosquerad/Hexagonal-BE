@@ -1,9 +1,9 @@
 package com.architecture.hexagonal.application.usecase.user.command.delete.impl;
 
+import com.architecture.hexagonal.application.databuilder.model.command.user.DeleteUserInputTestDataBuilder;
 import com.architecture.hexagonal.application.databuilder.transaction.SpyTransactionWriteBoundary;
-import com.architecture.hexagonal.application.databuilder.usecase.user.command.DeleteUserInputTestDataBuilder;
+import com.architecture.hexagonal.application.model.command.user.DeleteUserCommand;
 import com.architecture.hexagonal.application.service.user.UserService;
-import com.architecture.hexagonal.contract.bus.model.user.command.DeleteUserCommand;
 import com.architecture.hexagonal.domain.databuilder.model.entity.user.UserTestDataBuilder;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.domain.port.in.transaction.TransactionWriteBoundary;
@@ -31,12 +31,12 @@ class DeleteUserUseCaseImplTest {
     final DeleteUserCommand command =
         DeleteUserInputTestDataBuilder.builder().build().deleteUserInput();
     final User user = UserTestDataBuilder.builder().build().user();
-    Mockito.when(userService.deleteUser(command.getUserId())).thenReturn(user);
+    Mockito.when(userService.deleteUser(command.userId())).thenReturn(user);
 
     final User result = useCase.handle(command);
 
     AssertionsForClassTypes.assertThat(result).isSameAs(user);
-    Mockito.verify(userService).deleteUser(command.getUserId());
+    Mockito.verify(userService).deleteUser(command.userId());
     Mockito.verify(transactionBoundary).execute(Mockito.<Supplier<User>>any());
   }
 }

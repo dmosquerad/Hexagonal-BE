@@ -69,11 +69,6 @@
       <!-- ============================================ -->
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>contract-bus</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>${project.groupId}</groupId>
         <artifactId>contract-inbound-user-rest-server</artifactId>
         <version>${project.version}</version>
       </dependency>

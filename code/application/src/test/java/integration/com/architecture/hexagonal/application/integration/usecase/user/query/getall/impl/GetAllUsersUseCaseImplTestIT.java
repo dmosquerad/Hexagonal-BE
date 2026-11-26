@@ -1,18 +1,18 @@
 package com.architecture.hexagonal.application.integration.usecase.user.query.getall.impl;
 
 import com.architecture.hexagonal.application.databuilder.transaction.SpyTransactionReadBoundary;
-import com.architecture.hexagonal.application.databuilder.usecase.user.query.GetUsersInputTestDataBuilder;
+import com.architecture.hexagonal.application.databuilder.model.query.user.GetUsersInputTestDataBuilder;
 import com.architecture.hexagonal.application.usecase.user.query.getall.impl.GetAllUsersUseCaseImpl;
 import com.architecture.hexagonal.domain.port.out.configuration.EmailConfigurationPort;
 import com.architecture.hexagonal.domain.port.out.repository.user.UserRepositoryReadPort;
-import com.architecture.hexagonal.domain.model.projector.user.UserEmailProjector;
+import com.architecture.hexagonal.domain.model.criteria.user.UserEmailCriteria;
 import com.architecture.hexagonal.application.service.email.EmailService;
 import com.architecture.hexagonal.application.service.email.impl.EmailServiceImpl;
 import com.architecture.hexagonal.application.service.user.UserService;
 import com.architecture.hexagonal.application.service.user.impl.UserServiceImpl;
 import com.architecture.hexagonal.domain.databuilder.model.vo.pagination.PaginationResultVoTestDataBuilder;
 import com.architecture.hexagonal.domain.databuilder.model.vo.email.EmailBlockRulesVoTestDataBuilder;
-import com.architecture.hexagonal.contract.bus.model.user.query.GetUsersFilteredQuery;
+import com.architecture.hexagonal.application.model.query.user.GetUsersFilteredQuery;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationVo;
 import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;
@@ -66,15 +66,15 @@ class GetAllUsersUseCaseImplTestIT {
         .thenAnswer(invocation -> emailServiceImpl.getBlockedRules());
     Mockito.when(
             userService.getAllUsers(
-                ArgumentMatchers.any(UserEmailProjector.class),
+                ArgumentMatchers.any(UserEmailCriteria.class),
                 ArgumentMatchers.any(PaginationVo.class)))
         .thenAnswer(
             AdditionalAnswers.answer(
-                (UserEmailProjector projector, PaginationVo pagination) ->
-                    userServiceImpl.getAllUsers(projector, pagination)));
+                (UserEmailCriteria criteria, PaginationVo pagination) ->
+                    userServiceImpl.getAllUsers(criteria, pagination)));
     Mockito.when(
             userRepositoryReadPort.getAllUsers(
-                ArgumentMatchers.any(UserEmailProjector.class),
+                ArgumentMatchers.any(UserEmailCriteria.class),
                 ArgumentMatchers.any(PaginationVo.class)))
         .thenReturn(expectedResult);
 
@@ -86,11 +86,11 @@ class GetAllUsersUseCaseImplTestIT {
     Mockito.verify(emailService).getBlockedRules();
     Mockito.verify(userService)
         .getAllUsers(
-            ArgumentMatchers.any(UserEmailProjector.class),
+            ArgumentMatchers.any(UserEmailCriteria.class),
             ArgumentMatchers.any(PaginationVo.class));
     Mockito.verify(userRepositoryReadPort)
         .getAllUsers(
-            ArgumentMatchers.any(UserEmailProjector.class),
+            ArgumentMatchers.any(UserEmailCriteria.class),
             ArgumentMatchers.any(PaginationVo.class));
   }
 
@@ -108,11 +108,11 @@ class GetAllUsersUseCaseImplTestIT {
             .build()
             .paginationResult();
 
-    Mockito.when(userService.getAllUsers(ArgumentMatchers.any(UserEmailProjector.class)))
+    Mockito.when(userService.getAllUsers(ArgumentMatchers.any(UserEmailCriteria.class)))
         .thenAnswer(
             AdditionalAnswers.answer(
-                (UserEmailProjector projector) -> userServiceImpl.getAllUsers(projector)));
-    Mockito.when(userRepositoryReadPort.getAllUsers(ArgumentMatchers.any(UserEmailProjector.class)))
+                (UserEmailCriteria criteria) -> userServiceImpl.getAllUsers(criteria)));
+    Mockito.when(userRepositoryReadPort.getAllUsers(ArgumentMatchers.any(UserEmailCriteria.class)))
         .thenReturn(expectedResult);
 
     final PaginationResultVo<User> result = getAllUsersUseCase.handle(query);
@@ -121,8 +121,8 @@ class GetAllUsersUseCaseImplTestIT {
     Mockito.verify(transactionReadBoundary).execute(ArgumentMatchers.any());
     Mockito.verify(emailConfigurationPort, Mockito.never()).getBlockedRules();
     Mockito.verify(emailService, Mockito.never()).getBlockedRules();
-    Mockito.verify(userService).getAllUsers(ArgumentMatchers.any(UserEmailProjector.class));
+    Mockito.verify(userService).getAllUsers(ArgumentMatchers.any(UserEmailCriteria.class));
     Mockito.verify(userRepositoryReadPort)
-        .getAllUsers(ArgumentMatchers.any(UserEmailProjector.class));
+        .getAllUsers(ArgumentMatchers.any(UserEmailCriteria.class));
   }
 }
