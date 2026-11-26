@@ -7,10 +7,10 @@ import com.architecture.hexagonal.domain.port.out.configuration.SchedulerConfigu
 import com.architecture.hexagonal.domain.port.out.repository.outbox.OutboxRepositoryReadPort;
 import com.architecture.hexagonal.domain.port.out.repository.outbox.OutboxRepositoryWritePort;
 import com.architecture.hexagonal.domain.port.out.outbox.OutboxProcess;
-import com.architecture.hexagonal.domain.model.projector.outbox.OutboxStatusAndAggregateProjector;
+import com.architecture.hexagonal.domain.model.criteria.outbox.OutboxStatusAndAggregateCriteria;
 import com.architecture.hexagonal.application.service.outbox.OutboxService;
 import com.architecture.hexagonal.application.service.outbox.impl.OutboxServiceImpl;
-import com.architecture.hexagonal.contract.bus.model.retry.command.RetryOutboxeventCommand;
+import com.architecture.hexagonal.application.model.command.retry.RetryOutboxeventCommand;
 import com.architecture.hexagonal.domain.databuilder.model.entity.outbox.OutboxTestDataBuilder;
 import com.architecture.hexagonal.domain.databuilder.model.vo.outbox.SchedulerOutboxConfigurationVoTestDataBuilder;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
@@ -87,11 +87,11 @@ class RetryOutboxUseCaseImplTestIT {
         .thenAnswer(AdditionalAnswers.returnsFirstArg());
     Mockito.when(
             outboxService.find(
-                ArgumentMatchers.any(OutboxStatusAndAggregateProjector.class)))
+                ArgumentMatchers.any(OutboxStatusAndAggregateCriteria.class)))
         .thenAnswer(
             AdditionalAnswers.answer(
-                (OutboxStatusAndAggregateProjector projector) ->
-                    outboxServiceImpl.find(projector)));
+                (OutboxStatusAndAggregateCriteria criteria) ->
+                    outboxServiceImpl.find(criteria)));
     Mockito.when(outboxService.process(ArgumentMatchers.any(Outbox.class)))
         .thenAnswer(AdditionalAnswers.answer((Outbox event) -> outboxServiceImpl.process(event)));
     Mockito.when(
@@ -102,8 +102,8 @@ class RetryOutboxUseCaseImplTestIT {
             outboxRepositoryReadPort.findByStatusAndAggregateType(ArgumentMatchers.any()))
         .thenAnswer(
             AdditionalAnswers.answer(
-                (OutboxStatusAndAggregateProjector projector) ->
-                    projector.aggregateType() == outbox.aggregateType()
+                (OutboxStatusAndAggregateCriteria criteria) ->
+                    criteria.aggregateType() == outbox.aggregateType()
                         ? List.of(outbox)
                         : List.of()));
 
@@ -117,13 +117,13 @@ class RetryOutboxUseCaseImplTestIT {
     Mockito.verify(transactionWriteBoundary)
         .executeWithoutResult(ArgumentMatchers.any(Runnable.class));
     Mockito.verify(outboxService)
-        .find(ArgumentMatchers.any(OutboxStatusAndAggregateProjector.class));
+        .find(ArgumentMatchers.any(OutboxStatusAndAggregateCriteria.class));
     Mockito.verify(outboxService).process(ArgumentMatchers.any(Outbox.class));
     Mockito.verify(
             outboxRepositoryReadPort,
             Mockito.times(AggregateTypeVo.values().length))
         .findByStatusAndAggregateType(
-            ArgumentMatchers.any(OutboxStatusAndAggregateProjector.class));
+            ArgumentMatchers.any(OutboxStatusAndAggregateCriteria.class));
     Mockito.verify(outboxProcess).process(processingOutbox);
     Mockito.verify(outboxRepositoryWritePort).claimPendingForProcessing(processingOutbox);
     Mockito.verify(outboxRepositoryWritePort)
@@ -148,19 +148,19 @@ class RetryOutboxUseCaseImplTestIT {
         .thenAnswer(AdditionalAnswers.returnsFirstArg());
     Mockito.when(
             outboxService.find(
-                ArgumentMatchers.any(OutboxStatusAndAggregateProjector.class)))
+                ArgumentMatchers.any(OutboxStatusAndAggregateCriteria.class)))
         .thenAnswer(
             AdditionalAnswers.answer(
-                (OutboxStatusAndAggregateProjector projector) ->
-                    outboxServiceImpl.find(projector)));
+                (OutboxStatusAndAggregateCriteria criteria) ->
+                    outboxServiceImpl.find(criteria)));
     Mockito.when(outboxService.process(ArgumentMatchers.any(Outbox.class)))
         .thenAnswer(AdditionalAnswers.answer((Outbox event) -> outboxServiceImpl.process(event)));
     Mockito.when(
             outboxRepositoryReadPort.findByStatusAndAggregateType(ArgumentMatchers.any()))
         .thenAnswer(
             AdditionalAnswers.answer(
-                (OutboxStatusAndAggregateProjector projector) ->
-                    projector.aggregateType() == outbox.aggregateType()
+                (OutboxStatusAndAggregateCriteria criteria) ->
+                    criteria.aggregateType() == outbox.aggregateType()
                         ? List.of(outbox, duplicateOutbox)
                         : List.of()));
     Mockito.when(
@@ -183,7 +183,7 @@ class RetryOutboxUseCaseImplTestIT {
     Mockito.verify(transactionWriteBoundary, Mockito.times(2))
         .executeWithoutResult(ArgumentMatchers.any(Runnable.class));
     Mockito.verify(outboxService)
-        .find(ArgumentMatchers.any(OutboxStatusAndAggregateProjector.class));
+        .find(ArgumentMatchers.any(OutboxStatusAndAggregateCriteria.class));
     Mockito.verify(outboxService, Mockito.times(2)).process(outbox);
     Mockito.verify(outboxProcess)
         .process(ArgumentMatchers.argThat(candidate -> candidate.status() == StatusVo.PROCESSING));

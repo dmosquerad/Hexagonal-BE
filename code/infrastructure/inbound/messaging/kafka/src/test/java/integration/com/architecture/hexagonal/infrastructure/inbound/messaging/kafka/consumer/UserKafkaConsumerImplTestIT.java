@@ -1,9 +1,9 @@
 package com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.consumer;
 
-import com.architecture.hexagonal.contract.bus.model.inbox.command.RegisterInboxCommand;
-import com.architecture.hexagonal.contract.bus.model.user.command.CreateUserCommand;
-import com.architecture.hexagonal.contract.bus.model.user.command.DeleteUserCommand;
-import com.architecture.hexagonal.contract.bus.model.user.command.UpdateUserCommand;
+import com.architecture.hexagonal.application.model.command.inbox.RegisterInboxCommand;
+import com.architecture.hexagonal.application.model.command.user.CreateUserCommand;
+import com.architecture.hexagonal.application.model.command.user.DeleteUserCommand;
+import com.architecture.hexagonal.application.model.command.user.UpdateUserCommand;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.client.consumer.UserEventsConsumer;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserCreatedPayload;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserDeletedPayload;
@@ -50,9 +50,11 @@ class UserKafkaConsumerImplTestIT {
     final ArgumentCaptor<CreateUserCommand> commandCaptor =
         ArgumentCaptor.forClass(CreateUserCommand.class);
     Mockito.verify(commandBus).execute(commandCaptor.capture());
-    final CreateUserCommand expected = new CreateUserCommand();
-    expected.setName(message.getData_().getName());
-    expected.setEmail(message.getData_().getEmail());
+    final CreateUserCommand expected =
+        CreateUserCommand.builder()
+            .name(message.getData_().getName())
+            .email(message.getData_().getEmail())
+            .build();
     Assertions.assertThat(commandCaptor.getValue())
         .usingRecursiveComparison()
         .isEqualTo(expected);
@@ -105,10 +107,12 @@ class UserKafkaConsumerImplTestIT {
     final ArgumentCaptor<UpdateUserCommand> commandCaptor =
         ArgumentCaptor.forClass(UpdateUserCommand.class);
     Mockito.verify(commandBus).execute(commandCaptor.capture());
-    final UpdateUserCommand expected = new UpdateUserCommand();
-    expected.setUserId(message.getData_().getUserId());
-    expected.setName(message.getData_().getName());
-    expected.setEmail(message.getData_().getEmail());
+    final UpdateUserCommand expected =
+        UpdateUserCommand.builder()
+            .userId(message.getData_().getUserId())
+            .name(message.getData_().getName())
+            .email(message.getData_().getEmail())
+            .build();
     Assertions.assertThat(commandCaptor.getValue())
         .usingRecursiveComparison()
         .isEqualTo(expected);
@@ -164,8 +168,8 @@ class UserKafkaConsumerImplTestIT {
     final ArgumentCaptor<DeleteUserCommand> commandCaptor =
         ArgumentCaptor.forClass(DeleteUserCommand.class);
     Mockito.verify(commandBus).execute(commandCaptor.capture());
-    final DeleteUserCommand expected = new DeleteUserCommand();
-    expected.setUserId(message.getData_().getUserId());
+    final DeleteUserCommand expected =
+        DeleteUserCommand.builder().userId(message.getData_().getUserId()).build();
     Assertions.assertThat(commandCaptor.getValue())
         .usingRecursiveComparison()
         .isEqualTo(expected);

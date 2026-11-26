@@ -27,7 +27,7 @@
         </dependency>
         <dependency>
             <groupId>com.architecture.hexagonal</groupId>
-            <artifactId>contract-bus</artifactId>
+            <artifactId>application</artifactId>
         </dependency>
     </dependencies>
 

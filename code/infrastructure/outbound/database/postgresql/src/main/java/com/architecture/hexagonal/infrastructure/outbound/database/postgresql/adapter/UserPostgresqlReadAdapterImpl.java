@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.postgresql.adapter;
 
+import com.architecture.hexagonal.domain.model.criteria.user.UserEmailCriteria;
 import com.architecture.hexagonal.domain.model.entity.user.User;
-import com.architecture.hexagonal.domain.model.projector.user.UserEmailProjector;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResultVo;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationVo;
 import com.architecture.hexagonal.domain.port.out.repository.user.UserRepositoryReadPort;
@@ -29,14 +29,14 @@ public class UserPostgresqlReadAdapterImpl implements UserRepositoryReadPort {
 
   @Override
   public PaginationResultVo<User> getAllUsers(
-      final @NonNull UserEmailProjector userEmailProjector,
+      final @NonNull UserEmailCriteria userEmailCriteria,
       final @NonNull PaginationVo paginationVo) {
 
     final Specification<UserDao> specification =
-        Specification.where(UserSpecifications.hostEquals(userEmailProjector.host()))
+        Specification.where(UserSpecifications.hostEquals(userEmailCriteria.host()))
             .and(
                 UserSpecifications.blockedEmail(
-                    userEmailProjector.blockEmail(), userEmailProjector.blockedRules()));
+                    userEmailCriteria.blockEmail(), userEmailCriteria.blockedRules()));
 
     final Pageable pageable = PageRequest.of(paginationVo.page(), paginationVo.size());
     final Page<UserDao> page = userPostgresqlReadRepository.findAll(specification, pageable);
@@ -51,14 +51,13 @@ public class UserPostgresqlReadAdapterImpl implements UserRepositoryReadPort {
   }
 
   @Override
-  public PaginationResultVo<User> getAllUsers(
-      final @NonNull UserEmailProjector userEmailProjector) {
+  public PaginationResultVo<User> getAllUsers(final @NonNull UserEmailCriteria userEmailCriteria) {
 
     final Specification<UserDao> specification =
-        Specification.where(UserSpecifications.hostEquals(userEmailProjector.host()))
+        Specification.where(UserSpecifications.hostEquals(userEmailCriteria.host()))
             .and(
                 UserSpecifications.blockedEmail(
-                    userEmailProjector.blockEmail(), userEmailProjector.blockedRules()));
+                    userEmailCriteria.blockEmail(), userEmailCriteria.blockedRules()));
 
     final List<UserDao> results = userPostgresqlReadRepository.findAll(specification);
     final List<User> users = results.stream().map(userFromPostgresqlMapper::toUser).toList();

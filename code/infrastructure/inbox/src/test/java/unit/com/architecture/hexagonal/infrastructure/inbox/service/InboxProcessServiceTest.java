@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.infrastructure.inbox.service;
 
-import com.architecture.hexagonal.contract.bus.model.user.command.CreateUserCommand;
-import com.architecture.hexagonal.contract.bus.model.user.command.DeleteUserCommand;
-import com.architecture.hexagonal.contract.bus.model.user.command.UpdateUserCommand;
+import com.architecture.hexagonal.application.model.command.user.CreateUserCommand;
+import com.architecture.hexagonal.application.model.command.user.DeleteUserCommand;
+import com.architecture.hexagonal.application.model.command.user.UpdateUserCommand;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserCreatedData;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserDeletedData;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserUpdatedData;
@@ -66,9 +66,11 @@ class InboxProcessServiceTest {
     final ArgumentCaptor<CreateUserCommand> commandCaptor =
         ArgumentCaptor.forClass(CreateUserCommand.class);
     Mockito.verify(commandBus).execute(commandCaptor.capture());
-    final CreateUserCommand expected = new CreateUserCommand();
-    expected.setName(createdData.getName());
-    expected.setEmail(createdData.getEmail());
+    final CreateUserCommand expected =
+        CreateUserCommand.builder()
+            .name(createdData.getName())
+            .email(createdData.getEmail())
+            .build();
     Assertions.assertThat(commandCaptor.getValue()).usingRecursiveComparison().isEqualTo(expected);
   }
 
@@ -93,10 +95,12 @@ class InboxProcessServiceTest {
     final ArgumentCaptor<UpdateUserCommand> commandCaptor =
         ArgumentCaptor.forClass(UpdateUserCommand.class);
     Mockito.verify(commandBus).execute(commandCaptor.capture());
-    final UpdateUserCommand expected = new UpdateUserCommand();
-    expected.setUserId(userId);
-    expected.setName(updatedData.getName());
-    expected.setEmail(updatedData.getEmail());
+    final UpdateUserCommand expected =
+        UpdateUserCommand.builder()
+            .userId(userId)
+            .name(updatedData.getName())
+            .email(updatedData.getEmail())
+            .build();
     Assertions.assertThat(commandCaptor.getValue()).usingRecursiveComparison().isEqualTo(expected);
   }
 
@@ -119,8 +123,7 @@ class InboxProcessServiceTest {
     final ArgumentCaptor<DeleteUserCommand> commandCaptor =
         ArgumentCaptor.forClass(DeleteUserCommand.class);
     Mockito.verify(commandBus).execute(commandCaptor.capture());
-    final DeleteUserCommand expected = new DeleteUserCommand();
-    expected.setUserId(userId);
+    final DeleteUserCommand expected = DeleteUserCommand.builder().userId(userId).build();
     Assertions.assertThat(commandCaptor.getValue()).usingRecursiveComparison().isEqualTo(expected);
   }
 

@@ -1,10 +1,10 @@
 package com.architecture.hexagonal.application.usecase.user.command.create.impl;
 
+import com.architecture.hexagonal.application.databuilder.model.command.user.CreateUserInputTestDataBuilder;
 import com.architecture.hexagonal.application.databuilder.transaction.SpyTransactionWriteBoundary;
-import com.architecture.hexagonal.application.databuilder.usecase.user.command.CreateUserInputTestDataBuilder;
+import com.architecture.hexagonal.application.model.command.user.CreateUserCommand;
 import com.architecture.hexagonal.application.service.email.EmailService;
 import com.architecture.hexagonal.application.service.user.UserService;
-import com.architecture.hexagonal.contract.bus.model.user.command.CreateUserCommand;
 import com.architecture.hexagonal.domain.databuilder.model.entity.user.UserTestDataBuilder;
 import com.architecture.hexagonal.domain.databuilder.model.vo.email.EmailVoTestDataBuilder;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;

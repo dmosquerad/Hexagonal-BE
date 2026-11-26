@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.postgresql.adapter;
 
+import com.architecture.hexagonal.domain.databuilder.model.criteria.user.UserEmailCriteriaTestDataBuilder;
 import com.architecture.hexagonal.domain.databuilder.model.entity.user.UserTestDataBuilder;
-import com.architecture.hexagonal.domain.databuilder.model.projector.user.UserEmailProjectorTestDataBuilder;
 import com.architecture.hexagonal.domain.databuilder.model.vo.email.EmailBlockRulesVoTestDataBuilder;
 import com.architecture.hexagonal.domain.databuilder.model.vo.pagination.PaginationResultVoTestDataBuilder;
 import com.architecture.hexagonal.domain.databuilder.model.vo.pagination.PaginationVoTestDataBuilder;
@@ -96,7 +96,7 @@ class UserPostgresqlReadAdapterImplTest {
 
     final PaginationResultVo<User> result =
         userPostgresqlReadAdapterImpl.getAllUsers(
-            UserEmailProjectorTestDataBuilder.builder()
+            UserEmailCriteriaTestDataBuilder.builder()
                 .blockEmail(blockEmail)
                 .blockedRules(
                     EmailBlockRulesVoTestDataBuilder.builder()
@@ -104,7 +104,7 @@ class UserPostgresqlReadAdapterImplTest {
                         .build()
                         .emailBlockRulesVo())
                 .build()
-                .userEmailProjector(),
+                .userEmailCriteria(),
             paginationVo);
 
     AssertionsForClassTypes.assertThat(result)
@@ -134,14 +134,14 @@ class UserPostgresqlReadAdapterImplTest {
 
     final PaginationResultVo<User> result =
         userPostgresqlReadAdapterImpl.getAllUsers(
-            UserEmailProjectorTestDataBuilder.builder()
+            UserEmailCriteriaTestDataBuilder.builder()
                 .blockedRules(
                     EmailBlockRulesVoTestDataBuilder.builder()
                         .host(Set.of(host))
                         .build()
                         .emailBlockRulesVo())
                 .build()
-                .userEmailProjector());
+                .userEmailCriteria());
 
     AssertionsForClassTypes.assertThat(result)
         .usingRecursiveComparison()

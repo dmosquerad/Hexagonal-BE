@@ -2,8 +2,8 @@ package com.architecture.hexagonal.application.service.outbox.impl;
 
 import com.architecture.hexagonal.application.service.outbox.OutboxService;
 import com.architecture.hexagonal.domain.annotation.ApplicationService;
+import com.architecture.hexagonal.domain.model.criteria.outbox.OutboxStatusAndAggregateCriteria;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
-import com.architecture.hexagonal.domain.model.projector.outbox.OutboxStatusAndAggregateProjector;
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
 import com.architecture.hexagonal.domain.model.vo.time.factory.DateVoFactory;
 import com.architecture.hexagonal.domain.port.out.configuration.SchedulerConfigurationPort;
@@ -25,8 +25,8 @@ public class OutboxServiceImpl implements OutboxService {
 
   @Override
   public List<Outbox> find(
-      final @NonNull OutboxStatusAndAggregateProjector outboxStatusAndAggregateProjector) {
-    return outboxRepositoryReadPort.findByStatusAndAggregateType(outboxStatusAndAggregateProjector);
+      final @NonNull OutboxStatusAndAggregateCriteria outboxStatusAndAggregateCriteria) {
+    return outboxRepositoryReadPort.findByStatusAndAggregateType(outboxStatusAndAggregateCriteria);
   }
 
   @Override

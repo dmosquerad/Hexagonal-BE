@@ -1,13 +1,13 @@
 package com.architecture.hexagonal.application.usecase.user.query.getall.impl;
 
 import com.architecture.hexagonal.application.mapper.pagination.PaginationVoMapper;
+import com.architecture.hexagonal.application.model.query.user.GetUsersFilteredQuery;
+import com.architecture.hexagonal.application.model.vo.pagination.Pagination;
 import com.architecture.hexagonal.application.service.email.EmailService;
 import com.architecture.hexagonal.application.service.user.UserService;
-import com.architecture.hexagonal.contract.bus.model.common.Pagination;
-import com.architecture.hexagonal.contract.bus.model.user.query.GetUsersFilteredQuery;
 import com.architecture.hexagonal.domain.annotation.ApplicationUseCase;
+import com.architecture.hexagonal.domain.model.criteria.user.UserEmailCriteria;
 import com.architecture.hexagonal.domain.model.entity.user.User;
-import com.architecture.hexagonal.domain.model.projector.user.UserEmailProjector;
 import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationResultVo;
 import com.architecture.hexagonal.domain.model.vo.pagination.PaginationVo;
@@ -29,8 +29,8 @@ public class GetAllUsersUseCaseImpl
   @Override
   public PaginationResultVo<User> handle(
       final @NonNull GetUsersFilteredQuery getUsersFilteredQuery) {
-    final Boolean blockEmail = getUsersFilteredQuery.getBlockEmail();
-    final Pagination contractPagination = getUsersFilteredQuery.getPagination();
+    final Boolean blockEmail = getUsersFilteredQuery.blockEmail();
+    final Pagination contractPagination = getUsersFilteredQuery.pagination();
     final PaginationVo paginationVo =
         Objects.isNull(contractPagination)
             ? null
@@ -39,9 +39,9 @@ public class GetAllUsersUseCaseImpl
         Objects.nonNull(blockEmail)
             ? transactionReadBoundary.execute(emailService::getBlockedRules)
             : null;
-    final UserEmailProjector projector =
-        UserEmailProjector.builder()
-            .host(getUsersFilteredQuery.getHost())
+    final UserEmailCriteria criteria =
+        UserEmailCriteria.builder()
+            .host(getUsersFilteredQuery.host())
             .blockEmail(blockEmail)
             .blockedRules(blockedRules)
             .build();
@@ -49,7 +49,7 @@ public class GetAllUsersUseCaseImpl
     return transactionReadBoundary.execute(
         () ->
             Objects.isNull(paginationVo)
-                ? userService.getAllUsers(projector)
-                : userService.getAllUsers(projector, paginationVo));
+                ? userService.getAllUsers(criteria)
+                : userService.getAllUsers(criteria, paginationVo));
   }
 }

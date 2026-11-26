@@ -4,6 +4,7 @@ import com.architecture.hexagonal.domain.port.in.bus.middleware.BusMiddleware;
 import com.architecture.hexagonal.domain.port.out.bus.event.EventBus;
 import com.architecture.hexagonal.domain.port.out.bus.event.EventPublisher;
 import com.architecture.hexagonal.infrastructure.bus.BusHandlerFinder;
+import com.architecture.hexagonal.infrastructure.bus.BusMessageValidator;
 import java.util.List;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 public class EventBusImpl implements EventBus {
 
   private final BusHandlerFinder handlerFinder;
+  private final BusMessageValidator messageValidator;
   private final BusMiddleware loggingMiddleware;
 
   @Override
@@ -23,6 +25,7 @@ public class EventBusImpl implements EventBus {
     loggingMiddleware.execute(
         event,
         () -> {
+          messageValidator.validate(event);
           final List<EventPublisher> handlers = handlerFinder.findAll(event, EventPublisher.class);
           for (final EventPublisher<E> handler : handlers) {
             try {

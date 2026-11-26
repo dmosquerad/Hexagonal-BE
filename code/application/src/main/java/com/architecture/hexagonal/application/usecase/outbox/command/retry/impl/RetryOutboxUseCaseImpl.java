@@ -1,10 +1,10 @@
 package com.architecture.hexagonal.application.usecase.outbox.command.retry.impl;
 
+import com.architecture.hexagonal.application.model.command.retry.RetryOutboxeventCommand;
 import com.architecture.hexagonal.application.service.outbox.OutboxService;
-import com.architecture.hexagonal.contract.bus.model.retry.command.RetryOutboxeventCommand;
 import com.architecture.hexagonal.domain.annotation.ApplicationUseCase;
+import com.architecture.hexagonal.domain.model.criteria.outbox.OutboxStatusAndAggregateCriteria;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
-import com.architecture.hexagonal.domain.model.projector.outbox.OutboxStatusAndAggregateProjector;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
 import com.architecture.hexagonal.domain.port.in.bus.command.CommandHandler;
@@ -24,13 +24,13 @@ public class RetryOutboxUseCaseImpl implements CommandHandler<RetryOutboxeventCo
   @Override
   public Void handle(final @NonNull RetryOutboxeventCommand command) {
     for (final AggregateTypeVo aggregateType : AggregateTypeVo.values()) {
-      final OutboxStatusAndAggregateProjector projector =
-          OutboxStatusAndAggregateProjector.builder()
+      final OutboxStatusAndAggregateCriteria criteria =
+          OutboxStatusAndAggregateCriteria.builder()
               .aggregateType(aggregateType)
               .status(StatusVo.PENDING)
               .build();
       final List<Outbox> pendingEvents =
-          transactionReadBoundary.execute(() -> outboxService.find(projector));
+          transactionReadBoundary.execute(() -> outboxService.find(criteria));
 
       for (final Outbox outbox : pendingEvents) {
         transactionWriteBoundary.executeWithoutResult(() -> outboxService.process(outbox));

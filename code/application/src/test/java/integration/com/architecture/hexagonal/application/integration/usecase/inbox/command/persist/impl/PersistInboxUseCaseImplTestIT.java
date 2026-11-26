@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.application.integration.usecase.inbox.command.persist.impl;
 
 import com.architecture.hexagonal.application.databuilder.transaction.SpyTransactionWriteBoundary;
-import com.architecture.hexagonal.application.databuilder.usecase.inbox.command.RegisterInboxInputTestDataBuilder;
+import com.architecture.hexagonal.application.databuilder.model.command.inbox.RegisterInboxInputTestDataBuilder;
 import com.architecture.hexagonal.application.usecase.inbox.command.persist.impl.PersistInboxUseCaseImpl;
 import com.architecture.hexagonal.domain.port.out.inbox.InboxProcess;
 import com.architecture.hexagonal.domain.port.out.repository.inbox.InboxRepositoryReadPort;
@@ -9,7 +9,7 @@ import com.architecture.hexagonal.domain.port.out.repository.inbox.InboxReposito
 import com.architecture.hexagonal.domain.port.out.configuration.SchedulerConfigurationPort;
 import com.architecture.hexagonal.application.service.inbox.InboxService;
 import com.architecture.hexagonal.application.service.inbox.impl.InboxServiceImpl;
-import com.architecture.hexagonal.contract.bus.model.inbox.command.RegisterInboxCommand;
+import com.architecture.hexagonal.application.model.command.inbox.RegisterInboxCommand;
 import com.architecture.hexagonal.domain.databuilder.model.vo.time.DateVoTestDataBuilder;
 import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
@@ -53,14 +53,14 @@ class PersistInboxUseCaseImplTestIT {
                 PayloadVo.builder()
                     .messageHeader(
                         MessageHeaderVo.builder()
-                            .messageId(command.getMessageHeader().getMessageId())
+                            .messageId(command.messageHeader().messageId())
                             .messageDate(DateVoTestDataBuilder.builder().build().dateVo())
                             .build())
-                    .data(command.getData())
+                    .data(command.data())
                     .build())
-            .aggregateType(AggregateTypeVo.valueOf(command.getAggregateType()))
-            .aggregateId(command.getAggregateId())
-            .action(command.getAction())
+            .aggregateType(AggregateTypeVo.valueOf(command.aggregateType()))
+            .aggregateId(command.aggregateId())
+            .action(command.action())
             .status(StatusVo.PENDING)
             .createdAt(DateVoTestDataBuilder.builder().build().dateVo())
             .build();

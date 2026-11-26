@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.inbound.job.scheduled.inbox.executor.impl;
 
-import com.architecture.hexagonal.contract.bus.model.retry.command.RetryInboxeventCommand;
+import com.architecture.hexagonal.application.model.command.retry.RetryInboxeventCommand;
 import com.architecture.hexagonal.domain.port.in.bus.command.CommandBus;
 import com.architecture.hexagonal.domain.port.out.configuration.SchedulerConfigurationPort;
 import com.architecture.hexagonal.infrastructure.inbound.job.scheduled.inbox.executor.InboxScheduler;

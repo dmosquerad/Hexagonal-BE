@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.mapper.user;
 
-import com.architecture.hexagonal.contract.bus.model.user.command.UpdateUserCommand;
+import com.architecture.hexagonal.application.model.command.user.UpdateUserCommand;
 import com.architecture.hexagonal.contract.inbound.endpoint.rest.user.server.dto.UserUpdateDto;
 import com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.config.mapstruct.MapstructConfig;
 import java.util.UUID;

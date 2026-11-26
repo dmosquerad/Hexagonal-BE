@@ -1,9 +1,9 @@
 package com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.event;
 
-import com.architecture.hexagonal.contract.bus.model.user.event.UserUpdatedEvent;
 import com.architecture.hexagonal.contract.outbound.event.rabbitmq.model.UserUpdated;
+import com.architecture.hexagonal.domain.databuilder.model.event.user.UserUpdatedEventTestDataBuilder;
 import com.architecture.hexagonal.domain.databuilder.model.vo.time.TestTime;
-import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.databuilder.event.UserUpdatedEventTestDataBuilder;
+import com.architecture.hexagonal.domain.model.event.user.UserUpdatedEvent;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.databuilder.message.MessageHeaderTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.databuilder.message.UserDataTestDataBuilder;
 import com.architecture.hexagonal.infrastructure.outbound.event.rabbitmq.databuilder.message.UserUpdatedTestDataBuilder;
@@ -55,7 +55,7 @@ class UserUpdatedEventPublisherTest {
                     .messageHeader())
             .userData(
                 UserDataTestDataBuilder.builder()
-                    .userId(event.getUserId().toString())
+                    .userId(event.userId().toString())
                     .build()
                     .userData())
             .build()

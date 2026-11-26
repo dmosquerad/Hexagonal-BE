@@ -1,9 +1,9 @@
 package com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.databuilder.command;
 
-import com.architecture.hexagonal.application.databuilder.usecase.common.DateTestDataBuilder;
-import com.architecture.hexagonal.contract.bus.model.common.Date;
-import com.architecture.hexagonal.contract.bus.model.inbox.command.MessageHeader;
-import com.architecture.hexagonal.contract.bus.model.inbox.command.RegisterInboxCommand;
+import com.architecture.hexagonal.application.databuilder.model.vo.time.DateTestDataBuilder;
+import com.architecture.hexagonal.application.model.command.inbox.RegisterInboxCommand;
+import com.architecture.hexagonal.application.model.vo.payload.MessageHeader;
+import com.architecture.hexagonal.application.model.vo.time.Date;
 import com.architecture.hexagonal.domain.model.vo.payload.ActionType;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.databuilder.message.UserCreatedDataTestDataBuilder;
@@ -25,14 +25,14 @@ public class RegisterInboxCommandTestDataBuilder {
   @Builder.Default private Date createdAt = DateTestDataBuilder.builder().build().date();
 
   public RegisterInboxCommand registerInboxCommand() {
-    final RegisterInboxCommand command = new RegisterInboxCommand();
-    command.setMessageHeader(messageHeader);
-    command.setData(data);
-    command.setAggregateId(aggregateId);
-    command.setAggregateType(aggregateType);
-    command.setAction(action);
-    command.setCreatedAt(createdAt);
-    return command;
+    return RegisterInboxCommand.builder()
+        .messageHeader(messageHeader)
+        .data(data)
+        .aggregateId(aggregateId)
+        .aggregateType(aggregateType)
+        .action(action)
+        .createdAt(createdAt)
+        .build();
   }
 
 }

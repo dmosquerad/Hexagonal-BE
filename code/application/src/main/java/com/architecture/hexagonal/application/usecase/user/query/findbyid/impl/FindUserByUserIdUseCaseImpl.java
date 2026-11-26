@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.application.usecase.user.query.findbyid.impl;
 
+import com.architecture.hexagonal.application.model.query.user.FindUserByUserIdQuery;
 import com.architecture.hexagonal.application.service.user.UserService;
-import com.architecture.hexagonal.contract.bus.model.user.query.FindUserByUserIdQuery;
 import com.architecture.hexagonal.domain.annotation.ApplicationUseCase;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import com.architecture.hexagonal.domain.port.in.bus.query.QueryHandler;
@@ -19,6 +19,6 @@ public class FindUserByUserIdUseCaseImpl implements QueryHandler<FindUserByUserI
   @Override
   public User handle(final @NonNull FindUserByUserIdQuery findUserByUserIdQuery) {
     return transactionReadBoundary.execute(
-        () -> userService.findUserById(findUserByUserIdQuery.getUserId()));
+        () -> userService.findUserById(findUserByUserIdQuery.userId()));
   }
 }

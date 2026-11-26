@@ -1,14 +1,14 @@
 package com.architecture.hexagonal.application.integration.usecase.user.query.findbyid.impl;
 
 import com.architecture.hexagonal.application.databuilder.transaction.SpyTransactionReadBoundary;
-import com.architecture.hexagonal.application.databuilder.usecase.user.query.FindUserByUserIdInputTestDataBuilder;
+import com.architecture.hexagonal.application.databuilder.model.query.user.FindUserByUserIdInputTestDataBuilder;
 import com.architecture.hexagonal.application.usecase.user.query.findbyid.impl.FindUserByUserIdUseCaseImpl;
 import com.architecture.hexagonal.domain.port.out.repository.user.UserRepositoryReadPort;
 import com.architecture.hexagonal.domain.port.out.repository.user.UserRepositoryWritePort;
 import com.architecture.hexagonal.domain.port.out.bus.event.EventBus;
 import com.architecture.hexagonal.application.service.user.UserService;
 import com.architecture.hexagonal.application.service.user.impl.UserServiceImpl;
-import com.architecture.hexagonal.contract.bus.model.user.query.FindUserByUserIdQuery;
+import com.architecture.hexagonal.application.model.query.user.FindUserByUserIdQuery;
 import com.architecture.hexagonal.domain.databuilder.model.entity.user.UserTestDataBuilder;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import java.util.Optional;
@@ -43,11 +43,11 @@ class FindUserByUserIdUseCaseImplTestIT {
     final FindUserByUserIdQuery query =
         FindUserByUserIdInputTestDataBuilder.builder().build().findUserByUserIdInput();
     final User user =
-        UserTestDataBuilder.builder().userId(query.getUserId()).build().user();
+        UserTestDataBuilder.builder().userId(query.userId()).build().user();
 
-    Mockito.when(userRepositoryReadPort.findUserById(query.getUserId()))
+    Mockito.when(userRepositoryReadPort.findUserById(query.userId()))
         .thenReturn(Optional.of(user));
-    Mockito.when(userService.findUserById(query.getUserId()))
+    Mockito.when(userService.findUserById(query.userId()))
         .thenAnswer(
             AdditionalAnswers.answer(
                 (UUID userId) -> userServiceImpl.findUserById(userId)));
@@ -56,7 +56,7 @@ class FindUserByUserIdUseCaseImplTestIT {
 
     AssertionsForClassTypes.assertThat(result).isSameAs(user);
     Mockito.verify(transactionReadBoundary).execute(ArgumentMatchers.any());
-    Mockito.verify(userService).findUserById(query.getUserId());
-    Mockito.verify(userRepositoryReadPort).findUserById(query.getUserId());
+    Mockito.verify(userService).findUserById(query.userId());
+    Mockito.verify(userRepositoryReadPort).findUserById(query.userId());
   }
 }

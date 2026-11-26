@@ -1,9 +1,9 @@
 package com.architecture.hexagonal.application.usecase.user.command.create.impl;
 
-import com.architecture.hexagonal.application.mapper.user.UserCommandMapper;
+import com.architecture.hexagonal.application.mapper.user.UserMapper;
+import com.architecture.hexagonal.application.model.command.user.CreateUserCommand;
 import com.architecture.hexagonal.application.service.email.EmailService;
 import com.architecture.hexagonal.application.service.user.UserService;
-import com.architecture.hexagonal.contract.bus.model.user.command.CreateUserCommand;
 import com.architecture.hexagonal.domain.annotation.ApplicationUseCase;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
 import com.architecture.hexagonal.domain.exception.InvalidValueException;
@@ -24,7 +24,7 @@ public class CreateUserUseCaseImpl implements CommandHandler<CreateUserCommand, 
 
   @Override
   public User handle(final @NonNull CreateUserCommand createUserCommand) {
-    final User user = UserCommandMapper.INSTANCE.toUser(createUserCommand);
+    final User user = UserMapper.INSTANCE.toUser(createUserCommand);
     return transactionWriteBoundary.execute(
         () -> {
           if (emailService.isEmailBlocked(user.email())) {

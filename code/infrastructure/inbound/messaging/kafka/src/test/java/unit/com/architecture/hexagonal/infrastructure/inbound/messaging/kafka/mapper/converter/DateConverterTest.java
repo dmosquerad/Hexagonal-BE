@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.mapper.converter;
 
-import com.architecture.hexagonal.application.databuilder.usecase.common.DateTestDataBuilder;
-import com.architecture.hexagonal.contract.bus.model.common.Date;
+import com.architecture.hexagonal.application.databuilder.model.vo.time.DateTestDataBuilder;
+import com.architecture.hexagonal.application.model.vo.time.Date;
 import com.architecture.hexagonal.domain.databuilder.model.vo.time.TestTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;

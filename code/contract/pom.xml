@@ -12,7 +12,6 @@
     </parent>
 
     <modules>
-        <module>bus</module>
         <module>inbound</module>
         <module>outbound</module>
     </modules>

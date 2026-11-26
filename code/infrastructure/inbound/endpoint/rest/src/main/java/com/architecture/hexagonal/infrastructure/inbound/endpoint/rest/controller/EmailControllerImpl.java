@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.controller;
 
-import com.architecture.hexagonal.contract.bus.model.email.query.GetBlockedRulesQuery;
+import com.architecture.hexagonal.application.model.query.email.GetBlockedRulesQuery;
 import com.architecture.hexagonal.contract.inbound.endpoint.rest.email.server.controller.EmailsApi;
 import com.architecture.hexagonal.contract.inbound.endpoint.rest.email.server.dto.EmailBlockRulesResponseDto;
 import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;

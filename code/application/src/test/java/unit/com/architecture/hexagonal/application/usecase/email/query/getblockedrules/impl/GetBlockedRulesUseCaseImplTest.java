@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.application.usecase.email.query.getblockedrules.impl;
 
+import com.architecture.hexagonal.application.databuilder.model.query.email.GetBlockedRulesQueryTestDataBuilder;
 import com.architecture.hexagonal.application.databuilder.transaction.SpyTransactionReadBoundary;
-import com.architecture.hexagonal.application.databuilder.usecase.email.query.GetBlockedRulesQueryTestDataBuilder;
 import com.architecture.hexagonal.application.service.email.EmailService;
 import com.architecture.hexagonal.domain.databuilder.model.vo.email.EmailBlockRulesVoTestDataBuilder;
 import com.architecture.hexagonal.domain.model.vo.email.EmailBlockRulesVo;

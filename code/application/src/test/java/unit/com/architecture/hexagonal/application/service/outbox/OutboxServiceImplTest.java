@@ -4,8 +4,8 @@ import com.architecture.hexagonal.application.service.outbox.impl.OutboxServiceI
 import com.architecture.hexagonal.domain.databuilder.model.entity.outbox.OutboxTestDataBuilder;
 import com.architecture.hexagonal.domain.databuilder.model.vo.outbox.SchedulerOutboxConfigurationVoTestDataBuilder;
 import com.architecture.hexagonal.domain.databuilder.model.vo.time.TestTime;
+import com.architecture.hexagonal.domain.model.criteria.outbox.OutboxStatusAndAggregateCriteria;
 import com.architecture.hexagonal.domain.model.entity.outbox.Outbox;
-import com.architecture.hexagonal.domain.model.projector.outbox.OutboxStatusAndAggregateProjector;
 import com.architecture.hexagonal.domain.model.vo.outbox.SchedulerOutboxConfigurationVo;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
 import com.architecture.hexagonal.domain.model.vo.payload.StatusVo;
@@ -57,19 +57,19 @@ class OutboxServiceImplTest {
   @Test
   void findShouldReturnPendingEvents() {
     final Outbox outbox = OutboxTestDataBuilder.builder().build().outbox();
-    final OutboxStatusAndAggregateProjector projector =
-        OutboxStatusAndAggregateProjector.builder()
+    final OutboxStatusAndAggregateCriteria criteria =
+        OutboxStatusAndAggregateCriteria.builder()
             .aggregateType(AggregateTypeVo.USER)
             .status(StatusVo.PENDING)
             .build();
 
-    Mockito.when(outboxRepositoryReadPort.findByStatusAndAggregateType(projector))
+    Mockito.when(outboxRepositoryReadPort.findByStatusAndAggregateType(criteria))
         .thenReturn(List.of(outbox));
 
-    final List<Outbox> result = outboxService.find(projector);
+    final List<Outbox> result = outboxService.find(criteria);
 
     AssertionsForInterfaceTypes.assertThat(result).containsExactly(outbox);
-    Mockito.verify(outboxRepositoryReadPort).findByStatusAndAggregateType(projector);
+    Mockito.verify(outboxRepositoryReadPort).findByStatusAndAggregateType(criteria);
   }
 
   @Test

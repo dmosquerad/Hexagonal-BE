@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.consumer.impl;
 
-import com.architecture.hexagonal.contract.bus.model.inbox.command.RegisterInboxCommand;
+import com.architecture.hexagonal.application.model.command.inbox.RegisterInboxCommand;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.client.consumer.UserEventsConsumer;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserCreatedPayload;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserDeletedPayload;
@@ -45,8 +45,9 @@ public class UserKafkaConsumerImpl implements UserEventsConsumer {
       commandBus.execute(createUserCommandMapper.toCreateUserCommand(userCreatedMessage));
     } catch (final Exception _) {
       final RegisterInboxCommand registerInboxCommand =
-          registerInboxCommandMapper.toRegisterInboxCommand(userCreatedMessage);
-      registerInboxCommand.setCreatedAt(DateConverter.toDate(currentDateTime));
+          registerInboxCommandMapper.toRegisterInboxCommand(userCreatedMessage).toBuilder()
+              .createdAt(DateConverter.toDate(currentDateTime))
+              .build();
 
       commandBus.execute(registerInboxCommand);
     }
@@ -67,8 +68,9 @@ public class UserKafkaConsumerImpl implements UserEventsConsumer {
       commandBus.execute(updateUserCommandMapper.toUpdateUserCommand(userUpdatedMessage));
     } catch (final Exception _) {
       final RegisterInboxCommand registerInboxCommand =
-          registerInboxCommandMapper.toRegisterInboxCommand(userUpdatedMessage);
-      registerInboxCommand.setCreatedAt(DateConverter.toDate(currentDateTime));
+          registerInboxCommandMapper.toRegisterInboxCommand(userUpdatedMessage).toBuilder()
+              .createdAt(DateConverter.toDate(currentDateTime))
+              .build();
 
       commandBus.execute(registerInboxCommand);
     }
@@ -89,8 +91,9 @@ public class UserKafkaConsumerImpl implements UserEventsConsumer {
       commandBus.execute(deleteUserCommandMapper.toDeleteUserCommand(userDeletedMessage));
     } catch (final Exception _) {
       final RegisterInboxCommand registerInboxCommand =
-          registerInboxCommandMapper.toRegisterInboxCommand(userDeletedMessage);
-      registerInboxCommand.setCreatedAt(DateConverter.toDate(currentDateTime));
+          registerInboxCommandMapper.toRegisterInboxCommand(userDeletedMessage).toBuilder()
+              .createdAt(DateConverter.toDate(currentDateTime))
+              .build();
 
       commandBus.execute(registerInboxCommand);
     }

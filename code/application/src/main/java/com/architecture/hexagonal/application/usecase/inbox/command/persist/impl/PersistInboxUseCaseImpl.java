@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.application.usecase.inbox.command.persist.impl;
 
 import com.architecture.hexagonal.application.mapper.date.DateVoMapper;
+import com.architecture.hexagonal.application.model.command.inbox.RegisterInboxCommand;
 import com.architecture.hexagonal.application.service.inbox.InboxService;
-import com.architecture.hexagonal.contract.bus.model.inbox.command.RegisterInboxCommand;
 import com.architecture.hexagonal.domain.annotation.ApplicationUseCase;
 import com.architecture.hexagonal.domain.model.entity.inbox.Inbox;
 import com.architecture.hexagonal.domain.model.vo.payload.AggregateTypeVo;
@@ -28,18 +28,18 @@ public class PersistInboxUseCaseImpl implements CommandHandler<RegisterInboxComm
                 PayloadVo.builder()
                     .messageHeader(
                         MessageHeaderVo.builder()
-                            .messageId(command.getMessageHeader().getMessageId())
+                            .messageId(command.messageHeader().messageId())
                             .messageDate(
                                 DateVoMapper.INSTANCE.toDateVo(
-                                    command.getMessageHeader().getMessageDate()))
+                                    command.messageHeader().messageDate()))
                             .build())
-                    .data(command.getData())
+                    .data(command.data())
                     .build())
-            .aggregateType(AggregateTypeVo.valueOf(command.getAggregateType()))
-            .aggregateId(command.getAggregateId())
-            .action(command.getAction())
+            .aggregateType(AggregateTypeVo.valueOf(command.aggregateType()))
+            .aggregateId(command.aggregateId())
+            .action(command.action())
             .status(StatusVo.PENDING)
-            .createdAt(DateVoMapper.INSTANCE.toDateVo(command.getCreatedAt()))
+            .createdAt(DateVoMapper.INSTANCE.toDateVo(command.createdAt()))
             .build();
 
     return transactionWriteBoundary.execute(() -> inboxService.save(inbox));

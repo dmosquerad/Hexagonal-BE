@@ -1,10 +1,10 @@
 package com.architecture.hexagonal.application.usecase.user.command.update.impl;
 
+import com.architecture.hexagonal.application.databuilder.model.command.user.UpdateUserInputTestDataBuilder;
 import com.architecture.hexagonal.application.databuilder.transaction.SpyTransactionWriteBoundary;
-import com.architecture.hexagonal.application.databuilder.usecase.user.command.UpdateUserInputTestDataBuilder;
+import com.architecture.hexagonal.application.model.command.user.UpdateUserCommand;
 import com.architecture.hexagonal.application.service.email.EmailService;
 import com.architecture.hexagonal.application.service.user.UserService;
-import com.architecture.hexagonal.contract.bus.model.user.command.UpdateUserCommand;
 import com.architecture.hexagonal.domain.databuilder.model.entity.user.UserTestDataBuilder;
 import com.architecture.hexagonal.domain.databuilder.model.vo.email.EmailVoTestDataBuilder;
 import com.architecture.hexagonal.domain.exception.ExceptionMessage;
@@ -39,7 +39,7 @@ class UpdateUserUseCaseImplTest {
         UpdateUserInputTestDataBuilder.builder().build().updateUserInput();
     final User input =
         UserTestDataBuilder.builder()
-            .name(command.getName())
+            .name(command.name())
             .email(EmailVoTestDataBuilder.builder().username("updated").build().emailVo())
             .build()
             .user();

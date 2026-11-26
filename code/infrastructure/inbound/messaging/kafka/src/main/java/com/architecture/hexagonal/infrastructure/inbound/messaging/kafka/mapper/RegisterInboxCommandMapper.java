@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.inbound.messaging.kafka.mapper;
 
-import com.architecture.hexagonal.contract.bus.model.inbox.command.RegisterInboxCommand;
+import com.architecture.hexagonal.application.model.command.inbox.RegisterInboxCommand;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserCreatedPayload;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserDeletedPayload;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserUpdatedPayload;

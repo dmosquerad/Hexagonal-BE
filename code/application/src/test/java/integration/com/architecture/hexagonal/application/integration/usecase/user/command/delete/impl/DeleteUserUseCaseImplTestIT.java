@@ -1,15 +1,15 @@
 package com.architecture.hexagonal.application.integration.usecase.user.command.delete.impl;
 
 import com.architecture.hexagonal.application.databuilder.transaction.SpyTransactionWriteBoundary;
-import com.architecture.hexagonal.application.databuilder.usecase.user.command.DeleteUserInputTestDataBuilder;
+import com.architecture.hexagonal.application.databuilder.model.command.user.DeleteUserInputTestDataBuilder;
 import com.architecture.hexagonal.application.usecase.user.command.delete.impl.DeleteUserUseCaseImpl;
 import com.architecture.hexagonal.domain.port.out.repository.user.UserRepositoryReadPort;
 import com.architecture.hexagonal.domain.port.out.repository.user.UserRepositoryWritePort;
 import com.architecture.hexagonal.domain.port.out.bus.event.EventBus;
 import com.architecture.hexagonal.application.service.user.UserService;
 import com.architecture.hexagonal.application.service.user.impl.UserServiceImpl;
-import com.architecture.hexagonal.contract.bus.model.user.command.DeleteUserCommand;
-import com.architecture.hexagonal.contract.bus.model.user.event.UserDeletedEvent;
+import com.architecture.hexagonal.application.model.command.user.DeleteUserCommand;
+import com.architecture.hexagonal.domain.model.event.user.UserDeletedEvent;
 import com.architecture.hexagonal.domain.databuilder.model.entity.user.UserTestDataBuilder;
 import com.architecture.hexagonal.domain.model.entity.user.User;
 import java.util.Optional;
@@ -43,11 +43,11 @@ class DeleteUserUseCaseImplTestIT {
     final DeleteUserCommand command =
         DeleteUserInputTestDataBuilder.builder().build().deleteUserInput();
     final User user =
-        UserTestDataBuilder.builder().userId(command.getUserId()).build().user();
+        UserTestDataBuilder.builder().userId(command.userId()).build().user();
 
-    Mockito.when(userRepositoryWritePort.deleteUser(command.getUserId()))
+    Mockito.when(userRepositoryWritePort.deleteUser(command.userId()))
         .thenReturn(Optional.of(user));
-    Mockito.when(userService.deleteUser(command.getUserId()))
+    Mockito.when(userService.deleteUser(command.userId()))
         .thenAnswer(
             org.mockito.AdditionalAnswers.answer(
                 (UUID userId) -> userServiceImpl.deleteUser(userId)));
@@ -56,8 +56,8 @@ class DeleteUserUseCaseImplTestIT {
 
     AssertionsForClassTypes.assertThat(result).isSameAs(user);
     Mockito.verify(transactionWriteBoundary).execute(ArgumentMatchers.any());
-    Mockito.verify(userService).deleteUser(command.getUserId());
-    Mockito.verify(userRepositoryWritePort).deleteUser(command.getUserId());
+    Mockito.verify(userService).deleteUser(command.userId());
+    Mockito.verify(userRepositoryWritePort).deleteUser(command.userId());
     Mockito.verify(eventBus)
         .publish(ArgumentMatchers.any(UserDeletedEvent.class));
   }

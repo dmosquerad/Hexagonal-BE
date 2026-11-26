@@ -1,8 +1,8 @@
 package com.architecture.hexagonal.infrastructure.inbox.service;
 
-import com.architecture.hexagonal.contract.bus.model.user.command.CreateUserCommand;
-import com.architecture.hexagonal.contract.bus.model.user.command.DeleteUserCommand;
-import com.architecture.hexagonal.contract.bus.model.user.command.UpdateUserCommand;
+import com.architecture.hexagonal.application.model.command.user.CreateUserCommand;
+import com.architecture.hexagonal.application.model.command.user.DeleteUserCommand;
+import com.architecture.hexagonal.application.model.command.user.UpdateUserCommand;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserCreatedData;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserDeletedData;
 import com.architecture.hexagonal.contract.inbound.messaging.kafka.model.UserUpdatedData;
@@ -68,8 +68,8 @@ class InboxProcessServiceTestIT {
     final ArgumentCaptor<CreateUserCommand> commandCaptor =
         ArgumentCaptor.forClass(CreateUserCommand.class);
     Mockito.verify(commandBus).execute(commandCaptor.capture());
-    Assertions.assertThat(commandCaptor.getValue().getName()).isEqualTo("Inbox User");
-    Assertions.assertThat(commandCaptor.getValue().getEmail()).isEqualTo("inbox@example.com");
+    Assertions.assertThat(commandCaptor.getValue().name()).isEqualTo("Inbox User");
+    Assertions.assertThat(commandCaptor.getValue().email()).isEqualTo("inbox@example.com");
   }
 
   @Test
@@ -96,9 +96,9 @@ class InboxProcessServiceTestIT {
     final ArgumentCaptor<UpdateUserCommand> commandCaptor =
         ArgumentCaptor.forClass(UpdateUserCommand.class);
     Mockito.verify(commandBus).execute(commandCaptor.capture());
-    Assertions.assertThat(commandCaptor.getValue().getUserId()).isEqualTo(userId);
-    Assertions.assertThat(commandCaptor.getValue().getName()).isEqualTo("Updated User");
-    Assertions.assertThat(commandCaptor.getValue().getEmail()).isEqualTo("updated@example.com");
+    Assertions.assertThat(commandCaptor.getValue().userId()).isEqualTo(userId);
+    Assertions.assertThat(commandCaptor.getValue().name()).isEqualTo("Updated User");
+    Assertions.assertThat(commandCaptor.getValue().email()).isEqualTo("updated@example.com");
   }
 
   @Test
@@ -123,7 +123,7 @@ class InboxProcessServiceTestIT {
     final ArgumentCaptor<DeleteUserCommand> commandCaptor =
         ArgumentCaptor.forClass(DeleteUserCommand.class);
     Mockito.verify(commandBus).execute(commandCaptor.capture());
-    Assertions.assertThat(commandCaptor.getValue().getUserId()).isEqualTo(userId);
+    Assertions.assertThat(commandCaptor.getValue().userId()).isEqualTo(userId);
   }
 
   @Test

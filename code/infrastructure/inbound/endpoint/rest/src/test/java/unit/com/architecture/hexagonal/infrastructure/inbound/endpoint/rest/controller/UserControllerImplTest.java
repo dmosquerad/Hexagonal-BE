@@ -1,12 +1,12 @@
 package com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.controller;
 
-import com.architecture.hexagonal.contract.bus.model.user.command.CreateUserCommand;
-import com.architecture.hexagonal.contract.bus.model.user.command.DeleteUserCommand;
-import com.architecture.hexagonal.contract.bus.model.user.command.PatchUserCommand;
-import com.architecture.hexagonal.contract.bus.model.user.command.UpdateUserCommand;
-import com.architecture.hexagonal.contract.bus.model.user.query.FindUserByUserIdQuery;
-import com.architecture.hexagonal.contract.bus.model.user.query.GetUsersFilteredQuery;
-import com.architecture.hexagonal.contract.bus.model.user.query.UserExistsQuery;
+import com.architecture.hexagonal.application.model.command.user.CreateUserCommand;
+import com.architecture.hexagonal.application.model.command.user.DeleteUserCommand;
+import com.architecture.hexagonal.application.model.command.user.PatchUserCommand;
+import com.architecture.hexagonal.application.model.command.user.UpdateUserCommand;
+import com.architecture.hexagonal.application.model.query.user.FindUserByUserIdQuery;
+import com.architecture.hexagonal.application.model.query.user.GetUsersFilteredQuery;
+import com.architecture.hexagonal.application.model.query.user.UserExistsQuery;
 import com.architecture.hexagonal.contract.inbound.endpoint.rest.user.server.dto.ResponsePaginationDto;
 import com.architecture.hexagonal.contract.inbound.endpoint.rest.user.server.dto.UserCreateDto;
 import com.architecture.hexagonal.contract.inbound.endpoint.rest.user.server.dto.UserResponseDto;

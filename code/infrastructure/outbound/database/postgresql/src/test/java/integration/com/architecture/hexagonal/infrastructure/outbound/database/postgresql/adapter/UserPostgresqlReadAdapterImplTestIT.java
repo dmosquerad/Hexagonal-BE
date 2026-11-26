@@ -1,7 +1,7 @@
 package com.architecture.hexagonal.infrastructure.outbound.database.postgresql.adapter;
 
 import com.architecture.hexagonal.domain.databuilder.model.entity.user.UserTestDataBuilder;
-import com.architecture.hexagonal.domain.databuilder.model.projector.user.UserEmailProjectorTestDataBuilder;
+import com.architecture.hexagonal.domain.databuilder.model.criteria.user.UserEmailCriteriaTestDataBuilder;
 import com.architecture.hexagonal.domain.databuilder.model.vo.email.EmailBlockRulesVoTestDataBuilder;
 import com.architecture.hexagonal.domain.databuilder.model.vo.pagination.PaginationVoTestDataBuilder;
 import com.architecture.hexagonal.domain.model.entity.user.User;
@@ -64,13 +64,13 @@ class UserPostgresqlReadAdapterImplTestIT extends PostgresqlIT {
     final PaginationVo paginationVo = PaginationVoTestDataBuilder.builder().build().paginationVo();
 
     final PaginationResultVo<User> result = userPostgresqlReadAdapterImpl.getAllUsers(
-        UserEmailProjectorTestDataBuilder.builder()
+        UserEmailCriteriaTestDataBuilder.builder()
             .blockEmail(true)
             .blockedRules(EmailBlockRulesVoTestDataBuilder.builder()
                 .host(Set.of("example"))
                 .build().emailBlockRulesVo())
             .build()
-            .userEmailProjector(),
+            .userEmailCriteria(),
             paginationVo);
 
     AssertionsForClassTypes.assertThat(result.data())

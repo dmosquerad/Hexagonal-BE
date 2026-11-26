@@ -1,6 +1,6 @@
 package com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.mapper.user;
 
-import com.architecture.hexagonal.contract.bus.model.user.query.UserExistsQuery;
+import com.architecture.hexagonal.application.model.query.user.UserExistsQuery;
 import com.architecture.hexagonal.infrastructure.inbound.endpoint.rest.config.mapstruct.MapstructConfig;
 import java.util.UUID;
 import org.mapstruct.Mapper;
